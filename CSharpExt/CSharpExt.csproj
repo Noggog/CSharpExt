@@ -69,6 +69,7 @@
     <Compile Include="Structs\Dimensions\Bounding2D.cs" />
     <Compile Include="Structs\Dimensions\Dimension2D.cs" />
     <Compile Include="Structs\Dimensions\Dimension2DDouble.cs" />
+    <Compile Include="Structs\MemberAccessor.cs" />
     <Compile Include="Structs\Numbers\Percent.cs" />
     <Compile Include="Structs\Numbers\UDouble.cs" />
     <Compile Include="Structs\Numbers\UInt.cs" />
