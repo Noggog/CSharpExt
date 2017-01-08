@@ -133,5 +133,37 @@ namespace System
             list.Clear();
             list.Add(item);
         }
+
+        public static void RemoveEnd<T>(this IList<T> list, int fromIndex)
+        {
+            var toRemove = list.Count - fromIndex;
+            for (; toRemove > 0; toRemove--)
+            {
+                list.RemoveAt(list.Count - 1);
+            }
+        }
+
+        public static void RemoveAt<T>(this IList<T> list, int index, out T item)
+        {
+            item = list[index];
+            list.RemoveAt(index);
+        }
+
+        public static bool Remove<T>(this IList<T> list, T item, out int index)
+        {
+            EqualityComparer<T> comp = EqualityComparer<T>.Default;
+
+            for (int i = 0; i < list.Count; i++)
+            {
+                if (comp.Equals(list[i], item))
+                {
+                    index = i;
+                    return true;
+                }
+            }
+
+            index = -1;
+            return false;
+        }
     }
 }

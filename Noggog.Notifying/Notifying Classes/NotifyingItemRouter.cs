@@ -1,0 +1,130 @@
+﻿using System;
+
+namespace Noggog.Notifying
+{
+    /*
+    *  Class intended to forward another NotifyingItem by default.  
+    *  If it is set, then it breaks that subscription and becomes like a normal NotifyingItem until unset.
+    */
+    public class NotifyingItemRouter<T> : INotifyingItem<T>
+    {
+        INotifyingItemGetter<T> _base;
+        INotifyingItem<T> _child;
+
+        public bool HasBeenSwapped { get; private set; }
+
+        public NotifyingItemRouter(
+            INotifyingItemGetter<T> _base, 
+            INotifyingItem<T> _child)
+        {
+            this._base = _base;
+            this._child = _child;
+            if (!this._child.HasBeenSet)
+            {
+                SwapBack(null, force: true);
+            }
+        }
+
+        public T Value
+        {
+            get
+            {
+                return _child.Value;
+            }
+
+            set
+            {
+                SwapOver();
+                _child.Value = value;
+            }
+        }
+
+        public T DefaultValue
+        {
+            get
+            {
+                return _child.DefaultValue;
+            }
+        }
+
+        T INotifyingItemGetter<T>.Value
+        {
+            get
+            {
+                return this.Value;
+            }
+        }
+
+        public bool HasBeenSet
+        {
+            get
+            {
+                return (HasBeenSwapped ? _child.HasBeenSet : _base.HasBeenSet);
+            }
+
+            set
+            {
+                SwapOver();
+                _child.HasBeenSet = value;
+            }
+        }
+
+        public void SetCurrentAsDefault()
+        {
+            SwapOver();
+            _child.SetCurrentAsDefault();
+        }
+        
+        public void Subscribe<O>(O owner, NotifyingItemCallback<O, T> callback, bool fireInitial = true)
+        {
+            _child.Subscribe(owner, callback, fireInitial);
+        }
+
+        public void Unset(NotifyingUnsetParameters? cmds = null)
+        {
+            _child.Unset(cmds);
+            SwapBack(cmds);
+        }
+
+        public void Unsubscribe(object owner)
+        {
+            _child.Unsubscribe(owner);
+        }
+
+        private void SwapOver()
+        {
+            if (HasBeenSwapped) return;
+            _base.Unsubscribe(this);
+            this.HasBeenSwapped = true;
+        }
+
+        private void SwapBack(NotifyingUnsetParameters? cmds, bool force = false)
+        {
+            if (!HasBeenSwapped && ! force) return;
+            this.HasBeenSwapped = false;
+            _base.Subscribe(
+                this,
+                (owner, change) =>
+                {
+                    owner._child.Set(
+                        change.New, 
+                        new NotifyingFireParameters(
+                            markAsSet: _base.HasBeenSet, 
+                            throwEventExceptions: cmds == null ? false : cmds.Value.ThrowEventExceptions, 
+                            forceFire: cmds == null ? false : cmds.Value.ForceFire));
+                });
+        }
+
+        public void Set(T value, NotifyingFireParameters? cmd = null)
+        {
+            SwapOver();
+            _child.Set(value, cmd);
+        }
+
+        public void SetHasBeenSet(bool on)
+        {
+            SwapOver();
+            _child.SetHasBeenSet(on);
+        }
+    }
+}

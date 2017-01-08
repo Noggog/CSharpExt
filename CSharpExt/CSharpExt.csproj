@@ -41,6 +41,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Comparers\ReferenceEqualityComparer.cs" />
+    <Compile Include="Comparers\WeakReferenceEquatable.cs" />
+    <Compile Include="Containers\Pools\ObjectDictionaryListPool.cs" />
+    <Compile Include="Containers\Pools\ObjectDictionaryPool.cs" />
+    <Compile Include="Containers\Pools\ObjectListPool.cs" />
+    <Compile Include="Containers\Pools\ObjectPool.cs" />
+    <Compile Include="Enums\AddRemove.cs" />
+    <Compile Include="Enums\AddRemoveModify.cs" />
     <Compile Include="Enums\GridLoc.cs" />
     <Compile Include="Enums\Rotation.cs" />
     <Compile Include="Extensions\ActionExt.cs" />
@@ -70,6 +77,7 @@
     <Compile Include="Structs\Dimensions\Bounding2D.cs" />
     <Compile Include="Structs\Dimensions\Dimension2D.cs" />
     <Compile Include="Structs\Dimensions\Dimension2DDouble.cs" />
+    <Compile Include="Structs\LifecycleActions.cs" />
     <Compile Include="Structs\MemberAccessor.cs" />
     <Compile Include="Structs\Numbers\Percent.cs" />
     <Compile Include="Structs\Numbers\UDouble.cs" />
