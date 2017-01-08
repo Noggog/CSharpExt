@@ -40,7 +40,47 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Comparers\ReferenceEqualityComparer.cs" />
+    <Compile Include="Enums\GridLoc.cs" />
+    <Compile Include="Enums\Rotation.cs" />
+    <Compile Include="Extensions\ActionExt.cs" />
+    <Compile Include="Extensions\ArrayExt.cs" />
+    <Compile Include="Extensions\DictionaryExt.cs" />
+    <Compile Include="Extensions\DirectoryInfoExt.cs" />
+    <Compile Include="Extensions\DoubleExt.cs" />
+    <Compile Include="Extensions\EnumerableExt.cs" />
+    <Compile Include="Extensions\EnumExt.cs" />
+    <Compile Include="Extensions\FloatExt.cs" />
+    <Compile Include="Extensions\HashHelper.cs" />
+    <Compile Include="Extensions\HashSetExt.cs" />
+    <Compile Include="Extensions\ICollectionExt.cs" />
+    <Compile Include="Extensions\IntExt.cs" />
+    <Compile Include="Extensions\ListExt.cs" />
+    <Compile Include="Extensions\ObjectExt.cs" />
+    <Compile Include="Extensions\QueueExt.cs" />
+    <Compile Include="Extensions\RangeDoubleExt.cs" />
+    <Compile Include="Extensions\RangeIntExt.cs" />
+    <Compile Include="Extensions\StackExt.cs" />
+    <Compile Include="Extensions\StringExt.cs" />
+    <Compile Include="Extensions\SymbolExtensions.cs" />
+    <Compile Include="Extensions\TypeExt.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RandomSource.cs" />
+    <Compile Include="Structs\Dimensions\Bounding2D.cs" />
+    <Compile Include="Structs\Dimensions\Dimension2D.cs" />
+    <Compile Include="Structs\Dimensions\Dimension2DDouble.cs" />
+    <Compile Include="Structs\Numbers\Percent.cs" />
+    <Compile Include="Structs\Numbers\UDouble.cs" />
+    <Compile Include="Structs\Numbers\UInt.cs" />
+    <Compile Include="Structs\Numbers\ULong.cs" />
+    <Compile Include="Structs\Points\P2Double.cs" />
+    <Compile Include="Structs\Points\P2Int.cs" />
+    <Compile Include="Structs\Points\P2IntValue.cs" />
+    <Compile Include="Structs\Ranges\RangeDouble.cs" />
+    <Compile Include="Structs\Ranges\RangeFloat.cs" />
+    <Compile Include="Structs\Ranges\RangeInt.cs" />
+    <Compile Include="Structs\StringCaseAgnostic.cs" />
+    <Compile Include="Structs\TryGet.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
