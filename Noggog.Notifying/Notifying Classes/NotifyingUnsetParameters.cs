@@ -5,20 +5,24 @@ namespace Noggog.Notifying
     public struct NotifyingUnsetParameters
     {
         public static readonly NotifyingUnsetParameters Typical = new NotifyingUnsetParameters(
-            throwEventExceptions: false,
+            exceptionHandler: null,
             forceFire: false);
         public static readonly NotifyingUnsetParameters ThrowEvents = new NotifyingUnsetParameters(
-            throwEventExceptions: true,
+            exceptionHandler: (ex) =>
+            {
+                if (ex == null) return;
+                throw ex;
+            },
             forceFire: false);
 
-        public readonly bool ThrowEventExceptions;
+        public readonly Action<Exception> ExceptionHandler;
         public readonly bool ForceFire;
 
         public NotifyingUnsetParameters(
-            bool throwEventExceptions = false,
+            Action<Exception> exceptionHandler = null,
             bool forceFire = false)
         {
-            this.ThrowEventExceptions = throwEventExceptions;
+            this.ExceptionHandler = exceptionHandler;
             this.ForceFire = forceFire;
         }
     }
@@ -30,7 +34,7 @@ namespace Noggog.Notifying
             if (param == null) return null;
             return new NotifyingFireParameters(
                 markAsSet: false,
-                throwEventExceptions: param.Value.ThrowEventExceptions,
+                exceptionHandler: param.Value.ExceptionHandler,
                 forceFire: param.Value.ForceFire);
         }
 

@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Noggog.Notifying
 {
@@ -6,24 +9,28 @@ namespace Noggog.Notifying
     {
         public static readonly NotifyingFireParameters Typical = new NotifyingFireParameters(
             markAsSet: true,
-            throwEventExceptions: false,
+            exceptionHandler: null,
             forceFire: false);
         public static readonly NotifyingFireParameters ThrowEvents = new NotifyingFireParameters(
             markAsSet: true,
-            throwEventExceptions: true,
+            exceptionHandler: (ex) =>
+            {
+                if (ex == null) return;
+                throw ex;
+            },
             forceFire: false);
 
         public readonly bool MarkAsSet;
-        public readonly bool ThrowEventExceptions;
+        public readonly Action<Exception> ExceptionHandler;
         public readonly bool ForceFire;
 
         public NotifyingFireParameters(
             bool markAsSet = true,
-            bool throwEventExceptions = false,
+            Action<Exception> exceptionHandler = null,
             bool forceFire = false)
         {
             this.MarkAsSet = markAsSet;
-            this.ThrowEventExceptions = throwEventExceptions;
+            this.ExceptionHandler = exceptionHandler;
             this.ForceFire = forceFire;
         }
     }
@@ -34,7 +41,7 @@ namespace Noggog.Notifying
         {
             if (param == null) return null;
             return new NotifyingUnsetParameters(
-                throwEventExceptions: param.Value.ThrowEventExceptions,
+                exceptionHandler: param.Value.ExceptionHandler,
                 forceFire: param.Value.ForceFire);
         }
 

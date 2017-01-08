@@ -341,17 +341,13 @@ namespace Noggog.Notifying
                         }
                         catch (Exception ex)
                         {
-                            if (cmds.Value.ThrowEventExceptions)
+                            if (cmds?.ExceptionHandler != null)
                             {
                                 if (exceptions == null)
                                 {
                                     exceptions = new List<Exception>();
                                 }
                                 exceptions.Add(ex);
-                            }
-                            else
-                            {
-                                Log.Main.ReportError("Error firing NotifyingDictionary<" + typeof(K) + ", " + typeof(V) + "> : " + ex.ToStringSafe());
                             }
                         }
                     }
@@ -392,7 +388,7 @@ namespace Noggog.Notifying
                                 }
                                 catch (Exception ex)
                                 {
-                                    if (cmds.Value.ThrowEventExceptions)
+                                    if (cmds?.ExceptionHandler != null)
                                     {
                                         if (exceptions == null)
                                         {
@@ -400,20 +396,26 @@ namespace Noggog.Notifying
                                         }
                                         exceptions.Add(ex);
                                     }
-                                    else
-                                    {
-                                        Log.Main.ReportError("Error firing NotifyingDictionary<" + typeof(K) + ", " + typeof(V) + "> : " + ex.ToStringSafe());
-                                    }
                                 }
                             }
                         }
                     }
                 }
             }
-
-            if (exceptions != null)
+            
+            if (exceptions != null
+                && cmds?.ExceptionHandler != null
+                && exceptions.Count > 0)
             {
-                throw new AggregateException(exceptions.ToArray());
+                if (exceptions.Count == 1)
+                {
+                    cmds.Value.ExceptionHandler(exceptions[0]);
+                }
+                else
+                {
+                    cmds.Value.ExceptionHandler(
+                        new AggregateException(exceptions.ToArray()));
+                }
             }
         }
 
