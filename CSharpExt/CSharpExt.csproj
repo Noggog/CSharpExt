@@ -92,6 +92,8 @@
     <Compile Include="Structs\Ranges\RangeInt.cs" />
     <Compile Include="Structs\StringCaseAgnostic.cs" />
     <Compile Include="Structs\TryGet.cs" />
+    <Compile Include="XML\DocumentWrapper.cs" />
+    <Compile Include="XML\ElementWrapper.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
