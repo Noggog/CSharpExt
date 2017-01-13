@@ -114,7 +114,7 @@ namespace Noggog.Notifying
                 {
                     var old = _item;
                     _item = value;
-                    Fire(old, value, cmd.Value.ThrowEventExceptions);
+                    Fire(old, value, cmd);
                 }
                 else
                 {
@@ -123,9 +123,9 @@ namespace Noggog.Notifying
             }
         }
 
-        private void Fire(T old, T item, bool throwEventExceptions)
+        private void Fire(T old, T item, NotifyingFireParameters? cmds = null)
         {
-            List<Exception> exList = null;
+            List<Exception> exceptions = null;
             using (var fireSubscribers = subscribers.GetSubs())
             {
                 foreach (var sub in fireSubscribers)
@@ -138,25 +138,37 @@ namespace Noggog.Notifying
                         }
                         catch (Exception ex)
                         {
-                            if (throwEventExceptions)
+                            if (exceptions == null)
                             {
-                                if (exList == null)
-                                {
-                                    exList = new List<Exception>();
-                                }
-                                exList.Add(ex);
+                                exceptions = new List<Exception>();
                             }
-                            else
-                            {
-                                Log.Main.ReportError("Error firing NotifyingItem<" + typeof(T) + "> changes from " + old.ToStringSafe() + " to " + item.ToStringSafe() + ": " + ex.ToStringSafe());
-                            }
+                            exceptions.Add(ex);
                         }
                     }
                 }
             }
-            if (exList != null)
+
+            if (exceptions != null
+                && exceptions.Count > 0)
             {
-                throw new AggregateException(exList.ToArray());
+                Exception ex;
+                if (exceptions.Count == 1)
+                {
+                    ex = exceptions[0];
+                }
+                else
+                {
+                    ex = new AggregateException(exceptions.ToArray());
+                }
+
+                if (cmds?.ExceptionHandler == null)
+                {
+                    throw ex;
+                }
+                else
+                {
+                    cmds.Value.ExceptionHandler(ex);
+                }
             }
         }
 
@@ -284,7 +296,6 @@ namespace Noggog.Notifying
             not.Set(value,
                 new NotifyingFireParameters(
                     markAsSet: true,
-                    throwEventExceptions: false,
                     forceFire: false));
         }
 

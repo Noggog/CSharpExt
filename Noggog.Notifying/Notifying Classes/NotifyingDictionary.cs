@@ -12,7 +12,7 @@ namespace Noggog.Notifying
         bool TryGetValue(K key, out V val);
         void Subscribe<O>(O owner, NotifyingCollection<KeyValuePair<K, V>, ChangeKeyed<K, V>>.NotifyingCollectionCallback<O> callback, bool fireInitial);
     }
-    
+
     public interface INotifyingDictionary<K, V> : INotifyingDictionaryGetter<K, V>, INotifyingCollection<KeyValuePair<K, V>>
     {
         new V this[K key] { get; set; }
@@ -341,14 +341,11 @@ namespace Noggog.Notifying
                         }
                         catch (Exception ex)
                         {
-                            if (cmds?.ExceptionHandler != null)
+                            if (exceptions == null)
                             {
-                                if (exceptions == null)
-                                {
-                                    exceptions = new List<Exception>();
-                                }
-                                exceptions.Add(ex);
+                                exceptions = new List<Exception>();
                             }
+                            exceptions.Add(ex);
                         }
                     }
                 }
@@ -388,33 +385,38 @@ namespace Noggog.Notifying
                                 }
                                 catch (Exception ex)
                                 {
-                                    if (cmds?.ExceptionHandler != null)
+                                    if (exceptions == null)
                                     {
-                                        if (exceptions == null)
-                                        {
-                                            exceptions = new List<Exception>();
-                                        }
-                                        exceptions.Add(ex);
+                                        exceptions = new List<Exception>();
                                     }
+                                    exceptions.Add(ex);
                                 }
                             }
                         }
                     }
                 }
             }
-            
+
             if (exceptions != null
-                && cmds?.ExceptionHandler != null
                 && exceptions.Count > 0)
             {
+                Exception ex;
                 if (exceptions.Count == 1)
                 {
-                    cmds.Value.ExceptionHandler(exceptions[0]);
+                    ex = exceptions[0];
                 }
                 else
                 {
-                    cmds.Value.ExceptionHandler(
-                        new AggregateException(exceptions.ToArray()));
+                    ex = new AggregateException(exceptions.ToArray());
+                }
+
+                if (cmds?.ExceptionHandler == null)
+                {
+                    throw ex;
+                }
+                else
+                {
+                    cmds.Value.ExceptionHandler(ex);
                 }
             }
         }

@@ -110,8 +110,8 @@ namespace Noggog.Notifying
                         change.New, 
                         new NotifyingFireParameters(
                             markAsSet: _base.HasBeenSet, 
-                            throwEventExceptions: cmds == null ? false : cmds.Value.ThrowEventExceptions, 
-                            forceFire: cmds == null ? false : cmds.Value.ForceFire));
+                            exceptionHandler: cmds?.ExceptionHandler, 
+                            forceFire: cmds?.ForceFire ?? false));
                 });
         }
 

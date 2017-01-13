@@ -341,18 +341,11 @@ namespace Noggog.Notifying
                             }
                             catch (Exception ex)
                             {
-                                if (cmds.Value.ThrowEventExceptions)
+                                if (exceptions == null)
                                 {
-                                    if (exceptions == null)
-                                    {
-                                        exceptions = new List<Exception>();
-                                    }
-                                    exceptions.Add(ex);
+                                    exceptions = new List<Exception>();
                                 }
-                                else
-                                {
-                                    Log.Main.ReportError("Error firing NotifyingList<" + typeof(T) + "> : " + ex.ToStringSafe());
-                                }
+                                exceptions.Add(ex);
                             }
                         }
                     }
@@ -393,28 +386,39 @@ namespace Noggog.Notifying
                                 }
                                 catch (Exception ex)
                                 {
-                                    if (cmds.Value.ThrowEventExceptions)
+                                    if (exceptions == null)
                                     {
-                                        if (exceptions == null)
-                                        {
-                                            exceptions = new List<Exception>();
-                                        }
-                                        exceptions.Add(ex);
+                                        exceptions = new List<Exception>();
                                     }
-                                    else
-                                    {
-                                        Log.Main.ReportError("Error firing NotifyingList<" + typeof(T) + "> : " + ex.ToStringSafe());
-                                    }
+                                    exceptions.Add(ex);
                                 }
                             }
                         }
                     }
                 }
             }
-
-            if (exceptions != null)
+            
+            if (exceptions != null
+                && exceptions.Count > 0)
             {
-                throw new AggregateException(exceptions.ToArray());
+                Exception ex;
+                if (exceptions.Count == 1)
+                {
+                    ex = exceptions[0];
+                }
+                else
+                {
+                    ex = new AggregateException(exceptions.ToArray());
+                }
+
+                if (cmds?.ExceptionHandler == null)
+                {
+                    throw ex;
+                }
+                else
+                {
+                    cmds.Value.ExceptionHandler(ex);
+                }
             }
         }
 
