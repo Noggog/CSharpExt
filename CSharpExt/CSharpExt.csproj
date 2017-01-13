@@ -71,6 +71,7 @@
     <Compile Include="Extensions\StringExt.cs" />
     <Compile Include="Extensions\SymbolExtensions.cs" />
     <Compile Include="Extensions\TypeExt.cs" />
+    <Compile Include="Extensions\XmlExt.cs" />
     <Compile Include="Printing\DepthPrinter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RandomSource.cs" />
