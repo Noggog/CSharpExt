@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace System
+namespace Noggog
 {
     public struct P2Double : IEquatable<P2Double>
     {

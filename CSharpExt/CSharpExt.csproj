@@ -7,8 +7,8 @@
     <ProjectGuid>{C56B9607-41CF-4F59-9EEF-F79D57309EDA}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Noggog.CSharpExt</RootNamespace>
-    <AssemblyName>Noggog.CSharpExt</AssemblyName>
+    <RootNamespace>Noggog</RootNamespace>
+    <AssemblyName>Noggog</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -48,6 +48,8 @@
     <Compile Include="Containers\Pools\ObjectPool.cs" />
     <Compile Include="Enums\AddRemove.cs" />
     <Compile Include="Enums\AddRemoveModify.cs" />
+    <Compile Include="Enums\Axis.cs" />
+    <Compile Include="Enums\AxisDirection.cs" />
     <Compile Include="Enums\GridLoc.cs" />
     <Compile Include="Enums\Rotation.cs" />
     <Compile Include="Extensions\ActionExt.cs" />
@@ -87,6 +89,9 @@
     <Compile Include="Structs\Points\P2Double.cs" />
     <Compile Include="Structs\Points\P2Int.cs" />
     <Compile Include="Structs\Points\P2IntValue.cs" />
+    <Compile Include="Structs\Points\P3Double.cs" />
+    <Compile Include="Structs\Points\P3Int.cs" />
+    <Compile Include="Structs\Points\P3IntValue.cs" />
     <Compile Include="Structs\Ranges\RangeDouble.cs" />
     <Compile Include="Structs\Ranges\RangeFloat.cs" />
     <Compile Include="Structs\Ranges\RangeInt.cs" />

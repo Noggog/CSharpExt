@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
 
-namespace System
+namespace Noggog
 {
     public struct MemberAccessor<I, T>
     {

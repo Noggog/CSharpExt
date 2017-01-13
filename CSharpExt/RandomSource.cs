@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace System
+namespace Noggog
 {
     public class RandomSource
     {

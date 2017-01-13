@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace System
+namespace Noggog
 {
     public struct Bounding2D : IEquatable<Bounding2D>
     {

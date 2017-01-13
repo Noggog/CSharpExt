@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Noggog.Extensions
+namespace Noggog.Printing
 {
     public class DepthPrinter
     {

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace System
+namespace Noggog
 {
     public struct UDouble : IComparable<UDouble>, IComparable<double>, IEquatable<UDouble>
     {

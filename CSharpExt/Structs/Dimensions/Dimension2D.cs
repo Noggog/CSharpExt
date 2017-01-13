@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace System
+namespace Noggog
 {
     public struct Dimension2D : IP2IntGet, IEquatable<Dimension2D>
     {
