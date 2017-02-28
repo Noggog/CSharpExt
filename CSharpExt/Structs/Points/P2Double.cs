@@ -70,6 +70,29 @@ namespace Noggog
             return (this - p2).Magnitude;
         }
 
+        public static bool TryParse(string str, out P2Double p2)
+        {
+            string[] split = str.Split(',');
+            if (split.Length != 2)
+            {
+                p2 = default(P2Double);
+                return false;
+            }
+            double x, y;
+            if (!double.TryParse(split[0], out x))
+            {
+                p2 = default(P2Double);
+                return false;
+            }
+            if (!double.TryParse(split[1], out y))
+            {
+                p2 = default(P2Double);
+                return false;
+            }
+            p2 = new P2Double(x, y);
+            return true;
+        }
+
         public override bool Equals(object obj)
         {
             if (!(obj is P2Double)) return false;

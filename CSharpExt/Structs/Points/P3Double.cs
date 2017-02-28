@@ -392,6 +392,34 @@ namespace Noggog
             }
         }
 
+        public static bool TryParse(string str, out P3Double p3)
+        {
+            string[] split = str.Split(',');
+            if (split.Length != 3)
+            {
+                p3 = default(P3Double);
+                return false;
+            }
+            double x, y, z;
+            if (!double.TryParse(split[0], out x))
+            {
+                p3 = default(P3Double);
+                return false;
+            }
+            if (!double.TryParse(split[1], out y))
+            {
+                p3 = default(P3Double);
+                return false;
+            }
+            if (!double.TryParse(split[2], out z))
+            {
+                p3 = default(P3Double);
+                return false;
+            }
+            p3 = new P3Double(x, y, z);
+            return true;
+        }
+
         public override bool Equals(object obj)
         {
             if (!(obj is P3Double)) return false;
