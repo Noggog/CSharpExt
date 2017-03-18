@@ -24,11 +24,6 @@ namespace System
             });
         }
 
-        public static Bounding2D GetBounds<T>(this T[,] arr)
-        {
-            return new Bounding2D(0, arr.GetLength(1) - 1, 0, arr.GetLength(0) - 1);
-        }
-
         static public bool Contains<T>(this T[] arr, T val)
         {
             foreach (T t in arr)
@@ -40,15 +35,6 @@ namespace System
                 }
             }
             return false;
-        }
-
-        static public List<string> ToRowStrings(this bool[,] array)
-        {
-            return ToRowStrings(array, null, (b) =>
-            {
-                if (b) return 'X';
-                else return ' ';
-            });
         }
 
         static public Func<T, char> GetConverter<T>()
@@ -74,34 +60,6 @@ namespace System
                 });
             }
             return converter;
-        }
-
-        static public List<string> ToRowStrings<T>(this T[,] array, Bounding2D? bounding = null, Func<T, char> converter = null)
-        {
-            if (converter == null)
-            {
-                converter = GetConverter<T>();
-            }
-            List<string> ret = new List<string>();
-            Bounding2D bounds;
-            if (bounding == null)
-            {
-                bounds = array.GetBounds();
-            }
-            else
-            {
-                bounds = bounding.Value;
-            }
-            for (int y = bounds.Top; y >= bounds.Bottom; y -= 1)
-            {
-                StringBuilder sb = new StringBuilder();
-                for (int x = bounds.Left; x <= bounds.Right; x += 1)
-                {
-                    sb.Append(converter(array[y, x]));
-                }
-                ret.Add(sb.ToString());
-            }
-            return ret;
         }
 
         public static P2Int Center<T>(this T[,] array)

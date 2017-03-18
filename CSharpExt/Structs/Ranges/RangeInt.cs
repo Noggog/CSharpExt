@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace System
+namespace Noggog
 {
     public struct RangeInt : IEquatable<RangeInt>
     {

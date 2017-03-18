@@ -57,6 +57,7 @@ namespace Noggog
 
         public readonly static P2Int Origin = new P2Int(0, 0);
         public readonly static P2Int One = new P2Int(1, 1);
+        public bool IsZero { get { return X == 0 && Y == 0; } }
 
         P2Int IP2IntGet.Point { get { return this; } }
         public int X;
@@ -172,12 +173,7 @@ namespace Noggog
         {
             return new P2Int(-X, -Y);
         }
-
-        public bool isZero()
-        {
-            return X == 0 && Y == 0;
-        }
-
+        
         public override string ToString()
         {
             return "(" + X + "," + Y + ")";

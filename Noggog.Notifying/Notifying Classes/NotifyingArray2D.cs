@@ -55,7 +55,7 @@ namespace Noggog.Notifying
             this._count = new NotifyingItemWrapper<int>(arr.GetLength(0) * arr.GetLength(1));
         }
 
-        public NotifyingArray2D(Dimension2D dim)
+        public NotifyingArray2D(P2Int dim)
             : this(new T[dim.X, dim.Y])
         {
         }

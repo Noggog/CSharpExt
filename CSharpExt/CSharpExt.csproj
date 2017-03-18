@@ -78,9 +78,6 @@
     <Compile Include="Printing\DepthPrinter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RandomSource.cs" />
-    <Compile Include="Structs\Dimensions\Bounding2D.cs" />
-    <Compile Include="Structs\Dimensions\Dimension2D.cs" />
-    <Compile Include="Structs\Dimensions\Dimension2DDouble.cs" />
     <Compile Include="Structs\LifecycleActions.cs" />
     <Compile Include="Structs\MemberAccessor.cs" />
     <Compile Include="Structs\Numbers\Percent.cs" />
