@@ -156,6 +156,14 @@ namespace Noggog
             return magn * (max - min) + min;
         }
 
+        public P2Double NextInUnitCircle()
+        {
+            double radians = 2 * Math.PI * this.NextDouble();
+            return new P2Double(
+                (float)Math.Cos(radians),
+                (float)Math.Sin(radians));
+        }
+
         public int NextNormalDist(int min, int max, double wingCutoff = 2, bool useSpare = true)
         {
             return (int)NextNormalDist(min, (double)max, wingCutoff, useSpare);
