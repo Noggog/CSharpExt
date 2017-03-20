@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Noggog.Containers.Pools;
+using Noggog.Notifying;
 
 namespace Noggog.Notifying
 {
@@ -214,6 +215,10 @@ namespace Noggog.Notifying
         {
         }
     }
+}
+
+namespace System
+{
 
     public static class NotifyingItemExt
     {

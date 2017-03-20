@@ -1,4 +1,6 @@
-﻿using Noggog.Containers.Pools;
+﻿using Noggog;
+using Noggog.Containers.Pools;
+using Noggog.Notifying;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -444,6 +446,10 @@ namespace Noggog.Notifying
         }
         #endregion
     }
+}
+
+namespace System
+{
 
     public static class INotifyingListGetterExt
     {
