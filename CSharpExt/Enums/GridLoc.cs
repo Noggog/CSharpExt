@@ -325,17 +325,17 @@ namespace Noggog
             }
         }
 
-        public static GridLoc Rotate(this GridLoc loc, Rotation rot)
+        public static GridLoc Rotate(this GridLoc loc, ClockRotation rot)
         {
             switch (rot)
             {
-                case Rotation.None:
+                case ClockRotation.None:
                     return loc;
-                case Rotation.ClockWise:
+                case ClockRotation.ClockWise:
                     return loc.Clockwise90();
-                case Rotation.CounterClockWise:
+                case ClockRotation.CounterClockWise:
                     return loc.CounterClockwise90();
-                case Rotation.OneEighty:
+                case ClockRotation.OneEighty:
                     return loc.Opposite();
                 default:
                     throw new NotImplementedException();

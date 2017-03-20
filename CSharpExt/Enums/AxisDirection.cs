@@ -78,13 +78,13 @@ namespace Noggog
             }
         }
 
-        public static AxisDirection Rotate(this AxisDirection dir, Rotation rot)
+        public static AxisDirection Rotate(this AxisDirection dir, ClockRotation rot)
         {
             switch (rot)
             {
-                case Rotation.None:
+                case ClockRotation.None:
                     return dir;
-                case Rotation.ClockWise:
+                case ClockRotation.ClockWise:
                     switch (dir)
                     {
                         case AxisDirection.None:
@@ -128,7 +128,7 @@ namespace Noggog
                         default:
                             throw new NotImplementedException();
                     }
-                case Rotation.CounterClockWise:
+                case ClockRotation.CounterClockWise:
                     switch (dir)
                     {
                         case AxisDirection.None:
@@ -172,7 +172,7 @@ namespace Noggog
                         default:
                             throw new NotImplementedException();
                     }
-                case Rotation.OneEighty:
+                case ClockRotation.OneEighty:
                     switch (dir)
                     {
                         case AxisDirection.None:

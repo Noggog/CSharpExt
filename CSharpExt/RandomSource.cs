@@ -171,6 +171,22 @@ namespace Noggog
             return NextNormalDist(range.Min, range.Max, wingCutoff, useSpare);
         }
 
+        public ClockRotation NextRotation90()
+        {
+            numQueries++;
+            switch (rand.Next(4))
+            {
+                case 0:
+                    return ClockRotation.ClockWise;
+                case 1:
+                    return ClockRotation.CounterClockWise;
+                case 2:
+                    return ClockRotation.OneEighty;
+                default:
+                    return ClockRotation.None;
+            }
+        }
+
         public override string ToString()
         {
             return "RandomSource (Original Seed: " + OriginalSeed + ", Num Queries: " + numQueries + ")";

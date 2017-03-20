@@ -186,22 +186,22 @@ namespace Noggog
             return Shift(-x, -y);
         }
 
-        public static void Rotate(P2Int p, out P2Int outP, Rotation rotation)
+        public static void Rotate(P2Int p, out P2Int outP, ClockRotation rotation)
         {
             switch (rotation)
             {
-                case Rotation.ClockWise:
+                case ClockRotation.ClockWise:
                     outP = new P2Int(p.Y, -p.X);
                     break;
-                case Rotation.CounterClockWise:
+                case ClockRotation.CounterClockWise:
                     outP = new P2Int(-p.Y, p.X);
                     break;
-                case Rotation.OneEighty:
+                case ClockRotation.OneEighty:
                     outP = new P2Int(
                         p.X * -1,
                         p.Y * -1);
                     break;
-                case Rotation.None:
+                case ClockRotation.None:
                     outP = p;
                     break;
                 default:
@@ -209,17 +209,17 @@ namespace Noggog
             }
         }
 
-        public P2Int Rotate(Rotation rotation)
+        public P2Int Rotate(ClockRotation rotation)
         {
             switch (rotation)
             {
-                case Rotation.ClockWise:
+                case ClockRotation.ClockWise:
                     return new P2Int(Y, -X);
-                case Rotation.CounterClockWise:
+                case ClockRotation.CounterClockWise:
                     return new P2Int(-Y, X);
-                case Rotation.OneEighty:
+                case ClockRotation.OneEighty:
                     return new P2Int(-Y, -X);
-                case Rotation.None:
+                case ClockRotation.None:
                     return this;
                 default:
                     throw new NotImplementedException();

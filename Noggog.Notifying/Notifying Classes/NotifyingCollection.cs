@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Noggog.Containers.Pools;
+using Noggog.Notifying;
 
 namespace Noggog.Notifying
 {
@@ -146,6 +147,10 @@ namespace Noggog.Notifying
             return cmds.Value;
         }
     }
+}
+
+namespace System
+{
 
     public static class INotifyingCollectionExt
     {

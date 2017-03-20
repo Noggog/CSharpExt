@@ -52,7 +52,7 @@
     <Compile Include="Enums\Axis.cs" />
     <Compile Include="Enums\AxisDirection.cs" />
     <Compile Include="Enums\GridLoc.cs" />
-    <Compile Include="Enums\Rotation.cs" />
+    <Compile Include="Enums\ClockRotation.cs" />
     <Compile Include="Extensions\ActionExt.cs" />
     <Compile Include="Extensions\ArrayExt.cs" />
     <Compile Include="Extensions\DictionaryExt.cs" />
