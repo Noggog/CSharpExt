@@ -55,6 +55,15 @@ namespace Noggog
                 this.Reason);
         }
 
+        public T EvaluateOrThrow()
+        {
+            if (this.Succeeded)
+            {
+                return this.Value;
+            }
+            throw new ArgumentException(this.Reason);
+        }
+
         #region Factories
         public static TryGet<T> Success(T value)
         {
