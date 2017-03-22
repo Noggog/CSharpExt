@@ -296,6 +296,17 @@ namespace System
             not.Subscribe(owner, new NotifyingItemCallback<O, T>((o2, change) => callback(change)), fireInitial);
         }
 
+        public static void Forward<T>(this INotifyingItemGetter<T> not, INotifyingItem<T> to, bool fireInitial = true)
+        {
+            not.Subscribe(to, (change) => to.Value = change.New, fireInitial: fireInitial);
+        }
+
+        public static void Forward<T, R>(this INotifyingItemGetter<T> not, INotifyingItem<R> to, bool fireInitial = true)
+            where T : R
+        {
+            not.Subscribe(to, (change) => to.Value = change.New, fireInitial: fireInitial);
+        }
+
         public static void Set<T>(this INotifyingItem<T> not, T value)
         {
             not.Set(value,
