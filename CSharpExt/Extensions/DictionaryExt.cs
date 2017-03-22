@@ -8,8 +8,7 @@ namespace System
         public static V TryCreateValue<K, V>(this Dictionary<K, V> dict, K key)
             where V : new()
         {
-            V ret;
-            if (!dict.TryGetValue(key, out ret))
+            if (!dict.TryGetValue(key, out V ret))
             {
                 ret = new V();
                 dict[key] = ret;
@@ -18,10 +17,8 @@ namespace System
         }
 
         public static V TryCreateValue<K, V>(this Dictionary<K, V> dict, K key, Func<V> getNew)
-            where V : new()
         {
-            V ret;
-            if (!dict.TryGetValue(key, out ret))
+            if (!dict.TryGetValue(key, out V ret))
             {
                 ret = getNew();
                 dict[key] = ret;
