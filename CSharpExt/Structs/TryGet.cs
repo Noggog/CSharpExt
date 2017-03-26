@@ -4,6 +4,8 @@ namespace Noggog
 {
     public struct TryGet<T> : IEquatable<TryGet<T>>
     {
+        public readonly static TryGet<T> Failure = new TryGet<T>();
+        
         public readonly T Value;
         public readonly bool Succeeded;
         public bool Failed { get { return !Succeeded; } }
@@ -52,17 +54,12 @@ namespace Noggog
         }
 
         #region Factories
-        public static TryGet<T> Success(T value)
+        public static TryGet<T> Succeed(T value)
         {
             return new TryGet<T>(true, value);
         }
-
-        public static TryGet<T> Failure()
-        {
-            return new TryGet<T>(false);
-        }
-
-        public static TryGet<T> Failure(T val)
+        
+        public static TryGet<T> Fail(T val)
         {
             return new TryGet<T>(false, val);
         }

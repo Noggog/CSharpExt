@@ -4,6 +4,8 @@ namespace Noggog
 {
     public struct GetResponse<T> : IEquatable<GetResponse<T>>
     {
+        public static readonly GetResponse<T> Failure = new GetResponse<T>();
+
         public readonly T Value;
         public readonly bool Succeeded;
         public bool Failed { get { return !Succeeded; } }
@@ -65,32 +67,27 @@ namespace Noggog
         }
 
         #region Factories
-        public static GetResponse<T> Success(T value)
+        public static GetResponse<T> Succeed(T value)
         {
             return new GetResponse<T>(true, value);
         }
 
-        public static GetResponse<T> Success(T value, string reason)
+        public static GetResponse<T> Succeed(T value, string reason)
         {
             return new GetResponse<T>(true, value, reason);
         }
-
-        public static GetResponse<T> Failure()
-        {
-            return new GetResponse<T>(false);
-        }
-
-        public static GetResponse<T> Failure(string reason)
+        
+        public static GetResponse<T> Fail(string reason)
         {
             return new GetResponse<T>(false, reason: reason);
         }
 
-        public static GetResponse<T> Failure(T val, string reason)
+        public static GetResponse<T> Fail(T val, string reason)
         {
             return new GetResponse<T>(false, val, reason);
         }
 
-        public static GetResponse<T> Failure(T val)
+        public static GetResponse<T> Fail(T val)
         {
             return new GetResponse<T>(false, val);
         }
