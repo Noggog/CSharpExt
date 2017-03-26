@@ -1,11 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.26228.9
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSharpExt", "CSharpExt\CSharpExt.csproj", "{C56B9607-41CF-4F59-9EEF-F79D57309EDA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Noggog.Notifying", "Noggog.Notifying\Noggog.Notifying.csproj", "{D14DC61E-60D0-4C9D-8EA9-627816BD910B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSharpExt.Tests", "CSharpExt.Tests\CSharpExt.Tests.csproj", "{7445A66B-6B75-4B65-BB6D-D7DA88318985}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,10 +17,10 @@ Global
 		{C56B9607-41CF-4F59-9EEF-F79D57309EDA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C56B9607-41CF-4F59-9EEF-F79D57309EDA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C56B9607-41CF-4F59-9EEF-F79D57309EDA}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D14DC61E-60D0-4C9D-8EA9-627816BD910B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D14DC61E-60D0-4C9D-8EA9-627816BD910B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D14DC61E-60D0-4C9D-8EA9-627816BD910B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D14DC61E-60D0-4C9D-8EA9-627816BD910B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7445A66B-6B75-4B65-BB6D-D7DA88318985}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7445A66B-6B75-4B65-BB6D-D7DA88318985}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7445A66B-6B75-4B65-BB6D-D7DA88318985}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7445A66B-6B75-4B65-BB6D-D7DA88318985}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
