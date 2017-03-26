@@ -149,8 +149,7 @@ namespace Noggog.Notifying
         public void RemoveAt(int index, NotifyingFireParameters? cmds = null)
         {
             cmds = ProcessCmds(cmds);
-            T item;
-            list.RemoveAt(index, out item);
+            list.RemoveAt(index, out T item);
             _count.Set(list.Count, cmds);
             if (!HasSubscribers()) return;
             FireChange(
@@ -164,8 +163,7 @@ namespace Noggog.Notifying
         public bool Remove(T item, NotifyingFireParameters? cmds = null)
         {
             cmds = ProcessCmds(cmds);
-            int index;
-            if (list.Remove(item, out index))
+            if (list.Remove(item, out int index))
             {
                 _count.Set(list.Count, cmds);
                 if (!HasSubscribers()) return true;
@@ -462,8 +460,7 @@ namespace System
 
         public static INotifyingListGetter<R> Cast_List<T, R>(this INotifyingListGetter<T> getter, Func<T, R> converter)
         {
-            INotifyingListGetter<R> rhs = getter as INotifyingListGetter<R>;
-            if (rhs != null)
+            if (getter is INotifyingListGetter<R> rhs)
             {
                 return rhs;
             }
@@ -539,8 +536,7 @@ namespace System
 
         public static INotifyingListGetter<R> Cast_As_List<T, R>(this INotifyingEnumerable<T> getter, Func<T, R> converter)
         {
-            INotifyingListGetter<R> rhs = getter as INotifyingListGetter<R>;
-            if (rhs != null)
+            if (getter is INotifyingListGetter<R> rhs)
             {
                 return rhs;
             }

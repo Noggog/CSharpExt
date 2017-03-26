@@ -400,18 +400,18 @@ namespace Noggog
                 p3 = default(P3Double);
                 return false;
             }
-            double x, y, z;
-            if (!double.TryParse(split[0], out x))
+
+            if (!double.TryParse(split[0], out double x))
             {
                 p3 = default(P3Double);
                 return false;
             }
-            if (!double.TryParse(split[1], out y))
+            if (!double.TryParse(split[1], out double y))
             {
                 p3 = default(P3Double);
                 return false;
             }
-            if (!double.TryParse(split[2], out z))
+            if (!double.TryParse(split[2], out double z))
             {
                 p3 = default(P3Double);
                 return false;

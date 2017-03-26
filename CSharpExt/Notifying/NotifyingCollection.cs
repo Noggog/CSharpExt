@@ -158,8 +158,7 @@ namespace System
         public static INotifyingEnumerable<R> Cast<T, R>(this INotifyingEnumerable<T> getter)
             where T : R
         {
-            INotifyingListGetter<R> rhs = getter as INotifyingListGetter<R>;
-            if (rhs != null)
+            if (getter is INotifyingListGetter<R> rhs)
             {
                 return rhs;
             }

@@ -166,8 +166,7 @@ namespace System
 
         public static void LoadAssemblies()
         {
-            List<string> failed;
-            LoadAssemblies(out failed);
+            LoadAssemblies(out List<string> failed);
         }
 
         public static void LoadAssemblies(out List<string> failed)

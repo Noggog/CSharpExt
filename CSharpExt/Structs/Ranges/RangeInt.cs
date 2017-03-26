@@ -35,8 +35,7 @@ namespace Noggog
 
         public static RangeInt Parse(string str)
         {
-            RangeInt rd;
-            if (!TryParse(str, out rd))
+            if (!TryParse(str, out RangeInt rd))
             {
                 return default(RangeInt);
             }

@@ -75,10 +75,9 @@ namespace Noggog
                 return false;
             }
 
-            double x, y, z;
-            if (!double.TryParse(split[0], out x)
-                || !double.TryParse(split[1], out y)
-                || !double.TryParse(split[2], out z))
+            if (!double.TryParse(split[0], out double x)
+                || !double.TryParse(split[1], out double y)
+                || !double.TryParse(split[2], out double z))
             {
                 ret = default(P3Int);
                 return false;

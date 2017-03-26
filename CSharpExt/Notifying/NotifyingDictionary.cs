@@ -68,8 +68,7 @@ namespace Noggog.Notifying
             if (HasSubscribers())
             {
                 var prevCount = dict.Count;
-                V old;
-                if (!dict.TryGetValue(key, out old))
+                if (!dict.TryGetValue(key, out V old))
                 {
                     old = default(V);
                 }
@@ -99,8 +98,7 @@ namespace Noggog.Notifying
                 {
                     foreach (var item in items)
                     {
-                        V oldVal;
-                        if (dict.TryGetValue(item.Key, out oldVal))
+                        if (dict.TryGetValue(item.Key, out V oldVal))
                         {
                             changes.Item.Add(
                                 new ChangeKeyed<K, V>(
@@ -138,8 +136,7 @@ namespace Noggog.Notifying
             cmds = ProcessCmds(cmds);
             if (HasSubscribers())
             {
-                V old;
-                if (!dict.TryGetValue(key, out old))
+                if (!dict.TryGetValue(key, out V old))
                 {
                     old = default(V);
                 }
@@ -186,8 +183,7 @@ namespace Noggog.Notifying
                         set.Item.Add(this.dict.Keys);
                         foreach (var item in items)
                         {
-                            V oldVal;
-                            if (dict.TryGetValue(item.Key, out oldVal))
+                            if (dict.TryGetValue(item.Key, out V oldVal))
                             {
                                 changes.Item.Add(
                                     new ChangeKeyed<K, V>(
@@ -211,8 +207,7 @@ namespace Noggog.Notifying
 
                         foreach (var toRem in set.Item)
                         {
-                            V oldVal;
-                            if (dict.TryGetValue(toRem, out oldVal))
+                            if (dict.TryGetValue(toRem, out V oldVal))
                             {
                                 dict.Remove(toRem);
                                 changes.Item.Add(

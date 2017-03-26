@@ -36,8 +36,7 @@ namespace Noggog
 
         public static RangeDouble Parse(string str)
         {
-            RangeDouble rd;
-            if (!TryParse(str, out rd))
+            if (!TryParse(str, out RangeDouble rd))
             {
                 return default(RangeDouble);
             }

@@ -54,8 +54,7 @@ namespace System
 
         public static T RandomTake<T>(this List<T> list, RandomSource rand)
         {
-            T item;
-            RandomTake(list, rand, out item);
+            RandomTake(list, rand, out T item);
             return item;
         }
 

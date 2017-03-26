@@ -78,13 +78,13 @@ namespace Noggog
                 p2 = default(P2Double);
                 return false;
             }
-            double x, y;
-            if (!double.TryParse(split[0], out x))
+
+            if (!double.TryParse(split[0], out double x))
             {
                 p2 = default(P2Double);
                 return false;
             }
-            if (!double.TryParse(split[1], out y))
+            if (!double.TryParse(split[1], out double y))
             {
                 p2 = default(P2Double);
                 return false;

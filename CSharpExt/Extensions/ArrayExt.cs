@@ -40,9 +40,8 @@ namespace System
         static public Func<T, char> GetConverter<T>()
         {
             Func<T, char> converter;
-            Func<object, char> conv;
             Type type = typeof(T);
-            if (!Converters.TryGetValue(type, out conv))
+            if (!Converters.TryGetValue(type, out Func<object, char> conv))
             {
                 converter = new Func<T, char>((t) =>
                 {

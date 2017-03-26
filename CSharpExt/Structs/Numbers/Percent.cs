@@ -122,8 +122,7 @@ namespace Noggog
 
         public static bool TryParse(string str, out Percent p)
         {
-            double d;
-            if (double.TryParse(str, out d))
+            if (double.TryParse(str, out double d))
             {
                 if (InRange(d))
                 {

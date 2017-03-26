@@ -78,8 +78,7 @@ namespace Noggog
 
         public static bool TryParse(string str, out UDouble doub)
         {
-            double d;
-            if (!double.TryParse(str, out d))
+            if (!double.TryParse(str, out double d))
             {
                 doub = new UDouble();
                 return false;

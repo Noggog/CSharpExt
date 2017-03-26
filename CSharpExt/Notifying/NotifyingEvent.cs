@@ -26,8 +26,7 @@ namespace Noggog.Notifying
         {
             _rwl.EnterWriteLock();
 
-            FireList<Action> list;
-            if (!_event.TryGetValue(o, out list))
+            if (!_event.TryGetValue(o, out FireList<Action> list))
             {
                 _event.Add(o, new FireList<Action>());
             }
@@ -65,8 +64,7 @@ namespace Noggog.Notifying
         {
             _rwl.EnterWriteLock();
 
-            FireList<Action<T>> list;
-            if (!_event.TryGetValue(o, out list))
+            if (!_event.TryGetValue(o, out FireList<Action<T>> list))
             {
                 _event.Add(o, new FireList<Action<T>>());
             }
@@ -104,8 +102,7 @@ namespace Noggog.Notifying
         {
             _rwl.EnterWriteLock();
 
-            FireList<Action<T, K>> list;
-            if (!_event.TryGetValue(o, out list))
+            if (!_event.TryGetValue(o, out FireList<Action<T, K>> list))
             {
                 _event.Add(o, new FireList<Action<T, K>>());
             }

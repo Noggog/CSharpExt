@@ -7,7 +7,8 @@ namespace Noggog.Notifying
         public static readonly HasBeenSetGetter NotBeenSet_Instance = new HasBeenSetGetter(false);
         public static readonly HasBeenSetGetter HasBeenSet_Instance = new HasBeenSetGetter(true);
 
-        public bool HasBeenSet { get; private set; }
+        public readonly bool HasBeenSet;
+        bool IHasBeenSetGetter.HasBeenSet => this.HasBeenSet;
 
         public HasBeenSetGetter(bool on)
         {

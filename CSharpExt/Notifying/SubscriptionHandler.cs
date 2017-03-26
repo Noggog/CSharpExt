@@ -44,9 +44,8 @@ namespace Noggog.Notifying
         public bool Remove(object owner)
         {
             if (subscribers == null) return false;
-            List<T> list;
             var weakRef = new WeakReferenceEquatable(owner);
-            if (subscribers.TryGetValue(weakRef, out list))
+            if (subscribers.TryGetValue(weakRef, out List<T> list))
             {
                 if (!subscribers.Remove(weakRef))
                 {

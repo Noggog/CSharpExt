@@ -51,8 +51,7 @@ namespace System
 
         public static bool TryGetAttributeString(this XElement node, string str, out string val)
         {
-            XAttribute attr;
-            if (TryGetAttribute(node, str, out attr))
+            if (TryGetAttribute(node, str, out XAttribute attr))
             {
                 val = attr.Value;
                 return true;
@@ -63,8 +62,7 @@ namespace System
 
         public static bool TryGetAttribute<P>(this XElement node, string str, out P val, Func<string, P> converter)
         {
-            string strVal;
-            bool ret = TryGetAttributeString(node, str, out strVal);
+            bool ret = TryGetAttributeString(node, str, out string strVal);
             val = converter(strVal);
             return ret;
         }
@@ -97,15 +95,13 @@ namespace System
 
         public static P GetAttributeCustom<P>(this XElement node, string str, Func<string, P> converter)
         {
-            P val;
-            TryGetAttribute(node, str, out val, converter);
+            TryGetAttribute(node, str, out P val, converter);
             return val;
         }
 
         public static P GetAttribute<P>(this XElement node, string str, P defaultVal = default(P), bool throwException = false)
         {
-            P val;
-            if (!TryGetAttribute(node, str, out val, throwException))
+            if (!TryGetAttribute(node, str, out P val, throwException))
             {
                 val = defaultVal;
             }
@@ -114,8 +110,7 @@ namespace System
 
         public static string GetAttribute(this XElement node, string str, string defaultVal = null, bool throwException = false)
         {
-            string val;
-            if (!TryGetAttribute(node, str, out val, throwException))
+            if (!TryGetAttribute(node, str, out string val, throwException))
             {
                 val = defaultVal;
             }

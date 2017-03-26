@@ -11,7 +11,7 @@ namespace Noggog
         public StringCaseAgnostic(string str)
         {
             Value = str;
-            upper = str == null ? null : str.ToUpper();
+            upper = str?.ToUpper();
         }
 
         public StringCaseAgnostic(StringCaseAgnostic rhs)

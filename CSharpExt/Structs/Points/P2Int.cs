@@ -253,9 +253,8 @@ namespace Noggog
                 return false;
             }
 
-            int x, y;
-            if (!int.TryParse(split[0], out x)
-                || !int.TryParse(split[1], out y))
+            if (!int.TryParse(split[0], out int x)
+                || !int.TryParse(split[1], out int y))
             {
                 ret = default(P2Int);
                 return false;

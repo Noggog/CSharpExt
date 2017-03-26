@@ -40,10 +40,7 @@ namespace Noggog
         {
             if (propertyExpression.Body.NodeType != ExpressionType.Parameter)
             {
-                bool pass;
-                Func<object, T> tmpGetter;
-                Action<object, T> tmpSetter;
-                Process<T>(propertyExpression.Body, out tmpGetter, out tmpSetter, out pass);
+                Process<T>(propertyExpression.Body, out Func<object, T> tmpGetter, out Action<object, T> tmpSetter, out bool pass);
                 if (!pass)
                 {
                     throw new NotImplementedException("Node type of " + propertyExpression.Body.NodeType + " is not yet implemented for MemberAccessor");
@@ -107,10 +104,7 @@ namespace Noggog
 
             if (parentExpr != null)
             {
-                Func<object, object> parentGetter;
-                Action<object, object> parentSetter;
-                bool passParent;
-                Process(parentExpr, out parentGetter, out parentSetter, out passParent);
+                Process(parentExpr, out Func<object, object> parentGetter, out Action<object, object> parentSetter, out bool passParent);
                 var tmpSetter = setter;
                 var tmpGetter = getter;
                 if (passParent)

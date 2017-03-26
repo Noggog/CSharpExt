@@ -11,13 +11,11 @@ namespace System
             s = s.Trim();
             if (floatingPt)
             {
-                double d;
-                return double.TryParse(s, out d);
+                return double.TryParse(s, out double d);
             }
             else
             {
-                int i;
-                return Int32.TryParse(s, out i);
+                return Int32.TryParse(s, out int i);
             }
         }
 
@@ -66,17 +64,6 @@ namespace System
             yield return line.Replace(replace, delim);
         }
 
-        public static string ToUnixEndings(this string str)
-        {
-            return str.Replace("\r\n", "\n");
-        }
-
-        public static string ToUpperOrEmpty(this string str)
-        {
-            if (str == null) return string.Empty;
-            return str.ToUpper();
-        }
-
         public static bool TrySubstringFromStart(this string src, string item, out string result)
         {
             int index = src.IndexOf(item);
@@ -97,8 +84,7 @@ namespace System
 
         public static string SubstringFromStart(this string src, string item)
         {
-            string result;
-            TrySubstringFromStart(src, item, out result);
+            TrySubstringFromStart(src, item, out string result);
             return result;
         }
 
@@ -121,8 +107,7 @@ namespace System
 
         public static string SubstringFromEnd(this string src, string item)
         {
-            string result;
-            TrySubstringFromEnd(src, item, out result);
+            TrySubstringFromEnd(src, item, out string result);
             return result;
         }
 
@@ -144,8 +129,7 @@ namespace System
 
         public static string TrimStart(this string src, string item)
         {
-            string result;
-            TryTrimStart(src, item, out result);
+            TryTrimStart(src, item, out string result);
             return result;
         }
 
@@ -167,28 +151,13 @@ namespace System
 
         public static string TrimEnd(this string src, string item)
         {
-            string result;
-            TryTrimEnd(src, item, out result);
+            TryTrimEnd(src, item, out string result);
             return result;
         }
 
         public static byte[] ToBytes(this string str)
         {
             return Encoding.ASCII.GetBytes(str);
-        }
-
-        public static bool ToEnum<T>(this string str, out T e) where T : struct, IComparable, IConvertible
-        {
-            try
-            {
-                e = (T)Enum.Parse(typeof(T), str, true);
-                return true;
-            }
-            catch (Exception)
-            {
-                e = default(T);
-                return false;
-            }
         }
     }
 }

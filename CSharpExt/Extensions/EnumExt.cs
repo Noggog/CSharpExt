@@ -319,8 +319,7 @@ namespace System
 
         public static string ToStringFast_Enum_Only(Type enumType, int index)
         {
-            Dictionary<int, string> arr;
-            if (!NameDictionary.TryGetValue(enumType, out arr))
+            if (!NameDictionary.TryGetValue(enumType, out Dictionary<int, string> arr))
             {
                 if (enumType.IsEnum)
                 {
@@ -357,8 +356,7 @@ namespace System
                 throw new ArgumentException("TEnum must be an Enum");
             }
 
-            TEnum parseResult;
-            if (EnumExt.TryParse<TEnum>(value, out parseResult))
+            if (EnumExt.TryParse<TEnum>(value, out TEnum parseResult))
             {
                 return parseResult;
             }

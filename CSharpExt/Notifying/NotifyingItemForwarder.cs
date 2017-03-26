@@ -41,9 +41,8 @@ namespace Noggog.Notifying
 
         public void Unsubscribe(object owner)
         {
-            object transl;
             var weakRef = new WeakReferenceEquatable(owner);
-            if (!subscriberConverter.IsValueCreated || !subscriberConverter.Value.TryGetValue(weakRef, out transl)) return;
+            if (!subscriberConverter.IsValueCreated || !subscriberConverter.Value.TryGetValue(weakRef, out object transl)) return;
             toForward.Unsubscribe(transl);
             subscriberConverter.Value.Remove(weakRef);
         }
