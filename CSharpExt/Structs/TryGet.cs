@@ -7,16 +7,13 @@ namespace Noggog
         public readonly T Value;
         public readonly bool Succeeded;
         public bool Failed { get { return !Succeeded; } }
-        public readonly string Reason;
 
         private TryGet(
             bool succeeded,
-            T val = default(T),
-            string reason = null)
+            T val = default(T))
         {
             this.Value = val;
             this.Succeeded = succeeded;
-            this.Reason = reason;
         }
 
         public bool Equals(TryGet<T> other)
@@ -39,29 +36,19 @@ namespace Noggog
 
         public override string ToString()
         {
-            return $"TryGetResult({(Succeeded ? "Success" : "Fail")}, {Value}, {Reason})";
-        }
-
-        public TryGet<R> BubbleFailure<R>()
-        {
-            return new TryGet<R>(false, reason: this.Reason);
+            return $"TryGetResult({Succeeded}, {Value})";
         }
 
         public TryGet<R> Bubble<R>(Func<T, R> conv)
         {
-            return new TryGet<R>(
+            return TryGet<R>.Create(
                 this.Succeeded,
-                conv(this.Value),
-                this.Reason);
+                conv(this.Value));
         }
 
-        public T EvaluateOrThrow()
+        public TryGet<R> BubbleFailure<R>()
         {
-            if (this.Succeeded)
-            {
-                return this.Value;
-            }
-            throw new ArgumentException(this.Reason);
+            return new TryGet<R>(false);
         }
 
         #region Factories
@@ -70,24 +57,9 @@ namespace Noggog
             return new TryGet<T>(true, value);
         }
 
-        public static TryGet<T> Success(T value, string reason)
-        {
-            return new TryGet<T>(true, value, reason);
-        }
-
         public static TryGet<T> Failure()
         {
             return new TryGet<T>(false);
-        }
-
-        public static TryGet<T> Failure(string reason)
-        {
-            return new TryGet<T>(false, reason: reason);
-        }
-
-        public static TryGet<T> Failure(T val, string reason)
-        {
-            return new TryGet<T>(false, val, reason);
         }
 
         public static TryGet<T> Failure(T val)
@@ -95,9 +67,9 @@ namespace Noggog
             return new TryGet<T>(false, val);
         }
 
-        public static TryGet<T> Create(bool successful, T val = default(T), string reason = null)
+        public static TryGet<T> Create(bool successful, T val = default(T))
         {
-            return new TryGet<T>(successful, val, reason);
+            return new TryGet<T>(successful, val);
         }
         #endregion
     }

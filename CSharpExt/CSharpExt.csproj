@@ -122,6 +122,7 @@
     <Compile Include="Structs\Ranges\RangeFloat.cs" />
     <Compile Include="Structs\Ranges\RangeInt.cs" />
     <Compile Include="Structs\StringCaseAgnostic.cs" />
+    <Compile Include="Structs\GetResponse.cs" />
     <Compile Include="Structs\TryGet.cs" />
     <Compile Include="XML\DocumentWrapper.cs" />
     <Compile Include="XML\ElementWrapper.cs" />
