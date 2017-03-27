@@ -9,16 +9,30 @@ namespace Noggog
         public readonly T Value;
         public readonly bool Succeeded;
         public bool Failed { get { return !Succeeded; } }
-        public readonly string Reason;
+        public readonly string _reason;
+        public string Reason
+        {
+            get
+            {
+                if (this.Exception != null)
+                {
+                    return this.Exception.ToString();
+                }
+                return _reason;
+            }
+        }
+        public readonly Exception Exception;
 
         private GetResponse(
             bool succeeded,
             T val = default(T),
-            string reason = null)
+            string reason = null,
+            Exception ex = null)
         {
             this.Value = val;
             this.Succeeded = succeeded;
-            this.Reason = reason;
+            this._reason = reason;
+            this.Exception = ex;
         }
 
         public bool Equals(GetResponse<T> other)
@@ -46,15 +60,19 @@ namespace Noggog
 
         public GetResponse<R> BubbleFailure<R>()
         {
-            return new GetResponse<R>(false, reason: this.Reason);
+            return new GetResponse<R>(
+                succeeded: false, 
+                reason: this._reason, 
+                ex: this.Exception);
         }
 
         public GetResponse<R> Bubble<R>(Func<T, R> conv)
         {
             return new GetResponse<R>(
-                this.Succeeded,
-                conv(this.Value),
-                this.Reason);
+                succeeded: this.Succeeded,
+                val: conv(this.Value),
+                reason: this._reason,
+                ex: this.Exception);
         }
 
         public T EvaluateOrThrow()
@@ -76,7 +94,7 @@ namespace Noggog
         {
             return new GetResponse<T>(true, value, reason);
         }
-        
+
         public static GetResponse<T> Fail(string reason)
         {
             return new GetResponse<T>(false, reason: reason);
@@ -85,6 +103,16 @@ namespace Noggog
         public static GetResponse<T> Fail(T val, string reason)
         {
             return new GetResponse<T>(false, val, reason);
+        }
+
+        public static GetResponse<T> Fail(Exception ex)
+        {
+            return new GetResponse<T>(false, ex: ex);
+        }
+
+        public static GetResponse<T> Fail(T val, Exception ex)
+        {
+            return new GetResponse<T>(false, val, ex: ex);
         }
 
         public static GetResponse<T> Fail(T val)
