@@ -60,7 +60,7 @@ namespace Noggog
             get { return Length; }
         }
 
-        public double sqrMagnitude
+        public double SqrMagnitude
         {
             get { return (X * X + Y * Y); }
         }

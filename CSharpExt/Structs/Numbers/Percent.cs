@@ -112,9 +112,8 @@ namespace Noggog
 
         public int CompareTo(object obj)
         {
-            if (obj is Percent)
+            if (obj is Percent rhs)
             {
-                Percent rhs = (Percent)obj;
                 return this.Value.CompareTo(rhs.Value);
             }
             return 0;

@@ -57,9 +57,8 @@ namespace Noggog
 
         public override bool Equals(object obj)
         {
-            if (obj is UInt)
+            if (obj is UInt uRhs)
             {
-                var uRhs = (UInt)obj;
                 return this.Value == uRhs.Value;
             }
             if (obj is int)

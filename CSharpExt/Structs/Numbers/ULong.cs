@@ -49,9 +49,8 @@ namespace Noggog
 
         public override bool Equals(object obj)
         {
-            if (obj is ULong)
+            if (obj is ULong uRhs)
             {
-                var uRhs = (ULong)obj;
                 return this.Value == uRhs.Value;
             }
             if (obj is long)

@@ -36,9 +36,8 @@ namespace Noggog
 
         public override bool Equals(object obj)
         {
-            if (obj is UDouble)
+            if (obj is UDouble uRhs)
             {
-                UDouble uRhs = (UDouble)obj;
                 return this.Value == uRhs.Value;
             }
             else if (obj is double)
