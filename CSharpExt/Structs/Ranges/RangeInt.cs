@@ -28,6 +28,11 @@ namespace Noggog
             }
         }
 
+        public RangeInt(int? min, int? max)
+            : this(min ?? int.MinValue, max ?? int.MaxValue)
+        {
+        }
+
         public override string ToString()
         {
             return Min + "-" + Max;

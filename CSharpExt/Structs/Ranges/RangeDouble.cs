@@ -5,20 +5,11 @@ namespace Noggog
     public struct RangeDouble : IEquatable<RangeDouble>
     {
         public double Min;
-        public float FMin
-        {
-            get { return (float)Min; }
-        }
+        public float FMin => (float)Min;
 
         public double Max;
-        public float FMax
-        {
-            get { return (float)Max; }
-        }
-        public double Average
-        {
-            get { return ((Max - Min) / 2f) + Min; }
-        }
+        public float FMax => (float)Max;
+        public double Average => ((Max - Min) / 2f) + Min;
 
         public RangeDouble(double val1, double val2)
         {
@@ -32,6 +23,11 @@ namespace Noggog
                 Min = val1;
                 Max = val2;
             }
+        }
+
+        public RangeDouble(double? min, double? max)
+            : this(min ?? double.MinValue, max ?? double.MaxValue)
+        {
         }
 
         public static RangeDouble Parse(string str)
