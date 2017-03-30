@@ -9,7 +9,7 @@ namespace Noggog
         public readonly T Value;
         public readonly bool Succeeded;
         public bool Failed { get { return !Succeeded; } }
-        public readonly string _reason;
+        private readonly string _reason;
         public string Reason
         {
             get
