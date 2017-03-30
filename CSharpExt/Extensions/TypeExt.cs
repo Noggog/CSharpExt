@@ -25,8 +25,8 @@ namespace System
             StringBuilder sb = new StringBuilder();
             int index = name.IndexOf("`");
             name = name.Substring(0, index);
-            
-                var genArgs = t.GetGenericArguments();
+
+            var genArgs = t.GetGenericArguments();
 
             if (name.EqualsIgnoreCase("Nullable"))
             {
@@ -106,7 +106,16 @@ namespace System
             }
             foreach (Assembly assemb in AppDomain.CurrentDomain.GetAssemblies())
             {
-                foreach (Type p in assemb.GetTypes())
+                IEnumerable<Type> types;
+                try
+                {
+                    types = assemb.GetTypes();
+                }
+                catch (Exception ex)
+                {
+                    continue;
+                }
+                foreach (Type p in types)
                 {
                     if (p.Equals(targetType)) continue;
 
