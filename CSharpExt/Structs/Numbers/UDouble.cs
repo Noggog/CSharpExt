@@ -4,15 +4,24 @@ namespace Noggog
 {
     public struct UDouble : IComparable<UDouble>, IComparable<double>, IEquatable<UDouble>
     {
-        public double Value;
+        public readonly double Value;
 
         public UDouble(double val)
         {
             if (val < 0)
             {
-                val = 0;
+                throw new ArgumentException("Value was less than zero.");
             }
             Value = val;
+        }
+
+        public static UDouble FactorySafe(double d)
+        {
+            if (d < 0)
+            {
+                d = 0;
+            }
+            return new UDouble(d);
         }
 
         public static implicit operator UDouble(double d)
@@ -77,13 +86,18 @@ namespace Noggog
 
         public static bool TryParse(string str, out UDouble doub)
         {
-            if (!double.TryParse(str, out double d))
+            if (double.TryParse(str, out double d))
             {
-                doub = new UDouble();
-                return false;
+                doub = new UDouble(d);
+                return true;
             }
-            doub = new UDouble(d);
-            return true;
+            doub = new UDouble();
+            return false;
+        }
+
+        public bool EqualsWithin(UDouble rhs, double within = 0.000000001d)
+        {
+            return rhs.Value.EqualsWithin(rhs.Value, within);
         }
     }
 }
