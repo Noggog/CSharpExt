@@ -4,20 +4,19 @@ namespace Noggog
 {
     public struct StringCaseAgnostic : IEquatable<string>, IEquatable<StringCaseAgnostic>
     {
-        private string upper;
-        public string Upper { get { return upper; } }
-        public string Value;
+        public readonly string Upper;
+        public readonly string Value;
 
         public StringCaseAgnostic(string str)
         {
-            Value = str;
-            upper = str?.ToUpper();
+            this.Value = str;
+            this.Upper = str?.ToUpper();
         }
 
         public StringCaseAgnostic(StringCaseAgnostic rhs)
         {
-            Value = rhs.Value;
-            upper = rhs.upper;
+            this.Value = rhs.Value;
+            this.Upper = rhs.Upper;
         }
 
         public override string ToString()
@@ -27,27 +26,23 @@ namespace Noggog
 
         public override bool Equals(object obj)
         {
-            if (obj == null) return false;
-            if (obj is StringCaseAgnostic)
-            {
-                return this.Equals((StringCaseAgnostic)obj);
-            }
-            return Equals(obj.ToString());
+            if (!(obj is StringCaseAgnostic rhs)) return false;
+            return Equals(rhs);
         }
 
         public bool Equals(string other)
         {
-            return this.upper.Equals(other.ToUpper());
+            return object.Equals(this.Upper, other.ToUpper());
         }
 
         public bool Equals(StringCaseAgnostic other)
         {
-            return this.upper.Equals(other.upper);
+            return object.Equals(this.Upper, other.Upper);
         }
 
         public override int GetHashCode()
         {
-            return upper.GetHashCode();
+            return this.Upper.GetHashCode();
         }
 
         public static implicit operator string(StringCaseAgnostic ag)

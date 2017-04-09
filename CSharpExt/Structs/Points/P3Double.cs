@@ -18,50 +18,50 @@ namespace Noggog
         public readonly double Y;
         public readonly double Z;
 
-        public P3Double XPoint { get { return new P3Double(X, 0, 0); } }
-        public P3Double YPoint { get { return new P3Double(0, Y, 0); } }
-        public P3Double ZPoint { get { return new P3Double(0, 0, Z); } }
+        public P3Double XPoint => new P3Double(X, 0, 0);
+        public P3Double YPoint => new P3Double(0, Y, 0);
+        public P3Double ZPoint => new P3Double(0, 0, Z);
 
-        public P2Double XY { get { return new P2Double(X, Y); } }
-        public P2Double XZ { get { return new P2Double(X, Z); } }
-        public P2Double YZ { get { return new P2Double(Y, Z); } }
-        public P2Double ZY { get { return new P2Double(Z, Y); } }
-        public P2Double ZX { get { return new P2Double(Z, X); } }
-        public P2Double YX { get { return new P2Double(Y, X); } }
+        public P2Double XY => new P2Double(X, Y);
+        public P2Double XZ => new P2Double(X, Z);
+        public P2Double YZ => new P2Double(Y, Z);
+        public P2Double ZY => new P2Double(Z, Y);
+        public P2Double ZX => new P2Double(Z, X);
+        public P2Double YX => new P2Double(Y, X);
 
-        public P2Double XX { get { return new P2Double(X, X); } }
-        public P2Double YY { get { return new P2Double(Y, Y); } }
-        public P2Double ZZ { get { return new P2Double(Z, Z); } }
+        public P2Double XX => new P2Double(X, X);
+        public P2Double YY => new P2Double(Y, Y);
+        public P2Double ZZ => new P2Double(Z, Z);
 
-        public P3Double XXX { get { return new P3Double(X, X, X); } }
-        public P3Double XXY { get { return new P3Double(X, X, Y); } }
-        public P3Double XXZ { get { return new P3Double(X, X, Z); } }
-        public P3Double XYX { get { return new P3Double(X, Y, X); } }
-        public P3Double XYY { get { return new P3Double(X, Y, Y); } }
-        public P3Double XYZ { get { return new P3Double(X, Y, Z); } }
-        public P3Double XZX { get { return new P3Double(X, Z, X); } }
-        public P3Double XZY { get { return new P3Double(X, Z, Y); } }
-        public P3Double XZZ { get { return new P3Double(X, Z, Z); } }
+        public P3Double XXX => new P3Double(X, X, X);
+        public P3Double XXY => new P3Double(X, X, Y);
+        public P3Double XXZ => new P3Double(X, X, Z);
+        public P3Double XYX => new P3Double(X, Y, X);
+        public P3Double XYY => new P3Double(X, Y, Y);
+        public P3Double XYZ => new P3Double(X, Y, Z);
+        public P3Double XZX => new P3Double(X, Z, X);
+        public P3Double XZY => new P3Double(X, Z, Y);
+        public P3Double XZZ => new P3Double(X, Z, Z);
 
-        public P3Double YXX { get { return new P3Double(Y, X, X); } }
-        public P3Double YXY { get { return new P3Double(Y, X, Y); } }
-        public P3Double YXZ { get { return new P3Double(Y, X, Z); } }
-        public P3Double YYX { get { return new P3Double(Y, Y, X); } }
-        public P3Double YYY { get { return new P3Double(Y, Y, Y); } }
-        public P3Double YYZ { get { return new P3Double(Y, Y, Z); } }
-        public P3Double YZX { get { return new P3Double(Y, Z, X); } }
-        public P3Double YZY { get { return new P3Double(Y, Z, Y); } }
-        public P3Double YZZ { get { return new P3Double(Y, Z, Z); } }
+        public P3Double YXX => new P3Double(Y, X, X);
+        public P3Double YXY => new P3Double(Y, X, Y);
+        public P3Double YXZ => new P3Double(Y, X, Z);
+        public P3Double YYX => new P3Double(Y, Y, X);
+        public P3Double YYY => new P3Double(Y, Y, Y);
+        public P3Double YYZ => new P3Double(Y, Y, Z);
+        public P3Double YZX => new P3Double(Y, Z, X);
+        public P3Double YZY => new P3Double(Y, Z, Y);
+        public P3Double YZZ => new P3Double(Y, Z, Z);
 
-        public P3Double ZXX { get { return new P3Double(Z, X, X); } }
-        public P3Double ZXY { get { return new P3Double(Z, X, Y); } }
-        public P3Double ZXZ { get { return new P3Double(Z, X, Z); } }
-        public P3Double ZYX { get { return new P3Double(Z, Y, X); } }
-        public P3Double ZYY { get { return new P3Double(Z, Y, Y); } }
-        public P3Double ZYZ { get { return new P3Double(Z, Y, Z); } }
-        public P3Double ZZX { get { return new P3Double(Z, Z, X); } }
-        public P3Double ZZY { get { return new P3Double(Z, Z, Y); } }
-        public P3Double ZZZ { get { return new P3Double(Z, Z, Z); } }
+        public P3Double ZXX => new P3Double(Z, X, X);
+        public P3Double ZXY => new P3Double(Z, X, Y);
+        public P3Double ZXZ => new P3Double(Z, X, Z);
+        public P3Double ZYX => new P3Double(Z, Y, X);
+        public P3Double ZYY => new P3Double(Z, Y, Y);
+        public P3Double ZYZ => new P3Double(Z, Y, Z);
+        public P3Double ZZX => new P3Double(Z, Z, X);
+        public P3Double ZZY => new P3Double(Z, Z, Y);
+        public P3Double ZZZ => new P3Double(Z, Z, Z);
 
 
         public P3Double Normalized
@@ -73,33 +73,24 @@ namespace Noggog
             }
         }
 
-        public double Length
-        {
-            get { return Math.Sqrt(X * X + Y * Y + Z * Z); }
-        }
+        public double Length => Math.Sqrt(X * X + Y * Y + Z * Z);
 
-        public double Magnitude
-        {
-            get { return Length; }
-        }
+        public double Magnitude => Length;
 
-        public double SqrMagnitude
-        {
-            get { return (X * X + Y * Y + Z * Z); }
-        }
+        public double SqrMagnitude => (X * X + Y * Y + Z * Z);
 
         public P3Double(double x, double y, double z)
         {
-            X = x;
-            Y = y;
-            Z = z;
+            this.X = x;
+            this.Y = y;
+            this.Z = z;
         }
 
         public P3Double(P3Double p2)
         {
-            X = p2.X;
-            Y = p2.Y;
-            Z = p2.Z;
+            this.X = p2.X;
+            this.Y = p2.Y;
+            this.Z = p2.Z;
         }
         
         public P3Double Shift(double x, double y, double z)
@@ -167,16 +158,10 @@ namespace Noggog
             return X.EqualsWithin(value.X, within) && Y.EqualsWithin(value.Y, within) && Z.EqualsWithin(value.Z, within);
         }
 
-        public P3Double Absolute
-        {
-            get
-            {
-                return new P3Double(
-                    Math.Abs(X),
-                    Math.Abs(Y),
-                    Math.Abs(Z));
-            }
-        }
+        public P3Double Absolute => new P3Double(
+            Math.Abs(X),
+            Math.Abs(Y),
+            Math.Abs(Z));
 
         public static P3Double ProjectOnPlane(P3Double v, P3Double planeNormal)
         {
@@ -422,15 +407,15 @@ namespace Noggog
 
         public override bool Equals(object obj)
         {
-            if (!(obj is P3Double)) return false;
-            return Equals((P3Double)obj);
+            if (!(obj is P3Double rhs)) return false;
+            return Equals(rhs);
         }
 
         public bool Equals(P3Double rhs)
         {
-            return X == rhs.X
-                && Y == rhs.Y
-                && Z == rhs.Z;
+            return this.X == rhs.X
+                && this.Y == rhs.Y
+                && this.Z == rhs.Z;
         }
 
         public override int GetHashCode()
@@ -440,7 +425,7 @@ namespace Noggog
 
         public override string ToString()
         {
-            return $"Point3DDouble ({X}, {Y}, {Z})";
+            return $"({X}, {Y}, {Z})";
         }
 
         public static P3Double operator +(P3Double p1, P3Double p2)

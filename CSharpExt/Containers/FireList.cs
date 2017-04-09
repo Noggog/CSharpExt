@@ -9,13 +9,7 @@ namespace Noggog.Notifying
         List<T> _list = new List<T>();
         List<T> _fireList;
 
-        public int Count
-        {
-            get
-            {
-                return GetFireList().Count;
-            }
-        }
+        public int Count => GetFireList().Count;
 
         public void Add(T t)
         {

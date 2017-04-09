@@ -19,63 +19,61 @@ namespace Noggog
 
     public struct P3IntValue<T> : IP3IntGet, IEquatable<P3IntValue<T>>
     {
-        public T Value;
-        public P3Int Point;
-        public int X { get { return Point.X; } }
-        public int Y { get { return Point.Y; } }
-        public int Z { get { return Point.Z; } }
-        P3Int IP3IntGet.Point { get { return this.Point; } }
+        public readonly int X;
+        public readonly int Y;
+        public readonly int Z;
+        public readonly T Value;
+        int IP3IntGet.X => this.X;
+        int IP3IntGet.Y => this.Y;
+        int IP3IntGet.Z => this.Z;
+        P3Int IP3IntGet.Point => new P3Int(this.X, this.Y, this.Z);
 
         public P3IntValue(int x, int y, int z, T val)
         {
+            this.X = x;
+            this.Y = y;
+            this.Z = z;
             this.Value = val;
-            Point = new P3Int(x, y, z);
-        }
-
-        public P3IntValue(float x, float y, float z, T val)
-        {
-            this.Value = val;
-            Point = new P3Int(x, y, z);
-        }
-
-        public P3IntValue(P3Double vect, T val)
-        {
-            this.Value = val;
-            Point = new P3Int(vect);
         }
 
         public P3IntValue(P3Int rhs, T val)
         {
+            this.X = rhs.X;
+            this.Y = rhs.Y;
+            this.Z = rhs.Z;
             this.Value = val;
-            Point = rhs;
         }
 
         public P3IntValue(P3IntValue<T> rhs)
         {
+            this.X = rhs.X;
+            this.Y = rhs.Y;
+            this.Z = rhs.Z;
             this.Value = rhs.Value;
-            this.Point = rhs.Point;
         }
 
         public override string ToString()
         {
-            return "PointValue (" + Point.X + "," + Point.Y + ", " + Value + ")";
+            return $"({this.X},{this.Y},{this.Z},{this.Value})";
         }
 
         public override bool Equals(object obj)
         {
-            if (!(obj is P3IntValue<T>)) return false;
-            return Equals((P3IntValue<T>)obj);
+            if (!(obj is P3IntValue<T> rhs)) return false;
+            return Equals(rhs);
         }
 
         public bool Equals(P3IntValue<T> rhs)
         {
-            return this.Point == rhs.Point
+            return this.X == rhs.X
+                && this.Y == rhs.Y
+                && this.Z == rhs.Z
                 && object.Equals(Value, rhs.Value);
         }
 
         public override int GetHashCode()
         {
-            return HashHelper.GetHashCode(Point).CombineHashCode(Value);
+            return HashHelper.GetHashCode(X, Y, Z).CombineHashCode(Value);
         }
 
         public static bool operator ==(P3IntValue<T> left, P3IntValue<T> right)
@@ -90,7 +88,7 @@ namespace Noggog
 
         public static implicit operator P3Int(P3IntValue<T> p)
         {
-            return p.Point;
+            return new P3Int(p.X, p.Y, p.Z);
         }
     }
 

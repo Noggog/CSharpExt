@@ -15,49 +15,34 @@ namespace Noggog
         public static readonly P3Int Origin = new P3Int(0, 0, 0);
         public static readonly P3Int One = new P3Int(1, 1, 1);
 
-        public int X;
-        public int Y;
-        public int Z;
+        public readonly int X;
+        public readonly int Y;
+        public readonly int Z;
 
-        int IP3IntGet.X
-        {
-            get { return X; }
-        }
-
-        int IP3IntGet.Y
-        {
-            get { return Y; }
-        }
-
-        int IP3IntGet.Z
-        {
-            get { return Z; }
-        }
-
-        public P3Int Point
-        {
-            get { return this; }
-        }
+        int IP3IntGet.X => this.X;
+        int IP3IntGet.Y => this.Y;
+        int IP3IntGet.Z => this.Z;
+        public P3Int Point => this;
 
         public P3Int(int x, int y, int z)
         {
-            X = x;
-            Y = y;
-            Z = z;
+            this.X = x;
+            this.Y = y;
+            this.Z = z;
         }
 
         public P3Int(P3Double vec)
         {
-            X = (int)Math.Round(vec.X);
-            Y = (int)Math.Round(vec.Y);
-            Z = (int)Math.Round(vec.Z);
+            this.X = (int)Math.Round(vec.X);
+            this.Y = (int)Math.Round(vec.Y);
+            this.Z = (int)Math.Round(vec.Z);
         }
 
         public P3Int(double x, double y, double z)
         {
-            X = (int)Math.Round(x);
-            Y = (int)Math.Round(y);
-            Z = (int)Math.Round(z);
+            this.X = (int)Math.Round(x);
+            this.Y = (int)Math.Round(y);
+            this.Z = (int)Math.Round(z);
         }
 
         public static bool TryParse(string str, out P3Int ret)
@@ -99,8 +84,8 @@ namespace Noggog
 
         public override bool Equals(object obj)
         {
-            if (!(obj is P3Int)) return false;
-            return Equals((P3Int)obj);
+            if (!(obj is P3Int rhs)) return false;
+            return Equals(rhs);
         }
 
         public bool Equals(P3Int rhs)
@@ -117,7 +102,7 @@ namespace Noggog
 
         public override string ToString()
         {
-            return "(" + X + "," + Y + "," + Z + ")";
+            return $"({X},{Y},{Z}";
         }
 
         public static P3Int operator +(P3Int p1, P3Int p2)

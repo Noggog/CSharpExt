@@ -8,7 +8,7 @@ namespace Noggog
         
         public readonly T Value;
         public readonly bool Succeeded;
-        public bool Failed { get { return !Succeeded; } }
+        public bool Failed => !Succeeded;
 
         private TryGet(
             bool succeeded,
@@ -26,8 +26,8 @@ namespace Noggog
 
         public override bool Equals(object obj)
         {
-            if (!(obj is TryGet<T>)) return false;
-            return Equals((TryGet<T>)obj);
+            if (!(obj is TryGet<T> rhs)) return false;
+            return Equals(rhs);
         }
 
         public override int GetHashCode()
@@ -38,7 +38,7 @@ namespace Noggog
 
         public override string ToString()
         {
-            return $"TryGetResult({Succeeded}, {Value})";
+            return $"({Succeeded}, {Value})";
         }
 
         public TryGet<R> Bubble<R>(Func<T, R> conv)

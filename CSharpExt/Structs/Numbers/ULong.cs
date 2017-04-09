@@ -33,7 +33,9 @@ namespace Noggog
         public static implicit operator UInt(ULong i)
         {
             if (Math.Abs(i.Value) < int.MaxValue)
+            {
                 return new UInt(Convert.ToInt32(i.Value));
+            }
             throw new ArgumentOutOfRangeException("i", i.Value, "Out of range conversion of long to int");
         }
 

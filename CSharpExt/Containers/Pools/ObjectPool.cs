@@ -92,10 +92,7 @@ namespace Noggog.Containers.Pools
 
         public void Dispose()
         {
-            if (pool != null)
-            {
-                pool.Return(Item);
-            }
+            pool?.Return(Item);
         }
     }
 }

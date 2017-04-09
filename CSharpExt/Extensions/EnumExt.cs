@@ -11,8 +11,8 @@ namespace System
     public static class EnumExt
     {
         /**
-    * Includes an enumerated type and returns the new value.
-    */
+        * Includes an enumerated type and returns the new value.
+        */
         public static T Include<T>(this Enum value, T append)
         {
             Type type = value.GetType();
@@ -294,10 +294,8 @@ namespace System
             where T : struct, IComparable, IConvertible
         {
             string[] s = Enum.GetNames(typeof(T));
-            if (s.Length <= n)
-                return defaultPick;
-            else
-                return (T)Enum.Parse(typeof(T), s[n]);
+            if (s.Length <= n) return defaultPick;
+            return (T)Enum.Parse(typeof(T), s[n]);
         }
 
         public static Dictionary<Type, Dictionary<int, string>> NameDictionary = new Dictionary<Type, Dictionary<int, string>>();
@@ -383,7 +381,7 @@ namespace System
             LoadEnumTypes();
             return enums.TryGetValue(fullTypeName, out t);
         }
-        
+
         private static void LoadEnumTypes()
         {
             lock (_loadLock)

@@ -8,17 +8,15 @@ namespace Noggog.Containers.Pools
         public ObjectListPool(int maxPooledInstances = int.MaxValue)
             : base(
                   () => new List<T>(),
-                  new LifecycleActions<List<T>>()
-                  {
-                      OnReturn = (list) => list.Clear(),
-                      OnGet = (list) =>
+                  new LifecycleActions<List<T>>(
+                      onReturn: (list) => list.Clear(),
+                      onGet: (list) =>
                       {
                           if (list.Count > 0)
                           {
                               throw new DataMisalignedException();
                           }
-                      }
-                  },
+                      }),
                   maxPooledInstances)
         {
         }

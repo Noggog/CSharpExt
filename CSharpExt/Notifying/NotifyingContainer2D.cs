@@ -34,7 +34,7 @@ namespace Noggog.Notifying
         public abstract INotifyingItemGetter<int> MaxY { get; }
         public abstract int Width { get; }
         public abstract int Height { get; }
-        T INotifyingContainer2DGetter<T>.this[P2Int p] { get { return this[p]; } }
+        T INotifyingContainer2DGetter<T>.this[P2Int p] => this[p];
 
         public abstract T this[P2Int p] { get; set; }
 
@@ -60,10 +60,7 @@ namespace Noggog.Notifying
 
         public abstract IEnumerator<P2IntValue<T>> GetEnumerator();
 
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return this.GetEnumerator();
-        }
+        IEnumerator IEnumerable.GetEnumerator() => this.GetEnumerator();
 
         protected void FireChange(IEnumerable<ChangePoint<T>> changes, NotifyingFireParameters? cmds)
         {

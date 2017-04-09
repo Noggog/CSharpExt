@@ -11,13 +11,7 @@ namespace Noggog.Notifying
 
         public bool HasBeenSwapped { get; private set; }
 
-        public INotifyingItemGetter<int> Count
-        {
-            get
-            {
-                return _child.Count;
-            }
-        }
+        public INotifyingItemGetter<int> Count => _child.Count;
 
         public bool HasBeenSet
         {
@@ -33,17 +27,11 @@ namespace Noggog.Notifying
             }
         }
 
-        public IEnumerable<K> Keys { get { return _child.Keys; } }
+        public IEnumerable<K> Keys => _child.Keys;
 
-        public IEnumerable<V> Values { get { return _child.Values; } }
+        public IEnumerable<V> Values => _child.Values;
 
-        V INotifyingDictionaryGetter<K, V>.this[K key]
-        {
-            get
-            {
-                return _child[key];
-            }
-        }
+        V INotifyingDictionaryGetter<K, V>.this[K key] => _child[key];
 
         public V this[K key]
         {

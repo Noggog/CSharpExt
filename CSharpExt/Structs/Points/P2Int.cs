@@ -18,52 +18,21 @@ namespace Noggog
     public struct P2Int : IP2IntGet, IEquatable<P2Int>
     {
         private static readonly P2Int[] _directions = new[] { new P2Int(1, 0), new P2Int(-1, 0), new P2Int(0, 1), new P2Int(0, -1) };
-        public static IEnumerable<P2Int> Directions
-        {
-            get
-            {
-                return _directions;
-            }
-        }
-
-        public static P2Int Down
-        {
-            get
-            {
-                return _directions[3];
-            }
-        }
-        public static P2Int Up
-        {
-            get
-            {
-                return _directions[2];
-            }
-        }
-        public static P2Int Left
-        {
-            get
-            {
-                return _directions[0];
-            }
-        }
-        public static P2Int Right
-        {
-            get
-            {
-                return _directions[1];
-            }
-        }
+        public static IEnumerable<P2Int> Directions => _directions;
+        public static P2Int Down => _directions[3];
+        public static P2Int Up => _directions[2];
+        public static P2Int Left => _directions[0];
+        public static P2Int Right => _directions[1];
 
         public readonly static P2Int Origin = new P2Int(0, 0);
         public readonly static P2Int One = new P2Int(1, 1);
-        public bool IsZero { get { return X == 0 && Y == 0; } }
+        public bool IsZero => X == 0 && Y == 0;
 
-        P2Int IP2IntGet.Point { get { return this; } }
-        public int X;
-        int IP2IntGet.X { get { return this.X; } }
-        public int Y;
-        int IP2IntGet.Y { get { return this.Y; } }
+        P2Int IP2IntGet.Point => this;
+        public readonly int X;
+        int IP2IntGet.X => this.X;
+        public readonly int Y;
+        int IP2IntGet.Y => this.Y;
 
         #region Directions
         public P2Int this[GridLoc val]
@@ -176,7 +145,7 @@ namespace Noggog
         
         public override string ToString()
         {
-            return "(" + X + "," + Y + ")";
+            return $"({X},{Y})";
         }
 
         public P2Int Take(out int x, out int y)

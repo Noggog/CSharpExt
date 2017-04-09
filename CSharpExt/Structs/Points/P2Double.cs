@@ -4,18 +4,18 @@ namespace Noggog
 {
     public struct P2Double : IEquatable<P2Double>
     {
-        public double X;
-        public double Y;
+        public readonly double X;
+        public readonly double Y;
 
         public P2Double(double x, double y)
         {
-            X = x;
-            Y = y;
+            this.X = x;
+            this.Y = y;
         }
 
         public override string ToString()
         {
-            return $"P2Double ({X}, {Y})";
+            return $"({X}, {Y})";
         }
 
         public P2Double Normalized
@@ -27,15 +27,9 @@ namespace Noggog
             }
         }
 
-        public P2Double Absolute
-        {
-            get
-            {
-                return new P2Double(
-                    Math.Abs(this.X),
-                    Math.Abs(this.Y));
-            }
-        }
+        public P2Double Absolute => new P2Double(
+            Math.Abs(this.X),
+            Math.Abs(this.Y));
 
         public P2Double Normalize()
         {
@@ -45,30 +39,15 @@ namespace Noggog
                 this.Y / length);
         }
 
-        public double Length
-        {
-            get { return Math.Sqrt(X * X + Y * Y); }
-        }
+        public double Length => Math.Sqrt(X * X + Y * Y);
 
-        public static double Dot(P2Double v1, P2Double v2)
-        {
-            return v1.X * v2.X + v1.Y * v2.Y;
-        }
+        public static double Dot(P2Double v1, P2Double v2) => v1.X * v2.X + v1.Y * v2.Y;
 
-        public double Magnitude
-        {
-            get { return Length; }
-        }
+        public double Magnitude => Length;
 
-        public double SqrMagnitude
-        {
-            get { return (X * X + Y * Y); }
-        }
+        public double SqrMagnitude => (X * X + Y * Y);
 
-        public double Distance(P2Double p2)
-        {
-            return (this - p2).Magnitude;
-        }
+        public double Distance(P2Double p2) => (this - p2).Magnitude;
 
         public static bool TryParse(string str, out P2Double p2)
         {
@@ -95,8 +74,8 @@ namespace Noggog
 
         public override bool Equals(object obj)
         {
-            if (!(obj is P2Double)) return false;
-            return Equals((P2Double)obj);
+            if (!(obj is P2Double rhs)) return false;
+            return Equals(rhs);
         }
 
         public bool Equals(P2Double rhs)

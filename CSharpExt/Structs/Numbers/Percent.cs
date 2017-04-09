@@ -4,7 +4,7 @@ namespace Noggog
 {
     public struct Percent : IComparable, IEquatable<Percent>
     {
-        public double Value;
+        public readonly double Value;
 
         public Percent(double d)
         {
@@ -91,8 +91,8 @@ namespace Noggog
 
         public override bool Equals(object obj)
         {
-            if (!(obj is Percent)) return false;
-            return Equals((Percent)obj);
+            if (!(obj is Percent rhs)) return false;
+            return Equals(rhs);
         }
 
         public bool Equals(Percent other)

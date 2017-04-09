@@ -14,10 +14,8 @@ namespace System
             {
                 if (fi.IsReadOnly)
                 {
-                    if (disableReadonly)
-                        fi.IsReadOnly = false;
-                    else
-                        continue;
+                    if (!disableReadonly) continue;
+                    fi.IsReadOnly = false;
                 }
                 try
                 {
@@ -71,6 +69,5 @@ namespace System
                 }
             }
         }
-
     }
 }

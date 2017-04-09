@@ -84,7 +84,6 @@
     <Compile Include="Notifying\NotifyingContainer2D.cs" />
     <Compile Include="Notifying\NotifyingDictionary.cs" />
     <Compile Include="Notifying\NotifyingDictionaryRouter.cs" />
-    <Compile Include="Notifying\NotifyingEvent.cs" />
     <Compile Include="Notifying\NotifyingFireParameters.cs" />
     <Compile Include="Notifying\NotifyingItem.cs" />
     <Compile Include="Notifying\NotifyingItemConvertWrapper.cs" />
@@ -128,7 +127,9 @@
     <Compile Include="XML\ElementWrapper.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

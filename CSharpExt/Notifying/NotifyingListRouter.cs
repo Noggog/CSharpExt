@@ -51,21 +51,9 @@ namespace Noggog.Notifying
             }
         }
          
-        T INotifyingListGetter<T>.this[int index]
-        {
-            get
-            {
-                return this[index];
-            }
-        }
+        T INotifyingListGetter<T>.this[int index] => this[index];
 
-        public INotifyingItemGetter<int> Count
-        {
-            get
-            {
-                return _child.Count;
-            }
-        }
+        public INotifyingItemGetter<int> Count => _child.Count;
 
         public bool HasBeenSet
         {
@@ -73,7 +61,6 @@ namespace Noggog.Notifying
             {
                 return (HasBeenSwapped ? _child.HasBeenSet : _base.HasBeenSet);
             }
-
             set
             {
                 SwapOver();

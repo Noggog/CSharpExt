@@ -6,75 +6,75 @@ namespace Noggog
 {
     public class RandomSource
     {
-        static System.Random randSource = new Random();
-        int numQueries;
-        public int NumQueries { get { return numQueries; } }
-        System.Random rand;
-        public int OriginalSeed { get; protected set; }
+        private static System.Random randSource = new Random();
+        public int NumQueries { get; private set; }
+        private readonly System.Random rand;
+        public readonly int OriginalSeed;
+        private double? spareRoll;
 
         public RandomSource()
         {
             this.OriginalSeed = randSource.Next();
-            rand = new System.Random(OriginalSeed);
+            this.rand = new System.Random(OriginalSeed);
         }
 
         public RandomSource(int seed)
         {
             this.OriginalSeed = seed;
-            rand = new System.Random(seed);
+            this.rand = new System.Random(seed);
         }
 
         public int Next()
         {
-            numQueries++;
+            this.NumQueries++;
             return rand.Next();
         }
 
         public int Next(int min, int max)
         {
-            numQueries++;
+            this.NumQueries++;
             return rand.Next(min, max);
         }
 
         public int Next(int max)
         {
-            numQueries++;
+            this.NumQueries++;
             return rand.Next(max);
         }
 
         public double NextDouble()
         {
-            numQueries++;
+            this.NumQueries++;
             return rand.NextDouble();
         }
 
         public bool NextPercent(double percent)
         {
-            numQueries++;
+            this.NumQueries++;
             return percent > rand.NextDouble();
         }
 
         public bool NextPercent(int percent)
         {
-            numQueries++;
+            this.NumQueries++;
             return percent >= rand.Next(1, 100);
         }
 
         public Percent NextPercent()
         {
-            numQueries++;
+            this.NumQueries++;
             return new Percent(rand.NextDouble());
         }
 
         public bool NextBool()
         {
-            numQueries++;
+            this.NumQueries++;
             return rand.Next(2) == 1;
         }
 
         public float NextAngle()
         {
-            numQueries++;
+            this.NumQueries++;
             return (float)(rand.NextDouble() * 360);
         }
 
@@ -85,17 +85,16 @@ namespace Noggog
 
         public double NextDouble(double magn)
         {
-            numQueries++;
+            this.NumQueries++;
             return rand.NextDouble() * magn * 2 - magn;
         }
 
         public float NextRotationDegree()
         {
-            numQueries++;
+            this.NumQueries++;
             return (float)(rand.NextDouble() * 360);
         }
         
-        private double? spareRoll;
         private double NextMargsalia(bool useSpare)
         {
             double magn;
@@ -181,7 +180,7 @@ namespace Noggog
 
         public ClockRotation NextRotation90()
         {
-            numQueries++;
+            this.NumQueries++;
             switch (rand.Next(4))
             {
                 case 0:
@@ -197,7 +196,7 @@ namespace Noggog
 
         public override string ToString()
         {
-            return "RandomSource (Original Seed: " + OriginalSeed + ", Num Queries: " + numQueries + ")";
+            return $"(Seed: {OriginalSeed}, #Queries: {this.NumQueries})";
         }
     }
 }

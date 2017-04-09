@@ -2,7 +2,7 @@
 
 namespace Noggog.Notifying
 {
-    public struct ChangeKeyed<K, V>
+    public struct ChangeKeyed<K, V> : IEquatable<ChangeKeyed<K, V>>
     {
         public readonly V Old;
         public readonly V New;
@@ -15,6 +15,29 @@ namespace Noggog.Notifying
             this.New = newVal;
             this.AddRem = addRem;
             this.Key = k;
+        }
+
+        public bool Equals(ChangeKeyed<K, V> other)
+        {
+            return this.AddRem == other.AddRem
+                && object.Equals(this.Key, other.Key);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (!(obj is ChangeKeyed<K, V> rhs)) return false;
+            return Equals(rhs);
+        }
+
+        public override int GetHashCode()
+        {
+            return this.AddRem.GetHashCode()
+                .CombineHashCode(HashHelper.GetHashCode(this.Key));
+        }
+
+        public override string ToString()
+        {
+            return $"({this.AddRem.ToStringFast_Enum_Only()}: {this.Key}, {this.Old} => {this.New})";
         }
     }
 }

@@ -34,17 +34,13 @@ namespace Noggog.Notifying
     {
         static ObjectPool<SubscriptionHandler<NotifyingCollectionInternalCallback>> pool = new ObjectPool<SubscriptionHandler<NotifyingCollectionInternalCallback>>(
             () => new SubscriptionHandler<NotifyingCollectionInternalCallback>(),
-            new LifecycleActions<SubscriptionHandler<NotifyingCollectionInternalCallback>>()
-            {
-                OnReturn = (s) => s.Clear()
-            },
+            new LifecycleActions<SubscriptionHandler<NotifyingCollectionInternalCallback>>(
+                onReturn: (s) => s.Clear()),
             200);
         static ObjectPool<SubscriptionHandler<NotifyingInternalEnumerableCallback<T>>> enumerPool = new ObjectPool<SubscriptionHandler<NotifyingInternalEnumerableCallback<T>>>(
             () => new SubscriptionHandler<NotifyingInternalEnumerableCallback<T>>(),
-            new LifecycleActions<SubscriptionHandler<NotifyingInternalEnumerableCallback<T>>>()
-            {
-                OnReturn = (s) => s.Clear()
-            },
+            new LifecycleActions<SubscriptionHandler<NotifyingInternalEnumerableCallback<T>>>(
+                onReturn: (s) => s.Clear()),
             200);
 
         protected static ObjectListPool<ChangeAddRem<T>> fireEnumerPool = new ObjectListPool<ChangeAddRem<T>>(100);

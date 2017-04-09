@@ -19,62 +19,55 @@ namespace Noggog
 
     public struct P2IntValue<T> : IP2IntGet, IEquatable<P2IntValue<T>>
     {
-        public T Value;
-        public P2Int Point;
-        public int X { get { return Point.X; } }
-        public int Y { get { return Point.Y; } }
-        P2Int IP2IntGet.Point { get { return Point; } }
+        public readonly int X;
+        public readonly int Y;
+        public readonly T Value;
+        int IP2IntGet.X => this.X;
+        int IP2IntGet.Y => this.Y;
+        public P2Int Point => new P2Int(this.X, this.Y);
 
         public P2IntValue(int x, int y, T val)
         {
-            Value = val;
-            Point = new P2Int(x, y);
-        }
-
-        public P2IntValue(double x, double y, T val)
-        {
-            Value = val;
-            Point = new P2Double(x, y);
-        }
-
-        public P2IntValue(P2Double vect, T val)
-        {
-            Value = val;
-            Point = vect;
+            this.X = x;
+            this.Y = y;
+            this.Value = val;
         }
 
         public P2IntValue(P2Int rhs, T val)
         {
-            Value = val;
-            Point = new P2Int(rhs);
+            this.X = rhs.X;
+            this.Y = rhs.Y;
+            this.Value = val;
         }
 
         public P2IntValue(P2IntValue<T> rhs)
         {
+            this.X = rhs.X;
+            this.Y = rhs.Y;
             Value = rhs.Value;
-            Point = rhs.Point;
         }
 
         public override string ToString()
         {
-            return "PointValue (" + Point.X + "," + Point.Y + ", " + Value + ")";
+            return $"({this.X}, {this.Y}, {this.Value})";
         }
 
         public override bool Equals(object obj)
         {
-            if (!(obj is P2IntValue<T>)) return false;
-            return Equals((P2IntValue<T>)obj);
+            if (!(obj is P2IntValue<T> rhs)) return false;
+            return Equals(rhs);
         }
         
         public bool Equals(P2IntValue<T> rhs)
         {
-            return this.Point == rhs.Point
+            return this.X == rhs.X
+                && this.Y == rhs.Y
                 && object.Equals(this.Value, rhs.Value);
         }
 
         public override int GetHashCode()
         {
-            return HashHelper.GetHashCode(Point).CombineHashCode(Value);
+            return HashHelper.GetHashCode(this.X, this.Y).CombineHashCode(Value);
         }
 
         public static bool operator ==(P2IntValue<T> left, P2IntValue<T> right)
@@ -89,7 +82,7 @@ namespace Noggog
 
         public static implicit operator P2Int(P2IntValue<T> p)
         {
-            return p.Point;
+            return new P2Int(p.X, p.Y);
         }
 
         public static implicit operator T(P2IntValue<T> p)

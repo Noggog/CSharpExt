@@ -31,20 +31,11 @@ namespace Noggog.Notifying
 
         protected NotifyingItem<int> _count = new NotifyingItem<int>();
 
-        public INotifyingItemGetter<int> Count
-        {
-            get { return _count; }
-        }
+        public INotifyingItemGetter<int> Count => _count; 
 
         private List<T> list = pool.Get();
 
-        public IEnumerable<T> List
-        {
-            get
-            {
-                return list;
-            }
-        }
+        public IEnumerable<T> List => list;
 
         ~NotifyingList()
         {

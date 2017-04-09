@@ -68,14 +68,21 @@ namespace System
 
         public static bool InRange<T>(this T[,] array, int x, int y)
         {
-            return x >= 0 && y >= 0 && y < array.GetLength(0) && x < array.GetLength(1);
+            return x >= 0 
+                && y >= 0 
+                && y < array.GetLength(0) 
+                && x < array.GetLength(1);
         }
 
         public static void Fill<T>(this T[,] array, T to)
         {
             for (int y = 0; y < array.GetLength(0); y++)
+            {
                 for (int x = 0; x < array.GetLength(1); x++)
+                {
                     array[y, x] = to;
+                }
+            }
         }
 
         public static void Fill<T>(this T[][] array, T to)

@@ -4,12 +4,9 @@ namespace Noggog
 {
     public struct RangeFloat : IEquatable<RangeFloat>
     {
-        public float Min;
-        public float Max;
-        public float Average
-        {
-            get { return ((Max - Min) / 2f) + Min; }
-        }
+        public readonly float Min;
+        public readonly float Max;
+        public float Average => ((Max - Min) / 2f) + Min;
 
         public RangeFloat(float val1, float val2)
         {
@@ -89,8 +86,8 @@ namespace Noggog
 
         public override bool Equals(object obj)
         {
-            if (!(obj is RangeFloat)) return false;
-            return Equals((RangeFloat)obj);
+            if (!(obj is RangeFloat rhs)) return false;
+            return Equals(rhs);
         }
 
         public bool Equals(RangeFloat other)
@@ -101,7 +98,7 @@ namespace Noggog
 
         public override string ToString()
         {
-            return Min == Max ? Min.ToString() : Min + " - " + Max;
+            return this.Min.EqualsWithin(this.Max) ? $"({Min.ToString()})" : $"({Min} - {Max})";
         }
     }
 }

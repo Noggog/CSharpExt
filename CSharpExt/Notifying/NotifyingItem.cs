@@ -27,10 +27,8 @@ namespace Noggog.Notifying
     {
         static ObjectPool<SubscriptionHandler<NotifyingItemInternalCallback<T>>> pool = new ObjectPool<SubscriptionHandler<NotifyingItemInternalCallback<T>>>(
             () => new SubscriptionHandler<NotifyingItemInternalCallback<T>>(),
-            new LifecycleActions<SubscriptionHandler<NotifyingItemInternalCallback<T>>>()
-            {
-                OnReturn = (s) => s.Clear()
-            },
+            new LifecycleActions<SubscriptionHandler<NotifyingItemInternalCallback<T>>>(
+                onReturn: (s) => s.Clear()),
             200);
 
         private T _item;

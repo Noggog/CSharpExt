@@ -7,17 +7,15 @@ namespace Noggog
 {
     public struct MemberAccessor<I, T>
     {
-        Action<I, T> setter;
-        public Action<I, T> Setter { get { return setter; } }
-        Func<I, T> getter;
-        public Func<I, T> Getter { get { return getter; } }
+        public readonly Action<I, T> Setter;
+        public readonly Func<I, T> Getter;
 
         public MemberAccessor(
             Action<I, T> setter,
             Func<I, T> getter)
         {
-            this.setter = setter;
-            this.getter = getter;
+            this.Setter = setter;
+            this.Getter = getter;
         }
 
         public MemberAccessor(
@@ -25,12 +23,12 @@ namespace Noggog
             Expression<Action<I, T>> setterExpr)
         {
             Func<I, T> get = getterExpr.Compile();
-            getter = (obj) =>
+            this.Getter = (obj) =>
             {
                 return get((I)obj);
             };
             Action<I, T> set = setterExpr.Compile();
-            setter = (obj, val) =>
+            this.Setter = (obj, val) =>
             {
                 set((I)obj, val);
             };
@@ -45,15 +43,15 @@ namespace Noggog
                 {
                     throw new NotImplementedException("Node type of " + propertyExpression.Body.NodeType + " is not yet implemented for MemberAccessor");
                 }
-                getter = (i) => tmpGetter(i);
-                setter = (i, val) => tmpSetter(i, val);
+                this.Getter = (i) => tmpGetter(i);
+                this.Setter = (i, val) => tmpSetter(i, val);
             }
             else
             {
-                setter = null;
+                this.Setter = null;
             }
             Func<I, T> f = propertyExpression.Compile();
-            getter = (obj) =>
+            this.Getter = (obj) =>
             {
                 return f((I)obj);
             };

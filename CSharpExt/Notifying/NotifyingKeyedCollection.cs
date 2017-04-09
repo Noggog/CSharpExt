@@ -22,16 +22,20 @@ namespace Noggog.Notifying
         private Func<V, K> keyGetter;
         private NotifyingDictionary<K, V> dict = new NotifyingDictionary<K, V>();
 
-        public bool HasBeenSet { get { return dict.HasBeenSet; } set { dict.HasBeenSet = value; } }
+        public bool HasBeenSet
+        {
+            get { return dict.HasBeenSet; }
+            set { dict.HasBeenSet = value; }
+        }
 
-        public INotifyingItemGetter<int> Count { get { return dict.Count; } }
+        public INotifyingItemGetter<int> Count => dict.Count;
 
-        bool INotifyingEnumerable<KeyValuePair<K, V>>.HasBeenSet { get { return dict.HasBeenSet; } }
+        bool INotifyingEnumerable<KeyValuePair<K, V>>.HasBeenSet => dict.HasBeenSet;
 
-        public IEnumerable<K> Keys { get { return dict.Keys; } }
-        public IEnumerable<V> Values { get { return dict.Values; } }
-        public IEnumerable<KeyValuePair<K, V>> KeyedValues { get { return dict; } }
-        public V this[K key] { get { return dict[key]; } }
+        public IEnumerable<K> Keys => dict.Keys;
+        public IEnumerable<V> Values => dict.Values;
+        public IEnumerable<KeyValuePair<K, V>> KeyedValues => dict;
+        public V this[K key] => dict[key];
 
         public NotifyingKeyedCollection(Func<V, K> keyGetter)
         {

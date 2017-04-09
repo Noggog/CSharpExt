@@ -13,7 +13,7 @@ namespace Noggog.Notifying
         Dictionary<WeakReferenceEquatable, List<T>> subscribers;
         Dictionary<WeakReferenceEquatable, List<T>> fireSubscribers;
         private bool reloadFireList = true;
-        public bool HasSubs { get { return subscribers?.Count > 0; } }
+        public bool HasSubs => subscribers?.Count > 0;
 
         ~SubscriptionHandler()
         {

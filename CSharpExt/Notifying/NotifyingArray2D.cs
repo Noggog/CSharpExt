@@ -6,31 +6,18 @@ namespace Noggog.Notifying
 {
     public class NotifyingArray2D<T> : NotifyingContainer2D<T>
     {
+        private readonly T[,] arr;
         private static INotifyingItemGetter<int> zeroItem = new NotifyingItemWrapper<int>(0);
         private INotifyingItemGetter<int> _maxX;
-        public override INotifyingItemGetter<int> MaxX { get { return _maxX; } }
+        public override INotifyingItemGetter<int> MaxX => _maxX;
         private INotifyingItemGetter<int> _maxY;
-        public override INotifyingItemGetter<int> MaxY { get { return _maxY; } }
-        public override INotifyingItemGetter<int> MinX { get { return zeroItem; } }
-        public override INotifyingItemGetter<int> MinY { get { return zeroItem; } }
+        public override INotifyingItemGetter<int> MaxY => _maxY;
+        public override INotifyingItemGetter<int> MinX => zeroItem;
+        public override INotifyingItemGetter<int> MinY => zeroItem;
         private INotifyingItemGetter<int> _count;
-        public override INotifyingItemGetter<int> Count { get { return _count; } }
-
-        public override int Width
-        {
-            get
-            {
-                return arr.GetLength(1);
-            }
-        }
-
-        public override int Height
-        {
-            get
-            {
-                return arr.GetLength(0);
-            }
-        }
+        public override INotifyingItemGetter<int> Count => _count;
+        public override int Width => arr.GetLength(1);
+        public override int Height => arr.GetLength(0);
 
         public override T this[P2Int p]
         {
@@ -38,14 +25,11 @@ namespace Noggog.Notifying
             {
                 return arr[p.Y, p.X];
             }
-
             set
             {
                 arr[p.Y, p.X] = value;
             }
         }
-
-        T[,] arr;
 
         public NotifyingArray2D(T[,] arr)
         {
@@ -112,10 +96,7 @@ namespace Noggog.Notifying
             }
         }
 
-        public override T Get(P2Int p)
-        {
-            return arr[p.Y, p.X];
-        }
+        public override T Get(P2Int p) => arr[p.Y, p.X];
 
         public override IEnumerator<P2IntValue<T>> GetEnumerator()
         {

@@ -39,21 +39,9 @@ namespace Noggog.Notifying
             }
         }
 
-        public T DefaultValue
-        {
-            get
-            {
-                return _child.DefaultValue;
-            }
-        }
+        public T DefaultValue => _child.DefaultValue;
 
-        T INotifyingItemGetter<T>.Value
-        {
-            get
-            {
-                return this.Value;
-            }
-        }
+        T INotifyingItemGetter<T>.Value => this.Value;
 
         public bool HasBeenSet
         {

@@ -8,8 +8,10 @@ namespace Noggog
 
         public readonly T Value;
         public readonly bool Succeeded;
-        public bool Failed { get { return !Succeeded; } }
+        public readonly Exception Exception;
         private readonly string _reason;
+
+        public bool Failed => !Succeeded;
         public string Reason
         {
             get
@@ -21,7 +23,6 @@ namespace Noggog
                 return _reason;
             }
         }
-        public readonly Exception Exception;
 
         private GetResponse(
             bool succeeded,
@@ -43,8 +44,8 @@ namespace Noggog
 
         public override bool Equals(object obj)
         {
-            if (!(obj is GetResponse<T>)) return false;
-            return Equals((GetResponse<T>)obj);
+            if (!(obj is GetResponse<T> rhs)) return false;
+            return Equals(rhs);
         }
 
         public override int GetHashCode()
@@ -55,7 +56,7 @@ namespace Noggog
 
         public override string ToString()
         {
-            return $"GetResponse({(Succeeded ? "Success" : "Fail")}, {Value}, {Reason})";
+            return $"({(Succeeded ? "Success" : "Fail")}, {Value}, {Reason})";
         }
 
         public GetResponse<R> BubbleFailure<R>()

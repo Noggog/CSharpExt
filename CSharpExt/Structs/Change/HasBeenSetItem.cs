@@ -20,12 +20,20 @@ namespace Noggog.Notifying
     public class HasBeenSetItem<T> : IHasBeenSet<T>
     {
         private T _Item;
-        public T Item { get { return _Item; } set { Set(value); } }
+        public T Item
+        {
+            get { return _Item; }
+            set { Set(value); }
+        }
         public bool HasBeenSet;
 
-        bool IHasBeenSet<T>.HasBeenSet { get { return this.HasBeenSet; } set { this.HasBeenSet = value; } }
+        bool IHasBeenSet<T>.HasBeenSet
+        {
+            get { return this.HasBeenSet; }
+            set { this.HasBeenSet = value; }
+        }
 
-        bool IHasBeenSetGetter.HasBeenSet { get { return this.HasBeenSet; } }
+        bool IHasBeenSetGetter.HasBeenSet => this.HasBeenSet;
 
         public void Set(T item)
         {

@@ -4,15 +4,10 @@ namespace Noggog
 {
     public struct RangeInt : IEquatable<RangeInt>
     {
-        public int Min;
-        public int Max;
-
-        public float Average
-        {
-            get { return ((Max - Min) / 2f) + Min; }
-        }
-
-        public int Difference { get { return this.Max - this.Min; } }
+        public readonly int Min;
+        public readonly int Max;
+        public float Average => ((Max - Min) / 2f) + Min;
+        public int Difference => this.Max - this.Min;
 
         public RangeInt(int val1, int val2)
         {
@@ -31,11 +26,6 @@ namespace Noggog
         public RangeInt(int? min, int? max)
             : this(min ?? int.MinValue, max ?? int.MaxValue)
         {
-        }
-
-        public override string ToString()
-        {
-            return Min + "-" + Max;
         }
 
         public static RangeInt Parse(string str)
@@ -146,8 +136,8 @@ namespace Noggog
 
         public override bool Equals(object obj)
         {
-            if (!(obj is RangeInt)) return false;
-            return Equals((RangeInt)obj);
+            if (!(obj is RangeInt rhs)) return false;
+            return Equals(rhs);
         }
 
         public bool Equals(RangeInt other)
@@ -159,6 +149,11 @@ namespace Noggog
         public override int GetHashCode()
         {
             return HashHelper.GetHashCode(Min, Max);
+        }
+
+        public override string ToString()
+        {
+            return Min == Max ? $"({Min.ToString()})" : $"({Min} - {Max})";
         }
     }
 }

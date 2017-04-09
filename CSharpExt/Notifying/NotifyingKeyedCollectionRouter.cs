@@ -11,13 +11,7 @@ namespace Noggog.Notifying
 
         public bool HasBeenSwapped { get; private set; }
 
-        public INotifyingItemGetter<int> Count
-        {
-            get
-            {
-                return ((INotifyingCollection<KeyValuePair<K, V>>)_child).Count;
-            }
-        }
+        public INotifyingItemGetter<int> Count => ((INotifyingCollection<KeyValuePair<K, V>>)_child).Count;
 
         public bool HasBeenSet
         {
@@ -25,7 +19,6 @@ namespace Noggog.Notifying
             {
                 return (HasBeenSwapped ? _child.HasBeenSet : _base.HasBeenSet);
             }
-
             set
             {
                 SwapOver();
@@ -33,45 +26,15 @@ namespace Noggog.Notifying
             }
         }
 
-        public IEnumerable<KeyValuePair<K, V>> KeyedValues
-        {
-            get
-            {
-                return _child.KeyedValues;
-            }
-        }
+        public IEnumerable<KeyValuePair<K, V>> KeyedValues => _child.KeyedValues;
 
-        public IEnumerable<K> Keys
-        {
-            get
-            {
-                return _child.Keys;
-            }
-        }
+        public IEnumerable<K> Keys => _child.Keys;
 
-        public IEnumerable<V> Values
-        {
-            get
-            {
-                return _child.Values;
-            }
-        }
+        public IEnumerable<V> Values => _child.Values;
 
-        V INotifyingDictionaryGetter<K, V>.this[K key]
-        {
-            get
-            {
-                return _child[key];
-            }
-        }
+        V INotifyingDictionaryGetter<K, V>.this[K key] => _child[key];
 
-        public V this[K key]
-        {
-            get
-            {
-                return _child[key];
-            }
-        }
+        public V this[K key] => _child[key];
 
         public NotifyingKeyedCollectionRouter(
             INotifyingKeyedCollectionGetter<K, V> _base,

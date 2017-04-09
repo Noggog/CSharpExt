@@ -4,10 +4,10 @@ namespace Noggog
 {
     public struct RangeDouble : IEquatable<RangeDouble>
     {
-        public double Min;
+        public readonly double Min;
         public float FMin => (float)Min;
 
-        public double Max;
+        public readonly double Max;
         public float FMax => (float)Max;
         public double Average => ((Max - Min) / 2f) + Min;
 
@@ -15,13 +15,13 @@ namespace Noggog
         {
             if (val1 > val2)
             {
-                Max = val1;
-                Min = val2;
+                this.Max = val1;
+                this.Min = val2;
             }
             else
             {
-                Min = val1;
-                Max = val2;
+                this.Min = val1;
+                this.Max = val2;
             }
         }
 
@@ -117,8 +117,8 @@ namespace Noggog
 
         public override bool Equals(object obj)
         {
-            if (!(obj is RangeDouble)) return false;
-            return Equals((RangeDouble)obj);
+            if (!(obj is RangeDouble rhs)) return false;
+            return Equals(rhs);
         }
 
         public bool Equals(RangeDouble other)
@@ -134,7 +134,7 @@ namespace Noggog
 
         public override string ToString()
         {
-            return Min == Max ? Min.ToString() : Min + " - " + Max;
+            return Min == Max ? $"({Min.ToString()})" : $"({Min} - {Max})";
         }
 
         public static RangeDouble operator -(RangeDouble r1, RangeDouble r2)

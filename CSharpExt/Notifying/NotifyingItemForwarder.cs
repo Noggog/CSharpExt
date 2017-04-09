@@ -9,23 +9,12 @@ namespace Noggog.Notifying
     */
     public class NotifyingItemForwarder<T> : INotifyingItemGetter<T>
     {
-        public bool HasBeenSet
-        {
-            get
-            {
-                return toForward.HasBeenSet;
-            }
-        }
+        public bool HasBeenSet => toForward.HasBeenSet;
 
-        public T Value
-        {
-            get
-            {
-                return toForward.Value;
-            }
-        }
+        public T Value => toForward.Value;
 
         INotifyingItemGetter<T> toForward;
+
         Lazy<Dictionary<WeakReferenceEquatable, object>> subscriberConverter = new Lazy<Dictionary<WeakReferenceEquatable, object>>();
 
         public NotifyingItemForwarder(INotifyingItemGetter<T> toForward)

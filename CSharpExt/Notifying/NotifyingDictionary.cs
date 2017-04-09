@@ -27,13 +27,13 @@ namespace Noggog.Notifying
         protected static ObjectListPool<ChangeKeyed<K, V>> firePool = new ObjectListPool<ChangeKeyed<K, V>>(200);
 
         protected NotifyingItem<int> _count = new NotifyingItem<int>();
-        public INotifyingItemGetter<int> Count { get { return _count; } }
+        public INotifyingItemGetter<int> Count => _count;
         private Dictionary<K, V> dict = pool.Get();
         private Func<V, V> valConv;
 
-        public IEnumerable<KeyValuePair<K, V>> Dict { get { return dict; } }
-        public IEnumerable<K> Keys { get { return dict.Keys; } }
-        public IEnumerable<V> Values { get { return dict.Values; } }
+        public IEnumerable<KeyValuePair<K, V>> Dict => dict;
+        public IEnumerable<K> Keys => dict.Keys;
+        public IEnumerable<V> Values => dict.Values;
 
         public NotifyingDictionary(
             Func<V, V> valConv = null)

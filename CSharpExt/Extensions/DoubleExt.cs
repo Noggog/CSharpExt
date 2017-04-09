@@ -18,8 +18,8 @@ namespace System
             where T : IComparable<T>
         {
             if (val.CompareTo(min) < 0) return min;
-            else if (val.CompareTo(max) > 0) return max;
-            else return val;
+            if (val.CompareTo(max) > 0) return max;
+            return val;
         }
 
         public static double Clamp(this double a, double min, double max)
