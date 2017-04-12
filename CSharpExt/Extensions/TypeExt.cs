@@ -140,7 +140,16 @@ namespace System
             }
             foreach (Assembly assemb in AppDomain.CurrentDomain.GetAssemblies())
             {
-                foreach (Type p in assemb.GetTypes())
+                Type[] types;
+                try
+                {
+                    types = assemb.GetTypes();
+                }
+                catch (ReflectionTypeLoadException)
+                {
+                    continue;
+                }
+                foreach (Type p in types)
                 {
                     if (p.Equals(targetType))
                         continue;
