@@ -119,11 +119,6 @@ namespace Noggog.Notifying
         {
             this.Source.Unsubscribe(owner);
         }
-
-        public void SetHasBeenSet(bool on)
-        {
-            this.Source.SetHasBeenSet(on);
-        }
         #endregion
     }
 

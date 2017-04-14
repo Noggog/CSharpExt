@@ -112,7 +112,7 @@ namespace Noggog.Notifying
         public void SetHasBeenSet(bool on)
         {
             SwapOver();
-            _child.SetHasBeenSet(on);
+            _child.HasBeenSet = on;
         }
     }
 }

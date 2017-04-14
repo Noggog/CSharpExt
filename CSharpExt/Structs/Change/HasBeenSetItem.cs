@@ -56,11 +56,6 @@ namespace Noggog.Notifying
         {
             this.Unset();
         }
-
-        public void SetHasBeenSet(bool on)
-        {
-            this.HasBeenSet = on;
-        }
     }
 
     public interface IHasBeenSetGetter
@@ -73,6 +68,5 @@ namespace Noggog.Notifying
         new bool HasBeenSet { get; set; }
         void Set(T value, NotifyingFireParameters? cmds);
         void Unset(NotifyingUnsetParameters? cmds);
-        void SetHasBeenSet(bool on);
     }
 }

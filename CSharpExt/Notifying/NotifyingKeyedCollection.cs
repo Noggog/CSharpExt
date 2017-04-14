@@ -5,16 +5,22 @@ using System.Linq;
 
 namespace Noggog.Notifying
 {
-    public interface INotifyingKeyedCollectionGetter<K, V> : INotifyingDictionaryGetter<K, V>, INotifyingCollection<V>
+    public interface INotifyingKeyedCollectionGetter<K, V> : INotifyingDictionaryGetter<K, V>
     {
         IEnumerable<KeyValuePair<K, V>> KeyedValues { get; }
-        new bool HasBeenSet { get; }
     }
 
     public interface INotifyingKeyedCollection<K, V> : INotifyingKeyedCollectionGetter<K, V>
     {
         void Set(V val, NotifyingFireParameters? cmds);
         void Remove(K key, NotifyingFireParameters? cmds);
+        void Unset(NotifyingUnsetParameters? cmds);
+        void Clear(NotifyingFireParameters? cmds);
+        bool Remove(V item, NotifyingFireParameters? cmds);
+        void SetTo(IEnumerable<V> enumer, NotifyingFireParameters? cmds);
+        void Add(V item, NotifyingFireParameters? cmds);
+        void Add(IEnumerable<V> items, NotifyingFireParameters? cmds);
+        new bool HasBeenSet { get; set; }
     }
 
     public class NotifyingKeyedCollection<K, V> : INotifyingKeyedCollection<K, V>
@@ -130,12 +136,7 @@ namespace Noggog.Notifying
             if (((INotifyingEnumerable<V>)lhs).Count.Value != ((INotifyingEnumerable<V>)rhs).Count.Value) return false;
             return lhs.Values.SequenceEqual(rhs.Values);
         }
-
-        IEnumerator<V> IEnumerable<V>.GetEnumerator()
-        {
-            return this.dict.Select((kv) => kv.Value).GetEnumerator();
-        }
-
+        
         IEnumerator IEnumerable.GetEnumerator()
         {
             return this.GetEnumerator();

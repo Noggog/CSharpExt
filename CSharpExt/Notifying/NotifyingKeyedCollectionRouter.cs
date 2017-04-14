@@ -17,7 +17,7 @@ namespace Noggog.Notifying
         {
             get
             {
-                return (HasBeenSwapped ? _child.HasBeenSet : _base.HasBeenSet);
+                return (HasBeenSwapped ? ((INotifyingEnumerable<V>)_child).HasBeenSet : ((INotifyingEnumerable<V>)_base).HasBeenSet);
             }
             set
             {
@@ -50,14 +50,14 @@ namespace Noggog.Notifying
             ((INotifyingCollection<KeyValuePair<K, V>>)_base).Unsubscribe(this);
         }
 
-        private void SwapBack()
+        private void SwapBack(NotifyingUnsetParameters? cmds)
         {
             if (!HasBeenSwapped) return;
             _base.Subscribe(
                 this,
                 (changes) =>
                 {
-                    this._child.SetTo(_base);
+                    this._child.SetTo(_base.Values, cmds.ToFireParams());
                 });
         }
 
@@ -80,7 +80,7 @@ namespace Noggog.Notifying
 
         public void Unset(NotifyingUnsetParameters? cmds)
         {
-            SwapBack();
+            SwapBack(cmds);
             _child.Unset(cmds);
         }
 
@@ -134,19 +134,9 @@ namespace Noggog.Notifying
             _child.Add(items, cmds);
         }
 
-        public void Subscribe_Enumerable<O>(O owner, NotifyingEnumerableCallback<O, V> callback, bool fireInitial)
-        {
-            _child.Subscribe_Enumerable<O>(owner, callback, fireInitial);
-        }
-
-        IEnumerator<V> IEnumerable<V>.GetEnumerator()
-        {
-            return ((INotifyingEnumerable<V>)_child).GetEnumerator();
-        }
-
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return ((INotifyingEnumerable<V>)_child).GetEnumerator();
+            return this.GetEnumerator();
         }
     }
 }

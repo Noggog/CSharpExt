@@ -170,12 +170,7 @@ namespace Noggog.Notifying
                 }
             }
         }
-
-        void IHasBeenSet<T>.SetHasBeenSet(bool on)
-        {
-            this.HasBeenSet = on;
-        }
-
+        
         public static implicit operator T(NotifyingItem<T> item)
         {
             return item.Value;
