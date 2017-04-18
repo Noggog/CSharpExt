@@ -79,15 +79,22 @@ namespace System
                 {
                     return (P)Convert.ChangeType(strVal, typeof(P));
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
-                    if (throwException)
+                    try
                     {
-                        throw;
+                        return (P)Enum.Parse(typeof(P), strVal);
                     }
-                    else
+                    catch (Exception)
                     {
-                        return default(P);
+                        if (throwException)
+                        {
+                            throw ex;
+                        }
+                        else
+                        {
+                            return default(P);
+                        }
                     }
                 }
             });
