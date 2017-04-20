@@ -111,7 +111,7 @@ namespace System
                 {
                     types = assemb.GetTypes();
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     continue;
                 }

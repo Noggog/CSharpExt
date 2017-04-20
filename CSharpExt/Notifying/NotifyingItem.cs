@@ -9,18 +9,15 @@ namespace Noggog.Notifying
     public delegate void NotifyingItemSimpleCallback<T>(Change<T> change);
     public delegate void NotifyingItemInternalCallback<T>(object owner, Change<T> change);
 
-    public interface INotifyingItemGetter<T> : IHasBeenSetGetter
+    public interface INotifyingItemGetter<T> : IHasBeenSetItemGetter<T>
     {
-        T Value { get; }
         void Subscribe<O>(O owner, NotifyingItemCallback<O, T> callback, bool fireInitial);
         void Unsubscribe(object owner);
     }
 
-    public interface INotifyingItem<T> : INotifyingItemGetter<T>, IHasBeenSet<T>
+    public interface INotifyingItem<T> : INotifyingItemGetter<T>, IHasBeenSetItem<T>
     {
         new T Value { get; set; }
-        T DefaultValue { get; }
-        void SetCurrentAsDefault();
     }
 
     public class NotifyingItem<T> : INotifyingItem<T>
@@ -186,15 +183,9 @@ namespace Noggog.Notifying
             this.Item = item;
         }
 
-        public bool HasBeenSet { get { return true; } }
+        public bool HasBeenSet => true;
 
-        T INotifyingItemGetter<T>.Value
-        {
-            get
-            {
-                return this.Item;
-            }
-        }
+        T IHasBeenSetItemGetter<T>.Value => this.Item;
 
         void INotifyingItemGetter<T>.Subscribe<O>(O owner, NotifyingItemCallback<O, T> callback, bool fireInitial)
         {
@@ -302,10 +293,7 @@ namespace System
 
         public static void Set<T>(this INotifyingItem<T> not, T value)
         {
-            not.Set(value,
-                new NotifyingFireParameters(
-                    markAsSet: true,
-                    forceFire: false));
+            not.Set(value, NotifyingFireParameters.Typical);
         }
 
         public static void Unset<T>(this INotifyingItem<T> not)

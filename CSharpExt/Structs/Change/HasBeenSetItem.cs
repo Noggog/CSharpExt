@@ -1,14 +1,15 @@
-﻿using System;
+﻿using Noggog.Notifying;
+using System;
 
 namespace Noggog.Notifying
 {
-    public class HasBeenSetGetter : IHasBeenSetGetter
+    public class HasBeenSetGetter : IHasBeenSet
     {
         public static readonly HasBeenSetGetter NotBeenSet_Instance = new HasBeenSetGetter(false);
         public static readonly HasBeenSetGetter HasBeenSet_Instance = new HasBeenSetGetter(true);
 
         public readonly bool HasBeenSet;
-        bool IHasBeenSetGetter.HasBeenSet => this.HasBeenSet;
+        bool IHasBeenSet.HasBeenSet => this.HasBeenSet;
 
         public HasBeenSetGetter(bool on)
         {
@@ -17,23 +18,27 @@ namespace Noggog.Notifying
     }
 
     // Keep class, as it needs pass by reference
-    public class HasBeenSetItem<T> : IHasBeenSet<T>
+    public class HasBeenSetItem<T> : IHasBeenSetItem<T>
     {
         private T _Item;
         public T Item
         {
-            get { return _Item; }
-            set { Set(value); }
+            get => _Item;
+            set => Set(value);
         }
-        public bool HasBeenSet;
+        public bool HasBeenSet { get; set; }
+        public T DefaultValue { get; private set; }
 
-        bool IHasBeenSet<T>.HasBeenSet
+        public T Value { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
+        public HasBeenSetItem(
+            T defaultVal = default(T),
+            bool markAsSet = false)
         {
-            get { return this.HasBeenSet; }
-            set { this.HasBeenSet = value; }
+            this.DefaultValue = defaultVal;
+            this._Item = defaultVal;
+            this.HasBeenSet = markAsSet;
         }
-
-        bool IHasBeenSetGetter.HasBeenSet => this.HasBeenSet;
 
         public void Set(T item)
         {
@@ -43,30 +48,54 @@ namespace Noggog.Notifying
 
         public void Unset()
         {
-            this._Item = default(T);
+            this._Item = DefaultValue;
             this.HasBeenSet = false;
         }
 
-        void IHasBeenSet<T>.Set(T value, NotifyingFireParameters? cmds)
+        void IHasBeenSetItem<T>.Set(T value, NotifyingFireParameters? cmds)
         {
             this.Set(value);
         }
 
-        void IHasBeenSet<T>.Unset(NotifyingUnsetParameters? cmds)
+        void IHasBeenSetItem<T>.Unset(NotifyingUnsetParameters? cmds)
         {
             this.Unset();
         }
+
+        public void SetCurrentAsDefault()
+        {
+            this.DefaultValue = this.Item;
+        }
     }
 
-    public interface IHasBeenSetGetter
+    public interface IHasBeenSet
     {
         bool HasBeenSet { get; }
     }
 
-    public interface IHasBeenSet<T> : IHasBeenSetGetter
+    public interface IHasBeenSetItemGetter<T> : IHasBeenSet
     {
+        T Value { get; }
+    }
+
+    public interface IHasBeenSetItem<T> : IHasBeenSetItemGetter<T>
+    {
+        T DefaultValue { get; }
+        new T Value { get; set; }
         new bool HasBeenSet { get; set; }
         void Set(T value, NotifyingFireParameters? cmds);
         void Unset(NotifyingUnsetParameters? cmds);
+        void SetCurrentAsDefault();
+    }
+}
+
+namespace System
+{
+    public static class HasBeenSetItemExt
+    {
+        public static void Set<T>(this IHasBeenSetItem<T> not, T value)
+        {
+            not.Set(value, NotifyingFireParameters.Typical);
+        }
     }
 }

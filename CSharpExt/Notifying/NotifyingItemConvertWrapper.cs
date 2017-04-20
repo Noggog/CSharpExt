@@ -36,55 +36,13 @@ namespace Noggog.Notifying
         }
 
         #region NotifyingItem interface
-        public T Value
-        {
-            get
-            {
-                return Source.Value;
-            }
+        public T Value { get => Source.Value; set => this.Set(value); }
 
-            set
-            {
-                this.Set(value);
-            }
-        }
+        public T DefaultValue => Source.DefaultValue;
 
-        public T DefaultValue
-        {
-            get
-            {
-                return Source.DefaultValue;
-            }
-        }
+        public bool HasBeenSet { get => this.Source.HasBeenSet; set => this.Source.HasBeenSet = value; }
 
-        public bool HasBeenSet
-        {
-            get
-            {
-                return this.Source.HasBeenSet;
-            }
-
-            set
-            {
-                this.Source.HasBeenSet = value;
-            }
-        }
-
-        T INotifyingItemGetter<T>.Value
-        {
-            get
-            {
-                return ((INotifyingItemGetter<T>)this.Source).Value;
-            }
-        }
-
-        bool IHasBeenSetGetter.HasBeenSet
-        {
-            get
-            {
-                return ((IHasBeenSetGetter)this.Source).HasBeenSet;
-            }
-        }
+        T IHasBeenSetItemGetter<T>.Value => this.Source.Value;
 
         public void Unset(NotifyingUnsetParameters? cmds = null)
         {
@@ -139,55 +97,14 @@ namespace Noggog.Notifying
         }
 
         #region NotifyingItem interface
-        R INotifyingItem<R>.Value
-        {
-            get
-            {
-                return this.incomingConverter(this.Source.Value);
-            }
+        R INotifyingItem<R>.Value { get => this.incomingConverter(this.Source.Value); set => this.Source.Value = this.outgoingConverter(value); }
+        R IHasBeenSetItem<R>.Value { get => this.incomingConverter(this.Source.Value); set => this.Source.Value = this.outgoingConverter(value); }
 
-            set
-            {
-                this.Source.Value = this.outgoingConverter(value);
-            }
-        }
+        public R DefaultValue => this.incomingConverter(this.Source.DefaultValue);
 
-        public R DefaultValue
-        {
-            get
-            {
-                return this.incomingConverter(this.Source.DefaultValue);
-            }
-        }
+        public bool HasBeenSet { get => this.Source.HasBeenSet; set => this.Source.HasBeenSet = value; }
 
-        public bool HasBeenSet
-        {
-            get
-            {
-                return this.Source.HasBeenSet;
-            }
-
-            set
-            {
-                this.Source.HasBeenSet = value;
-            }
-        }
-
-        bool IHasBeenSetGetter.HasBeenSet
-        {
-            get
-            {
-                return this.Source.HasBeenSet;
-            }
-        }
-
-        public R Value
-        {
-            get
-            {
-                return this.incomingConverter(this.Source.Value);
-            }
-        }
+        public R Value => this.incomingConverter(this.Source.Value);
 
         public void Unset(NotifyingUnsetParameters? cmds)
         {
