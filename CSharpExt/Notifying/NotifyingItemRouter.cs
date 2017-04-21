@@ -42,6 +42,8 @@ namespace Noggog.Notifying
         public T DefaultValue => _child.DefaultValue;
 
         T IHasBeenSetItemGetter<T>.Value => this.Value;
+        void IHasBeenSetItem<T>.Set(T value) => Set(value, cmd: null);
+        void IHasBeenSetItem<T>.Unset() => Unset(cmds: null);
 
         public bool HasBeenSet
         {

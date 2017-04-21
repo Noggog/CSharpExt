@@ -18,6 +18,8 @@ namespace Noggog.Notifying
     public interface INotifyingItem<T> : INotifyingItemGetter<T>, IHasBeenSetItem<T>
     {
         new T Value { get; set; }
+        void Set(T value, NotifyingFireParameters? cmds);
+        void Unset(NotifyingUnsetParameters? cmds);
     }
 
     public class NotifyingItem<T> : INotifyingItem<T>
@@ -167,7 +169,16 @@ namespace Noggog.Notifying
                 }
             }
         }
-        
+
+        void IHasBeenSetItem<T>.Set(T value) => Set(value, cmd: null);
+
+        void IHasBeenSetItem<T>.Unset() => Unset(cmds: null);
+
+        public void Unset()
+        {
+            throw new NotImplementedException();
+        }
+
         public static implicit operator T(NotifyingItem<T> item)
         {
             return item.Value;

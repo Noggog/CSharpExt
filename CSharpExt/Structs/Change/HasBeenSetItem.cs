@@ -52,16 +52,6 @@ namespace Noggog.Notifying
             this.HasBeenSet = false;
         }
 
-        void IHasBeenSetItem<T>.Set(T value, NotifyingFireParameters? cmds)
-        {
-            this.Set(value);
-        }
-
-        void IHasBeenSetItem<T>.Unset(NotifyingUnsetParameters? cmds)
-        {
-            this.Unset();
-        }
-
         public void SetCurrentAsDefault()
         {
             this.DefaultValue = this.Item;
@@ -83,19 +73,8 @@ namespace Noggog.Notifying
         T DefaultValue { get; }
         new T Value { get; set; }
         new bool HasBeenSet { get; set; }
-        void Set(T value, NotifyingFireParameters? cmds);
-        void Unset(NotifyingUnsetParameters? cmds);
+        void Set(T value);
+        void Unset();
         void SetCurrentAsDefault();
-    }
-}
-
-namespace System
-{
-    public static class HasBeenSetItemExt
-    {
-        public static void Set<T>(this IHasBeenSetItem<T> not, T value)
-        {
-            not.Set(value, NotifyingFireParameters.Typical);
-        }
     }
 }

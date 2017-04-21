@@ -43,6 +43,8 @@ namespace Noggog.Notifying
         public bool HasBeenSet { get => this.Source.HasBeenSet; set => this.Source.HasBeenSet = value; }
 
         T IHasBeenSetItemGetter<T>.Value => this.Source.Value;
+        void IHasBeenSetItem<T>.Set(T value) => Set(value, cmd: null);
+        void IHasBeenSetItem<T>.Unset() => Unset(cmds: null);
 
         public void Unset(NotifyingUnsetParameters? cmds = null)
         {
@@ -99,6 +101,8 @@ namespace Noggog.Notifying
         #region NotifyingItem interface
         R INotifyingItem<R>.Value { get => this.incomingConverter(this.Source.Value); set => this.Source.Value = this.outgoingConverter(value); }
         R IHasBeenSetItem<R>.Value { get => this.incomingConverter(this.Source.Value); set => this.Source.Value = this.outgoingConverter(value); }
+        void IHasBeenSetItem<R>.Set(R value) => Set(value, cmds: null);
+        void IHasBeenSetItem<R>.Unset() => Unset(cmds: null);
 
         public R DefaultValue => this.incomingConverter(this.Source.DefaultValue);
 
