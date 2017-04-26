@@ -146,7 +146,6 @@ namespace Noggog.Notifying
 
 namespace System
 {
-
     public static class INotifyingCollectionExt
     {
         #region Cast

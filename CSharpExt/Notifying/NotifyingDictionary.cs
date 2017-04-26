@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using Noggog.Containers.Pools;
 
@@ -459,6 +460,46 @@ namespace Noggog.Notifying
         public static void Remove<K, V>(this INotifyingDictionary<K, V> getter, K key)
         {
             getter.Remove(key, null);
+        }
+
+        public static V TryGetValue<K, V>(this INotifyingDictionaryGetter<K, V> dict, K key)
+        {
+            dict.TryGetValue(key, out V val);
+            return val;
+        }
+
+        public static void SetToWithDefault<K, V>(
+            this INotifyingDictionary<K, V> not,
+            IHasBeenSetItemGetter<IEnumerable<KeyValuePair<K, V>>> rhs,
+            INotifyingDictionaryGetter<K, V> def,
+            NotifyingFireParameters? cmds,
+            Func<K, V, V, KeyValuePair<K, V>> converter)
+        {
+            if (rhs.HasBeenSet)
+            {
+                if (def == null)
+                {
+                    not.SetTo(
+                        rhs.Value.Select((t) => converter(t.Key, t.Value, default(V))),
+                        cmds);
+                }
+                else
+                {
+                    not.SetTo(
+                        rhs.Value.Select((t) => converter(t.Key, t.Value, def.TryGetValue(t.Key))),
+                        cmds);
+                }
+            }
+            else if (def?.HasBeenSet ?? false)
+            {
+                not.SetTo(
+                    def.Value.Select((t) => converter(t.Key, t.Value, default(V))),
+                    cmds);
+            }
+            else
+            {
+                not.Unset(cmds.ToUnsetParams());
+            }
         }
     }
 }

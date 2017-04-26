@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Noggog.Notifying;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +13,7 @@ namespace Noggog.Notifying
 
     public interface INotifyingKeyedCollection<K, V> : INotifyingKeyedCollectionGetter<K, V>
     {
+        Func<V, K> KeyGetter { get; }
         void Set(V val, NotifyingFireParameters? cmds);
         void Remove(K key, NotifyingFireParameters? cmds);
         void Unset(NotifyingUnsetParameters? cmds);
@@ -25,7 +27,7 @@ namespace Noggog.Notifying
 
     public class NotifyingKeyedCollection<K, V> : INotifyingKeyedCollection<K, V>
     {
-        private Func<V, K> keyGetter;
+        public Func<V, K> KeyGetter { get; private set; }
         private NotifyingDictionary<K, V> dict = new NotifyingDictionary<K, V>();
 
         public bool HasBeenSet
@@ -46,12 +48,12 @@ namespace Noggog.Notifying
 
         public NotifyingKeyedCollection(Func<V, K> keyGetter)
         {
-            this.keyGetter = keyGetter;
+            this.KeyGetter = keyGetter;
         }
 
         public void Set(V val, NotifyingFireParameters? cmds)
         {
-            K key = keyGetter(val);
+            K key = KeyGetter(val);
             this.dict.Set(key, val, cmds);
         }
 
@@ -62,7 +64,7 @@ namespace Noggog.Notifying
 
         public bool Remove(V val, NotifyingFireParameters? cmds)
         {
-            K key = keyGetter(val);
+            K key = KeyGetter(val);
             return this.dict.Remove(key, cmds);
         }
 
@@ -106,14 +108,14 @@ namespace Noggog.Notifying
             this.dict.SetTo(
                 enumer.Select(
                     (v) => new KeyValuePair<K, V>(
-                        keyGetter(v),
+                        KeyGetter(v),
                         v)),
                 cmds);
         }
 
         public void Add(V item, NotifyingFireParameters? cmds)
         {
-            K key = keyGetter(item);
+            K key = KeyGetter(item);
             this.dict.Set(key, item, cmds);
         }
 
@@ -122,7 +124,7 @@ namespace Noggog.Notifying
             this.dict.Set(
                 items.Select(
                     (v) => new KeyValuePair<K, V>(
-                        keyGetter(v),
+                        KeyGetter(v),
                         v)),
                 cmds);
         }
@@ -141,6 +143,66 @@ namespace Noggog.Notifying
         IEnumerator IEnumerable.GetEnumerator()
         {
             return this.GetEnumerator();
+        }
+    }
+}
+
+namespace System
+{
+    public static class INotifyingKeyedCollectionExt
+    {
+        public static void SetToWithDefault<K, V>(
+            this INotifyingKeyedCollection<K, V> not,
+            INotifyingKeyedCollectionGetter<K, V> rhs,
+            INotifyingKeyedCollectionGetter<K, V> def,
+            NotifyingFireParameters? cmds)
+        {
+            if (rhs.HasBeenSet)
+            {
+                not.SetTo(rhs.Values, cmds);
+            }
+            else if (def?.HasBeenSet ?? false)
+            {
+                not.SetTo(def.Values, cmds);
+            }
+            else
+            {
+                not.Unset(cmds.ToUnsetParams());
+            }
+        }
+
+        public static void SetToWithDefault<K, V>(
+            this INotifyingKeyedCollection<K, V> not,
+            INotifyingKeyedCollectionGetter<K, V> rhs,
+            INotifyingKeyedCollectionGetter<K, V> def,
+            NotifyingFireParameters? cmds,
+            Func<V, V, V> converter)
+        {
+            if (rhs.HasBeenSet)
+            {
+                if (def == null)
+                {
+                    not.SetTo(
+                        rhs.Values.Select((t) => converter(t, default(V))),
+                        cmds);
+                }
+                else
+                {
+                    not.SetTo(
+                        rhs.Values.Select((t) => converter(t, def[not.KeyGetter(t)])),
+                        cmds);
+                }
+            }
+            else if (def?.HasBeenSet ?? false)
+            {
+                not.SetTo(
+                    def.Values.Select((t) => converter(t, default(V))),
+                    cmds);
+            }
+            else
+            {
+                not.Unset(cmds.ToUnsetParams());
+            }
         }
     }
 }

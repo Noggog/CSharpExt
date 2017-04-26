@@ -34,6 +34,8 @@ namespace Noggog.Notifying
 
         public IEnumerable<KeyValuePair<K, V>> Value => _child.Value;
 
+        public Func<V, K> KeyGetter => _child.KeyGetter;
+
         V INotifyingDictionaryGetter<K, V>.this[K key] => _child[key];
 
         public V this[K key] => _child[key];
