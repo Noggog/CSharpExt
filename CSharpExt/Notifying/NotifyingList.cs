@@ -636,5 +636,30 @@ namespace System
         {
             INotifyingCollectionExt.SetTo(list, ((IEnumerable<T>)items));
         }
+
+        public static bool InRange<T>(this INotifyingListGetter<T> list, int index)
+        {
+            return index >= 0 && index < list.Count.Value;
+        }
+
+        public static bool TryGet<T>(this INotifyingListGetter<T> list, int index, out T item)
+        {
+            if (!InRange(list, index))
+            {
+                item = default(T);
+                return false;
+            }
+            item = list[index];
+            return true;
+        }
+
+        public static T TryGet<T>(this INotifyingListGetter<T> list, int index)
+        {
+            if (!InRange(list, index))
+            {
+                return default(T);
+            }
+            return list[index];
+        }
     }
 }

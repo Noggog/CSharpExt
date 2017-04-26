@@ -36,6 +36,26 @@ namespace System
             return index >= 0 && index < list.Count;
         }
 
+        public static bool TryGet<T>(this IList<T> list, int index, out T item)
+        {
+            if (!InRange(list, index))
+            {
+                item = default(T);
+                return false;
+            }
+            item = list[index];
+            return true;
+        }
+
+        public static T TryGet<T>(this IList<T> list, int index)
+        {
+            if (!InRange(list, index))
+            {
+                return default(T);
+            }
+            return list[index];
+        }
+
         public static List<T> Populate<T>(this List<T> list, int num) where T : new()
         {
             for (int i = 0; i < num; i++)

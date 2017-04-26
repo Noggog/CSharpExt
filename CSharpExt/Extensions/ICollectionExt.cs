@@ -50,5 +50,17 @@ namespace System
                 i++;
             }
         }
+
+        public static void First<T>(
+            this ICollection<T> coll,
+            Action<T, bool> each)
+        {
+            bool first = true;
+            foreach (var item in coll)
+            {
+                each(item, first);
+                first = false;
+            }
+        }
     }
 }

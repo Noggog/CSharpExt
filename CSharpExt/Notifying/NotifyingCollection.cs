@@ -283,5 +283,60 @@ namespace System
         {
             return not.Remove(item, null);
         }
+
+        public static void SetToWithDefault<T>(
+            this INotifyingCollection<T> not, 
+            IHasBeenSetItemGetter<IEnumerable<T>> rhs, 
+            IHasBeenSetItemGetter<IEnumerable<T>> def,
+            NotifyingFireParameters? cmds)
+        {
+            if (rhs.HasBeenSet)
+            {
+                not.SetTo(rhs.Value, cmds);
+            }
+            else if (def?.HasBeenSet ?? false)
+            {
+                not.SetTo(def.Value, cmds);
+            }
+            else
+            {
+                not.Unset(cmds.ToUnsetParams());
+            }
+        }
+
+        public static void SetToWithDefault<T>(
+            this INotifyingCollection<T> not,
+            IHasBeenSetItemGetter<IEnumerable<T>> rhs, 
+            INotifyingListGetter<T> def, 
+            NotifyingFireParameters? cmds,
+            Func<T, T, T> converter)
+        {
+            if (rhs.HasBeenSet)
+            {
+                if (def == null)
+                {
+                    not.SetTo(
+                        rhs.Value.Select((t) => converter(t, default(T))),
+                        cmds);
+                }
+                else
+                {
+                    int i = 0;
+                    not.SetTo(
+                        rhs.Value.Select((t) => converter(t, def.TryGet(i++))),
+                        cmds);
+                }
+            }
+            else if (def?.HasBeenSet ?? false)
+            {
+                not.SetTo(
+                    def.Value.Select((t) => converter(t, default(T))),
+                    cmds);
+            }
+            else
+            {
+                not.Unset(cmds.ToUnsetParams());
+            }
+        }
     }
 }
