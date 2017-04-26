@@ -67,7 +67,9 @@ namespace Noggog.Notifying
                 _child.HasBeenSet = value;
             }
         }
-        
+
+        IEnumerable<T> IHasBeenSetItemGetter<IEnumerable<T>>.Value => _child.Value;
+
         public void Set(int index, T item, NotifyingFireParameters? cmds)
         {
             SwapOver();

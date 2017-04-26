@@ -35,6 +35,8 @@ namespace Noggog.Notifying
         public IEnumerable<K> Keys => dict.Keys;
         public IEnumerable<V> Values => dict.Values;
 
+        IEnumerable<KeyValuePair<K, V>> IHasBeenSetItemGetter<IEnumerable<KeyValuePair<K, V>>>.Value => dict;
+
         public NotifyingDictionary(
             Func<V, V> valConv = null)
         {

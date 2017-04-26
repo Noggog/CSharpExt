@@ -7,12 +7,11 @@ using Noggog.Notifying;
 
 namespace Noggog.Notifying
 {
-    public interface INotifyingEnumerable<T> : IEnumerable<T>
+    public interface INotifyingEnumerable<T> : IEnumerable<T>, IHasBeenSetItemGetter<IEnumerable<T>>
     {
         void Subscribe_Enumerable<O>(O owner, NotifyingEnumerableCallback<O, T> callback, bool fireInitial);
         void Unsubscribe(object owner);
         INotifyingItemGetter<int> Count { get; }
-        bool HasBeenSet { get; }
     }
 
     public interface INotifyingCollection<T> : INotifyingEnumerable<T>
@@ -169,9 +168,11 @@ namespace System
         {
             public INotifyingEnumerable<T> Orig;
 
-            public bool HasBeenSet { get { return Orig.HasBeenSet; } }
+            public bool HasBeenSet => Orig.HasBeenSet;
 
-            public INotifyingItemGetter<int> Count { get { return Orig.Count; } }
+            public INotifyingItemGetter<int> Count => Orig.Count;
+
+            IEnumerable<R> IHasBeenSetItemGetter<IEnumerable<R>>.Value => Orig.Select<T, R>((t) => t);
 
             public void Subscribe_Enumerable<O>(O owner, NotifyingEnumerableCallback<O, R> callback, bool fireInitial)
             {

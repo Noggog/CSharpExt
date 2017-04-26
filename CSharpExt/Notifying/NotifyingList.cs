@@ -433,6 +433,8 @@ namespace Noggog.Notifying
         {
             get { return false; }
         }
+
+        IEnumerable<T> IHasBeenSetItemGetter<IEnumerable<T>>.Value => list;
         #endregion
     }
 }
@@ -470,6 +472,8 @@ namespace System
             public INotifyingItemGetter<int> Count { get { return Orig.Count; } }
 
             public bool HasBeenSet { get { return Orig.HasBeenSet; } }
+
+            public IEnumerable<R> Value => Orig.Value.Select((t) => Converter(t));
 
             public R this[int index]
             {
@@ -544,6 +548,8 @@ namespace System
             public INotifyingItemGetter<int> Count { get { return Orig.Count; } }
 
             public bool HasBeenSet { get { return Orig.HasBeenSet; } }
+
+            IEnumerable<R> IHasBeenSetItemGetter<IEnumerable<R>>.Value => Orig.Select((t) => _converter(t));
 
             public R this[int index]
             {

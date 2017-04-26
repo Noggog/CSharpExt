@@ -36,11 +36,12 @@ namespace Noggog.Notifying
 
         public INotifyingItemGetter<int> Count => dict.Count;
 
-        bool INotifyingEnumerable<KeyValuePair<K, V>>.HasBeenSet => dict.HasBeenSet;
-
         public IEnumerable<K> Keys => dict.Keys;
         public IEnumerable<V> Values => dict.Values;
         public IEnumerable<KeyValuePair<K, V>> KeyedValues => dict;
+
+        IEnumerable<KeyValuePair<K, V>> IHasBeenSetItemGetter<IEnumerable<KeyValuePair<K, V>>>.Value => dict;
+
         public V this[K key] => dict[key];
 
         public NotifyingKeyedCollection(Func<V, K> keyGetter)
