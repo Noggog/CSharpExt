@@ -311,5 +311,53 @@ namespace System
         {
             not.Unset(null);
         }
+
+        public static void SetToWithDefault<T>(
+            this INotifyingItem<T> not,
+            INotifyingItemGetter<T> rhs,
+            INotifyingItemGetter<T> def,
+            NotifyingFireParameters? cmds)
+        {
+            if (rhs.HasBeenSet)
+            {
+                not.Set(rhs.Value, cmds);
+            }
+            else if (def?.HasBeenSet ?? false)
+            {
+                not.Set(def.Value, cmds);
+            }
+            else
+            {
+                not.Unset(cmds.ToUnsetParams());
+            }
+        }
+
+        public static void SetToWithDefault<T>(
+            this INotifyingItem<T> not,
+            INotifyingItemGetter<T> rhs,
+            INotifyingItemGetter<T> def,
+            NotifyingFireParameters? cmds,
+            Func<T, T, T> converter)
+        {
+            if (rhs.HasBeenSet)
+            {
+                if (def == null)
+                {
+                    not.Set(converter(rhs.Value, def.Value), cmds);
+                }
+                else
+                {
+                    not.Set(converter(rhs.Value, default(T)), cmds);
+                }
+            }
+            else if (def?.HasBeenSet ?? false)
+            {
+                not.Set(converter(def.Value, default(T)), cmds);
+            }
+            else
+            {
+                not.Unset(cmds.ToUnsetParams());
+            }
+        }
     }
 }
