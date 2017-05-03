@@ -95,7 +95,7 @@ namespace Noggog.Notifying
         {
             cmds = ProcessCmds(cmds);
             list.Insert(index, item);
-            _count.Set(_count.Value + 1, cmds);
+            _count.Set(_count.Item + 1, cmds);
             if (!HasSubscribers()) return;
             FireChange(
                 new ChangeIndex<T>(default(T), item, AddRemoveModify.Add, index).Single(),
@@ -434,7 +434,7 @@ namespace Noggog.Notifying
             get { return false; }
         }
 
-        IEnumerable<T> IHasBeenSetItemGetter<IEnumerable<T>>.Value => list;
+        IEnumerable<T> IHasBeenSetItemGetter<IEnumerable<T>>.Item => list;
         #endregion
     }
 }
@@ -469,19 +469,13 @@ namespace System
             public INotifyingListGetter<T> Orig;
             public Func<T, R> Converter;
 
-            public INotifyingItemGetter<int> Count { get { return Orig.Count; } }
+            public INotifyingItemGetter<int> Count => Orig.Count;
 
-            public bool HasBeenSet { get { return Orig.HasBeenSet; } }
+            public bool HasBeenSet => Orig.HasBeenSet;
+            
+            IEnumerable<R> IHasBeenSetItemGetter<IEnumerable<R>>.Item => Orig.Item.Select((t) => Converter(t));
 
-            public IEnumerable<R> Value => Orig.Value.Select((t) => Converter(t));
-
-            public R this[int index]
-            {
-                get
-                {
-                    return Converter(Orig[index]);
-                }
-            }
+            public R this[int index] => Converter(Orig[index]);
 
             public void Subscribe_Enumerable<O>(O owner, NotifyingEnumerableCallback<O, R> callback, bool fireInitial = true)
             {
@@ -549,7 +543,7 @@ namespace System
 
             public bool HasBeenSet { get { return Orig.HasBeenSet; } }
 
-            IEnumerable<R> IHasBeenSetItemGetter<IEnumerable<R>>.Value => Orig.Select((t) => _converter(t));
+            IEnumerable<R> IHasBeenSetItemGetter<IEnumerable<R>>.Item => Orig.Select((t) => _converter(t));
 
             public R this[int index]
             {
@@ -639,7 +633,7 @@ namespace System
 
         public static bool InRange<T>(this INotifyingListGetter<T> list, int index)
         {
-            return index >= 0 && index < list.Count.Value;
+            return index >= 0 && index < list.Count.Item;
         }
 
         public static bool TryGet<T>(this INotifyingListGetter<T> list, int index, out T item)

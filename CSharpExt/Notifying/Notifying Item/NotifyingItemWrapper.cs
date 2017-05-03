@@ -17,7 +17,7 @@ namespace Noggog.Notifying
 
         public bool HasBeenSet => true;
 
-        T IHasBeenSetItemGetter<T>.Value => this.Item;
+        T IHasBeenSetItemGetter<T>.Item => this.Item;
 
         void INotifyingItemGetter<T>.Subscribe<O>(O owner, NotifyingItemCallback<O, T> callback, bool fireInitial)
         {

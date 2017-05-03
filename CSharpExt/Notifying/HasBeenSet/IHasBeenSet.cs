@@ -13,13 +13,13 @@ namespace Noggog.Notifying
 
     public interface IHasBeenSetItemGetter<T> : IHasBeenSet
     {
-        T Value { get; }
+        T Item { get; }
     }
 
     public interface IHasBeenSetItem<T> : IHasBeenSetItemGetter<T>
     {
         T DefaultValue { get; }
-        new T Value { get; set; }
+        new T Item { get; set; }
         new bool HasBeenSet { get; set; }
         void Set(T value);
         void Unset();

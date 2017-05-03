@@ -18,7 +18,7 @@ namespace Noggog.Notifying
 
     public interface INotifyingItem<T> : INotifyingItemGetter<T>, IHasBeenSetItem<T>
     {
-        new T Value { get; set; }
+        new T Item { get; set; }
         void Set(T value, NotifyingFireParameters? cmds);
         void Unset(NotifyingUnsetParameters? cmds);
     }

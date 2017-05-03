@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Noggog.Notifying
 {
-    public class HasBeenSetItemNoNull<T> : IHasBeenSetItem<T>
+    public class HasBeenSetItemNoNullOnSet<T> : IHasBeenSetItem<T>
     {
         private T _Item;
         public T Item
@@ -17,13 +17,16 @@ namespace Noggog.Notifying
         public bool HasBeenSet { get; set; }
         public T DefaultValue { get; private set; }
         Func<T> defaultFallback;
+        Action<T> onSet;
 
-        public HasBeenSetItemNoNull(
+        public HasBeenSetItemNoNullOnSet(
             Func<T> defaultFallback,
+            Action<T> onSet,
             T defaultVal = default(T),
             bool markAsSet = false)
         {
             this.defaultFallback = defaultFallback;
+            this.onSet = onSet;
             this.DefaultValue = defaultVal;
             this._Item = defaultVal;
             if (defaultVal == null)
@@ -48,6 +51,7 @@ namespace Noggog.Notifying
                 this._Item = item;
             }
             this.HasBeenSet = true;
+            this.onSet(this._Item);
         }
 
         public void Unset()
@@ -61,6 +65,7 @@ namespace Noggog.Notifying
                 this._Item = this.DefaultValue;
             }
             this.HasBeenSet = false;
+            this.onSet(this._Item);
         }
 
         public void SetCurrentAsDefault()
@@ -69,7 +74,7 @@ namespace Noggog.Notifying
         }
     }
 
-    public class HasBeenSetItemNoNullDirect<T> : IHasBeenSetItem<T>
+    public class HasBeenSetItemNoNullDirectOnSet<T> : IHasBeenSetItem<T>
         where T : new()
     {
         private T _Item;
@@ -80,12 +85,15 @@ namespace Noggog.Notifying
         }
         public bool HasBeenSet { get; set; }
         public T DefaultValue { get; private set; }
+        Action<T> onSet;
 
-        public HasBeenSetItemNoNullDirect(
+        public HasBeenSetItemNoNullDirectOnSet(
+            Action<T> onSet,
             T defaultVal = default(T),
             bool markAsSet = false)
         {
             this.DefaultValue = defaultVal;
+            this.onSet = onSet;
             this._Item = defaultVal;
             if (defaultVal == null)
             {
@@ -109,6 +117,7 @@ namespace Noggog.Notifying
                 this._Item = item;
             }
             this.HasBeenSet = true;
+            this.onSet(this._Item);
         }
 
         public void Unset()
@@ -122,6 +131,7 @@ namespace Noggog.Notifying
                 this._Item = this.DefaultValue;
             }
             this.HasBeenSet = false;
+            this.onSet(this._Item);
         }
 
         public void SetCurrentAsDefault()
@@ -130,7 +140,7 @@ namespace Noggog.Notifying
         }
     }
 
-    public class HasBeenSetItemNoNullDirect<T, Backup> : IHasBeenSetItem<T>
+    public class HasBeenSetItemNoNullDirectOnSet<T, Backup> : IHasBeenSetItem<T>
         where Backup : T, new()
     {
         private T _Item;
@@ -141,12 +151,15 @@ namespace Noggog.Notifying
         }
         public bool HasBeenSet { get; set; }
         public T DefaultValue { get; private set; }
+        Action<T> onSet;
 
-        public HasBeenSetItemNoNullDirect(
+        public HasBeenSetItemNoNullDirectOnSet(
+            Action<T> onSet,
             T defaultVal = default(T),
             bool markAsSet = false)
         {
             this.DefaultValue = defaultVal;
+            this.onSet = onSet;
             this._Item = defaultVal;
             if (defaultVal == null)
             {
@@ -170,6 +183,7 @@ namespace Noggog.Notifying
                 this._Item = item;
             }
             this.HasBeenSet = true;
+            this.onSet(this._Item);
         }
 
         public void Unset()
@@ -183,6 +197,7 @@ namespace Noggog.Notifying
                 this._Item = this.DefaultValue;
             }
             this.HasBeenSet = false;
+            this.onSet(this._Item);
         }
 
         public void SetCurrentAsDefault()

@@ -25,23 +25,23 @@ namespace Noggog.Notifying
             }
         }
 
-        public T Value
+        public T Item
         {
             get
             {
-                return _child.Value;
+                return _child.Item;
             }
 
             set
             {
                 SwapOver();
-                _child.Value = value;
+                _child.Item = value;
             }
         }
 
         public T DefaultValue => _child.DefaultValue;
 
-        T IHasBeenSetItemGetter<T>.Value => this.Value;
+        T IHasBeenSetItemGetter<T>.Item => this.Item;
         void IHasBeenSetItem<T>.Set(T value) => Set(value, cmd: null);
         void IHasBeenSetItem<T>.Unset() => Unset(cmds: null);
 

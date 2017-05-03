@@ -11,7 +11,7 @@ namespace Noggog.Notifying
     {
         public bool HasBeenSet => toForward.HasBeenSet;
 
-        public T Value => toForward.Value;
+        public T Item => toForward.Item;
 
         INotifyingItemGetter<T> toForward;
 

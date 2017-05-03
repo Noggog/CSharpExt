@@ -42,7 +42,7 @@ namespace Noggog.Notifying
         public IEnumerable<V> Values => dict.Values;
         public IEnumerable<KeyValuePair<K, V>> KeyedValues => dict;
 
-        IEnumerable<KeyValuePair<K, V>> IHasBeenSetItemGetter<IEnumerable<KeyValuePair<K, V>>>.Value => dict;
+        IEnumerable<KeyValuePair<K, V>> IHasBeenSetItemGetter<IEnumerable<KeyValuePair<K, V>>>.Item => dict;
 
         public V this[K key] => dict[key];
 
@@ -136,7 +136,7 @@ namespace Noggog.Notifying
 
         public static bool ValuesEqual(INotifyingKeyedCollection<K, V> lhs, INotifyingKeyedCollection<K, V> rhs)
         {
-            if (((INotifyingEnumerable<V>)lhs).Count.Value != ((INotifyingEnumerable<V>)rhs).Count.Value) return false;
+            if (((INotifyingEnumerable<V>)lhs).Count.Item != ((INotifyingEnumerable<V>)rhs).Count.Item) return false;
             return lhs.Values.SequenceEqual(rhs.Values);
         }
         

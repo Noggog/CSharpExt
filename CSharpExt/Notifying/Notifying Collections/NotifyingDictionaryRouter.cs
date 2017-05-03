@@ -31,7 +31,7 @@ namespace Noggog.Notifying
 
         public IEnumerable<V> Values => _child.Values;
 
-        IEnumerable<KeyValuePair<K, V>> IHasBeenSetItemGetter<IEnumerable<KeyValuePair<K, V>>>.Value => _child.Value;
+        IEnumerable<KeyValuePair<K, V>> IHasBeenSetItemGetter<IEnumerable<KeyValuePair<K, V>>>.Item => _child.Item;
 
         V INotifyingDictionaryGetter<K, V>.this[K key] => _child[key];
 

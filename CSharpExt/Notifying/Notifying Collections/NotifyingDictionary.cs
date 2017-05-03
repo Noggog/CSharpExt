@@ -36,7 +36,7 @@ namespace Noggog.Notifying
         public IEnumerable<K> Keys => dict.Keys;
         public IEnumerable<V> Values => dict.Values;
 
-        IEnumerable<KeyValuePair<K, V>> IHasBeenSetItemGetter<IEnumerable<KeyValuePair<K, V>>>.Value => dict;
+        IEnumerable<KeyValuePair<K, V>> IHasBeenSetItemGetter<IEnumerable<KeyValuePair<K, V>>>.Item => dict;
 
         public NotifyingDictionary(
             Func<V, V> valConv = null)
@@ -480,20 +480,20 @@ namespace Noggog.Notifying
                 if (def == null)
                 {
                     not.SetTo(
-                        rhs.Value.Select((t) => converter(t.Key, t.Value, default(V))),
+                        rhs.Item.Select((t) => converter(t.Key, t.Value, default(V))),
                         cmds);
                 }
                 else
                 {
                     not.SetTo(
-                        rhs.Value.Select((t) => converter(t.Key, t.Value, def.TryGetValue(t.Key))),
+                        rhs.Item.Select((t) => converter(t.Key, t.Value, def.TryGetValue(t.Key))),
                         cmds);
                 }
             }
             else if (def?.HasBeenSet ?? false)
             {
                 not.SetTo(
-                    def.Value.Select((t) => converter(t.Key, t.Value, default(V))),
+                    def.Item.Select((t) => converter(t.Key, t.Value, default(V))),
                     cmds);
             }
             else

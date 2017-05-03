@@ -171,7 +171,7 @@ namespace System
 
             public INotifyingItemGetter<int> Count => Orig.Count;
 
-            IEnumerable<R> IHasBeenSetItemGetter<IEnumerable<R>>.Value => Orig.Select<T, R>((t) => t);
+            IEnumerable<R> IHasBeenSetItemGetter<IEnumerable<R>>.Item => Orig.Select<T, R>((t) => t);
 
             public void Subscribe_Enumerable<O>(O owner, NotifyingEnumerableCallback<O, R> callback, bool fireInitial)
             {
@@ -291,11 +291,11 @@ namespace System
         {
             if (rhs.HasBeenSet)
             {
-                not.SetTo(rhs.Value, cmds);
+                not.SetTo(rhs.Item, cmds);
             }
             else if (def?.HasBeenSet ?? false)
             {
-                not.SetTo(def.Value, cmds);
+                not.SetTo(def.Item, cmds);
             }
             else
             {
@@ -315,21 +315,21 @@ namespace System
                 if (def == null)
                 {
                     not.SetTo(
-                        rhs.Value.Select((t) => converter(t, default(T))),
+                        rhs.Item.Select((t) => converter(t, default(T))),
                         cmds);
                 }
                 else
                 {
                     int i = 0;
                     not.SetTo(
-                        rhs.Value.Select((t) => converter(t, def.TryGet(i++))),
+                        rhs.Item.Select((t) => converter(t, def.TryGet(i++))),
                         cmds);
                 }
             }
             else if (def?.HasBeenSet ?? false)
             {
                 not.SetTo(
-                    def.Value.Select((t) => converter(t, default(T))),
+                    def.Item.Select((t) => converter(t, default(T))),
                     cmds);
             }
             else

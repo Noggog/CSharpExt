@@ -30,19 +30,19 @@ namespace Noggog.Notifying
                         source.DefaultValue));
                 if (result.Succeeded)
                 {
-                    Source.Value = result.Value;
+                    Source.Item = result.Value;
                 }
             }
         }
 
         #region NotifyingItem interface
-        public T Value { get => Source.Value; set => this.Set(value); }
+        public T Item { get => Source.Item; set => this.Set(value); }
 
         public T DefaultValue => Source.DefaultValue;
 
         public bool HasBeenSet { get => this.Source.HasBeenSet; set => this.Source.HasBeenSet = value; }
 
-        T IHasBeenSetItemGetter<T>.Value => this.Source.Value;
+        T IHasBeenSetItemGetter<T>.Item => this.Source.Item;
         void IHasBeenSetItem<T>.Set(T value) => Set(value, cmd: null);
         void IHasBeenSetItem<T>.Unset() => Unset(cmds: null);
 
@@ -62,7 +62,7 @@ namespace Noggog.Notifying
         {
             var setting = this.incomingConverter(
                 new Change<T>(
-                    Source.Value,
+                    Source.Item,
                     value));
             if (setting.Succeeded)
             {
@@ -99,8 +99,8 @@ namespace Noggog.Notifying
         }
 
         #region NotifyingItem interface
-        R INotifyingItem<R>.Value { get => this.incomingConverter(this.Source.Value); set => this.Source.Value = this.outgoingConverter(value); }
-        R IHasBeenSetItem<R>.Value { get => this.incomingConverter(this.Source.Value); set => this.Source.Value = this.outgoingConverter(value); }
+        R INotifyingItem<R>.Item { get => this.incomingConverter(this.Source.Item); set => this.Source.Item = this.outgoingConverter(value); }
+        R IHasBeenSetItem<R>.Item { get => this.incomingConverter(this.Source.Item); set => this.Source.Item = this.outgoingConverter(value); }
         void IHasBeenSetItem<R>.Set(R value) => Set(value, cmds: null);
         void IHasBeenSetItem<R>.Unset() => Unset(cmds: null);
 
@@ -108,7 +108,7 @@ namespace Noggog.Notifying
 
         public bool HasBeenSet { get => this.Source.HasBeenSet; set => this.Source.HasBeenSet = value; }
 
-        public R Value => this.incomingConverter(this.Source.Value);
+        public R Item => this.incomingConverter(this.Source.Item);
 
         public void Unset(NotifyingUnsetParameters? cmds)
         {

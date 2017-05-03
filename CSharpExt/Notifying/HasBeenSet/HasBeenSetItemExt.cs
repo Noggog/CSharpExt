@@ -16,11 +16,11 @@ namespace System
         {
             if (rhs.HasBeenSet)
             {
-                not.Set(rhs.Value);
+                not.Set(rhs.Item);
             }
             else if (def?.HasBeenSet ?? false)
             {
-                not.Set(def.Value);
+                not.Set(def.Item);
             }
             else
             {
@@ -38,16 +38,16 @@ namespace System
             {
                 if (def == null)
                 {
-                    not.Set(converter(rhs.Value, def.Value));
+                    not.Set(converter(rhs.Item, def.Item));
                 }
                 else
                 {
-                    not.Set(converter(rhs.Value, default(T)));
+                    not.Set(converter(rhs.Item, default(T)));
                 }
             }
             else if (def?.HasBeenSet ?? false)
             {
-                not.Set(converter(def.Value, default(T)));
+                not.Set(converter(def.Item, default(T)));
             }
             else
             {

@@ -52,7 +52,7 @@ namespace System
                         if (!attached)
                         {
                             attached = true;
-                            callback(o2, new Change<T>(item.Value));
+                            callback(o2, new Change<T>(item.Item));
                         }
                     }
                     else
@@ -62,11 +62,11 @@ namespace System
                             attached = false;
                             if (customDetachCallback != null)
                             {
-                                customDetachCallback(item.Value);
+                                customDetachCallback(item.Item);
                             }
                             else
                             {
-                                callback(o2, new Change<T>(item.Value, default(T)));
+                                callback(o2, new Change<T>(item.Item, default(T)));
                             }
                         }
                     }
@@ -86,13 +86,13 @@ namespace System
 
         public static void Forward<T>(this INotifyingItemGetter<T> not, INotifyingItem<T> to, bool fireInitial = true)
         {
-            not.Subscribe(to, (change) => to.Value = change.New, fireInitial: fireInitial);
+            not.Subscribe(to, (change) => to.Item = change.New, fireInitial: fireInitial);
         }
 
         public static void Forward<T, R>(this INotifyingItemGetter<T> not, INotifyingItem<R> to, bool fireInitial = true)
             where T : R
         {
-            not.Subscribe(to, (change) => to.Value = change.New, fireInitial: fireInitial);
+            not.Subscribe(to, (change) => to.Item = change.New, fireInitial: fireInitial);
         }
 
         public static void Set<T>(this INotifyingItem<T> not, T value)
@@ -113,11 +113,11 @@ namespace System
         {
             if (rhs.HasBeenSet)
             {
-                not.Set(rhs.Value, cmds);
+                not.Set(rhs.Item, cmds);
             }
             else if (def?.HasBeenSet ?? false)
             {
-                not.Set(def.Value, cmds);
+                not.Set(def.Item, cmds);
             }
             else
             {
@@ -136,16 +136,16 @@ namespace System
             {
                 if (def == null)
                 {
-                    not.Set(converter(rhs.Value, def.Value), cmds);
+                    not.Set(converter(rhs.Item, def.Item), cmds);
                 }
                 else
                 {
-                    not.Set(converter(rhs.Value, default(T)), cmds);
+                    not.Set(converter(rhs.Item, default(T)), cmds);
                 }
             }
             else if (def?.HasBeenSet ?? false)
             {
-                not.Set(converter(def.Value, default(T)), cmds);
+                not.Set(converter(def.Item, default(T)), cmds);
             }
             else
             {

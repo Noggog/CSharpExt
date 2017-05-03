@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Noggog.Notifying
 {
-    public class HasBeenSetItemNoNull<T> : IHasBeenSetItem<T>
+    public class HasBeenSetItemNoNullConverter<T> : IHasBeenSetItem<T>
     {
         private T _Item;
         public T Item
@@ -17,22 +17,25 @@ namespace Noggog.Notifying
         public bool HasBeenSet { get; set; }
         public T DefaultValue { get; private set; }
         Func<T> defaultFallback;
+        Func<T, T> converter;
 
-        public HasBeenSetItemNoNull(
+        public HasBeenSetItemNoNullConverter(
             Func<T> defaultFallback,
+            Func<T, T> converter,
             T defaultVal = default(T),
             bool markAsSet = false)
         {
             this.defaultFallback = defaultFallback;
+            this.converter = converter;
             this.DefaultValue = defaultVal;
             this._Item = defaultVal;
             if (defaultVal == null)
             {
-                this._Item = defaultFallback();
+                this._Item = converter(defaultFallback());
             }
             else
             {
-                this._Item = defaultVal;
+                this._Item = converter(defaultVal);
             }
             this.HasBeenSet = markAsSet;
         }
@@ -41,11 +44,11 @@ namespace Noggog.Notifying
         {
             if (item == null)
             {
-                this._Item = defaultFallback();
+                this._Item = converter(defaultFallback());
             }
             else
             {
-                this._Item = item;
+                this._Item = converter(item);
             }
             this.HasBeenSet = true;
         }
@@ -54,22 +57,22 @@ namespace Noggog.Notifying
         {
             if (this.DefaultValue == null)
             {
-                this._Item = defaultFallback();
+                this._Item = converter(defaultFallback());
             }
             else
             {
-                this._Item = this.DefaultValue;
+                this._Item = converter(this.DefaultValue);
             }
             this.HasBeenSet = false;
         }
 
         public void SetCurrentAsDefault()
         {
-            this.DefaultValue = this._Item;
+            this.DefaultValue = this.Item;
         }
     }
 
-    public class HasBeenSetItemNoNullDirect<T> : IHasBeenSetItem<T>
+    public class HasBeenSetItemNoNullDirectConverter<T> : IHasBeenSetItem<T>
         where T : new()
     {
         private T _Item;
@@ -80,20 +83,23 @@ namespace Noggog.Notifying
         }
         public bool HasBeenSet { get; set; }
         public T DefaultValue { get; private set; }
+        Func<T, T> converter;
 
-        public HasBeenSetItemNoNullDirect(
+        public HasBeenSetItemNoNullDirectConverter(
+            Func<T, T> converter,
             T defaultVal = default(T),
             bool markAsSet = false)
         {
+            this.converter = converter;
             this.DefaultValue = defaultVal;
             this._Item = defaultVal;
             if (defaultVal == null)
             {
-                this._Item = new T();
+                this._Item = converter(new T());
             }
             else
             {
-                this._Item = defaultVal;
+                this._Item = converter(defaultVal);
             }
             this.HasBeenSet = markAsSet;
         }
@@ -102,11 +108,11 @@ namespace Noggog.Notifying
         {
             if (item == null)
             {
-                this._Item = new T();
+                this._Item = converter(new T());
             }
             else
             {
-                this._Item = item;
+                this._Item = converter(item);
             }
             this.HasBeenSet = true;
         }
@@ -115,11 +121,11 @@ namespace Noggog.Notifying
         {
             if (this.DefaultValue == null)
             {
-                this._Item = new T();
+                this._Item = converter(new T());
             }
             else
             {
-                this._Item = this.DefaultValue;
+                this._Item = converter(this.DefaultValue);
             }
             this.HasBeenSet = false;
         }
@@ -130,7 +136,7 @@ namespace Noggog.Notifying
         }
     }
 
-    public class HasBeenSetItemNoNullDirect<T, Backup> : IHasBeenSetItem<T>
+    public class HasBeenSetItemNoNullDirectConverter<T, Backup> : IHasBeenSetItem<T>
         where Backup : T, new()
     {
         private T _Item;
@@ -141,20 +147,23 @@ namespace Noggog.Notifying
         }
         public bool HasBeenSet { get; set; }
         public T DefaultValue { get; private set; }
+        Func<T, T> converter;
 
-        public HasBeenSetItemNoNullDirect(
+        public HasBeenSetItemNoNullDirectConverter(
+            Func<T, T> converter,
             T defaultVal = default(T),
             bool markAsSet = false)
         {
+            this.converter = converter;
             this.DefaultValue = defaultVal;
             this._Item = defaultVal;
             if (defaultVal == null)
             {
-                this._Item = new Backup();
+                this._Item = converter(new Backup());
             }
             else
             {
-                this._Item = defaultVal;
+                this._Item = converter(defaultVal);
             }
             this.HasBeenSet = markAsSet;
         }
@@ -163,11 +172,11 @@ namespace Noggog.Notifying
         {
             if (item == null)
             {
-                this._Item = new Backup();
+                this._Item = converter(new Backup());
             }
             else
             {
-                this._Item = item;
+                this._Item = converter(item);
             }
             this.HasBeenSet = true;
         }
@@ -176,11 +185,11 @@ namespace Noggog.Notifying
         {
             if (this.DefaultValue == null)
             {
-                this._Item = new Backup();
+                this._Item = converter(new Backup());
             }
             else
             {
-                this._Item = this.DefaultValue;
+                this._Item = converter(this.DefaultValue);
             }
             this.HasBeenSet = false;
         }
