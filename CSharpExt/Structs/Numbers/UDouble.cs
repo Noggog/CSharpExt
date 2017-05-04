@@ -5,6 +5,8 @@ namespace Noggog
     public struct UDouble : IComparable<UDouble>, IComparable<double>, IEquatable<UDouble>
     {
         public readonly double Value;
+        public const double MinValue = 0d;
+        public const double MaxValue = double.MaxValue;
 
         public UDouble(double val)
         {
@@ -84,6 +86,12 @@ namespace Noggog
             return Value.CompareTo(other);
         }
 
+        public static UDouble Parse(string str)
+        {
+            TryParse(str, out UDouble ud);
+            return ud;
+        }
+
         public static bool TryParse(string str, out UDouble doub)
         {
             if (double.TryParse(str, out double d))
@@ -98,6 +106,27 @@ namespace Noggog
         public bool EqualsWithin(UDouble rhs, double within = 0.000000001d)
         {
             return rhs.Value.EqualsWithin(rhs.Value, within);
+        }
+
+        public bool IsInRange(UDouble min, UDouble max)
+        {
+            if (this.Value < min) return false;
+            if (this.Value > max) return false;
+            return true;
+        }
+
+        public UDouble InRange(UDouble min, UDouble max)
+        {
+            if (this.Value < min) throw new ArgumentException($"{this.Value} was lower than the minimum {min}.");
+            if (this.Value > max) throw new ArgumentException($"{this.Value} was greater than the maximum {max}.");
+            return this.Value;
+        }
+
+        public UDouble PutInRange(UDouble min, UDouble max)
+        {
+            if (this.Value < min) return min;
+            if (this.Value > max) return max;
+            return this.Value;
         }
     }
 }

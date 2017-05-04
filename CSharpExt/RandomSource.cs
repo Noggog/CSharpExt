@@ -173,7 +173,7 @@ namespace Noggog
             return (ushort)NextNormalDist((int)min, (int)max, wingCutoff, useSpare);
         }
 
-        public int NextNormalDist(RangeInt range, double wingCutoff = 2, bool useSpare = true)
+        public int NextNormalDist(RangeInt32 range, double wingCutoff = 2, bool useSpare = true)
         {
             return NextNormalDist(range.Min, range.Max, wingCutoff, useSpare);
         }

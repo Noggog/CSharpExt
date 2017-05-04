@@ -5,7 +5,7 @@ namespace System
 {
     public static class RangeIntExt
     {
-        public static int Get(this RangeInt range, RandomSource rand)
+        public static int Get(this RangeInt32 range, RandomSource rand)
         {
             if (range.Min == range.Max)
             {
@@ -17,7 +17,7 @@ namespace System
             }
         }
 
-        public static int GetNormalDist(this RangeInt range, RandomSource rand)
+        public static int GetNormalDist(this RangeInt32 range, RandomSource rand)
         {
             if (range.Min == range.Max)
             {
