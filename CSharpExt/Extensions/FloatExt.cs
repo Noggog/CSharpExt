@@ -42,5 +42,26 @@ namespace System
             diff /= 2;
             return diff + less;
         }
+
+        public static bool IsInRange(this float d, float min, float max)
+        {
+            if (d < min) return false;
+            if (d > max) return false;
+            return true;
+        }
+
+        public static float InRange(this float d, float min, float max)
+        {
+            if (d < min) throw new ArgumentException($"{d} was lower than the minimum {min}.");
+            if (d > max) throw new ArgumentException($"{d} was greater than the maximum {max}.");
+            return d;
+        }
+
+        public static float PutInRange(this float d, float min, float max)
+        {
+            if (d < min) return min;
+            if (d > max) return max;
+            return d;
+        }
     }
 }

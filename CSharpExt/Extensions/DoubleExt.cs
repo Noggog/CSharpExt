@@ -36,5 +36,26 @@ namespace System
         {
             return (int)Math.Round(a);
         }
+
+        public static bool IsInRange(this double d, double min, double max)
+        {
+            if (d < min) return false;
+            if (d > max) return false;
+            return true;
+        }
+
+        public static double InRange(this double d, double min, double max)
+        {
+            if (d < min) throw new ArgumentException($"{d} was lower than the minimum {min}.");
+            if (d > max) throw new ArgumentException($"{d} was greater than the maximum {max}.");
+            return d;
+        }
+
+        public static double PutInRange(this double d, double min, double max)
+        {
+            if (d < min) return min;
+            if (d > max) return max;
+            return d;
+        }
     }
 }

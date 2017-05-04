@@ -68,7 +68,14 @@
     <Compile Include="Extensions\HashHelper.cs" />
     <Compile Include="Extensions\HashSetExt.cs" />
     <Compile Include="Extensions\ICollectionExt.cs" />
-    <Compile Include="Extensions\IntExt.cs" />
+    <Compile Include="Extensions\Int8Ext.cs" />
+    <Compile Include="Extensions\UInt8Ext.cs" />
+    <Compile Include="Extensions\UInt64Ext.cs" />
+    <Compile Include="Extensions\UInt32Ext.cs" />
+    <Compile Include="Extensions\UInt16Ext.cs" />
+    <Compile Include="Extensions\Int16Ext.cs" />
+    <Compile Include="Extensions\Int64Ext.cs" />
+    <Compile Include="Extensions\Int32Ext.cs" />
     <Compile Include="Extensions\ListExt.cs" />
     <Compile Include="Extensions\ObjectExt.cs" />
     <Compile Include="Extensions\QueueExt.cs" />
