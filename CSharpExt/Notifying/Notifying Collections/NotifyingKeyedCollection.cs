@@ -15,13 +15,12 @@ namespace Noggog.Notifying
     {
         Func<V, K> KeyGetter { get; }
         void Set(V val, NotifyingFireParameters? cmds);
-        void Remove(K key, NotifyingFireParameters? cmds);
+        void Set(IEnumerable<V> items, NotifyingFireParameters? cmds);
+        bool Remove(K key, NotifyingFireParameters? cmds);
         void Unset(NotifyingUnsetParameters? cmds);
         void Clear(NotifyingFireParameters? cmds);
         bool Remove(V item, NotifyingFireParameters? cmds);
         void SetTo(IEnumerable<V> enumer, NotifyingFireParameters? cmds);
-        void Add(V item, NotifyingFireParameters? cmds);
-        void Add(IEnumerable<V> items, NotifyingFireParameters? cmds);
         new bool HasBeenSet { get; set; }
     }
 
@@ -57,9 +56,9 @@ namespace Noggog.Notifying
             this.dict.Set(key, val, cmds);
         }
 
-        public void Remove(K key, NotifyingFireParameters? cmds)
+        public bool Remove(K key, NotifyingFireParameters? cmds)
         {
-            this.dict.Remove(key, cmds);
+            return this.dict.Remove(key, cmds);
         }
 
         public bool Remove(V val, NotifyingFireParameters? cmds)
@@ -113,13 +112,7 @@ namespace Noggog.Notifying
                 cmds);
         }
 
-        public void Add(V item, NotifyingFireParameters? cmds)
-        {
-            K key = KeyGetter(item);
-            this.dict.Set(key, item, cmds);
-        }
-
-        public void Add(IEnumerable<V> items, NotifyingFireParameters? cmds)
+        public void Set(IEnumerable<V> items, NotifyingFireParameters? cmds)
         {
             this.dict.Set(
                 items.Select(
@@ -151,6 +144,34 @@ namespace System
 {
     public static class INotifyingKeyedCollectionExt
     {
+        public static void Set<K, V>(
+            this INotifyingKeyedCollection<K, V> not,
+            V val)
+        {
+            not.Set(val, cmds: null);
+        }
+
+        public static void Set<K, V>(
+            this INotifyingKeyedCollection<K, V> not,
+            IEnumerable<V> vals)
+        {
+            not.Set(vals, cmds: null);
+        }
+
+        public static bool Remove<K, V>(
+            this INotifyingKeyedCollection<K, V> not,
+            V val)
+        {
+            return not.Remove(val, cmds: null);
+        }
+
+        public static bool Remove<K, V>(
+            this INotifyingKeyedCollection<K, V> not,
+            K key)
+        {
+            return not.Remove(key, cmds: null);
+        }
+
         public static void SetToWithDefault<K, V>(
             this INotifyingKeyedCollection<K, V> not,
             INotifyingKeyedCollectionGetter<K, V> rhs,

@@ -71,10 +71,10 @@ namespace Noggog.Notifying
             _child.Set(val, cmds);
         }
 
-        public void Remove(K key, NotifyingFireParameters? cmds)
+        public bool Remove(K key, NotifyingFireParameters? cmds)
         {
             SwapOver();
-            _child.Remove(key, cmds);
+            return _child.Remove(key, cmds);
         }
 
         public void Subscribe<O>(O owner, NotifyingCollection<KeyValuePair<K, V>, ChangeKeyed<K, V>>.NotifyingCollectionCallback<O> callback, bool fireInitial)
@@ -126,16 +126,10 @@ namespace Noggog.Notifying
             _child.SetTo(enumer, cmds);
         }
 
-        public void Add(V item, NotifyingFireParameters? cmds)
+        public void Set(IEnumerable<V> items, NotifyingFireParameters? cmds)
         {
             SwapOver();
-            _child.Add(item, cmds);
-        }
-
-        public void Add(IEnumerable<V> items, NotifyingFireParameters? cmds)
-        {
-            SwapOver();
-            _child.Add(items, cmds);
+            _child.Set(items, cmds);
         }
 
         IEnumerator IEnumerable.GetEnumerator()
