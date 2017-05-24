@@ -134,5 +134,15 @@ namespace Noggog
         {
             return Min == Max ? $"({Min.ToString()})" : $"({Min} - {Max})";
         }
+
+        public static bool operator ==(RangeInt32 c1, RangeInt32 c2)
+        {
+            return c1.Equals(c2);
+        }
+
+        public static bool operator !=(RangeInt32 c1, RangeInt32 c2)
+        {
+            return !c1.Equals(c2);
+        }
     }
 }

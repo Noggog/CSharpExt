@@ -146,5 +146,15 @@ namespace Noggog
         {
             return new RangeDouble(r1.Min + r2.Min, r1.Max + r2.Max);
         }
+
+        public static bool operator ==(RangeDouble c1, RangeDouble c2)
+        {
+            return c1.Equals(c2);
+        }
+
+        public static bool operator !=(RangeDouble c1, RangeDouble c2)
+        {
+            return !c1.Equals(c2);
+        }
     }
 }
