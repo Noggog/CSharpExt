@@ -96,5 +96,34 @@ namespace System
         {
             return e.OrderBy<T, int>((item) => rand.Next());
         }
+
+        public static IEnumerable<R> SelectAgainst<T, R>(this IEnumerable<T> lhs, IEnumerable<T> rhs, Func<T, T, R> selector, out bool countEqual)
+        {
+            List<R> ret = new List<R>();
+            var lhsEnumer = lhs.GetEnumerator();
+            var rhsEnumer = rhs.GetEnumerator();
+            while (lhsEnumer.MoveNext())
+            {
+                if (!rhsEnumer.MoveNext())
+                {
+                    countEqual = false;
+                    return ret;
+                }
+                ret.Add(selector(lhsEnumer.Current, rhsEnumer.Current));
+            }
+            countEqual = !rhsEnumer.MoveNext();
+            return ret;
+        }
+
+        public static IEnumerable<R> SelectAgainst<T, R>(this IEnumerable<T> lhs, IEnumerable<T> rhs, Func<T, T, R> selector)
+        {
+            var lhsEnumer = lhs.GetEnumerator();
+            var rhsEnumer = rhs.GetEnumerator();
+            while (lhsEnumer.MoveNext())
+            {
+                if (!rhsEnumer.MoveNext()) yield break;
+                yield return selector(lhsEnumer.Current, rhsEnumer.Current);
+            }
+        }
     }
 }
