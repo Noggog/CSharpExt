@@ -125,7 +125,6 @@ namespace System
                         if (targetType.Equals(i.GetGenericTypeDefinition()))
                         {
                             yield return new KeyValuePair<Type, Type>(i, p);
-                            break;
                         }
                     }
                 }
