@@ -92,14 +92,6 @@ namespace System
             }
         }
 
-        /**
-        * Checks if an enumerated type is missing a value.
-        */
-        public static bool Missing<T>(this Enum obj, T value)
-        {
-            return !Has(obj, value);
-        }
-
         #region Helper Classes
 
         //class to simplfy narrowing values between 
@@ -151,94 +143,16 @@ namespace System
             return Length((Enum)Activator.CreateInstance(typeof(T)));
         }
 
-        public static T Parse<T>(string str, bool ignoreCase = false)
+        public static bool TryParse<T>(int number, out T val)
         {
-            return (T)Enum.Parse(typeof(T), str, ignoreCase);
-        }
-
-        public static bool TryParse<T>(string str, out T val, bool ignoreCase = false)
-        {
-            try
+            if (Enum.IsDefined(typeof(T), number))
             {
-                val = Parse<T>(str, ignoreCase);
+                val = (T)(object)number;
                 return true;
             }
-            catch (ArgumentException)
-            {
-                val = default(T);
-                return false;
-            }
-        }
 
-        public static bool TryParse<TEnum>(this TEnum val, string value, out TEnum result)
-            where TEnum : struct, IConvertible
-        {
-            if (!typeof(TEnum).IsEnum)
-            {
-                throw new ArgumentException("TEnum must be an Enum");
-            }
-
-            if (EnumExt.TryParse<TEnum>(value, out result))
-            {
-                return true;
-            }
-            else
-            {
-                foreach (TEnum enumValue in Enum.GetValues(typeof(TEnum)))
-                {
-                    string valueString = EnumExt.ToDescriptionString<TEnum>(enumValue);
-                    if (valueString.Equals(value))
-                    {
-                        result = enumValue;
-                        return true;
-                    }
-                }
-
-                result = default(TEnum);
-                return false;
-            }
-        }
-
-        public static bool TryParse<TEnum>(this TEnum val, string value, bool ignoreCase, out TEnum result)
-            where TEnum : struct, IConvertible
-        {
-            if (!typeof(TEnum).IsEnum)
-            {
-                throw new ArgumentException("TEnum must be an Enum");
-            }
-
-            if (val.TryParse<TEnum>(value, ignoreCase, out result))
-            {
-                return true;
-            }
-            else
-            {
-                foreach (TEnum enumValue in Enum.GetValues(typeof(TEnum)))
-                {
-                    string valueString = EnumExt.ToDescriptionString<TEnum>(enumValue);
-                    if (string.Compare(valueString, value, true) == 0)
-                    {
-                        result = enumValue;
-                        return true;
-                    }
-                }
-
-                result = default(TEnum);
-                return false;
-            }
-        }
-
-        public static T Parse<T>(string str, T defaultTo, bool ignoreCase = false)
-            where T : struct, IComparable, IConvertible
-        {
-            try
-            {
-                return Parse<T>(str, ignoreCase);
-            }
-            catch (ArgumentException)
-            {
-                return defaultTo;
-            }
+            val = default(T);
+            return false;
         }
 
         public static T Parse<T>(int number, T defaultTo)
@@ -354,7 +268,7 @@ namespace System
                 throw new ArgumentException("TEnum must be an Enum");
             }
 
-            if (EnumExt.TryParse<TEnum>(value, out TEnum parseResult))
+            if (Enum.TryParse(value, out TEnum parseResult))
             {
                 return parseResult;
             }
@@ -365,7 +279,7 @@ namespace System
                 string valueString = EnumExt.ToDescriptionString<TEnum>(enumValue);
                 if (valueString.Equals(value))
                 {
-                    return (TEnum)enumValue;
+                    return enumValue;
                 }
             }
 
