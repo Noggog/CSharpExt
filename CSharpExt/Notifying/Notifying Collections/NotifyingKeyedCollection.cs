@@ -148,28 +148,38 @@ namespace System
             this INotifyingKeyedCollection<K, V> not,
             V val)
         {
-            not.Set(val, cmds: null);
+            not.Set(val, NotifyingFireParameters.Typical);
         }
 
         public static void Set<K, V>(
             this INotifyingKeyedCollection<K, V> not,
             IEnumerable<V> vals)
         {
-            not.Set(vals, cmds: null);
+            not.Set(vals, NotifyingFireParameters.Typical);
         }
 
         public static bool Remove<K, V>(
             this INotifyingKeyedCollection<K, V> not,
             V val)
         {
-            return not.Remove(val, cmds: null);
+            return not.Remove(val, NotifyingFireParameters.Typical);
         }
 
         public static bool Remove<K, V>(
             this INotifyingKeyedCollection<K, V> not,
             K key)
         {
-            return not.Remove(key, cmds: null);
+            return not.Remove(key, NotifyingFireParameters.Typical);
+        }
+
+        public static void SetTo<K, V>(this INotifyingKeyedCollection<K, V> dict, IEnumerable<V> enumer)
+        {
+            dict.SetTo(enumer, NotifyingFireParameters.Typical);
+        }
+
+        public static void SetTo<K, V>(this INotifyingKeyedCollection<K, V> dict, IEnumerable<KeyValuePair<K, V>> enumer)
+        {
+            dict.SetTo(enumer.Select((kv) => kv.Value), NotifyingFireParameters.Typical);
         }
 
         public static void SetToWithDefault<K, V>(
