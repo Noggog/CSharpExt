@@ -11,7 +11,35 @@ namespace System
     {
         public static bool InheritsFrom(this Type t, Type baseType)
         {
-            return baseType.IsAssignableFrom(t) && baseType != t;
+            if (baseType == t) return false;
+            if (baseType.IsGenericType)
+            {
+                return IsAssignableToGenericType(t, baseType);
+            }
+            else
+            {
+                return baseType.IsAssignableFrom(t);
+            }
+        }
+
+        public static bool IsAssignableToGenericType(Type givenType, Type genericType)
+        {
+            var genTypeDef = genericType.GetGenericTypeDefinition();
+            var interfaceTypes = givenType.GetInterfaces();
+
+            foreach (var it in interfaceTypes)
+            {
+                if (!it.IsGenericType) continue;
+                var genDef = it.GetGenericTypeDefinition();
+                if (genDef.Equals(genTypeDef)) return true;
+            }
+
+            if (givenType.IsGenericType && givenType.GetGenericTypeDefinition() == genericType) return true;
+
+            Type baseType = givenType.BaseType;
+            if (baseType == null) return false;
+
+            return IsAssignableToGenericType(baseType, genericType);
         }
 
         public static string GetName(this Type t)
