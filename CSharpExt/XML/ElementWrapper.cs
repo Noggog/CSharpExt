@@ -7,10 +7,10 @@ namespace Noggog.Xml
     {
         XmlWriter writer;
 
-        public ElementWrapper(XmlWriter writer, string elem)
+        public ElementWrapper(XmlWriter writer, string elem, string nameSpace = null)
         {
             this.writer = writer;
-            this.writer.WriteStartElement(elem);
+            this.writer.WriteStartElement(elem, ns: nameSpace);
         }
 
         public void Dispose()
