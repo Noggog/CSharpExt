@@ -15,7 +15,7 @@ namespace Noggog.Notifying
         public override INotifyingItemGetter<int> MinX => zeroItem;
         public override INotifyingItemGetter<int> MinY => zeroItem;
         private INotifyingItemGetter<int> _count;
-        public override INotifyingItemGetter<int> Count => _count;
+        public override INotifyingItemGetter<int> CountProperty => _count;
         public override int Width => arr.GetLength(1);
         public override int Height => arr.GetLength(0);
 

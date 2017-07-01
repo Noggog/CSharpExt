@@ -35,7 +35,8 @@ namespace Noggog.Notifying
             set { dict.HasBeenSet = value; }
         }
 
-        public INotifyingItemGetter<int> Count => dict.Count;
+        public INotifyingItemGetter<int> CountProperty => dict.CountProperty;
+        public int Count => dict.Count;
 
         public IEnumerable<K> Keys => dict.Keys;
         public IEnumerable<V> Values => dict.Values;
@@ -129,7 +130,7 @@ namespace Noggog.Notifying
 
         public static bool ValuesEqual(INotifyingKeyedCollection<K, V> lhs, INotifyingKeyedCollection<K, V> rhs)
         {
-            if (((INotifyingEnumerable<V>)lhs).Count.Item != ((INotifyingEnumerable<V>)rhs).Count.Item) return false;
+            if (((INotifyingEnumerable<V>)lhs).CountProperty.Item != ((INotifyingEnumerable<V>)rhs).CountProperty.Item) return false;
             return lhs.Values.SequenceEqual(rhs.Values);
         }
         

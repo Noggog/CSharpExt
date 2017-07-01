@@ -11,7 +11,8 @@ namespace Noggog.Notifying
     {
         void Subscribe_Enumerable<O>(O owner, NotifyingEnumerableCallback<O, T> callback, bool fireInitial);
         void Unsubscribe(object owner);
-        INotifyingItemGetter<int> Count { get; }
+        INotifyingItemGetter<int> CountProperty { get; }
+        int Count { get; }
     }
 
     public interface INotifyingCollection<T> : INotifyingEnumerable<T>
@@ -169,7 +170,9 @@ namespace System
 
             public bool HasBeenSet => Orig.HasBeenSet;
 
-            public INotifyingItemGetter<int> Count => Orig.Count;
+            public INotifyingItemGetter<int> CountProperty => Orig.CountProperty;
+
+            public int Count => Orig.Count;
 
             IEnumerable<R> IHasBeenSetItemGetter<IEnumerable<R>>.Item => Orig.Select<T, R>((t) => t);
 

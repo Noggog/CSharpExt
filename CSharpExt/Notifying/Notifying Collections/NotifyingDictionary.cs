@@ -28,7 +28,8 @@ namespace Noggog.Notifying
         protected static ObjectListPool<ChangeKeyed<K, V>> firePool = new ObjectListPool<ChangeKeyed<K, V>>(200);
 
         protected NotifyingItem<int> _count = new NotifyingItem<int>();
-        public INotifyingItemGetter<int> Count => _count;
+        public INotifyingItemGetter<int> CountProperty => _count;
+        public int Count => _count.Item;
         private Dictionary<K, V> dict = pool.Get();
         private Func<V, V> valConv;
 

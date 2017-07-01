@@ -27,7 +27,8 @@ namespace Noggog.Notifying
     {
         protected static ObjectListPool<ChangePoint<T>> firePool = new ObjectListPool<ChangePoint<T>>(100);
 
-        public abstract INotifyingItemGetter<int> Count { get; }
+        public abstract INotifyingItemGetter<int> CountProperty { get; }
+        public int Count => CountProperty.Item;
         public abstract INotifyingItemGetter<int> MinX { get; }
         public abstract INotifyingItemGetter<int> MinY { get; }
         public abstract INotifyingItemGetter<int> MaxX { get; }

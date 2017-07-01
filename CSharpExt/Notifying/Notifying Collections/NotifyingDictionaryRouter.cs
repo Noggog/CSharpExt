@@ -11,7 +11,8 @@ namespace Noggog.Notifying
 
         public bool HasBeenSwapped { get; private set; }
 
-        public INotifyingItemGetter<int> Count => _child.Count;
+        public INotifyingItemGetter<int> CountProperty => _child.CountProperty;
+        public int Count => _child.Count;
 
         public bool HasBeenSet
         {

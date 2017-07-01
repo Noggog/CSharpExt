@@ -53,7 +53,9 @@ namespace Noggog.Notifying
          
         T INotifyingListGetter<T>.this[int index] => this[index];
 
-        public INotifyingItemGetter<int> Count => _child.Count;
+        public INotifyingItemGetter<int> CountProperty => _child.CountProperty;
+
+        public int Count => _child.Count;
 
         public bool HasBeenSet
         {

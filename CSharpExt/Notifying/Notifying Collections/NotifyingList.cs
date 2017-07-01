@@ -31,7 +31,8 @@ namespace Noggog.Notifying
 
         protected NotifyingItem<int> _count = new NotifyingItem<int>();
 
-        public INotifyingItemGetter<int> Count => _count; 
+        public INotifyingItemGetter<int> CountProperty => _count;
+        public int Count => _count.Item;
 
         private List<T> list = pool.Get();
 
@@ -469,7 +470,8 @@ namespace System
             public INotifyingListGetter<T> Orig;
             public Func<T, R> Converter;
 
-            public INotifyingItemGetter<int> Count => Orig.Count;
+            public INotifyingItemGetter<int> CountProperty => Orig.CountProperty;
+            public int Count => Orig.Count;
 
             public bool HasBeenSet => Orig.HasBeenSet;
             
@@ -539,7 +541,8 @@ namespace System
             private NotifyingList<R> _internalList = new NotifyingList<R>();
             private int counter;
 
-            public INotifyingItemGetter<int> Count { get { return Orig.Count; } }
+            public INotifyingItemGetter<int> CountProperty => Orig.CountProperty;
+            public int Count => Orig.Count;
 
             public bool HasBeenSet { get { return Orig.HasBeenSet; } }
 
@@ -633,7 +636,7 @@ namespace System
 
         public static bool InRange<T>(this INotifyingListGetter<T> list, int index)
         {
-            return index >= 0 && index < list.Count.Item;
+            return index >= 0 && index < list.CountProperty.Item;
         }
 
         public static bool TryGet<T>(this INotifyingListGetter<T> list, int index, out T item)
