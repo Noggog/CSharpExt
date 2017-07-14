@@ -2,7 +2,7 @@
 
 namespace System
 {
-    public static class ByteExt
+    public static class Int8Ext
     {
         public static bool IsInRange(this sbyte d, sbyte min, sbyte max)
         {

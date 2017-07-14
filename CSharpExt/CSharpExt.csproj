@@ -21,6 +21,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -66,7 +67,7 @@
     <Compile Include="Extensions\HashSetExt.cs" />
     <Compile Include="Extensions\ICollectionExt.cs" />
     <Compile Include="Extensions\Int8Ext.cs" />
-    <Compile Include="Extensions\UInt8Ext.cs" />
+    <Compile Include="Extensions\ByteExt.cs" />
     <Compile Include="Extensions\UInt64Ext.cs" />
     <Compile Include="Extensions\UInt32Ext.cs" />
     <Compile Include="Extensions\UInt16Ext.cs" />

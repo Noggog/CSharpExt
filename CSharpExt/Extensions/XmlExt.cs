@@ -75,15 +75,20 @@ namespace System
                 {
                     return default(P);
                 }
+                var t = typeof(P);
+                if (TypeExt.IsNullable<P>(out var underlyingType))
+                {
+                    t = underlyingType;
+                }
                 try
                 {
-                    return (P)Convert.ChangeType(strVal, typeof(P));
+                    return (P)Convert.ChangeType(strVal, t);
                 }
                 catch (Exception ex)
                 {
                     try
                     {
-                        return (P)Enum.Parse(typeof(P), strVal);
+                        return (P)Enum.Parse(t, strVal);
                     }
                     catch (Exception)
                     {

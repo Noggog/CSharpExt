@@ -291,5 +291,37 @@ namespace System
             enumerType = null;
             return false;
         }
+
+        private static bool IsNullable_Internal<T>(Type type, out Type underlying)
+        {
+            if (!type.IsValueType)
+            {
+                underlying = type;
+                return true;
+            }
+            underlying = Nullable.GetUnderlyingType(type);
+            if (underlying != null) return true;
+            return false;
+        }
+
+        public static bool IsNullable<T>()
+        {
+            return IsNullable_Internal<T>(typeof(T), out var underlying);
+        }
+
+        public static bool IsNullable<T>(this T obj)
+        {
+            return IsNullable<T>();
+        }
+
+        public static bool IsNullable<T>(out Type underlying)
+        {
+            return IsNullable_Internal<T>(typeof(T), out underlying);
+        }
+
+        public static bool IsNullable<T>(this T obj, out Type underlying)
+        {
+            return IsNullable<T>(out underlying);
+        }
     }
 }
