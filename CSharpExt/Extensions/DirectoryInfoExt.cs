@@ -51,7 +51,7 @@ namespace System
             return source.Exists;
         }
 
-        static public void DeleteContainedFiles(DirectoryInfo dir, bool recursive)
+        public static void DeleteContainedFiles(this DirectoryInfo dir, bool recursive)
         {
             if (dir.Exists)
             {
@@ -68,6 +68,19 @@ namespace System
                     }
                 }
             }
+        }
+
+        public static bool IsSubfolderOf(this DirectoryInfo dir, DirectoryInfo potentialParent)
+        {
+            while (dir.Parent != null)
+            {
+                if (dir.Parent.FullName.Equals(potentialParent.FullName))
+                {
+                    return true;
+                }
+                dir = dir.Parent;
+            }
+            return false;
         }
     }
 }
