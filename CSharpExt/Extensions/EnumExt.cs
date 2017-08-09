@@ -327,6 +327,20 @@ namespace System
         #endregion
     }
 
+    public static class EnumExt<T>
+    {
+        private static Lazy<T[]> _Values = new Lazy<T[]>(() =>
+        {
+            List<T> ret = new List<T>();
+            foreach (T item in Enum.GetValues(typeof(T)))
+            {
+                ret.Add(item);
+            }
+            return ret.ToArray();
+        });
+        public static T[] Values => _Values.Value;
+    }
+
     static class EnumStrings<T> where T : struct, IComparable, IConvertible
     {
         private static Dictionary<int, string> _strings;
