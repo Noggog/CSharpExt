@@ -131,6 +131,8 @@
     <Compile Include="Structs\Change\ChangeMod.cs" />
     <Compile Include="Structs\Change\ChangePoint.cs" />
     <Compile Include="Notifying\HasBeenSet\HasBeenSetItem.cs" />
+    <Compile Include="Structs\DirectoryPath.cs" />
+    <Compile Include="Structs\FilePath.cs" />
     <Compile Include="Structs\LifecycleActions.cs" />
     <Compile Include="Structs\MemberAccessor.cs" />
     <Compile Include="Structs\Numbers\Percent.cs" />
