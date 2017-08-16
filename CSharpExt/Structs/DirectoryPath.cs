@@ -43,7 +43,7 @@ namespace Noggog
 
         public override string ToString()
         {
-            return this._dirInfo.FullName;
+            return this._dirInfo?.FullName;
         }
 
         public bool IsSubfolderOf(DirectoryPath rhs)

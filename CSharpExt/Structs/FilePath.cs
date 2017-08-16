@@ -45,7 +45,7 @@ namespace Noggog
 
         public override string ToString()
         {
-            return this._fileInfo.FullName;
+            return this._fileInfo?.FullName;
         }
 
         public static implicit operator FilePath(FileInfo info)
