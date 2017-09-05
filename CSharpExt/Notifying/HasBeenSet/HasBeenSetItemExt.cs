@@ -1,4 +1,5 @@
-﻿using Noggog.Notifying;
+﻿using Noggog;
+using Noggog.Notifying;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -52,6 +53,14 @@ namespace System
             else
             {
                 not.Unset();
+            }
+        }
+
+        public static void SetIfSucceeded<T>(this IHasBeenSetItem<T> not, TryGet<T> tryGet)
+        {
+            if (tryGet.Succeeded)
+            {
+                not.Item = tryGet.Value;
             }
         }
     }

@@ -1,4 +1,5 @@
-﻿using Noggog.Notifying;
+﻿using Noggog;
+using Noggog.Notifying;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -235,6 +236,15 @@ namespace System
             {
                 not.Unset(cmds.ToUnsetParams());
             }
+        }
+
+        public static void SetIfSucceeded<K, V>(
+            this INotifyingKeyedCollection<K, V> not,
+            TryGet<IEnumerable<V>> tryGet,
+            NotifyingFireParameters? cmds = null)
+        {
+            if (tryGet.Failed) return;
+            not.SetTo(tryGet.Value, cmds);
         }
     }
 }

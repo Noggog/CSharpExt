@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Noggog.Containers.Pools;
 using Noggog.Notifying;
+using Noggog;
 
 namespace Noggog.Notifying
 {
@@ -339,6 +340,15 @@ namespace System
             {
                 not.Unset(cmds.ToUnsetParams());
             }
+        }
+
+        public static void SetIfSucceeded<T>(
+            this INotifyingCollection<T> not,
+            TryGet<IEnumerable<T>> tryGet,
+            NotifyingFireParameters? cmds = null)
+        {
+            if (tryGet.Failed) return;
+            not.SetTo(tryGet.Value, cmds);
         }
     }
 }
