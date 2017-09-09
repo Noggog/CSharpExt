@@ -120,6 +120,14 @@ namespace System
             return val;
         }
 
+        public static void TransferAttribute<P>(this XElement node, string str, Action<P> acti, bool throwException = false)
+        {
+            if (TryGetAttribute(node, str, out P val, throwException))
+            {
+                acti(val);
+            }
+        }
+
         public static string GetAttribute(this XElement node, string str, string defaultVal = null, bool throwException = false)
         {
             if (!TryGetAttribute(node, str, out string val, throwException))
