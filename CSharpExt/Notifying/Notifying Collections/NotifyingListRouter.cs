@@ -139,6 +139,11 @@ namespace Noggog.Notifying
             _child.Subscribe(owner, callback, fireInitial);
         }
 
+        public void Subscribe(NotifyingCollection<T, ChangeIndex<T>>.NotifyingCollectionSimpleCallback callback, bool fireInitial)
+        {
+            _child.Subscribe(callback, fireInitial);
+        }
+
         public void Subscribe_Enumerable<O>(O owner, NotifyingEnumerableCallback<O, T> callback, bool fireInitial = true)
         {
             _child.Subscribe_Enumerable(owner, callback, fireInitial);

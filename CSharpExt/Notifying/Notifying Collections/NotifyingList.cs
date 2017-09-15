@@ -13,6 +13,7 @@ namespace Noggog.Notifying
         T this[int index] { get; }
         int IndexOf(T item);
         void Subscribe<O>(O owner, NotifyingCollection<T, ChangeIndex<T>>.NotifyingCollectionCallback<O> callback, bool fireInitial);
+        void Subscribe(NotifyingCollection<T, ChangeIndex<T>>.NotifyingCollectionSimpleCallback callback, bool fireInitial);
     }
 
     public interface INotifyingList<T> : INotifyingListGetter<T>, INotifyingCollection<T>
@@ -290,6 +291,11 @@ namespace Noggog.Notifying
             this.Subscribe_Internal(owner, callback, fireInitial);
         }
 
+        public void Subscribe(NotifyingCollectionSimpleCallback callback, bool fireInitial)
+        {
+            this.Subscribe_Internal<object>(null, (o2, ch) => callback(ch), fireInitial);
+        }
+
         public IEnumerator<T> GetEnumerator()
         {
             return list.GetEnumerator();
@@ -517,6 +523,13 @@ namespace System
                     (o2, changes) => callback(o2, changes.Select((c) => new ChangeIndex<R>(Converter(c.Old), Converter(c.New), c.AddRem, c.Index))),
                     fireInitial);
             }
+
+            public void Subscribe(NotifyingCollection<R, ChangeIndex<R>>.NotifyingCollectionSimpleCallback callback, bool fireInitial)
+            {
+                Orig.Subscribe(
+                    (changes) => callback(changes.Select((c) => new ChangeIndex<R>(Converter(c.Old), Converter(c.New), c.AddRem, c.Index))),
+                    fireInitial);
+            }
         }
 
         public static INotifyingListGetter<R> Cast_As_List<T, R>(this INotifyingEnumerable<T> getter)
@@ -544,17 +557,11 @@ namespace System
             public INotifyingItemGetter<int> CountProperty => Orig.CountProperty;
             public int Count => Orig.Count;
 
-            public bool HasBeenSet { get { return Orig.HasBeenSet; } }
+            public bool HasBeenSet => Orig.HasBeenSet;
 
             IEnumerable<R> IHasBeenSetItemGetter<IEnumerable<R>>.Item => Orig.Select((t) => _converter(t));
 
-            public R this[int index]
-            {
-                get
-                {
-                    return _internalList[index];
-                }
-            }
+            public R this[int index] => _internalList[index];
 
             public INotifyingListCastAsFunc(INotifyingEnumerable<T> enumer, Func<T, R> converter)
             {
@@ -592,6 +599,11 @@ namespace System
             public void Subscribe<O>(O owner, NotifyingCollection<R, ChangeIndex<R>>.NotifyingCollectionCallback<O> callback, bool fireInitial)
             {
                 _internalList.Subscribe(owner, callback, fireInitial);
+            }
+
+            public void Subscribe(NotifyingCollection<R, ChangeIndex<R>>.NotifyingCollectionSimpleCallback callback, bool fireInitial)
+            {
+                _internalList.Subscribe(callback, fireInitial);
             }
 
             public void Unsubscribe(object owner)
