@@ -125,5 +125,13 @@ namespace System
                 yield return selector(lhsEnumer.Current, rhsEnumer.Current);
             }
         }
+
+        public static void ForEach<T>(this IEnumerable<T> e, Action<T> toDo)
+        {
+            foreach (var item in e)
+            {
+                toDo(item);
+            }
+        }
     }
 }
