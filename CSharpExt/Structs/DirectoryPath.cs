@@ -24,6 +24,17 @@ namespace Noggog
             this._dirInfo = new DirectoryInfo(this._fullPath);
         }
 
+        public DirectoryPath(string path, string referencePath)
+        {
+            if (path.StartsWith(".."))
+            {
+                path = System.IO.Path.Combine(referencePath, path);
+            }
+            this._fileInfo = new FileInfo(path);
+            this._fullPath = FilePath.StandardizePath(path);
+            this._dirInfo = new DirectoryInfo(this._fullPath);
+        }
+
         public bool Equals(DirectoryPath other)
         {
             if (!this._fullPath.Equals(other._fullPath)) return false;
@@ -59,6 +70,12 @@ namespace Noggog
         public void DeleteContainedFiles(bool recursive)
         {
             this._dirInfo.DeleteContainedFiles(recursive);
+        }
+
+        public void Create()
+        {
+            if (this.Exists) return;
+            this._dirInfo.Create();
         }
 
         public static implicit operator DirectoryPath(DirectoryInfo info)
