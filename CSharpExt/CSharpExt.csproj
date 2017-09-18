@@ -159,6 +159,8 @@
     <Compile Include="Structs\StringCaseAgnostic.cs" />
     <Compile Include="Structs\GetResponse.cs" />
     <Compile Include="Structs\TryGet.cs" />
+    <Compile Include="Utility\ArgsQuerying\ArgsQueryConsoleManager.cs" />
+    <Compile Include="Utility\ArgsQuerying\ArgsQueryManager.cs" />
     <Compile Include="Utility\TempFolder.cs" />
     <Compile Include="XML\DocumentWrapper.cs" />
     <Compile Include="XML\ElementWrapper.cs" />
