@@ -7,6 +7,7 @@ namespace Noggog.Notifying
 {
     public class SubscriptionHandler<T>
     {
+        private static readonly object NEVER_UNSUB = new object();
         public readonly static ObjectListPool<T> pool = new ObjectListPool<T>(500);
         readonly static ObjectDictionaryListPool<WeakReferenceEquatable, T> dictPool = new ObjectDictionaryListPool<WeakReferenceEquatable, T>(pool, 250);
 
@@ -35,6 +36,10 @@ namespace Noggog.Notifying
             {
                 subscribers = dictPool.Get();
             }
+            if (owner == null)
+            {
+                owner = NEVER_UNSUB;
+            }
             subscribers.TryCreateValue(
                 new WeakReferenceEquatable(owner),
                 () => pool.Get()).Add(item);
@@ -44,6 +49,7 @@ namespace Noggog.Notifying
         public bool Remove(object owner)
         {
             if (subscribers == null) return false;
+            if (owner == null) return false;
             var weakRef = new WeakReferenceEquatable(owner);
             if (subscribers.TryGetValue(weakRef, out List<T> list))
             {
