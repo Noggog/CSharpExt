@@ -56,7 +56,8 @@ namespace System
             }
         }
 
-        public static void SetIfSucceeded<T>(this IHasBeenSetItem<T> not, TryGet<T> tryGet)
+        public static void SetIfSucceeded<T, R>(this IHasBeenSetItem<T> not, TryGet<R> tryGet)
+            where R : T
         {
             if (tryGet.Succeeded)
             {
