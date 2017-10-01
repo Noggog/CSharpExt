@@ -35,5 +35,20 @@ namespace Noggog.Notifying
             toForward.Unsubscribe(transl);
             subscriberConverter.Value.Remove(weakRef);
         }
+
+        public void Subscribe(NotifyingItemSimpleCallback<T> callback, bool fireInitial)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Subscribe(NotifyingItemSimpleCallback<T> callback)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Subscribe<O>(O owner, NotifyingItemCallback<O, T> callback)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

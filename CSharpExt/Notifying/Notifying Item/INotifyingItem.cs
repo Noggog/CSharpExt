@@ -12,7 +12,10 @@ namespace Noggog.Notifying
 
     public interface INotifyingItemGetter<T> : IHasBeenSetItemGetter<T>
     {
+        void Subscribe(NotifyingItemSimpleCallback<T> callback, bool fireInitial);
+        void Subscribe(NotifyingItemSimpleCallback<T> callback);
         void Subscribe<O>(O owner, NotifyingItemCallback<O, T> callback, bool fireInitial);
+        void Subscribe<O>(O owner, NotifyingItemCallback<O, T> callback);
         void Unsubscribe(object owner);
     }
 

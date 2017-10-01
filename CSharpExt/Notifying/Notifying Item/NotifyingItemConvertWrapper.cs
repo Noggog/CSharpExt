@@ -75,6 +75,21 @@ namespace Noggog.Notifying
             this.Source.Subscribe(owner, callback, fireInitial);
         }
 
+        public void Subscribe(NotifyingItemSimpleCallback<T> callback, bool fireInitial)
+        {
+            this.Source.Subscribe(callback, fireInitial);
+        }
+
+        public void Subscribe(NotifyingItemSimpleCallback<T> callback)
+        {
+            this.Source.Subscribe(callback);
+        }
+
+        public void Subscribe<O>(O owner, NotifyingItemCallback<O, T> callback)
+        {
+            this.Source.Subscribe(owner, callback);
+        }
+
         public void Unsubscribe(object owner)
         {
             this.Source.Unsubscribe(owner);
@@ -138,6 +153,45 @@ namespace Noggog.Notifying
                             this.incomingConverter(change.New)));
                 },
                 fireInitial);
+        }
+
+        public void Subscribe(NotifyingItemSimpleCallback<R> callback, bool fireInitial)
+        {
+            this.Source.Subscribe(
+                (change) =>
+                {
+                    callback(
+                        new Change<R>(
+                            this.incomingConverter(change.Old),
+                            this.incomingConverter(change.New)));
+                },
+                fireInitial);
+        }
+
+        public void Subscribe(NotifyingItemSimpleCallback<R> callback)
+        {
+            this.Source.Subscribe(
+                (change) =>
+                {
+                    callback(
+                        new Change<R>(
+                            this.incomingConverter(change.Old),
+                            this.incomingConverter(change.New)));
+                });
+        }
+
+        public void Subscribe<O>(O owner, NotifyingItemCallback<O, R> callback)
+        {
+            this.Source.Subscribe(
+                owner,
+                (ow, change) =>
+                {
+                    callback(
+                        ow,
+                        new Change<R>(
+                            this.incomingConverter(change.Old),
+                            this.incomingConverter(change.New)));
+                });
         }
 
         public void Unsubscribe(object owner)

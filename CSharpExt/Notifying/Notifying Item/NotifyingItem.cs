@@ -194,6 +194,21 @@ namespace Noggog.Notifying
             }
         }
 
+        public void Subscribe(NotifyingItemSimpleCallback<T> callback, bool fireInitial)
+        {
+            this.Subscribe<object>(owner: null, callback: (o, c) => callback(c), fireInitial: fireInitial);
+        }
+
+        public void Subscribe(NotifyingItemSimpleCallback<T> callback)
+        {
+            this.Subscribe<object>(owner: null, callback: (o, c) => callback(c), fireInitial: true);
+        }
+
+        public void Subscribe<O>(O owner, NotifyingItemCallback<O, T> callback)
+        {
+            this.Subscribe<O>(owner: owner, callback: callback, fireInitial: true);
+        }
+
         public void Unsubscribe(object owner)
         {
             if (subscribers == null) return;
@@ -289,7 +304,7 @@ namespace Noggog.Notifying
         void IHasBeenSetItem<T>.Set(T value) => Set(value, cmd: null);
 
         void IHasBeenSetItem<T>.Unset() => Unset(cmds: null);
-        
+
         public static implicit operator T(NotifyingItem<T> item)
         {
             return item.Item;

@@ -70,6 +70,21 @@ namespace Noggog.Notifying
             _child.Subscribe(owner, callback, fireInitial);
         }
 
+        public void Subscribe(NotifyingItemSimpleCallback<T> callback, bool fireInitial)
+        {
+            _child.Subscribe(callback, fireInitial);
+        }
+
+        public void Subscribe(NotifyingItemSimpleCallback<T> callback)
+        {
+            _child.Subscribe(callback);
+        }
+
+        public void Subscribe<O>(O owner, NotifyingItemCallback<O, T> callback)
+        {
+            _child.Subscribe(owner, callback);
+        }
+
         public void Unset(NotifyingUnsetParameters? cmds = null)
         {
             _child.Unset(cmds);
