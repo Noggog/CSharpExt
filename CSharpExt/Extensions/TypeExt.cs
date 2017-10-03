@@ -9,32 +9,44 @@ namespace System
 {
     public static class TypeExt
     {
-        public static bool InheritsFrom(this Type t, Type baseType)
+        public static bool InheritsFrom(this Type t, Type baseType, bool excludeSelf = false)
         {
-            if (baseType == t) return false;
+            if (baseType == t) return !excludeSelf;
+            if (baseType.IsAssignableFrom(t)) return true;
             if (baseType.IsGenericType)
             {
                 return IsAssignableToGenericType(t, baseType);
             }
-            else
-            {
-                return baseType.IsAssignableFrom(t);
-            }
+            return false;
         }
 
         public static bool IsAssignableToGenericType(Type givenType, Type genericType)
         {
             var genTypeDef = genericType.GetGenericTypeDefinition();
-            var interfaceTypes = givenType.GetInterfaces();
-
-            foreach (var it in interfaceTypes)
+            foreach (var it in givenType.GetInterfaces())
             {
                 if (!it.IsGenericType) continue;
                 var genDef = it.GetGenericTypeDefinition();
-                if (genDef.Equals(genTypeDef)) return true;
+                if (!genDef.Equals(genTypeDef)) continue;
+                if (it.GenericTypeArguments.Length != genericType.GenericTypeArguments.Length) return false;
+                for (int i = 0; i < it.GenericTypeArguments.Length; i++)
+                {
+                    if (!it.GenericTypeArguments[i].InheritsFrom(genericType.GenericTypeArguments[i])) return false;
+                }
+                return true;
             }
 
-            if (givenType.IsGenericType && givenType.GetGenericTypeDefinition() == genericType) return true;
+            if (givenType.IsGenericType)
+            {
+                if (givenType.GetGenericTypeDefinition() == genericType) return true;
+                if (givenType.GenericTypeArguments.Length != genericType.GenericTypeArguments.Length
+                    || givenType.GenericTypeArguments.Length == 0) return false;
+                for (int i = 0; i < givenType.GenericTypeArguments.Length; i++)
+                {
+                    if (!givenType.GenericTypeArguments[i].InheritsFrom(genericType.GenericTypeArguments[i])) return false;
+                }
+                return true;
+            }
 
             Type baseType = givenType.BaseType;
             if (baseType == null) return false;
