@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using Xunit;
@@ -9,6 +10,7 @@ namespace CSharpExt.Tests
 {
     public class TypeExt_Tests
     {
+        #region InheritsFrom
         class AClass
         {
         }
@@ -241,7 +243,7 @@ namespace CSharpExt.Tests
         }
 
         [Fact]
-        public void Generic_BaseUnpecified_Inverted_Fail()
+        public void Generic_BaseUnspecified_Inverted_Fail()
         {
             Assert.False(typeof(SubGenGenClass<SubClass>).InheritsFrom(typeof(GenClass<>)));
         }
@@ -253,9 +255,26 @@ namespace CSharpExt.Tests
         }
 
         [Fact]
-        public void Generic_Unpecified_Subclass_Inverted_Fail()
+        public void Generic_Unspecified_Subclass_Inverted_Fail()
         {
             Assert.False(typeof(GenClass<AClass>).InheritsFrom(typeof(SubGenGenClass<SubClass>)));
         }
+
+        #region CouldInheritFrom
+        [Fact]
+        public void Generic_Undefined()
+        {
+            var methodType = typeof(TypeExt_Tests).GetMethods(BindingFlags.NonPublic | BindingFlags.Instance)
+                .Where((m) => m.Name.Equals(nameof(TestGenericSource))).First();
+            Assert.True(typeof(SubClass).InheritsFrom(methodType.ReturnType, couldInherit: true));
+        }
+
+        private T TestGenericSource<T>()
+            where T : AClass
+        {
+            return default(T);
+        }
+        #endregion
+        #endregion
     }
 }

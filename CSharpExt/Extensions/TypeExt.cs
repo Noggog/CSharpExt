@@ -9,18 +9,23 @@ namespace System
 {
     public static class TypeExt
     {
-        public static bool InheritsFrom(this Type t, Type baseType, bool excludeSelf = false)
+        public static bool InheritsFrom(this Type t, Type baseType, bool excludeSelf = false, bool couldInherit = false)
         {
             if (baseType == t) return !excludeSelf;
             if (baseType.IsAssignableFrom(t)) return true;
             if (baseType.IsGenericType)
             {
-                return IsAssignableToGenericType(t, baseType);
+                if (IsAssignableToGenericType(t, baseType, couldInherit: couldInherit)) return true;
+            }
+            if (couldInherit
+                && baseType.IsGenericParameter)
+            {
+                return t.InheritsFrom(baseType.BaseType, excludeSelf: excludeSelf, couldInherit: couldInherit);
             }
             return false;
         }
 
-        public static bool IsAssignableToGenericType(Type givenType, Type genericType)
+        public static bool IsAssignableToGenericType(Type givenType, Type genericType, bool couldInherit = false)
         {
             var genTypeDef = genericType.GetGenericTypeDefinition();
             foreach (var it in givenType.GetInterfaces())
@@ -43,7 +48,13 @@ namespace System
                     || givenType.GenericTypeArguments.Length == 0) return false;
                 for (int i = 0; i < givenType.GenericTypeArguments.Length; i++)
                 {
-                    if (!givenType.GenericTypeArguments[i].InheritsFrom(genericType.GenericTypeArguments[i])) return false;
+                    var genType = genericType.GenericTypeArguments[i];
+                    if (!givenType.GenericTypeArguments[i].InheritsFrom(genType))
+                    {
+                        if (!couldInherit) return false;
+                        if (!genType.IsGenericParameter) return false;
+                        if (!givenType.GenericTypeArguments[i].InheritsFrom(genType.BaseType, excludeSelf: false, couldInherit: true)) return false;
+                    }
                 }
                 return true;
             }

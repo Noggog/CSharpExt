@@ -55,6 +55,38 @@ namespace Noggog.Utility
             }
         }
 
+        public static RetType BuildGenericDelegate<RetType>(Type containingType, Type[] genTypes, MethodInfo method, params object[] missingParamValues)
+        {
+            var queueMissingParams = new Queue<object>(missingParamValues);
+
+            var dgtMi = typeof(RetType).GetMethod("Invoke");
+            var dgtRet = dgtMi.ReturnType;
+            var dgtParams = dgtMi.GetParameters();
+
+            var paramsOfDelegate = dgtParams
+                .Select(tp => Expression.Parameter(tp.ParameterType, tp.Name))
+                .ToArray();
+
+            var methodParams = method.GetParameters();
+
+            if (method.IsStatic)
+            {
+                var paramsToPass = methodParams
+                    .Select((p, i) => CreateParam(paramsOfDelegate, i, p, queueMissingParams))
+                    .ToArray();
+
+                var expr = Expression.Lambda<RetType>(
+                    Expression.Call(containingType, method.Name, genTypes, paramsToPass),
+                    paramsOfDelegate);
+
+                return expr.Compile();
+            }
+            else
+            {
+                throw new NotImplementedException();
+            }
+        }
+
         private static Expression CreateParam(ParameterExpression[] paramsOfDelegate, int i, ParameterInfo callParamType, Queue<object> queueMissingParams)
         {
             if (i < paramsOfDelegate.Length)
