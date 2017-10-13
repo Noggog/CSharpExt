@@ -95,6 +95,7 @@
     <Compile Include="Notifying\HasBeenSet\HasBeenSetItemNoNull.cs" />
     <Compile Include="Notifying\HasBeenSet\HasBeenSetItemOnSet.cs" />
     <Compile Include="Notifying\HasBeenSet\IHasBeenSet.cs" />
+    <Compile Include="Notifying\Notifying Collections\NotifyingListBounded.cs" />
     <Compile Include="Notifying\Notifying Item\INotifyingItem.cs" />
     <Compile Include="Notifying\Notifying Item\NotifyingItemOnSet.cs" />
     <Compile Include="Notifying\Notifying Item\NotifyingItemConverterOnSet.cs" />

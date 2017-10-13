@@ -35,7 +35,7 @@ namespace Noggog.Notifying
         public INotifyingItemGetter<int> CountProperty => _count;
         public int Count => _count.Item;
 
-        private List<T> list = pool.Get();
+        protected List<T> list = pool.Get();
 
         public IEnumerable<T> List => list;
 
@@ -60,7 +60,7 @@ namespace Noggog.Notifying
             }
         }
 
-        public void Set(int index, T item, NotifyingFireParameters? cmds = null)
+        public virtual void Set(int index, T item, NotifyingFireParameters? cmds = null)
         {
             cmds = ProcessCmds(cmds);
             if (HasSubscribers())
@@ -93,7 +93,7 @@ namespace Noggog.Notifying
             }
         }
 
-        public void Insert(int index, T item, NotifyingFireParameters? cmds = null)
+        public virtual void Insert(int index, T item, NotifyingFireParameters? cmds = null)
         {
             cmds = ProcessCmds(cmds);
             list.Insert(index, item);
@@ -104,7 +104,7 @@ namespace Noggog.Notifying
                 cmds);
         }
 
-        public void Add(T item, NotifyingFireParameters? cmds = null)
+        public virtual void Add(T item, NotifyingFireParameters? cmds = null)
         {
             cmds = ProcessCmds(cmds);
             list.Add(item);
@@ -115,7 +115,7 @@ namespace Noggog.Notifying
                 cmds);
         }
 
-        public void Add(IEnumerable<T> items, NotifyingFireParameters? cmds = null)
+        public virtual void Add(IEnumerable<T> items, NotifyingFireParameters? cmds = null)
         {
             cmds = ProcessCmds(cmds);
             if (HasSubscribers())
@@ -168,7 +168,7 @@ namespace Noggog.Notifying
             return false;
         }
 
-        public void SetTo(IEnumerable<T> enumer, NotifyingFireParameters? cmds = null)
+        public virtual void SetTo(IEnumerable<T> enumer, NotifyingFireParameters? cmds = null)
         {
             if (cmds == null)
             {
@@ -436,10 +436,7 @@ namespace Noggog.Notifying
             list.CopyTo(array, arrayIndex);
         }
 
-        public bool IsReadOnly
-        {
-            get { return false; }
-        }
+        public bool IsReadOnly => false;
 
         IEnumerable<T> IHasBeenSetItemGetter<IEnumerable<T>>.Item => list;
         #endregion
