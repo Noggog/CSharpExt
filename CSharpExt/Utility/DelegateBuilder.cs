@@ -83,7 +83,17 @@ namespace Noggog.Utility
             }
             else
             {
-                throw new NotImplementedException();
+                var paramThis = Expression.Convert(paramsOfDelegate[0], method.DeclaringType);
+
+                var paramsToPass = methodParams
+                    .Select((p, i) => CreateParam(paramsOfDelegate, i + 1, p, queueMissingParams))
+                    .ToArray();
+
+                var expr = Expression.Lambda<RetType>(
+                    Expression.Call(paramThis, method.Name, genTypes, paramsToPass),
+                    paramsOfDelegate);
+
+                return expr.Compile();
             }
         }
 
