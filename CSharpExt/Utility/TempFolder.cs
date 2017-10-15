@@ -15,7 +15,15 @@ namespace Noggog.Utility
         {
             this.Dir = new DirectoryInfo(Path.Combine(Path.GetTempPath(), Path.GetRandomFileName()));
             this.Dir.Create();
-            
+        }
+
+        public TempFolder(DirectoryInfo dir)
+        {
+            this.Dir = dir;
+            if (!dir.Exists)
+            {
+                this.Dir.Create();
+            }
         }
 
         public void Dispose()
