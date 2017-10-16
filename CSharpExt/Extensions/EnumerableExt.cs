@@ -133,5 +133,14 @@ namespace System
                 toDo(item);
             }
         }
+
+        public static IEnumerable<T> First<T>(this IEnumerable<T> en, int amount)
+        {
+            foreach (var item in en)
+            {
+                if (amount-- == 0) yield break;
+                yield return item;
+            }
+        }
     }
 }
