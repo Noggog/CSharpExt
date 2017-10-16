@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Noggog
 {
@@ -143,6 +144,33 @@ namespace Noggog
         public static bool operator !=(RangeInt64 c1, RangeInt64 c2)
         {
             return !c1.Equals(c2);
+        }
+
+        public static IEnumerable<RangeInt64> ConstructRanges<T>(
+            IEnumerable<KeyValuePair<long, T>> items,
+            Func<T, bool> eval)
+        {
+            bool inRange = false;
+            long startRange = 0;
+            foreach (var item in items)
+            {
+                if (eval(item.Value))
+                {
+                    if (!inRange)
+                    {
+                        startRange = item.Key;
+                        inRange = true;
+                    }
+                }
+                else
+                {
+                    if (inRange)
+                    {
+                        yield return new RangeInt64(startRange, item.Key - 1);
+                        inRange = false;
+                    }
+                }
+            }
         }
     }
 }
