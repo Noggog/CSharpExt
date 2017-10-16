@@ -21,7 +21,12 @@ namespace Noggog
                 Max = val2;
             }
         }
-        
+
+        public RangeFloat(float val)
+            : this(val, val)
+        {
+        }
+
         public bool IsInRange(float f)
         {
             if (f > this.Max) return false;

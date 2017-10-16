@@ -8,6 +8,7 @@ namespace Noggog
         public readonly ulong Max;
         public float Average => ((Max - Min) / 2f) + Min;
         public ulong Difference => (ulong)(this.Max - this.Min);
+        public ulong Width => (ulong)(this.Max - this.Min + 1);
 
         public RangeUInt64(ulong val1, ulong val2)
         {
@@ -25,6 +26,11 @@ namespace Noggog
 
         public RangeUInt64(ulong? min, ulong? max)
             : this(min ?? ulong.MinValue, max ?? ulong.MaxValue)
+        {
+        }
+
+        public RangeUInt64(ulong val)
+            : this(val, val)
         {
         }
 

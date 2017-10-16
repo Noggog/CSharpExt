@@ -8,6 +8,7 @@ namespace Noggog
         public readonly byte Max;
         public float Average => ((Max - Min) / 2f) + Min;
         public byte Difference => (byte)(this.Max - this.Min);
+        public ushort Width => (byte)(this.Max - this.Min + 1);
 
         public RangeUInt8(byte val1, byte val2)
         {
@@ -25,6 +26,11 @@ namespace Noggog
 
         public RangeUInt8(byte? min, byte? max)
             : this(min ?? byte.MinValue, max ?? byte.MaxValue)
+        {
+        }
+
+        public RangeUInt8(byte val)
+            : this(val, val)
         {
         }
 

@@ -8,6 +8,7 @@ namespace Noggog
         public readonly sbyte Max;
         public float Average => ((Max - Min) / 2f) + Min;
         public sbyte Difference => (sbyte)(this.Max - this.Min);
+        public ushort Width => (ushort)(this.Max - this.Min + 1);
 
         public RangeInt8(sbyte val1, sbyte val2)
         {
@@ -25,6 +26,11 @@ namespace Noggog
 
         public RangeInt8(sbyte? min, sbyte? max)
             : this(min ?? sbyte.MinValue, max ?? sbyte.MaxValue)
+        {
+        }
+
+        public RangeInt8(sbyte val)
+            : this(val, val)
         {
         }
 

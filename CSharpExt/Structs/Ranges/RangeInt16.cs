@@ -8,6 +8,7 @@ namespace Noggog
         public readonly short Max;
         public float Average => ((Max - Min) / 2f) + Min;
         public short Difference => (short)(this.Max - this.Min);
+        public ushort Width => (ushort)(this.Max - this.Min + 1);
 
         public RangeInt16(short val1, short val2)
         {
@@ -25,6 +26,11 @@ namespace Noggog
 
         public RangeInt16(short? min, short? max)
             : this(min ?? short.MinValue, max ?? short.MaxValue)
+        {
+        }
+
+        public RangeInt16(short val)
+            : this(val, val)
         {
         }
 

@@ -30,6 +30,11 @@ namespace Noggog
         {
         }
 
+        public RangeUDouble(UDouble val)
+            : this(val, val)
+        {
+        }
+
         public static RangeUDouble Parse(string str)
         {
             if (!TryParse(str, out RangeUDouble rd))

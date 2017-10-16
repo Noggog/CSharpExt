@@ -8,6 +8,7 @@ namespace Noggog
         public readonly ushort Max;
         public float Average => ((Max - Min) / 2f) + Min;
         public ushort Difference => (ushort)(this.Max - this.Min);
+        public uint Width => (uint)(this.Max - this.Min + 1);
 
         public RangeUInt16(ushort val1, ushort val2)
         {
@@ -25,6 +26,11 @@ namespace Noggog
 
         public RangeUInt16(ushort? min, ushort? max)
             : this(min ?? ushort.MinValue, max ?? ushort.MaxValue)
+        {
+        }
+
+        public RangeUInt16(ushort val)
+            : this(val, val)
         {
         }
 

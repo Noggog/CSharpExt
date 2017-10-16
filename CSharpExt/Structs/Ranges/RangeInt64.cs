@@ -9,6 +9,7 @@ namespace Noggog
         public readonly long Max;
         public float Average => ((Max - Min) / 2f) + Min;
         public long Difference => this.Max - this.Min;
+        public long Width => this.Difference + 1;
 
         public RangeInt64(long val1, long val2)
         {
@@ -26,6 +27,11 @@ namespace Noggog
 
         public RangeInt64(long? min, long? max)
             : this(min ?? long.MinValue, max ?? long.MaxValue)
+        {
+        }
+
+        public RangeInt64(long val)
+            : this(val, val)
         {
         }
 
@@ -113,7 +119,7 @@ namespace Noggog
                 return new RangeInt64(min, max);
             }
         }
-        
+
         public override bool Equals(object obj)
         {
             if (!(obj is RangeInt64 rhs)) return false;
