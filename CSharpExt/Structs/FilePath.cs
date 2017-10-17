@@ -11,12 +11,16 @@ namespace Noggog
     {
         private readonly StringCaseAgnostic _fullPath;
         private readonly FileInfo _fileInfo;
+        private readonly string _originalPath;
+
         public DirectoryPath Directory => new DirectoryPath(_fileInfo.Directory.FullName);
         public string Path => _fullPath;
+        public string RelativePath => _originalPath;
         public string Name => _fileInfo.Name;
 
         public FilePath(string path)
         {
+            this._originalPath = path;
             this._fileInfo = new FileInfo(path);
             this._fullPath = StandardizePath(path);
         }
