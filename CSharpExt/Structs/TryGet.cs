@@ -41,11 +41,20 @@ namespace Noggog
             return $"({Succeeded}, {Value})";
         }
 
-        public TryGet<R> Bubble<R>(Func<T, R> conv)
+        public TryGet<R> Bubble<R>(Func<T, R> conv, bool fireIfFailed = false)
         {
+            R val;
+            if (this.Succeeded || fireIfFailed)
+            {
+                val = conv(this.Value);
+            }
+            else
+            {
+                val = default(R);
+            }
             return TryGet<R>.Create(
                 this.Succeeded,
-                conv(this.Value));
+                val);
         }
 
         public TryGet<R> BubbleFailure<R>()
