@@ -139,7 +139,21 @@ namespace Noggog
 
         public override string ToString()
         {
-            return Min == Max ? $"({Min.ToString()})" : $"({Min} - {Max})";
+            return Min == Max ? $"({Min})" : $"({Min} - {Max})";
+        }
+
+        public string ToString(string format)
+        {
+            string prefix;
+            if (format.Contains("X"))
+            {
+                prefix = "0x";
+            }
+            else
+            {
+                prefix = string.Empty;
+            }
+            return Min == Max ? $"({prefix}{Min.ToString(format)})" : $"({prefix}{Min.ToString(format)} - {prefix}{Max.ToString(format)})";
         }
 
         public static bool operator ==(RangeInt64 c1, RangeInt64 c2)

@@ -141,6 +141,20 @@ namespace Noggog
             return Min == Max ? $"({Min.ToString()})" : $"({Min} - {Max})";
         }
 
+        public string ToString(string format)
+        {
+            string prefix;
+            if (format.Contains("X"))
+            {
+                prefix = "0x";
+            }
+            else
+            {
+                prefix = string.Empty;
+            }
+            return Min == Max ? $"({prefix}{Min.ToString(format)})" : $"({prefix}{Min.ToString(format)} - {prefix}{Max.ToString(format)})";
+        }
+
         public static bool operator ==(RangeInt8 c1, RangeInt8 c2)
         {
             return c1.Equals(c2);

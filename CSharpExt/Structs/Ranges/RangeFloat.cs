@@ -106,6 +106,11 @@ namespace Noggog
             return this.Min.EqualsWithin(this.Max) ? $"({Min.ToString()})" : $"({Min} - {Max})";
         }
 
+        public string ToString(string format)
+        {
+            return this.Min.EqualsWithin(this.Max) ? $"({Min.ToString(format)})" : $"({Min.ToString(format)} - {Max.ToString(format)})";
+        }
+
         public static bool operator ==(RangeFloat c1, RangeFloat c2)
         {
             return c1.Equals(c2);

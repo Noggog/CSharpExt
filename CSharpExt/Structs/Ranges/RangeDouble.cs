@@ -139,7 +139,12 @@ namespace Noggog
 
         public override string ToString()
         {
-            return Min == Max ? $"({Min.ToString()})" : $"({Min} - {Max})";
+            return Min.EqualsWithin(Max) ? $"({Min.ToString()})" : $"({Min} - {Max})";
+        }
+
+        public string ToString(string format)
+        {
+            return Min == Max ? $"({Min.ToString(format)})" : $"({Min.ToString(format)} - {Max.ToString(format)})";
         }
 
         public static RangeDouble operator -(RangeDouble r1, RangeDouble r2)

@@ -76,6 +76,11 @@ namespace Noggog
             return Value.ToString();
         }
 
+        public string ToString(string format)
+        {
+            return Value.ToString(format);
+        }
+
         public int CompareTo(UDouble other)
         {
             return Value.CompareTo(other.Value);
