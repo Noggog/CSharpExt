@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 
 namespace Noggog
 {
@@ -63,16 +64,19 @@ namespace Noggog
         }
 
         #region Factories
+        [DebuggerStepThrough]
         public static TryGet<T> Succeed(T value)
         {
             return new TryGet<T>(true, value);
         }
-        
+
+        [DebuggerStepThrough]
         public static TryGet<T> Fail(T val)
         {
             return new TryGet<T>(false, val);
         }
 
+        [DebuggerStepThrough]
         public static TryGet<T> Create(bool successful, T val = default(T))
         {
             return new TryGet<T>(successful, val);
