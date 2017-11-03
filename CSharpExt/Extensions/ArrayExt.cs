@@ -127,6 +127,14 @@ namespace System
             return ret;
         }
 
+        public static IEnumerable<(T item, bool Last)> IterateMarkLast<T>(this T[] arr)
+        {
+            for (int i = 0; i < arr.Length; i++)
+            {
+                yield return (arr[i], i == arr.Length - 1);
+            }
+        }
+
         #region Jagged3DArray
         #region Instantiation
         public static T[][][] Instantiate3DArray<T>(int size)

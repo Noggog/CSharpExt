@@ -51,6 +51,16 @@ namespace System
             }
         }
 
+        public static IEnumerable<(T item, bool Last)> IterateMarkLast<T>(
+            this ICollection<T> coll)
+        {
+            int count = coll.Count;
+            foreach (var item in coll)
+            {
+                yield return (item, --count == 0);
+            }
+        }
+
         public static void First<T>(
             this ICollection<T> coll,
             Action<T, bool> each)
