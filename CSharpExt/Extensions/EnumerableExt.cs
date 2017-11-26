@@ -143,4 +143,9 @@ namespace System
             }
         }
     }
+
+    public static class EnumerableExt<T>
+    {
+        public static readonly IEnumerable<T> EMPTY = new T[0];
+    }
 }
