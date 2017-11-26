@@ -286,12 +286,12 @@ namespace Noggog.Notifying
             return changes;
         }
 
-        public void Subscribe<O>(O owner, NotifyingCollectionCallback<O> callback, bool fireInitial)
+        public void Subscribe<O>(O owner, NotifyingCollectionCallback<O> callback, bool fireInitial = true)
         {
             this.Subscribe_Internal(owner, callback, fireInitial);
         }
 
-        public void Subscribe(NotifyingCollectionSimpleCallback callback, bool fireInitial)
+        public void Subscribe(NotifyingCollectionSimpleCallback callback, bool fireInitial = true)
         {
             this.Subscribe_Internal<object>(null, (o2, ch) => callback(ch), fireInitial);
         }
@@ -445,7 +445,6 @@ namespace Noggog.Notifying
 
 namespace System
 {
-
     public static class INotifyingListGetterExt
     {
         #region Cast
@@ -630,7 +629,12 @@ namespace System
 
         public static void Subscribe<O, T>(this INotifyingListGetter<T> getter, O owner, NotifyingCollection<T, ChangeIndex<T>>.NotifyingCollectionCallback<O> callback)
         {
-            getter.Subscribe(owner, callback, true);
+            getter.Subscribe(owner, callback, fireInitial: true);
+        }
+
+        public static void Subscribe<T>(this INotifyingListGetter<T> getter, NotifyingCollection<T, ChangeIndex<T>>.NotifyingCollectionSimpleCallback callback)
+        {
+            getter.Subscribe(callback, fireInitial: true);
         }
 
         public static void Subscribe<O, T>(this INotifyingListGetter<T> getter, O owner, NotifyingCollection<T, ChangeIndex<T>>.NotifyingCollectionSimpleCallback callback, bool fireInitial = true)
