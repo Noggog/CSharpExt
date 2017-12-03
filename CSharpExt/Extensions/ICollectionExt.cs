@@ -51,7 +51,7 @@ namespace System
             }
         }
 
-        public static IEnumerable<(T item, bool Last)> IterateMarkLast<T>(
+        public static IEnumerable<(T Item, bool Last)> IterateMarkLast<T>(
             this ICollection<T> coll)
         {
             int count = coll.Count;

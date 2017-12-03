@@ -142,6 +142,28 @@ namespace System
                 yield return item;
             }
         }
+
+        public static IEnumerable<(T Item, bool Last)> IterateMarkLast<T>(this IEnumerable<T> en)
+        {
+            T last = default(T);
+            bool first = true;
+            foreach (var item in en)
+            {
+                if (!first)
+                {
+                    yield return (last, false);
+                }
+                else
+                {
+                    first = false;
+                }
+                last = item;
+            }
+            if (!first)
+            {
+                yield return (last, true);
+            }
+        }
     }
 
     public static class EnumerableExt<T>
