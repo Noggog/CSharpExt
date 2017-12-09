@@ -6,18 +6,17 @@ using System.Threading.Tasks;
 
 namespace Noggog.Notifying
 {
-    public struct NotifyingItemWrapper<T> : INotifyingItemGetter<T>
+    public struct NotifyingSetItemWrapper<T> : INotifyingSetItemGetter<T>
     {
-        public readonly T Item;
+        public readonly T _item;
+        public T Item => _item;
 
-        public NotifyingItemWrapper(T item)
+        public NotifyingSetItemWrapper(T item)
         {
-            this.Item = item;
+            this._item = item;
         }
 
         public bool HasBeenSet => true;
-
-        T IHasBeenSetItemGetter<T>.Item => this.Item;
 
         public void Subscribe(NotifyingItemSimpleCallback<T> callback, bool fireInitial)
         {

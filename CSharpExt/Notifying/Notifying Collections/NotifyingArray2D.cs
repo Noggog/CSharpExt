@@ -7,7 +7,7 @@ namespace Noggog.Notifying
     public class NotifyingArray2D<T> : NotifyingContainer2D<T>
     {
         private readonly T[,] arr;
-        private static INotifyingItemGetter<int> zeroItem = new NotifyingItemWrapper<int>(0);
+        private static INotifyingItemGetter<int> zeroItem = new NotifyingSetItemWrapper<int>(0);
         private INotifyingItemGetter<int> _maxX;
         public override INotifyingItemGetter<int> MaxX => _maxX;
         private INotifyingItemGetter<int> _maxY;
@@ -34,9 +34,9 @@ namespace Noggog.Notifying
         public NotifyingArray2D(T[,] arr)
         {
             this.arr = arr;
-            this._maxY = new NotifyingItemWrapper<int>(arr.GetLength(0) - 1);
-            this._maxX = new NotifyingItemWrapper<int>(arr.GetLength(1) - 1);
-            this._count = new NotifyingItemWrapper<int>(arr.GetLength(0) * arr.GetLength(1));
+            this._maxY = new NotifyingSetItemWrapper<int>(arr.GetLength(0) - 1);
+            this._maxX = new NotifyingSetItemWrapper<int>(arr.GetLength(1) - 1);
+            this._count = new NotifyingSetItemWrapper<int>(arr.GetLength(0) * arr.GetLength(1));
         }
 
         public NotifyingArray2D(P2Int dim)

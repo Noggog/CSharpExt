@@ -5,14 +5,15 @@ using Noggog.Notifying;
 
 namespace Noggog.Notifying
 {
-    public class NotifyingItemOnSet<T> : NotifyingItem<T>
+    public class NotifyingSetItemOnSet<T> : NotifyingSetItem<T>
     {
         Action<T> onSet;
 
-        public NotifyingItemOnSet(
+        public NotifyingSetItemOnSet(
             Action<T> onSet,
-            T defaultVal = default(T))
-            : base(defaultVal)
+            T defaultVal = default(T),
+            bool markAsSet = false)
+            : base(defaultVal, markAsSet)
         {
             this.onSet = onSet;
         }

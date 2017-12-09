@@ -10,8 +10,9 @@ namespace Noggog.Notifying
     public delegate void NotifyingItemSimpleCallback<T>(Change<T> change);
     public delegate void NotifyingItemInternalCallback<T>(object owner, Change<T> change);
 
-    public interface INotifyingItemGetter<T> : IHasBeenSetItemGetter<T>
+    public interface INotifyingItemGetter<T>
     {
+        T Item { get; }
         void Subscribe(NotifyingItemSimpleCallback<T> callback, bool fireInitial);
         void Subscribe(NotifyingItemSimpleCallback<T> callback);
         void Subscribe<O>(O owner, NotifyingItemCallback<O, T> callback, bool fireInitial);
@@ -19,11 +20,20 @@ namespace Noggog.Notifying
         void Unsubscribe(object owner);
     }
 
-    public interface INotifyingItem<T> : INotifyingItemGetter<T>, IHasBeenSetItem<T>
+    public interface INotifyingItem<T> : INotifyingItemGetter<T>, IHasItem<T>
     {
         new T Item { get; set; }
         void Set(T value, NotifyingFireParameters? cmds);
-        void Unset(NotifyingUnsetParameters? cmds);
     }
 
+    public interface INotifyingSetItemGetter<T> : IHasBeenSetItemGetter<T>, INotifyingItemGetter<T>
+    {
+        new T Item { get; }
+    }
+
+    public interface INotifyingSetItem<T> : INotifyingItem<T>, IHasBeenSetItem<T>, INotifyingSetItemGetter<T>
+    {
+        new T Item { get; set; }
+        void Unset(NotifyingUnsetParameters? cmds);
+    }
 }

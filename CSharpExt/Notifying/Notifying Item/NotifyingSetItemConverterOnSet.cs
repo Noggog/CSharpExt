@@ -5,20 +5,25 @@ using Noggog.Notifying;
 
 namespace Noggog.Notifying
 {
-    public class NotifyingItemOnSet<T> : NotifyingItem<T>
+    public class NotifyingSetItemConverterOnSet<T> : NotifyingSetItem<T>
     {
+        Func<T, T> converter;
         Action<T> onSet;
 
-        public NotifyingItemOnSet(
+        public NotifyingSetItemConverterOnSet(
+            Func<T, T> converter,
             Action<T> onSet,
-            T defaultVal = default(T))
-            : base(defaultVal)
+            T defaultVal = default(T),
+            bool markAsSet = false)
+            : base(defaultVal, markAsSet)
         {
+            this.converter = converter;
             this.onSet = onSet;
         }
 
         public override void Set(T value, NotifyingFireParameters? cmd = default(NotifyingFireParameters?))
         {
+            value = converter(value);
             base.Set(value, cmd);
             onSet(value);
         }

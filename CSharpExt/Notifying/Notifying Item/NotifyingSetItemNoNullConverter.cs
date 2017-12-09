@@ -5,21 +5,19 @@ using Noggog.Notifying;
 
 namespace Noggog.Notifying
 {
-    public class NotifyingItemNoNullOnSetConverter<T> : NotifyingItem<T>
+    public class NotifyingSetItemNoNullConverter<T> : NotifyingSetItem<T>
     {
         Func<T> noNullFallback;
-        Action<T> onSet;
         Func<T, T> converter;
 
-        public NotifyingItemNoNullOnSetConverter(
+        public NotifyingSetItemNoNullConverter(
             Func<T> noNullFallback,
-            Action<T> onSet,
             Func<T, T> converter,
-            T defaultVal = default(T))
-            : base(defaultVal)
+            T defaultVal = default(T),
+            bool markAsSet = false)
+            : base(defaultVal, markAsSet)
         {
             this.noNullFallback = noNullFallback;
-            this.onSet = onSet;
             this.converter = converter;
         }
 
@@ -27,27 +25,26 @@ namespace Noggog.Notifying
         {
             if (value == null)
             {
-                value = noNullFallback();
+                base.Set(converter(noNullFallback()), cmd);
             }
-            value = converter(value);
-            base.Set(value, cmd);
-            onSet(this.Item);
+            else
+            {
+                base.Set(converter(value), cmd);
+            }
         }
     }
 
-    public class NotifyingItemNoNullDirectOnSetConverter<T> : NotifyingItem<T>
+    public class NotifyingSetItemNoNullDirectConverter<T> : NotifyingSetItem<T>
         where T : new()
     {
-        Action<T> onSet;
         Func<T, T> converter;
 
-        public NotifyingItemNoNullDirectOnSetConverter(
-            Action<T> onSet,
+        public NotifyingSetItemNoNullDirectConverter(
             Func<T, T> converter,
-            T defaultVal = default(T))
-            : base(defaultVal)
+            T defaultVal = default(T),
+            bool markAsSet = false)
+            : base(defaultVal, markAsSet)
         {
-            this.onSet = onSet;
             this.converter = converter;
         }
 
@@ -55,11 +52,12 @@ namespace Noggog.Notifying
         {
             if (value == null)
             {
-                value = new T();
+                base.Set(converter(new T()), cmd);
             }
-            value = converter(value);
-            base.Set(value, cmd);
-            onSet(this.Item);
+            else
+            {
+                base.Set(converter(value), cmd);
+            }
         }
     }
 }

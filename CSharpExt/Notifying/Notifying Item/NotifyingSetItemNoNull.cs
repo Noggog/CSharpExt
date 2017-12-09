@@ -5,14 +5,15 @@ using Noggog.Notifying;
 
 namespace Noggog.Notifying
 {
-    public class NotifyingItemNoNull<T> : NotifyingItem<T>
+    public class NotifyingSetItemNoNull<T> : NotifyingSetItem<T>
     {
         Func<T> noNullFallback;
 
-        public NotifyingItemNoNull(
+        public NotifyingSetItemNoNull(
             Func<T> noNullFallback,
-            T defaultVal = default(T))
-            : base(defaultVal)
+            T defaultVal = default(T),
+            bool markAsSet = false)
+            : base(defaultVal, markAsSet)
         {
             this.noNullFallback = noNullFallback;
         }
@@ -30,12 +31,13 @@ namespace Noggog.Notifying
         }
     }
 
-    public class NotifyingItemNoNullDirect<T> : NotifyingItem<T>
+    public class NotifyingSetItemNoNullDirect<T> : NotifyingSetItem<T>
         where T : new()
     {
-        public NotifyingItemNoNullDirect(
-            T defaultVal = default(T))
-            : base(defaultVal)
+        public NotifyingSetItemNoNullDirect(
+            T defaultVal = default(T),
+            bool markAsSet = false)
+            : base(defaultVal, markAsSet)
         {
         }
 

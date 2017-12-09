@@ -2,20 +2,23 @@
 
 namespace Noggog.Notifying
 {
-    public struct NotifyingItemConvertWrapper<T> : INotifyingItem<T>
+    public struct NotifyingSetItemConvertWrapper<T> : INotifyingSetItem<T>
     {
-        private readonly INotifyingItem<T> Source;
+        private readonly INotifyingSetItem<T> Source;
         private readonly Func<Change<T>, TryGet<T>> incomingConverter;
 
-        public NotifyingItemConvertWrapper(
+        public NotifyingSetItemConvertWrapper(
             Func<Change<T>, TryGet<T>> incomingConverter,
             T defaultVal = default(T))
-            : this(new NotifyingItem<T>(defaultVal: defaultVal), incomingConverter, true)
+            : this(
+                  source: new NotifyingSetItem<T>(defaultVal: defaultVal),
+                  incomingConverter: incomingConverter,
+                  setIntially: true)
         {
         }
 
-        public NotifyingItemConvertWrapper(
-            INotifyingItem<T> source,
+        public NotifyingSetItemConvertWrapper(
+            INotifyingSetItem<T> source,
             Func<Change<T>, TryGet<T>> incomingConverter,
             bool setIntially)
         {
@@ -36,7 +39,17 @@ namespace Noggog.Notifying
 
         #region NotifyingItem interface
         public T Item { get => Source.Item; set => this.Set(value); }
-        
+
+        public T DefaultValue => throw new NotImplementedException();
+
+        public bool HasBeenSet => this.Source.HasBeenSet;
+
+        bool IHasBeenSetItem<T>.HasBeenSet
+        {
+            get => this.Source.HasBeenSet;
+            set => this.Source.HasBeenSet = value;
+        }
+
         public void Set(T value, NotifyingFireParameters? cmd)
         {
             var setting = this.incomingConverter(
@@ -47,6 +60,16 @@ namespace Noggog.Notifying
             {
                 this.Source.Set(setting.Value, cmd);
             }
+        }
+
+        public void Set(T value)
+        {
+            this.Set(value, cmd: null);
+        }
+
+        public void SetCurrentAsDefault()
+        {
+            this.Source.SetCurrentAsDefault();
         }
 
         public void Subscribe<O>(O owner, NotifyingItemCallback<O, T> callback, bool fireInitial)
@@ -69,6 +92,16 @@ namespace Noggog.Notifying
             this.Source.Subscribe(owner, callback);
         }
 
+        public void Unset(NotifyingUnsetParameters? cmds)
+        {
+            this.Source.Unset(cmds);
+        }
+
+        public void Unset()
+        {
+            this.Source.Unset();
+        }
+
         public void Unsubscribe(object owner)
         {
             this.Source.Unsubscribe(owner);
@@ -76,13 +109,13 @@ namespace Noggog.Notifying
         #endregion
     }
 
-    public class NotifyingItemConvertWrapper<T, R> : INotifyingSetItem<R>
+    public class NotifyingSetItemConvertWrapper<T, R> : INotifyingSetItem<R>
     {
         public readonly INotifyingSetItem<T> Source;
         private readonly Func<T, R> incomingConverter;
         private readonly Func<R, T> outgoingConverter;
 
-        public NotifyingItemConvertWrapper(
+        public NotifyingSetItemConvertWrapper(
             INotifyingSetItem<T> source,
             Func<T, R> incomingConverter,
             Func<R, T> outgoingConverter)

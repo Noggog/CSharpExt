@@ -5,19 +5,23 @@ using Noggog.Notifying;
 
 namespace Noggog.Notifying
 {
-    public class NotifyingItemNoNullOnSet<T> : NotifyingItem<T>
+    public class NotifyingSetItemNoNullOnSetConverter<T> : NotifyingSetItem<T>
     {
         Func<T> noNullFallback;
         Action<T> onSet;
+        Func<T, T> converter;
 
-        public NotifyingItemNoNullOnSet(
+        public NotifyingSetItemNoNullOnSetConverter(
             Func<T> noNullFallback,
             Action<T> onSet,
-            T defaultVal = default(T))
-            : base(defaultVal)
+            Func<T, T> converter,
+            T defaultVal = default(T),
+            bool markAsSet = false)
+            : base(defaultVal, markAsSet)
         {
             this.noNullFallback = noNullFallback;
             this.onSet = onSet;
+            this.converter = converter;
         }
 
         public override void Set(T value, NotifyingFireParameters? cmd = default(NotifyingFireParameters?))
@@ -26,22 +30,27 @@ namespace Noggog.Notifying
             {
                 value = noNullFallback();
             }
+            value = converter(value);
             base.Set(value, cmd);
-            onSet(value);
+            onSet(this.Item);
         }
     }
 
-    public class NotifyingItemNoNullDirectOnSet<T> : NotifyingItem<T>
+    public class NotifyingSetItemNoNullDirectOnSetConverter<T> : NotifyingSetItem<T>
         where T : new()
     {
         Action<T> onSet;
+        Func<T, T> converter;
 
-        public NotifyingItemNoNullDirectOnSet(
+        public NotifyingSetItemNoNullDirectOnSetConverter(
             Action<T> onSet,
-            T defaultVal = default(T))
-            : base(defaultVal)
+            Func<T, T> converter,
+            T defaultVal = default(T),
+            bool markAsSet = false)
+            : base(defaultVal, markAsSet)
         {
             this.onSet = onSet;
+            this.converter = converter;
         }
 
         public override void Set(T value, NotifyingFireParameters? cmd = default(NotifyingFireParameters?))
@@ -50,8 +59,9 @@ namespace Noggog.Notifying
             {
                 value = new T();
             }
+            value = converter(value);
             base.Set(value, cmd);
-            onSet(value);
+            onSet(this.Item);
         }
     }
 }

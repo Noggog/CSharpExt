@@ -13,9 +13,8 @@ namespace Noggog.Notifying
         public NotifyingItemConverterOnSet(
             Func<T, T> converter,
             Action<T> onSet,
-            T defaultVal = default(T),
-            bool markAsSet = false)
-            : base(defaultVal, markAsSet)
+            T defaultVal = default(T))
+            : base(defaultVal)
         {
             this.converter = converter;
             this.onSet = onSet;

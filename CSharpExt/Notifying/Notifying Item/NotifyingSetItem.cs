@@ -5,10 +5,11 @@ using Noggog.Notifying;
 
 namespace Noggog.Notifying
 {
-    public static class NotifyingItem
+    public static class NotifyingSetItem
     {
-        public static INotifyingItem<T> Factory<T>(
+        public static INotifyingSetItem<T> Factory<T>(
             T defaultVal = default(T),
+            bool markAsSet = false,
             Func<T> noNullFallback = null,
             Action<T> onSet = null,
             Func<T, T> converter = null)
@@ -19,29 +20,34 @@ namespace Noggog.Notifying
                 {
                     if (converter == null)
                     {
-                        return new NotifyingItem<T>(defaultVal: defaultVal);
+                        return new NotifyingSetItem<T>(
+                            defaultVal: defaultVal,
+                            markAsSet: markAsSet);
                     }
                     else
                     {
-                        return new NotifyingItemConverter<T>(
+                        return new NotifyingSetItemConverter<T>(
                             converter,
-                            defaultVal: defaultVal);
+                            defaultVal: defaultVal,
+                            markAsSet: markAsSet);
                     }
                 }
                 else
                 {
                     if (converter == null)
                     {
-                        return new NotifyingItemOnSet<T>(
+                        return new NotifyingSetItemOnSet<T>(
                             onSet: onSet,
-                            defaultVal: defaultVal);
+                            defaultVal: defaultVal,
+                            markAsSet: markAsSet);
                     }
                     else
                     {
-                        return new NotifyingItemConverterOnSet<T>(
+                        return new NotifyingSetItemConverterOnSet<T>(
                             converter: converter,
                             onSet: onSet,
-                            defaultVal: defaultVal);
+                            defaultVal: defaultVal,
+                            markAsSet: markAsSet);
                     }
                 }
             }
@@ -51,41 +57,46 @@ namespace Noggog.Notifying
                 {
                     if (converter == null)
                     {
-                        return new NotifyingItemNoNull<T>(
+                        return new NotifyingSetItemNoNull<T>(
                             noNullFallback: noNullFallback,
-                            defaultVal: defaultVal);
+                            defaultVal: defaultVal,
+                            markAsSet: markAsSet);
                     }
                     else
                     {
-                        return new NotifyingItemNoNullConverter<T>(
+                        return new NotifyingSetItemNoNullConverter<T>(
                             noNullFallback: noNullFallback,
                             converter: converter,
-                            defaultVal: defaultVal);
+                            defaultVal: defaultVal,
+                            markAsSet: markAsSet);
                     }
                 }
                 else
                 {
                     if (converter == null)
                     {
-                        return new NotifyingItemNoNullOnSet<T>(
+                        return new NotifyingSetItemNoNullOnSet<T>(
                             noNullFallback: noNullFallback,
                             onSet: onSet,
-                            defaultVal: defaultVal);
+                            defaultVal: defaultVal,
+                            markAsSet: markAsSet);
                     }
                     else
                     {
-                        return new NotifyingItemNoNullOnSetConverter<T>(
+                        return new NotifyingSetItemNoNullOnSetConverter<T>(
                             noNullFallback: noNullFallback,
                             onSet: onSet,
                             converter: converter,
-                            defaultVal: defaultVal);
+                            defaultVal: defaultVal,
+                            markAsSet: markAsSet);
                     }
                 }
             }
         }
 
-        public static INotifyingItem<T> FactoryNoNull<T>(
-            T initialVal = default(T),
+        public static INotifyingSetItem<T> FactoryNoNull<T>(
+            T defaultVal = default(T),
+            bool markAsSet = false,
             Action<T> onSet = null,
             Func<T, T> converter = null)
             where T : new()
@@ -94,78 +105,66 @@ namespace Noggog.Notifying
             {
                 if (converter == null)
                 {
-                    return new NotifyingItemNoNullDirect<T>(
-                        defaultVal: initialVal);
+                    return new NotifyingSetItemNoNullDirect<T>(
+                        defaultVal: defaultVal,
+                        markAsSet: markAsSet);
                 }
                 else
                 {
-                    return new NotifyingItemNoNullDirectConverter<T>(
+                    return new NotifyingSetItemNoNullDirectConverter<T>(
                         converter,
-                        defaultVal: initialVal);
+                        defaultVal: defaultVal,
+                        markAsSet: markAsSet);
                 }
             }
             else
             {
                 if (converter == null)
                 {
-                    return new NotifyingItemNoNullDirectOnSet<T>(
+                    return new NotifyingSetItemNoNullDirectOnSet<T>(
                         onSet: onSet,
-                        defaultVal: initialVal);
+                        defaultVal: defaultVal,
+                        markAsSet: markAsSet);
                 }
                 else
                 {
-                    return new NotifyingItemNoNullDirectOnSetConverter<T>(
+                    return new NotifyingSetItemNoNullDirectOnSetConverter<T>(
                         converter: converter,
                         onSet: onSet,
-                        defaultVal: initialVal);
+                        defaultVal: defaultVal,
+                        markAsSet: markAsSet);
                 }
             }
         }
     }
 
-    public class NotifyingItem<T> : INotifyingItem<T>
+    public class NotifyingSetItem<T> : INotifyingSetItem<T>
     {
-        static ObjectPool<SubscriptionHandler<NotifyingItemInternalCallback<T>>> pool = new ObjectPool<SubscriptionHandler<NotifyingItemInternalCallback<T>>>(
-            () => new SubscriptionHandler<NotifyingItemInternalCallback<T>>(),
-            new LifecycleActions<SubscriptionHandler<NotifyingItemInternalCallback<T>>>(
-                onReturn: (s) => s.Clear()),
-            200);
-
         protected T _item;
         public T Item
         {
-            get
-            {
-                return _item;
-            }
-            set
-            {
-                Set(value, null);
-            }
+            get => _item;
+            set => Set(value, null);
         }
-        
+
+        public T DefaultValue { get; private set; }
+        public bool HasBeenSet { get; set; }
         protected SubscriptionHandler<NotifyingItemInternalCallback<T>> subscribers;
 
-        public NotifyingItem(
-            T defaultVal = default(T))
+        public NotifyingSetItem(
+            T defaultVal = default(T),
+            bool markAsSet = false)
         {
+            this.DefaultValue = defaultVal;
             this._item = defaultVal;
-        }
-
-        ~NotifyingItem()
-        {
-            if (subscribers != null)
-            {
-                pool.Return(subscribers);
-                subscribers = null;
-            }
+            this.HasBeenSet = markAsSet;
         }
 
         public void Subscribe<O>(O owner, NotifyingItemCallback<O, T> callback, bool fireInitial = true)
         {
             if (subscribers == null)
             {
-                subscribers = pool.Get();
+                subscribers = new SubscriptionHandler<NotifyingItemInternalCallback<T>>();
             }
             subscribers.Add(owner, (own, change) => callback((O)own, change));
             if (fireInitial)
@@ -195,10 +194,28 @@ namespace Noggog.Notifying
             subscribers.Remove(owner);
         }
 
+        public void Unset(NotifyingUnsetParameters? cmds = null)
+        {
+            HasBeenSet = false;
+            Set(DefaultValue, cmds.ToFireParams());
+        }
+
+        public void SetCurrentAsDefault()
+        {
+            this.DefaultValue = this._item;
+        }
+
         public virtual void Set(T value, NotifyingFireParameters? cmd = null)
         {
-            cmd = cmd ?? NotifyingFireParameters.Typical;
-            
+            if (cmd == null)
+            {
+                cmd = NotifyingFireParameters.Typical;
+            }
+
+            if (cmd.Value.MarkAsSet)
+            {
+                HasBeenSet = true;
+            }
             if (cmd.Value.ForceFire || !object.Equals(_item, value))
             {
                 if (subscribers != null && subscribers.HasSubs)
@@ -263,7 +280,11 @@ namespace Noggog.Notifying
             }
         }
 
-        public static implicit operator T(NotifyingItem<T> item)
+        void IHasBeenSetItem<T>.Set(T value) => Set(value, cmd: null);
+
+        void IHasBeenSetItem<T>.Unset() => Unset(cmds: null);
+
+        public static implicit operator T(NotifyingSetItem<T> item)
         {
             return item.Item;
         }

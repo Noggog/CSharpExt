@@ -13,9 +13,8 @@ namespace Noggog.Notifying
         public NotifyingItemNoNullConverter(
             Func<T> noNullFallback,
             Func<T, T> converter,
-            T defaultVal = default(T),
-            bool markAsSet = false)
-            : base(defaultVal, markAsSet)
+            T defaultVal = default(T))
+            : base(defaultVal)
         {
             this.noNullFallback = noNullFallback;
             this.converter = converter;
@@ -41,9 +40,8 @@ namespace Noggog.Notifying
 
         public NotifyingItemNoNullDirectConverter(
             Func<T, T> converter,
-            T defaultVal = default(T),
-            bool markAsSet = false)
-            : base(defaultVal, markAsSet)
+            T defaultVal = default(T))
+            : base(defaultVal)
         {
             this.converter = converter;
         }

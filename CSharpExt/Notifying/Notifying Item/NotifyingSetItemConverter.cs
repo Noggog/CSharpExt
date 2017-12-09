@@ -5,14 +5,15 @@ using Noggog.Notifying;
 
 namespace Noggog.Notifying
 {
-    public class NotifyingItemConverter<T> : NotifyingItem<T>
+    public class NotifyingSetItemConverter<T> : NotifyingSetItem<T>
     {
         Func<T, T> converter;
 
-        public NotifyingItemConverter(
+        public NotifyingSetItemConverter(
             Func<T, T> converter,
-            T defaultVal = default(T))
-            : base(defaultVal)
+            T defaultVal = default(T),
+            bool markAsSet = false)
+            : base(defaultVal, markAsSet)
         {
             this.converter = converter;
         }

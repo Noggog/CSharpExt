@@ -7,17 +7,17 @@ namespace Noggog.Notifying
     * Class useed to forward another notifying item's values. 
     * It contains logic to convert any subscribers to new objects, so unsubscriptions don't collide and accidentally unsub unwanted things.
     */
-    public class NotifyingItemForwarder<T> : INotifyingItemGetter<T>
+    public class NotifyingSetItemForwarder<T> : INotifyingSetItemGetter<T>
     {
         public bool HasBeenSet => toForward.HasBeenSet;
 
         public T Item => toForward.Item;
 
-        INotifyingItemGetter<T> toForward;
+        INotifyingSetItemGetter<T> toForward;
 
         Lazy<Dictionary<WeakReferenceEquatable, object>> subscriberConverter = new Lazy<Dictionary<WeakReferenceEquatable, object>>();
 
-        public NotifyingItemForwarder(INotifyingItemGetter<T> toForward)
+        public NotifyingSetItemForwarder(INotifyingSetItemGetter<T> toForward)
         {
             this.toForward = toForward;
         }

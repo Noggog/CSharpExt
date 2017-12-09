@@ -100,15 +100,15 @@ namespace System
             not.Set(value, NotifyingFireParameters.Typical);
         }
 
-        public static void Unset<T>(this INotifyingItem<T> not)
+        public static void Unset<T>(this INotifyingSetItem<T> not)
         {
             not.Unset(null);
         }
 
         public static void SetToWithDefault<T>(
-            this INotifyingItem<T> not,
-            INotifyingItemGetter<T> rhs,
-            INotifyingItemGetter<T> def,
+            this INotifyingSetItem<T> not,
+            INotifyingSetItemGetter<T> rhs,
+            INotifyingSetItemGetter<T> def,
             NotifyingFireParameters? cmds)
         {
             if (rhs.HasBeenSet)
@@ -126,9 +126,9 @@ namespace System
         }
 
         public static void SetToWithDefault<T>(
-            this INotifyingItem<T> not,
-            INotifyingItemGetter<T> rhs,
-            INotifyingItemGetter<T> def,
+            this INotifyingSetItem<T> not,
+            INotifyingSetItemGetter<T> rhs,
+            INotifyingSetItemGetter<T> def,
             NotifyingFireParameters? cmds,
             Func<T, T, T> converter)
         {

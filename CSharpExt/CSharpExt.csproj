@@ -98,6 +98,15 @@
     <Compile Include="Notifying\HasBeenSet\IHasBeenSet.cs" />
     <Compile Include="Notifying\Notifying Collections\NotifyingListBounded.cs" />
     <Compile Include="Notifying\Notifying Item\INotifyingItem.cs" />
+    <Compile Include="Notifying\Notifying Item\NotifyingSetItemConvertWrapper.cs" />
+    <Compile Include="Notifying\Notifying Item\NotifyingSetItemNoNullOnSetConverter.cs" />
+    <Compile Include="Notifying\Notifying Item\NotifyingSetItemNoNullOnSet.cs" />
+    <Compile Include="Notifying\Notifying Item\NotifyingSetItemNoNullConverter.cs" />
+    <Compile Include="Notifying\Notifying Item\NotifyingSetItemNoNull.cs" />
+    <Compile Include="Notifying\Notifying Item\NotifyingSetItemConverterOnSet.cs" />
+    <Compile Include="Notifying\Notifying Item\NotifyingSetItemOnSet.cs" />
+    <Compile Include="Notifying\Notifying Item\NotifyingSetItemConverter.cs" />
+    <Compile Include="Notifying\Notifying Item\NotifyingSetItem.cs" />
     <Compile Include="Notifying\Notifying Item\NotifyingItemOnSet.cs" />
     <Compile Include="Notifying\Notifying Item\NotifyingItemConverterOnSet.cs" />
     <Compile Include="Notifying\Notifying Item\NotifyingItemConverter.cs" />
@@ -106,7 +115,7 @@
     <Compile Include="Notifying\Notifying Item\NotifyingItemNoNullConverter.cs" />
     <Compile Include="Notifying\Notifying Item\NotifyingItemNoNull.cs" />
     <Compile Include="Notifying\Notifying Item\NotifyingItemExt.cs" />
-    <Compile Include="Notifying\Notifying Item\NotifyingItemWrapper.cs" />
+    <Compile Include="Notifying\Notifying Item\NotifyingSetItemWrapper.cs" />
     <Compile Include="Notifying\Notifying Collections\NotifyingArray2D.cs" />
     <Compile Include="Notifying\Notifying Collections\NotifyingCollection.cs" />
     <Compile Include="Notifying\Notifying Collections\NotifyingContainer2D.cs" />
@@ -115,8 +124,8 @@
     <Compile Include="Notifying\NotifyingFireParameters.cs" />
     <Compile Include="Notifying\Notifying Item\NotifyingItem.cs" />
     <Compile Include="Notifying\Notifying Item\NotifyingItemConvertWrapper.cs" />
-    <Compile Include="Notifying\Notifying Item\NotifyingItemForwarder.cs" />
-    <Compile Include="Notifying\Notifying Item\NotifyingItemRouter.cs" />
+    <Compile Include="Notifying\Notifying Item\NotifyingSetItemForwarder.cs" />
+    <Compile Include="Notifying\Notifying Item\NotifyingSetItemRouter.cs" />
     <Compile Include="Notifying\Notifying Collections\NotifyingKeyedCollection.cs" />
     <Compile Include="Notifying\Notifying Collections\NotifyingKeyedCollectionRouter.cs" />
     <Compile Include="Notifying\Notifying Collections\NotifyingList.cs" />

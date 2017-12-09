@@ -6,16 +6,16 @@ namespace Noggog.Notifying
     *  Class intended to forward another NotifyingItem by default.  
     *  If it is set, then it breaks that subscription and becomes like a normal NotifyingItem until unset.
     */
-    public class NotifyingItemRouter<T> : INotifyingItem<T>
+    public class NotifyingSetItemRouter<T> : INotifyingSetItem<T>
     {
-        INotifyingItemGetter<T> _base;
-        INotifyingItem<T> _child;
+        INotifyingSetItemGetter<T> _base;
+        INotifyingSetItem<T> _child;
 
         public bool HasBeenSwapped { get; private set; }
 
-        public NotifyingItemRouter(
-            INotifyingItemGetter<T> _base, 
-            INotifyingItem<T> _child)
+        public NotifyingSetItemRouter(
+            INotifyingSetItemGetter<T> _base,
+            INotifyingSetItem<T> _child)
         {
             this._base = _base;
             this._child = _child;
