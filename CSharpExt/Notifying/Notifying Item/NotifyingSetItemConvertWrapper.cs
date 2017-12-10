@@ -9,9 +9,12 @@ namespace Noggog.Notifying
 
         public NotifyingSetItemConvertWrapper(
             Func<Change<T>, TryGet<T>> incomingConverter,
-            T defaultVal = default(T))
+            T defaultVal = default(T),
+            bool markAsSet = false)
             : this(
-                  source: new NotifyingSetItem<T>(defaultVal: defaultVal),
+                  source: new NotifyingSetItem<T>(
+                      defaultVal: defaultVal, 
+                      markAsSet: markAsSet),
                   incomingConverter: incomingConverter,
                   setIntially: true)
         {
