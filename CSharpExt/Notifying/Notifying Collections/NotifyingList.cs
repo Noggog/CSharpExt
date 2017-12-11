@@ -438,7 +438,7 @@ namespace Noggog.Notifying
 
         public bool IsReadOnly => false;
 
-        IEnumerable<T> IHasBeenSetItemGetter<IEnumerable<T>>.Item => list;
+        IEnumerable<T> IHasItemGetter<IEnumerable<T>>.Item => list;
         #endregion
     }
 }
@@ -476,8 +476,8 @@ namespace System
             public int Count => Orig.Count;
 
             public bool HasBeenSet => Orig.HasBeenSet;
-            
-            IEnumerable<R> IHasBeenSetItemGetter<IEnumerable<R>>.Item => Orig.Item.Select((t) => Converter(t));
+
+            IEnumerable<R> IHasItemGetter<IEnumerable<R>>.Item => Orig.Item.Select((t) => Converter(t));
 
             public R this[int index] => Converter(Orig[index]);
 
@@ -555,7 +555,7 @@ namespace System
 
             public bool HasBeenSet => Orig.HasBeenSet;
 
-            IEnumerable<R> IHasBeenSetItemGetter<IEnumerable<R>>.Item => Orig.Select((t) => _converter(t));
+            IEnumerable<R> IHasItemGetter<IEnumerable<R>>.Item => Orig.Select((t) => _converter(t));
 
             public R this[int index] => _internalList[index];
 

@@ -6,9 +6,14 @@ using System.Threading.Tasks;
 
 namespace Noggog.Notifying
 {
-    public interface IHasItem<T>
+    public interface IHasItem<T> : IHasItemGetter<T>
     {
-        T Item { get; set; }
+        new T Item { get; set; }
+    }
+
+    public interface IHasItemGetter<T>
+    {
+        T Item { get; }
     }
 
     public interface IHasBeenSet
@@ -16,9 +21,8 @@ namespace Noggog.Notifying
         bool HasBeenSet { get; }
     }
 
-    public interface IHasBeenSetItemGetter<T> : IHasBeenSet
+    public interface IHasBeenSetItemGetter<T> : IHasBeenSet, IHasItemGetter<T>
     {
-        T Item { get; }
     }
 
     public interface IHasBeenSetItem<T> : IHasItem<T>, IHasBeenSetItemGetter<T>

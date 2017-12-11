@@ -43,7 +43,7 @@ namespace Noggog.Notifying
         public IEnumerable<V> Values => dict.Values;
         public IEnumerable<KeyValuePair<K, V>> KeyedValues => dict;
 
-        IEnumerable<KeyValuePair<K, V>> IHasBeenSetItemGetter<IEnumerable<KeyValuePair<K, V>>>.Item => dict;
+        IEnumerable<KeyValuePair<K, V>> IHasItemGetter<IEnumerable<KeyValuePair<K, V>>>.Item => dict;
 
         public V this[K key] => dict[key];
 

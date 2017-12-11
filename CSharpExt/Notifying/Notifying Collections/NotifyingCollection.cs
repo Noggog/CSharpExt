@@ -175,7 +175,7 @@ namespace System
 
             public int Count => Orig.Count;
 
-            IEnumerable<R> IHasBeenSetItemGetter<IEnumerable<R>>.Item => Orig.Select<T, R>((t) => t);
+            IEnumerable<R> IHasItemGetter<IEnumerable<R>>.Item => Orig.Select<T, R>((t) => t);
 
             public void Subscribe_Enumerable<O>(O owner, NotifyingEnumerableCallback<O, R> callback, bool fireInitial)
             {

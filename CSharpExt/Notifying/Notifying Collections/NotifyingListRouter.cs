@@ -70,7 +70,7 @@ namespace Noggog.Notifying
             }
         }
 
-        IEnumerable<T> IHasBeenSetItemGetter<IEnumerable<T>>.Item => _child.Item;
+        IEnumerable<T> IHasItemGetter<IEnumerable<T>>.Item => _child.Item;
 
         public void Set(int index, T item, NotifyingFireParameters? cmds)
         {

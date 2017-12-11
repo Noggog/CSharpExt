@@ -10,9 +10,9 @@ namespace Noggog.Notifying
     public delegate void NotifyingItemSimpleCallback<T>(Change<T> change);
     public delegate void NotifyingItemInternalCallback<T>(object owner, Change<T> change);
 
-    public interface INotifyingItemGetter<T>
+    public interface INotifyingItemGetter<T> : IHasItemGetter<T>
     {
-        T Item { get; }
+        new T Item { get; }
         void Subscribe(NotifyingItemSimpleCallback<T> callback, bool fireInitial);
         void Subscribe(NotifyingItemSimpleCallback<T> callback);
         void Subscribe<O>(O owner, NotifyingItemCallback<O, T> callback, bool fireInitial);

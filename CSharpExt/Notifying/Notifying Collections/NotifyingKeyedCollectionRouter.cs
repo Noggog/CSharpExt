@@ -33,7 +33,7 @@ namespace Noggog.Notifying
 
         public IEnumerable<V> Values => _child.Values;
 
-        IEnumerable<KeyValuePair<K, V>> IHasBeenSetItemGetter<IEnumerable<KeyValuePair<K, V>>>.Item => _child.Item;
+        IEnumerable<KeyValuePair<K, V>> IHasItemGetter<IEnumerable<KeyValuePair<K, V>>>.Item => _child.Item;
 
         public Func<V, K> KeyGetter => _child.KeyGetter;
 

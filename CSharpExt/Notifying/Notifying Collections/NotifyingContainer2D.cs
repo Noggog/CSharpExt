@@ -36,7 +36,7 @@ namespace Noggog.Notifying
         public abstract int Width { get; }
         public abstract int Height { get; }
 
-        IEnumerable<P2IntValue<T>> IHasBeenSetItemGetter<IEnumerable<P2IntValue<T>>>.Item { get; }
+        IEnumerable<P2IntValue<T>> IHasItemGetter<IEnumerable<P2IntValue<T>>>.Item { get; }
 
         T INotifyingContainer2DGetter<T>.this[P2Int p] => this[p];
 
