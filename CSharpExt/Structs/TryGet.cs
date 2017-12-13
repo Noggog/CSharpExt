@@ -63,6 +63,15 @@ namespace Noggog
             return new TryGet<R>(false);
         }
 
+        public T GetOrDefault(T def)
+        {
+            if (this.Succeeded)
+            {
+                return this.Value;
+            }
+            return def;
+        }
+
         #region Factories
         [DebuggerStepThrough]
         public static TryGet<T> Succeed(T value)
