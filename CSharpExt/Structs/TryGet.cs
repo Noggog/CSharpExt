@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Noggog;
+using System;
 using System.Diagnostics;
 
 namespace Noggog
@@ -91,5 +92,21 @@ namespace Noggog
             return new TryGet<T>(successful, val);
         }
         #endregion
+    }
+}
+
+namespace System
+{
+    public static class TryGetExt
+    {
+        public static R GetOrDefault<T, R>(this TryGet<T> tryGet, R def)
+            where T : R
+        {
+            if (tryGet.Succeeded)
+            {
+                return tryGet.Value;
+            }
+            return def;
+        }
     }
 }
