@@ -45,6 +45,7 @@
   <ItemGroup>
     <Compile Include="Comparers\ReferenceEqualityComparer.cs" />
     <Compile Include="Comparers\WeakReferenceEquatable.cs" />
+    <Compile Include="Containers\Common\ICollectionGetter.cs" />
     <Compile Include="Containers\FireList.cs" />
     <Compile Include="Containers\Pools\ObjectDictionaryListPool.cs" />
     <Compile Include="Containers\Pools\ObjectDictionaryPool.cs" />
@@ -183,6 +184,7 @@
       <Version>4.4.0</Version>
     </PackageReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
