@@ -42,6 +42,11 @@ namespace Noggog
             return Equals(rhs);
         }
 
+        public void Delete()
+        {
+            this._fileInfo.Delete();
+        }
+
         public override int GetHashCode()
         {
             return this._fullPath.GetHashCode();

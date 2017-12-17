@@ -78,6 +78,20 @@ namespace Noggog
             this._dirInfo.Create();
         }
 
+        public IEnumerable<FileInfo> EnumerateFileInfos()
+        {
+            this._dirInfo.Refresh();
+            return this._dirInfo.EnumerateFiles();
+        }
+
+        public IEnumerable<FilePath> EnumerateFiles()
+        {
+            foreach (var file in this._dirInfo.EnumerateFiles())
+            {
+                yield return new FilePath(file.FullName);
+            }
+        }
+
         public static implicit operator DirectoryPath(DirectoryInfo info)
         {
             return new DirectoryPath(info.FullName);
