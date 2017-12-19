@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Noggog.Notifying;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -33,5 +34,33 @@ namespace Noggog.Notifying
         void Set(T value);
         void Unset();
         void SetCurrentAsDefault();
+    }
+}
+
+namespace System
+{
+    public static class IHasItemExt
+    {
+        public static T GetOrDefault<T>(this IHasBeenSetItemGetter<T> getter, T def)
+        {
+            if (getter.HasBeenSet) return getter.Item;
+            return def;
+        }
+
+        public static void SetIfNotSet<T>(this IHasBeenSetItem<T> prop, T item, bool markAsSet = true)
+        {
+            if (prop.HasBeenSet) return;
+            prop.Item = item;
+            if (!markAsSet)
+            {
+                prop.HasBeenSet = false;
+            }
+        }
+
+        public static void SetIfNotSet<T>(this IHasBeenSetItem<T> prop, T item)
+        {
+            if (prop.HasBeenSet) return;
+            prop.Item = item;
+        }
     }
 }
