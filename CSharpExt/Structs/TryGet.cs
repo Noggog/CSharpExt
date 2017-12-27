@@ -108,5 +108,22 @@ namespace System
             }
             return def;
         }
+
+        public static TryGet<R> Bubble<T, R>(this TryGet<T> tryGet, bool fireIfFailed = false)
+            where T : R
+        {
+            R val;
+            if (tryGet.Succeeded || fireIfFailed)
+            {
+                val = tryGet.Value;
+            }
+            else
+            {
+                val = default(R);
+            }
+            return TryGet<R>.Create(
+                tryGet.Succeeded,
+                val);
+        }
     }
 }
