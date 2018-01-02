@@ -195,17 +195,17 @@ namespace Noggog.Notifying
             subscribers.Remove(owner);
         }
 
-        public virtual void Set(T value, NotifyingFireParameters? cmd = null)
+        public virtual void Set(T value, NotifyingFireParameters? cmds = null)
         {
-            cmd = cmd ?? NotifyingFireParameters.Typical;
+            cmds = cmds ?? NotifyingFireParameters.Typical;
             
-            if (cmd.Value.ForceFire || !object.Equals(_item, value))
+            if (cmds.Value.ForceFire || !object.Equals(_item, value))
             {
                 if (subscribers != null && subscribers.HasSubs)
                 {
                     var old = _item;
                     _item = value;
-                    Fire(old, value, cmd);
+                    Fire(old, value, cmds);
                 }
                 else
                 {
