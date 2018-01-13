@@ -78,12 +78,12 @@ namespace System
             throw new TimeoutException($"{taskMessage} took longer than {timeoutMS.Value}ms.");
         }
 
-        public static async Task DoThenComplete(TaskCompletionSource<bool> tcs, Func<Task> action)
+        public static async Task DoThenComplete(TaskCompletionSource tcs, Func<Task> action)
         {
             try
             {
                 await action();
-                tcs?.SetResult(true);
+                tcs?.Complete();
             }
             catch (Exception ex)
             {

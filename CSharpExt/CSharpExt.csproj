@@ -51,6 +51,7 @@
     <Compile Include="Containers\Pools\ObjectDictionaryPool.cs" />
     <Compile Include="Containers\Pools\ObjectListPool.cs" />
     <Compile Include="Containers\Pools\ObjectPool.cs" />
+    <Compile Include="Convenience Classes\TaskCompletionSource.cs" />
     <Compile Include="Enums\AddRemove.cs" />
     <Compile Include="Enums\AddRemoveModify.cs" />
     <Compile Include="Enums\Axis.cs" />
