@@ -64,25 +64,43 @@ namespace Noggog.Notifying
             SwapOver();
             _child.SetCurrentAsDefault();
         }
-        
+
+        public void Subscribe(Action callback, bool fireInitial = true)
+        {
+            _child.Subscribe(
+                callback: callback,
+                fireInitial: fireInitial);
+        }
+
+        public void Subscribe(object owner, Action callback, bool fireInitial = true)
+        {
+            _child.Subscribe(
+                owner: owner,
+                callback: callback,
+                fireInitial: fireInitial);
+        }
+
+        public void Subscribe(object owner, NotifyingItemSimpleCallback<T> callback, bool fireInitial = true)
+        {
+            _child.Subscribe(
+                owner: owner,
+                callback: callback,
+                fireInitial: fireInitial);
+        }
+
+        public void Subscribe(NotifyingItemSimpleCallback<T> callback, bool fireInitial = true)
+        {
+            _child.Subscribe(
+                callback: callback,
+                fireInitial: fireInitial);
+        }
+
         public void Subscribe<O>(O owner, NotifyingItemCallback<O, T> callback, bool fireInitial = true)
         {
-            _child.Subscribe(owner, callback, fireInitial);
-        }
-
-        public void Subscribe(NotifyingItemSimpleCallback<T> callback, bool fireInitial)
-        {
-            _child.Subscribe(callback, fireInitial);
-        }
-
-        public void Subscribe(NotifyingItemSimpleCallback<T> callback)
-        {
-            _child.Subscribe(callback);
-        }
-
-        public void Subscribe<O>(O owner, NotifyingItemCallback<O, T> callback)
-        {
-            _child.Subscribe(owner, callback);
+            _child.Subscribe(
+                owner: owner, 
+                callback: callback,
+                fireInitial: fireInitial);
         }
 
         public void Unset(NotifyingUnsetParameters? cmds = null)

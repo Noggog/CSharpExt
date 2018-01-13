@@ -49,24 +49,29 @@ namespace Noggog.Notifying
             }
         }
 
-        public void Subscribe<O>(O owner, NotifyingItemCallback<O, T> callback, bool fireInitial)
+        public void Subscribe(Action callback, bool fireInitial = true)
         {
-            this.Source.Subscribe(owner, callback, fireInitial);
+            this.Source.Subscribe(callback: callback, fireInitial: fireInitial);
         }
 
-        public void Subscribe(NotifyingItemSimpleCallback<T> callback, bool fireInitial)
+        public void Subscribe(object owner, Action callback, bool fireInitial = true)
         {
-            this.Source.Subscribe(callback, fireInitial);
+            this.Source.Subscribe(owner: owner, callback: callback, fireInitial: fireInitial);
         }
 
-        public void Subscribe(NotifyingItemSimpleCallback<T> callback)
+        public void Subscribe(NotifyingItemSimpleCallback<T> callback, bool fireInitial = true)
         {
-            this.Source.Subscribe(callback);
+            this.Source.Subscribe(callback: callback, fireInitial: fireInitial);
         }
 
-        public void Subscribe<O>(O owner, NotifyingItemCallback<O, T> callback)
+        public void Subscribe(object owner, NotifyingItemSimpleCallback<T> callback, bool fireInitial = true)
         {
-            this.Source.Subscribe(owner, callback);
+            this.Source.Subscribe(owner: owner, callback: callback, fireInitial: fireInitial);
+        }
+
+        public void Subscribe<O>(O owner, NotifyingItemCallback<O, T> callback, bool fireInitial = true)
+        {
+            this.Source.Subscribe(owner: owner, callback: callback, fireInitial: fireInitial);
         }
 
         public void Unsubscribe(object owner)
@@ -123,11 +128,53 @@ namespace Noggog.Notifying
             this.Source.Set(this.outgoingConverter(value), cmds);
         }
 
-        public void Subscribe<O>(O owner, NotifyingItemCallback<O, R> callback, bool fireInitial)
+        public void Subscribe(object owner, Action callback, bool fireInitial = true)
         {
             this.Source.Subscribe(
-                owner,
-                (ow, change) =>
+                owner: owner,
+                callback: callback,
+                fireInitial: fireInitial);
+        }
+
+        public void Subscribe(Action callback, bool fireInitial = true)
+        {
+            this.Source.Subscribe(
+                callback: callback,
+                fireInitial: fireInitial);
+        }
+
+        public void Subscribe(object owner, NotifyingItemSimpleCallback<R> callback, bool fireInitial = true)
+        {
+            this.Source.Subscribe(
+                owner: owner,
+                callback: (change) =>
+                {
+                    callback(
+                        new Change<R>(
+                            this.incomingConverter(change.Old),
+                            this.incomingConverter(change.New)));
+                },
+                fireInitial: fireInitial);
+        }
+
+        public void Subscribe(NotifyingItemSimpleCallback<R> callback, bool fireInitial = true)
+        {
+            this.Source.Subscribe(
+                callback: (change) =>
+                {
+                    callback(
+                        new Change<R>(
+                            this.incomingConverter(change.Old),
+                            this.incomingConverter(change.New)));
+                },
+                fireInitial: fireInitial);
+        }
+
+        public void Subscribe<O>(O owner, NotifyingItemCallback<O, R> callback, bool fireInitial = true)
+        {
+            this.Source.Subscribe(
+                owner: owner,
+                callback: (ow, change) =>
                 {
                     callback(
                         ow,
@@ -135,46 +182,7 @@ namespace Noggog.Notifying
                             this.incomingConverter(change.Old),
                             this.incomingConverter(change.New)));
                 },
-                fireInitial);
-        }
-
-        public void Subscribe(NotifyingItemSimpleCallback<R> callback, bool fireInitial)
-        {
-            this.Source.Subscribe(
-                (change) =>
-                {
-                    callback(
-                        new Change<R>(
-                            this.incomingConverter(change.Old),
-                            this.incomingConverter(change.New)));
-                },
-                fireInitial);
-        }
-
-        public void Subscribe(NotifyingItemSimpleCallback<R> callback)
-        {
-            this.Source.Subscribe(
-                (change) =>
-                {
-                    callback(
-                        new Change<R>(
-                            this.incomingConverter(change.Old),
-                            this.incomingConverter(change.New)));
-                });
-        }
-
-        public void Subscribe<O>(O owner, NotifyingItemCallback<O, R> callback)
-        {
-            this.Source.Subscribe(
-                owner,
-                (ow, change) =>
-                {
-                    callback(
-                        ow,
-                        new Change<R>(
-                            this.incomingConverter(change.Old),
-                            this.incomingConverter(change.New)));
-                });
+                fireInitial: fireInitial);
         }
 
         public void Unsubscribe(object owner)

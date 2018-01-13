@@ -161,6 +161,26 @@ namespace Noggog.Notifying
             }
         }
 
+        public void Subscribe(object owner, Action callback, bool fireInitial = true)
+        {
+            this.Subscribe<object>(owner: owner, callback: (o, c) => callback(), fireInitial: fireInitial);
+        }
+
+        public void Subscribe(Action callback, bool fireInitial = true)
+        {
+            this.Subscribe<object>(owner: null, callback: (o, c) => callback(), fireInitial: fireInitial);
+        }
+
+        public void Subscribe(object owner, NotifyingItemSimpleCallback<T> callback, bool fireInitial = true)
+        {
+            this.Subscribe<object>(owner: owner, callback: (o, c) => callback(c), fireInitial: fireInitial);
+        }
+
+        public void Subscribe(NotifyingItemSimpleCallback<T> callback, bool fireInitial = true)
+        {
+            this.Subscribe<object>(owner: null, callback: (o, c) => callback(c), fireInitial: fireInitial);
+        }
+
         public void Subscribe<O>(O owner, NotifyingItemCallback<O, T> callback, bool fireInitial = true)
         {
             if (subscribers == null)
@@ -172,21 +192,6 @@ namespace Noggog.Notifying
             {
                 callback(owner, new Change<T>(this.Item));
             }
-        }
-
-        public void Subscribe(NotifyingItemSimpleCallback<T> callback, bool fireInitial)
-        {
-            this.Subscribe<object>(owner: null, callback: (o, c) => callback(c), fireInitial: fireInitial);
-        }
-
-        public void Subscribe(NotifyingItemSimpleCallback<T> callback)
-        {
-            this.Subscribe<object>(owner: null, callback: (o, c) => callback(c), fireInitial: true);
-        }
-
-        public void Subscribe<O>(O owner, NotifyingItemCallback<O, T> callback)
-        {
-            this.Subscribe<O>(owner: owner, callback: callback, fireInitial: true);
         }
 
         public void Unsubscribe(object owner)

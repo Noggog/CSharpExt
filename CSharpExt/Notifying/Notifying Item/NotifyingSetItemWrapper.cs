@@ -18,7 +18,23 @@ namespace Noggog.Notifying
 
         public bool HasBeenSet => true;
 
-        public void Subscribe(NotifyingItemSimpleCallback<T> callback, bool fireInitial)
+        public void Subscribe(Action callback, bool fireInitial = true)
+        {
+            if (fireInitial)
+            {
+                callback();
+            }
+        }
+
+        public void Subscribe(object owner, Action callback, bool fireInitial = true)
+        {
+            if (fireInitial)
+            {
+                callback();
+            }
+        }
+
+        public void Subscribe(object owner, NotifyingItemSimpleCallback<T> callback, bool fireInitial = true)
         {
             if (fireInitial)
             {
@@ -26,15 +42,15 @@ namespace Noggog.Notifying
             }
         }
 
-        public void Subscribe(NotifyingItemSimpleCallback<T> callback)
+        public void Subscribe(NotifyingItemSimpleCallback<T> callback, bool fireInitial = true)
         {
+            if (fireInitial)
+            {
+                callback(new Change<T>(Item));
+            }
         }
 
-        public void Subscribe<O>(O owner, NotifyingItemCallback<O, T> callback)
-        {
-        }
-
-        void INotifyingItemGetter<T>.Subscribe<O>(O owner, NotifyingItemCallback<O, T> callback, bool fireInitial)
+        public void Subscribe<O>(O owner, NotifyingItemCallback<O, T> callback, bool fireInitial = true)
         {
             if (fireInitial)
             {

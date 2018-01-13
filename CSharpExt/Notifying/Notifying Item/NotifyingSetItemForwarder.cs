@@ -22,7 +22,27 @@ namespace Noggog.Notifying
             this.toForward = toForward;
         }
 
-        public void Subscribe<O>(O owner, NotifyingItemCallback<O, T> callback, bool fireInitial)
+        public void Subscribe(Action callback, bool fireInitial = true)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Subscribe(object owner, Action callback, bool fireInitial = true)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Subscribe(object owner, NotifyingItemSimpleCallback<T> callback, bool fireInitial = true)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Subscribe(NotifyingItemSimpleCallback<T> callback, bool fireInitial = true)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Subscribe<O>(O owner, NotifyingItemCallback<O, T> callback, bool fireInitial = true)
         {
             object transl = subscriberConverter.Value.TryCreateValue(new WeakReferenceEquatable(owner));
             toForward.Subscribe(transl, (owner2, changes) => callback(owner, changes), fireInitial);
@@ -34,21 +54,6 @@ namespace Noggog.Notifying
             if (!subscriberConverter.IsValueCreated || !subscriberConverter.Value.TryGetValue(weakRef, out object transl)) return;
             toForward.Unsubscribe(transl);
             subscriberConverter.Value.Remove(weakRef);
-        }
-
-        public void Subscribe(NotifyingItemSimpleCallback<T> callback, bool fireInitial)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Subscribe(NotifyingItemSimpleCallback<T> callback)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Subscribe<O>(O owner, NotifyingItemCallback<O, T> callback)
-        {
-            throw new NotImplementedException();
         }
     }
 }
