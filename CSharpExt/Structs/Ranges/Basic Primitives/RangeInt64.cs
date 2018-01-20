@@ -70,6 +70,22 @@ namespace Noggog
             return true;
         }
 
+        // ToDo
+        // Make more generic to be usable for all ranges
+        public bool Collides(RangeInt64 rhs)
+        {
+            if (this.Min < rhs.Min)
+            {
+                if (this.Max < rhs.Min) return false;
+                return true;
+            }
+            else
+            {
+                if (this.Min > rhs.Max) return false;
+                return true;
+            }
+        }
+
         public long PutInRange(long f, bool throwException = true)
         {
             if (throwException)

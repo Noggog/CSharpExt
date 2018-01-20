@@ -61,6 +61,15 @@ namespace Noggog
             return false;
         }
 
+        public bool Collides(RangeInt64 range)
+        {
+            foreach (var curRange in this.Ranges)
+            {
+                if (range.Collides(curRange)) return true;
+            }
+            return false;
+        }
+
         public bool TryGetCurrentRange(long l, out RangeInt64 range)
         {
             RangeInt64? target = null;
