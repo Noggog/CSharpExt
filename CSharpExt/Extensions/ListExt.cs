@@ -8,27 +8,32 @@ namespace System
     {
         public static int BinarySearch<T>(this IList<T> list, T value)
         {
-            if (list.Count == 0) return -1;
+            if (list.Count == 0) return ~0;
             var comp = Comparer<T>.Default;
             int low = 0;
             int high = list.Count - 1;
             while (low < high)
             {
-                var m = low + (high - low) / 2;
-                if (comp.Compare(list[m], value) < 0)
+                var index = low + (high - low) / 2;
+                var result = comp.Compare(list[index], value);
+                if (result == 0)
                 {
-                    low = m + 1;
+                    return index;
+                }
+                else if (result < 0)
+                {
+                    low = index + 1;
                 }
                 else
                 {
-                    high = m - 1;
+                    high = index - 1;
                 }
             }
             if (comp.Compare(list[low], value) < 0)
             {
                 low++;
             }
-            return low;
+            return ~low;
         }
 
         public static bool InRange<T>(this IList<T> list, int index)

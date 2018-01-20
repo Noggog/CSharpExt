@@ -41,7 +41,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ListExt_Tests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SortedListExt_Tests.cs" />
     <Compile Include="TypeExt_Tests.cs" />
   </ItemGroup>
   <ItemGroup>

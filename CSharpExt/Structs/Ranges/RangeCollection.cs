@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace Noggog
 {
+    // Poor internal implementation.  Functional API shell to be improved later.
     public class RangeCollection
     {
         List<RangeInt64> Ranges = new List<RangeInt64>();
