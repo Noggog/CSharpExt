@@ -99,5 +99,15 @@ namespace System
             result = new RangeInt32(lowEnd, highEnd);
             return true;
         }
+
+        public static void Add<K, V>(
+            this SortedList<K, V> sortedList,
+            IEnumerable<KeyValuePair<K, V>> vals)
+        {
+            foreach(var val in vals)
+            {
+                sortedList[val.Key] = val.Value;
+            }
+        }
     }
 }
