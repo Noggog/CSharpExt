@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Noggog.Extensions;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -40,6 +41,20 @@ namespace Noggog
         {
             if (!(obj is FilePath rhs)) return false;
             return Equals(rhs);
+        }
+
+        public string GetRelativePathTo(DirectoryInfo relativeTo)
+        {
+            return PathExt.MakeRelativePath(
+                relativeTo.FullName + "\\",
+                this._fullPath);
+        }
+
+        public string GetRelativePathTo(FileInfo relativeTo)
+        {
+            return PathExt.MakeRelativePath(
+                relativeTo.FullName,
+                this._fullPath);
         }
 
         public void Delete()

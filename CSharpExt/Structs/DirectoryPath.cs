@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Noggog.Extensions;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -76,6 +77,13 @@ namespace Noggog
         {
             if (this.Exists) return;
             this._dirInfo.Create();
+        }
+
+        public string GetRelativePathTo(DirectoryInfo relativeTo)
+        {
+            return PathExt.MakeRelativePath(
+                relativeTo.FullName + "\\",
+                this._fullPath + "\\");
         }
 
         public IEnumerable<FileInfo> EnumerateFileInfos()
