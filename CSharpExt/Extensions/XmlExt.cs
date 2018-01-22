@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Xml.Linq;
@@ -135,6 +136,43 @@ namespace System
                 val = defaultVal;
             }
             return val;
+        }
+
+        public static bool ContentEqual(this XName name, XName rhs)
+        {
+            if (!name.LocalName.Equals(rhs.LocalName)) return false;
+            if (!name.NamespaceName.Equals(rhs.NamespaceName)) return false;
+            return true;
+        }
+
+        public static bool ContentEqual(this XAttribute attr, XAttribute rhs)
+        {
+            if (!attr.Name.ContentEqual(rhs.Name)) return false;
+            if (!attr.Value.Equals(rhs.Value)) return false;
+            return true;
+        }
+
+        public static bool ContentEqual(this XElement node, XElement rhs)
+        {
+            if (node.HasElements != rhs.HasElements) return false;
+            if (!node.Name.ContentEqual(rhs.Name)) return false;
+            var lhsAttrEnumer = node.Attributes().GetEnumerator();
+            var rhsAttrEnumer = node.Attributes().GetEnumerator();
+            while (true)
+            {
+                var lhsHas = lhsAttrEnumer.MoveNext();
+                var rhsHas = rhsAttrEnumer.MoveNext();
+                if (lhsHas != rhsHas) return false;
+                if (!lhsHas) break;
+                var lhsAttr = lhsAttrEnumer.Current;
+                var rhsAttr = rhsAttrEnumer.Current;
+                if (!lhsAttr.ContentEqual(rhsAttr)) return false;
+            }
+            foreach (var elem in node.Elements())
+            {
+                throw new NotImplementedException();
+            }
+            return true;
         }
 
         /*
