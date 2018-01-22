@@ -79,10 +79,10 @@ namespace Noggog
             this._dirInfo.Create();
         }
 
-        public string GetRelativePathTo(DirectoryInfo relativeTo)
+        public string GetRelativePathTo(DirectoryPath relativeTo)
         {
             return PathExt.MakeRelativePath(
-                relativeTo.FullName + "\\",
+                relativeTo.Path + "\\",
                 this._fullPath + "\\");
         }
 

@@ -43,17 +43,17 @@ namespace Noggog
             return Equals(rhs);
         }
 
-        public string GetRelativePathTo(DirectoryInfo relativeTo)
+        public string GetRelativePathTo(DirectoryPath relativeTo)
         {
             return PathExt.MakeRelativePath(
-                relativeTo.FullName + "\\",
+                relativeTo.Path + "\\",
                 this._fullPath);
         }
 
-        public string GetRelativePathTo(FileInfo relativeTo)
+        public string GetRelativePathTo(FilePath relativeTo)
         {
             return PathExt.MakeRelativePath(
-                relativeTo.FullName,
+                relativeTo.Path,
                 this._fullPath);
         }
 
