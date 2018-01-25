@@ -149,8 +149,21 @@ namespace System
 
         public static void SetTo<T>(this IList<T> list, IEnumerable<T> items)
         {
-            list.Clear();
-            list.AddRange(items);
+            int i = 0;
+            foreach (var item in items)
+            {
+                if (i >= list.Count)
+                {
+                    list.Add(item);
+                }
+                else
+                {
+                    list[i] = item;
+                }
+                i++;
+            }
+
+            list.RemoveToCount(i);
         }
 
         public static void SetTo<T>(this IList<T> list, T item)
@@ -159,9 +172,9 @@ namespace System
             list.Add(item);
         }
 
-        public static void RemoveEnd<T>(this IList<T> list, int fromIndex)
+        public static void RemoveToCount<T>(this IList<T> list, int count)
         {
-            var toRemove = list.Count - fromIndex;
+            var toRemove = list.Count - count;
             for (; toRemove > 0; toRemove--)
             {
                 list.RemoveAt(list.Count - 1);
