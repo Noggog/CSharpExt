@@ -2,7 +2,7 @@
 
 namespace Noggog.Notifying
 {
-    public struct ChangeAddRem<T> : IEquatable<ChangeAddRem<T>>
+    public class ChangeAddRem<T> : IEquatable<ChangeAddRem<T>>
     {
         public readonly T Item;
         public readonly AddRemove AddRem;
