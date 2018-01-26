@@ -53,7 +53,7 @@ namespace Noggog.Notifying
             set => this.Source.HasBeenSet = value;
         }
 
-        public void Set(T value, NotifyingFireParameters? cmd)
+        public void Set(T value, NotifyingFireParameters cmd)
         {
             var setting = this.incomingConverter(
                 new Change<T>(
@@ -113,7 +113,7 @@ namespace Noggog.Notifying
                 fireInitial: fireInitial);
         }
 
-        public void Unset(NotifyingUnsetParameters? cmds)
+        public void Unset(NotifyingUnsetParameters cmds)
         {
             this.Source.Unset(cmds);
         }
@@ -162,7 +162,7 @@ namespace Noggog.Notifying
             set => this.Source.Item = this.outgoingConverter(value);
         }
 
-        public void Unset(NotifyingUnsetParameters? cmds)
+        public void Unset(NotifyingUnsetParameters cmds)
         {
             this.Source.Unset(cmds);
         }
@@ -172,7 +172,7 @@ namespace Noggog.Notifying
             this.Source.SetCurrentAsDefault();
         }
 
-        public void Set(R value, NotifyingFireParameters? cmds)
+        public void Set(R value, NotifyingFireParameters cmds)
         {
             this.Source.Set(this.outgoingConverter(value), cmds);
         }

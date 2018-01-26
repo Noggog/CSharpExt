@@ -18,7 +18,7 @@ namespace Noggog.Notifying
             this.noNullFallback = noNullFallback;
         }
 
-        public override void Set(T value, NotifyingFireParameters? cmd = default(NotifyingFireParameters?))
+        public override void Set(T value, NotifyingFireParameters cmd = default(NotifyingFireParameters))
         {
             if (value == null)
             {
@@ -41,7 +41,7 @@ namespace Noggog.Notifying
         {
         }
 
-        public override void Set(T value, NotifyingFireParameters? cmd = default(NotifyingFireParameters?))
+        public override void Set(T value, NotifyingFireParameters cmd = default(NotifyingFireParameters))
         {
             if (value == null)
             {

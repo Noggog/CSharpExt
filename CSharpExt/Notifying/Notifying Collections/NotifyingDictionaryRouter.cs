@@ -75,13 +75,13 @@ namespace Noggog.Notifying
                 });
         }
 
-        public void Set(K key, V val, NotifyingFireParameters? cmds)
+        public void Set(K key, V val, NotifyingFireParameters cmds)
         {
             SwapOver();
             _child.Set(key, val, cmds);
         }
 
-        public void Remove(K key, NotifyingFireParameters? cmds)
+        public void Remove(K key, NotifyingFireParameters cmds)
         {
             SwapOver();
             _child.Remove(key, cmds);
@@ -92,37 +92,37 @@ namespace Noggog.Notifying
             _child.Subscribe(owner, callback, fireInitial);
         }
 
-        public void Unset(NotifyingUnsetParameters? cmds)
+        public void Unset(NotifyingUnsetParameters cmds)
         {
             SwapBack();
             _child.Unset(cmds);
         }
 
-        public void Clear(NotifyingFireParameters? cmds)
+        public void Clear(NotifyingFireParameters cmds)
         {
             SwapOver();
             _child.Clear(cmds);
         }
 
-        public bool Remove(KeyValuePair<K, V> item, NotifyingFireParameters? cmds)
+        public bool Remove(KeyValuePair<K, V> item, NotifyingFireParameters cmds)
         {
             SwapOver();
             return _child.Remove(item, cmds);
         }
 
-        public void SetTo(IEnumerable<KeyValuePair<K, V>> enumer, NotifyingFireParameters? cmds)
+        public void SetTo(IEnumerable<KeyValuePair<K, V>> enumer, NotifyingFireParameters cmds)
         {
             SwapOver();
             _child.SetTo(enumer, cmds);
         }
 
-        public void Add(KeyValuePair<K, V> item, NotifyingFireParameters? cmds)
+        public void Add(KeyValuePair<K, V> item, NotifyingFireParameters cmds)
         {
             SwapOver();
             _child.Add(item, cmds);
         }
 
-        public void Add(IEnumerable<KeyValuePair<K, V>> items, NotifyingFireParameters? cmds)
+        public void Add(IEnumerable<KeyValuePair<K, V>> items, NotifyingFireParameters cmds)
         {
             SwapOver();
             _child.Add(items, cmds);

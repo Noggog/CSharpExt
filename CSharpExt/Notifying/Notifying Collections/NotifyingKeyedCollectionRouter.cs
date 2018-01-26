@@ -55,7 +55,7 @@ namespace Noggog.Notifying
             ((INotifyingCollection<KeyValuePair<K, V>>)_base).Unsubscribe(this);
         }
 
-        private void SwapBack(NotifyingUnsetParameters? cmds)
+        private void SwapBack(NotifyingUnsetParameters cmds)
         {
             if (!HasBeenSwapped) return;
             _base.Subscribe(
@@ -66,13 +66,13 @@ namespace Noggog.Notifying
                 });
         }
 
-        public void Set(V val, NotifyingFireParameters? cmds)
+        public void Set(V val, NotifyingFireParameters cmds)
         {
             SwapOver();
             _child.Set(val, cmds);
         }
 
-        public bool Remove(K key, NotifyingFireParameters? cmds)
+        public bool Remove(K key, NotifyingFireParameters cmds)
         {
             SwapOver();
             return _child.Remove(key, cmds);
@@ -83,13 +83,13 @@ namespace Noggog.Notifying
             _child.Subscribe(owner, callback, fireInitial);
         }
 
-        public void Unset(NotifyingUnsetParameters? cmds)
+        public void Unset(NotifyingUnsetParameters cmds)
         {
             SwapBack(cmds);
             _child.Unset(cmds);
         }
 
-        public void Clear(NotifyingFireParameters? cmds)
+        public void Clear(NotifyingFireParameters cmds)
         {
             SwapOver();
             _child.Clear(cmds);
@@ -115,19 +115,19 @@ namespace Noggog.Notifying
             return ((INotifyingCollection<KeyValuePair<K, V>>)_child).GetEnumerator();
         }
 
-        public bool Remove(V item, NotifyingFireParameters? cmds)
+        public bool Remove(V item, NotifyingFireParameters cmds)
         {
             SwapOver();
             return _child.Remove(item, cmds);
         }
 
-        public void SetTo(IEnumerable<V> enumer, NotifyingFireParameters? cmds)
+        public void SetTo(IEnumerable<V> enumer, NotifyingFireParameters cmds)
         {
             SwapOver();
             _child.SetTo(enumer, cmds);
         }
 
-        public void Set(IEnumerable<V> items, NotifyingFireParameters? cmds)
+        public void Set(IEnumerable<V> items, NotifyingFireParameters cmds)
         {
             SwapOver();
             _child.Set(items, cmds);

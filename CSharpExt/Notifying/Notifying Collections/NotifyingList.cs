@@ -19,9 +19,9 @@ namespace Noggog.Notifying
     public interface INotifyingList<T> : INotifyingListGetter<T>, INotifyingCollection<T>
     {
         new T this[int index] { get; set; }
-        void Insert(int index, T item, NotifyingFireParameters? cmds);
-        void Set(int index, T item, NotifyingFireParameters? cmds);
-        void RemoveAt(int index, NotifyingFireParameters? cmds);
+        void Insert(int index, T item, NotifyingFireParameters cmds);
+        void Set(int index, T item, NotifyingFireParameters cmds);
+        void RemoveAt(int index, NotifyingFireParameters cmds);
     }
 
     public class NotifyingList<T> : NotifyingCollection<T, ChangeIndex<T>>, INotifyingList<T>
@@ -60,7 +60,7 @@ namespace Noggog.Notifying
             }
         }
 
-        public virtual void Set(int index, T item, NotifyingFireParameters? cmds = null)
+        public virtual void Set(int index, T item, NotifyingFireParameters cmds = null)
         {
             cmds = ProcessCmds(cmds);
             if (HasSubscribers())
@@ -93,7 +93,7 @@ namespace Noggog.Notifying
             }
         }
 
-        public virtual void Insert(int index, T item, NotifyingFireParameters? cmds = null)
+        public virtual void Insert(int index, T item, NotifyingFireParameters cmds = null)
         {
             cmds = ProcessCmds(cmds);
             list.Insert(index, item);
@@ -104,7 +104,7 @@ namespace Noggog.Notifying
                 cmds);
         }
 
-        public virtual void Add(T item, NotifyingFireParameters? cmds = null)
+        public virtual void Add(T item, NotifyingFireParameters cmds = null)
         {
             cmds = ProcessCmds(cmds);
             list.Add(item);
@@ -115,7 +115,7 @@ namespace Noggog.Notifying
                 cmds);
         }
 
-        public virtual void Add(IEnumerable<T> items, NotifyingFireParameters? cmds = null)
+        public virtual void Add(IEnumerable<T> items, NotifyingFireParameters cmds = null)
         {
             cmds = ProcessCmds(cmds);
             if (HasSubscribers())
@@ -139,7 +139,7 @@ namespace Noggog.Notifying
             }
         }
 
-        public void RemoveAt(int index, NotifyingFireParameters? cmds = null)
+        public void RemoveAt(int index, NotifyingFireParameters cmds = null)
         {
             cmds = ProcessCmds(cmds);
             list.RemoveAt(index, out T item);
@@ -153,7 +153,7 @@ namespace Noggog.Notifying
                 cmds);
         }
 
-        public bool Remove(T item, NotifyingFireParameters? cmds = null)
+        public bool Remove(T item, NotifyingFireParameters cmds = null)
         {
             cmds = ProcessCmds(cmds);
             if (list.Remove(item, out int index))
@@ -168,14 +168,11 @@ namespace Noggog.Notifying
             return false;
         }
 
-        public virtual void SetTo(IEnumerable<T> enumer, NotifyingFireParameters? cmds = null)
+        public virtual void SetTo(IEnumerable<T> enumer, NotifyingFireParameters cmds = null)
         {
-            if (cmds == null)
-            {
-                cmds = NotifyingFireParameters.Typical;
-            }
+            cmds = cmds ?? NotifyingFireParameters.Typical;
 
-            if (cmds.Value.MarkAsSet)
+            if (cmds.MarkAsSet)
             {
                 HasBeenSet = true;
             }
@@ -242,11 +239,11 @@ namespace Noggog.Notifying
             }
         }
 
-        public void Clear(NotifyingFireParameters? cmds = null)
+        public void Clear(NotifyingFireParameters cmds = null)
         {
             cmds = ProcessCmds(cmds);
 
-            if (this.list.Count == 0 && !cmds.Value.ForceFire) return;
+            if (this.list.Count == 0 && !cmds.ForceFire) return;
 
             if (HasSubscribers())
             { // Will be firing
@@ -270,7 +267,7 @@ namespace Noggog.Notifying
             }
         }
 
-        public void Unset(NotifyingUnsetParameters? cmds = null)
+        public void Unset(NotifyingUnsetParameters cmds = null)
         {
             HasBeenSet = false;
             Clear(cmds.ToFireParams());
@@ -321,7 +318,7 @@ namespace Noggog.Notifying
             return changes;
         }
 
-        protected void FireChange(IEnumerable<ChangeIndex<T>> changes, NotifyingFireParameters? cmds)
+        protected void FireChange(IEnumerable<ChangeIndex<T>> changes, NotifyingFireParameters cmds)
         {
             List<Exception> exceptions = null;
 
@@ -415,7 +412,7 @@ namespace Noggog.Notifying
                 }
                 else
                 {
-                    cmds.Value.ExceptionHandler(ex);
+                    cmds.ExceptionHandler(ex);
                 }
             }
         }

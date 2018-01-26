@@ -15,13 +15,13 @@ namespace Noggog.Notifying
     public interface INotifyingKeyedCollection<K, V> : INotifyingKeyedCollectionGetter<K, V>
     {
         Func<V, K> KeyGetter { get; }
-        void Set(V val, NotifyingFireParameters? cmds);
-        void Set(IEnumerable<V> items, NotifyingFireParameters? cmds);
-        bool Remove(K key, NotifyingFireParameters? cmds);
-        void Unset(NotifyingUnsetParameters? cmds);
-        void Clear(NotifyingFireParameters? cmds);
-        bool Remove(V item, NotifyingFireParameters? cmds);
-        void SetTo(IEnumerable<V> enumer, NotifyingFireParameters? cmds);
+        void Set(V val, NotifyingFireParameters cmds);
+        void Set(IEnumerable<V> items, NotifyingFireParameters cmds);
+        bool Remove(K key, NotifyingFireParameters cmds);
+        void Unset(NotifyingUnsetParameters cmds);
+        void Clear(NotifyingFireParameters cmds);
+        bool Remove(V item, NotifyingFireParameters cmds);
+        void SetTo(IEnumerable<V> enumer, NotifyingFireParameters cmds);
         new bool HasBeenSet { get; set; }
     }
 
@@ -52,18 +52,18 @@ namespace Noggog.Notifying
             this.KeyGetter = keyGetter;
         }
 
-        public void Set(V val, NotifyingFireParameters? cmds)
+        public void Set(V val, NotifyingFireParameters cmds)
         {
             K key = KeyGetter(val);
             this.dict.Set(key, val, cmds);
         }
 
-        public bool Remove(K key, NotifyingFireParameters? cmds)
+        public bool Remove(K key, NotifyingFireParameters cmds)
         {
             return this.dict.Remove(key, cmds);
         }
 
-        public bool Remove(V val, NotifyingFireParameters? cmds)
+        public bool Remove(V val, NotifyingFireParameters cmds)
         {
             K key = KeyGetter(val);
             return this.dict.Remove(key, cmds);
@@ -94,17 +94,17 @@ namespace Noggog.Notifying
             return this.dict.GetEnumerator();
         }
 
-        public void Unset(NotifyingUnsetParameters? cmds)
+        public void Unset(NotifyingUnsetParameters cmds)
         {
             this.dict.Unset(cmds);
         }
 
-        public void Clear(NotifyingFireParameters? cmds)
+        public void Clear(NotifyingFireParameters cmds)
         {
             this.dict.Clear(cmds);
         }
 
-        public void SetTo(IEnumerable<V> enumer, NotifyingFireParameters? cmds)
+        public void SetTo(IEnumerable<V> enumer, NotifyingFireParameters cmds)
         {
             this.dict.SetTo(
                 enumer.Select(
@@ -114,7 +114,7 @@ namespace Noggog.Notifying
                 cmds);
         }
 
-        public void Set(IEnumerable<V> items, NotifyingFireParameters? cmds)
+        public void Set(IEnumerable<V> items, NotifyingFireParameters cmds)
         {
             this.dict.Set(
                 items.Select(
@@ -188,7 +188,7 @@ namespace System
             this INotifyingKeyedCollection<K, V> not,
             INotifyingKeyedCollectionGetter<K, V> rhs,
             INotifyingKeyedCollectionGetter<K, V> def,
-            NotifyingFireParameters? cmds)
+            NotifyingFireParameters cmds)
         {
             if (rhs.HasBeenSet)
             {
@@ -208,7 +208,7 @@ namespace System
             this INotifyingKeyedCollection<K, V> not,
             INotifyingKeyedCollectionGetter<K, V> rhs,
             INotifyingKeyedCollectionGetter<K, V> def,
-            NotifyingFireParameters? cmds,
+            NotifyingFireParameters cmds,
             Func<V, V, V> converter)
         {
             if (rhs.HasBeenSet)
@@ -241,7 +241,7 @@ namespace System
         public static void SetIfSucceeded<K, V>(
             this INotifyingKeyedCollection<K, V> not,
             TryGet<IEnumerable<V>> tryGet,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             if (tryGet.Failed) return;
             not.SetTo(tryGet.Value, cmds);

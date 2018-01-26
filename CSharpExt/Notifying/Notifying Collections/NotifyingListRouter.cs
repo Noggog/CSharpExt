@@ -72,31 +72,31 @@ namespace Noggog.Notifying
 
         IEnumerable<T> IHasItemGetter<IEnumerable<T>>.Item => _child.Item;
 
-        public void Set(int index, T item, NotifyingFireParameters? cmds)
+        public void Set(int index, T item, NotifyingFireParameters cmds)
         {
             SwapOver();
             _child.Set(index, item, cmds);
         }
 
-        public void Add(T item, NotifyingFireParameters? cmds)
+        public void Add(T item, NotifyingFireParameters cmds)
         {
             SwapOver();
             _child.Add(item, cmds);
         }
 
-        public void Add(IEnumerable<T> items, NotifyingFireParameters? cmds)
+        public void Add(IEnumerable<T> items, NotifyingFireParameters cmds)
         {
             SwapOver();
             _child.Add(items, cmds);
         }
 
-        public void Insert(int index, T item, NotifyingFireParameters? cmds)
+        public void Insert(int index, T item, NotifyingFireParameters cmds)
         {
             SwapOver();
             _child.Insert(index, item, cmds);
         }
         
-        public void Clear(NotifyingFireParameters? cmds)
+        public void Clear(NotifyingFireParameters cmds)
         {
             SwapOver();
             _child.Clear(cmds);
@@ -122,13 +122,13 @@ namespace Noggog.Notifying
             return _child;
         }
 
-        public bool Remove(T item, NotifyingFireParameters? cmds = null)
+        public bool Remove(T item, NotifyingFireParameters cmds = null)
         {
             SwapOver();
             return _child.Remove(item, cmds);
         }
 
-        public void RemoveAt(int index, NotifyingFireParameters? cmds)
+        public void RemoveAt(int index, NotifyingFireParameters cmds)
         {
             SwapOver();
             _child.RemoveAt(index, cmds);
@@ -149,7 +149,7 @@ namespace Noggog.Notifying
             _child.Subscribe_Enumerable(owner, callback, fireInitial);
         }
 
-        public void Unset(NotifyingUnsetParameters? cmds = null)
+        public void Unset(NotifyingUnsetParameters cmds = null)
         {
             SwapBack();
             _child.Unset(cmds);
@@ -165,7 +165,7 @@ namespace Noggog.Notifying
             return _child.GetEnumerator();
         }
         
-        public void SetTo(IEnumerable<T> enumer, NotifyingFireParameters? cmds)
+        public void SetTo(IEnumerable<T> enumer, NotifyingFireParameters cmds)
         {
             SwapOver();
             _child.SetTo(enumer, cmds);

@@ -18,12 +18,12 @@ namespace Noggog.Notifying
 
     public interface INotifyingCollection<T> : INotifyingEnumerable<T>
     {
-        void Unset(NotifyingUnsetParameters? cmds);
-        void Clear(NotifyingFireParameters? cmds);
-        bool Remove(T item, NotifyingFireParameters? cmds);
-        void SetTo(IEnumerable<T> enumer, NotifyingFireParameters? cmds);
-        void Add(T item, NotifyingFireParameters? cmds);
-        void Add(IEnumerable<T> items, NotifyingFireParameters? cmds);
+        void Unset(NotifyingUnsetParameters cmds);
+        void Clear(NotifyingFireParameters cmds);
+        bool Remove(T item, NotifyingFireParameters cmds);
+        void SetTo(IEnumerable<T> enumer, NotifyingFireParameters cmds);
+        void Add(T item, NotifyingFireParameters cmds);
+        void Add(IEnumerable<T> items, NotifyingFireParameters cmds);
         new bool HasBeenSet { get; set; }
     }
 
@@ -131,17 +131,14 @@ namespace Noggog.Notifying
 
         protected abstract ObjectPoolCheckout<List<ChangeAddRem<T>>> CompileCurrentEnumer();
 
-        protected NotifyingFireParameters ProcessCmds(NotifyingFireParameters? cmds)
+        protected NotifyingFireParameters ProcessCmds(NotifyingFireParameters cmds)
         {
-            if (cmds == null)
-            {
-                cmds = NotifyingFireParameters.Typical;
-            }
-            if (cmds.Value.MarkAsSet)
+            cmds = cmds ?? NotifyingFireParameters.Typical;
+            if (cmds.MarkAsSet)
             {
                 HasBeenSet = true;
             }
-            return cmds.Value;
+            return cmds;
         }
     }
 }
@@ -291,7 +288,7 @@ namespace System
             this INotifyingCollection<T> not, 
             IHasBeenSetItemGetter<IEnumerable<T>> rhs, 
             IHasBeenSetItemGetter<IEnumerable<T>> def,
-            NotifyingFireParameters? cmds)
+            NotifyingFireParameters cmds)
         {
             if (rhs.HasBeenSet)
             {
@@ -311,7 +308,7 @@ namespace System
             this INotifyingCollection<T> not,
             IHasBeenSetItemGetter<IEnumerable<T>> rhs, 
             INotifyingListGetter<T> def, 
-            NotifyingFireParameters? cmds,
+            NotifyingFireParameters cmds,
             Func<T, T, T> converter)
         {
             if (rhs.HasBeenSet)
@@ -345,7 +342,7 @@ namespace System
         public static void SetIfSucceeded<T>(
             this INotifyingCollection<T> not,
             TryGet<IEnumerable<T>> tryGet,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             if (tryGet.Failed) return;
             not.SetTo(tryGet.Value, cmds);

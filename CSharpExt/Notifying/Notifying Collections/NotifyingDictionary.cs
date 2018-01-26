@@ -17,8 +17,8 @@ namespace Noggog.Notifying
     public interface INotifyingDictionary<K, V> : INotifyingDictionaryGetter<K, V>, INotifyingCollection<KeyValuePair<K, V>>
     {
         new V this[K key] { get; set; }
-        void Set(K key, V val, NotifyingFireParameters? cmds);
-        void Remove(K key, NotifyingFireParameters? cmds);
+        void Set(K key, V val, NotifyingFireParameters cmds);
+        void Remove(K key, NotifyingFireParameters cmds);
     }
 
     public class NotifyingDictionary<K, V> : NotifyingCollection<KeyValuePair<K, V>, ChangeKeyed<K, V>>, INotifyingDictionary<K, V>
@@ -66,7 +66,7 @@ namespace Noggog.Notifying
             }
         }
 
-        public void Set(K key, V item, NotifyingFireParameters? cmds = null)
+        public void Set(K key, V item, NotifyingFireParameters cmds = null)
         {
             cmds = ProcessCmds(cmds);
             if (HasSubscribers())
@@ -93,7 +93,7 @@ namespace Noggog.Notifying
             }
         }
 
-        public void Set(IEnumerable<KeyValuePair<K, V>> items, NotifyingFireParameters? cmds = null)
+        public void Set(IEnumerable<KeyValuePair<K, V>> items, NotifyingFireParameters cmds = null)
         {
             cmds = ProcessCmds(cmds);
             if (HasSubscribers())
@@ -135,7 +135,7 @@ namespace Noggog.Notifying
             }
         }
 
-        public bool Remove(K key, NotifyingFireParameters? cmds = null)
+        public bool Remove(K key, NotifyingFireParameters cmds = null)
         {
             cmds = ProcessCmds(cmds);
             if (HasSubscribers())
@@ -170,12 +170,12 @@ namespace Noggog.Notifying
             }
         }
 
-        void INotifyingDictionary<K, V>.Remove(K key, NotifyingFireParameters? cmds)
+        void INotifyingDictionary<K, V>.Remove(K key, NotifyingFireParameters cmds)
         {
             this.Remove(key, cmds);
         }
 
-        public void SetTo(IEnumerable<KeyValuePair<K, V>> items, NotifyingFireParameters? cmds = null)
+        public void SetTo(IEnumerable<KeyValuePair<K, V>> items, NotifyingFireParameters cmds = null)
         {
             cmds = ProcessCmds(cmds);
             if (HasSubscribers())
@@ -238,11 +238,11 @@ namespace Noggog.Notifying
             }
         }
 
-        public void Clear(NotifyingFireParameters? cmds = null)
+        public void Clear(NotifyingFireParameters cmds = null)
         {
             cmds = ProcessCmds(cmds);
 
-            if (this.dict.Count == 0 && !cmds.Value.ForceFire) return;
+            if (this.dict.Count == 0 && !cmds.ForceFire) return;
 
             if (HasSubscribers())
             { // Will be firing
@@ -270,7 +270,7 @@ namespace Noggog.Notifying
             }
         }
 
-        public void Unset(NotifyingUnsetParameters? cmds = null)
+        public void Unset(NotifyingUnsetParameters cmds = null)
         {
             HasBeenSet = false;
             Clear(cmds.ToFireParams());
@@ -324,7 +324,7 @@ namespace Noggog.Notifying
             return changes;
         }
 
-        protected void FireChange(IEnumerable<ChangeKeyed<K, V>> changes, NotifyingFireParameters? cmds)
+        protected void FireChange(IEnumerable<ChangeKeyed<K, V>> changes, NotifyingFireParameters cmds)
         {
             List<Exception> exceptions = null;
 
@@ -415,22 +415,22 @@ namespace Noggog.Notifying
                 }
                 else
                 {
-                    cmds.Value.ExceptionHandler(ex);
+                    cmds.ExceptionHandler(ex);
                 }
             }
         }
 
-        bool INotifyingCollection<KeyValuePair<K, V>>.Remove(KeyValuePair<K, V> item, NotifyingFireParameters? cmds)
+        bool INotifyingCollection<KeyValuePair<K, V>>.Remove(KeyValuePair<K, V> item, NotifyingFireParameters cmds)
         {
             return this.Remove(item.Key, cmds);
         }
 
-        void INotifyingCollection<KeyValuePair<K, V>>.Add(KeyValuePair<K, V> item, NotifyingFireParameters? cmds)
+        void INotifyingCollection<KeyValuePair<K, V>>.Add(KeyValuePair<K, V> item, NotifyingFireParameters cmds)
         {
             this.Set(item.Key, item.Value, cmds);
         }
 
-        void INotifyingCollection<KeyValuePair<K, V>>.Add(IEnumerable<KeyValuePair<K, V>> items, NotifyingFireParameters? cmds)
+        void INotifyingCollection<KeyValuePair<K, V>>.Add(IEnumerable<KeyValuePair<K, V>> items, NotifyingFireParameters cmds)
         {
             this.Set(items, cmds);
         }
@@ -473,7 +473,7 @@ namespace Noggog.Notifying
             this INotifyingDictionary<K, V> not,
             IHasBeenSetItemGetter<IEnumerable<KeyValuePair<K, V>>> rhs,
             INotifyingDictionaryGetter<K, V> def,
-            NotifyingFireParameters? cmds,
+            NotifyingFireParameters cmds,
             Func<K, V, V, KeyValuePair<K, V>> converter)
         {
             if (rhs.HasBeenSet)

@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace Noggog.Notifying
 {
-    public struct NotifyingFireParameters
+    public class NotifyingFireParameters
     {
         public static readonly NotifyingFireParameters Typical = new NotifyingFireParameters(
             markAsSet: true,
@@ -37,15 +37,15 @@ namespace Noggog.Notifying
 
     public static class NotifyingFireParametersExt
     {
-        public static NotifyingUnsetParameters? ToUnsetParams(this NotifyingFireParameters? param)
+        public static NotifyingUnsetParameters ToUnsetParams(this NotifyingFireParameters param)
         {
             if (param == null) return null;
             return new NotifyingUnsetParameters(
-                exceptionHandler: param.Value.ExceptionHandler,
-                forceFire: param.Value.ForceFire);
+                exceptionHandler: param.ExceptionHandler,
+                forceFire: param.ForceFire);
         }
 
-        public static NotifyingFireParameters? ToFireParams(this NotifyingFireParameters? param)
+        public static NotifyingFireParameters ToFireParams(this NotifyingFireParameters param)
         {
             return param;
         }

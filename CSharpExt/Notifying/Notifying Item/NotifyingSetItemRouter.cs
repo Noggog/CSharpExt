@@ -103,7 +103,7 @@ namespace Noggog.Notifying
                 fireInitial: fireInitial);
         }
 
-        public void Unset(NotifyingUnsetParameters? cmds = null)
+        public void Unset(NotifyingUnsetParameters cmds = null)
         {
             _child.Unset(cmds);
             SwapBack(cmds);
@@ -121,7 +121,7 @@ namespace Noggog.Notifying
             this.HasBeenSwapped = true;
         }
 
-        private void SwapBack(NotifyingUnsetParameters? cmds, bool force = false)
+        private void SwapBack(NotifyingUnsetParameters cmds, bool force = false)
         {
             if (!HasBeenSwapped && ! force) return;
             this.HasBeenSwapped = false;
@@ -138,7 +138,7 @@ namespace Noggog.Notifying
                 });
         }
 
-        public void Set(T value, NotifyingFireParameters? cmd = null)
+        public void Set(T value, NotifyingFireParameters cmd = null)
         {
             SwapOver();
             _child.Set(value, cmd);

@@ -104,7 +104,7 @@ namespace System
             this INotifyingSetItem<T> not,
             INotifyingSetItemGetter<T> rhs,
             INotifyingSetItemGetter<T> def,
-            NotifyingFireParameters? cmds)
+            NotifyingFireParameters cmds)
         {
             if (rhs.HasBeenSet)
             {
@@ -124,7 +124,7 @@ namespace System
             this INotifyingSetItem<T> not,
             INotifyingSetItemGetter<T> rhs,
             INotifyingSetItemGetter<T> def,
-            NotifyingFireParameters? cmds,
+            NotifyingFireParameters cmds,
             Func<T, T, T> converter)
         {
             if (rhs.HasBeenSet)

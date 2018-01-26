@@ -200,11 +200,11 @@ namespace Noggog.Notifying
             subscribers.Remove(owner);
         }
 
-        public virtual void Set(T value, NotifyingFireParameters? cmds = null)
+        public virtual void Set(T value, NotifyingFireParameters cmds = null)
         {
             cmds = cmds ?? NotifyingFireParameters.Typical;
             
-            if (cmds.Value.ForceFire || !object.Equals(_item, value))
+            if (cmds.ForceFire || !object.Equals(_item, value))
             {
                 if (subscribers != null && subscribers.HasSubs)
                 {
@@ -219,7 +219,7 @@ namespace Noggog.Notifying
             }
         }
 
-        protected void Fire(T old, T item, NotifyingFireParameters? cmds = null)
+        protected void Fire(T old, T item, NotifyingFireParameters cmds = null)
         {
             List<Exception> exceptions = null;
             using (var fireSubscribers = subscribers.GetSubs())
@@ -263,7 +263,7 @@ namespace Noggog.Notifying
                 }
                 else
                 {
-                    cmds.Value.ExceptionHandler(ex);
+                    cmds.ExceptionHandler(ex);
                 }
             }
         }

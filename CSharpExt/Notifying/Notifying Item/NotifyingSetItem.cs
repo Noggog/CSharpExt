@@ -211,7 +211,7 @@ namespace Noggog.Notifying
             subscribers.Remove(owner);
         }
 
-        public void Unset(NotifyingUnsetParameters? cmds = null)
+        public void Unset(NotifyingUnsetParameters cmds = null)
         {
             HasBeenSet = false;
             Set(DefaultValue, cmds.ToFireParams());
@@ -222,18 +222,15 @@ namespace Noggog.Notifying
             this.DefaultValue = this._item;
         }
 
-        public virtual void Set(T value, NotifyingFireParameters? cmd = null)
+        public virtual void Set(T value, NotifyingFireParameters cmd = null)
         {
-            if (cmd == null)
-            {
-                cmd = NotifyingFireParameters.Typical;
-            }
+            cmd = cmd ?? NotifyingFireParameters.Typical;
 
-            if (cmd.Value.MarkAsSet)
+            if (cmd.MarkAsSet)
             {
                 HasBeenSet = true;
             }
-            if (cmd.Value.ForceFire || !object.Equals(_item, value))
+            if (cmd.ForceFire || !object.Equals(_item, value))
             {
                 if (subscribers != null && subscribers.HasSubs)
                 {
@@ -248,7 +245,7 @@ namespace Noggog.Notifying
             }
         }
 
-        protected void Fire(T old, T item, NotifyingFireParameters? cmds = null)
+        protected void Fire(T old, T item, NotifyingFireParameters cmds = null)
         {
             List<Exception> exceptions = null;
             using (var fireSubscribers = subscribers.GetSubs())
@@ -292,7 +289,7 @@ namespace Noggog.Notifying
                 }
                 else
                 {
-                    cmds.Value.ExceptionHandler(ex);
+                    cmds.ExceptionHandler(ex);
                 }
             }
         }

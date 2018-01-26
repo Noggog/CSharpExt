@@ -23,7 +23,7 @@ namespace Noggog.Notifying
             this.converter = converter;
         }
 
-        public override void Set(T value, NotifyingFireParameters? cmd = default(NotifyingFireParameters?))
+        public override void Set(T value, NotifyingFireParameters cmd = default(NotifyingFireParameters))
         {
             if (value == null)
             {
@@ -51,7 +51,7 @@ namespace Noggog.Notifying
             this.converter = converter;
         }
 
-        public override void Set(T value, NotifyingFireParameters? cmd = default(NotifyingFireParameters?))
+        public override void Set(T value, NotifyingFireParameters cmd = default(NotifyingFireParameters))
         {
             if (value == null)
             {

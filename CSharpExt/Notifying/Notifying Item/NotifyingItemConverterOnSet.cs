@@ -20,7 +20,7 @@ namespace Noggog.Notifying
             this.onSet = onSet;
         }
 
-        public override void Set(T value, NotifyingFireParameters? cmd = default(NotifyingFireParameters?))
+        public override void Set(T value, NotifyingFireParameters cmd = default(NotifyingFireParameters))
         {
             value = converter(value);
             base.Set(value, cmd);

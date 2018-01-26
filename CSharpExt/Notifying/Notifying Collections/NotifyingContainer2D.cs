@@ -44,29 +44,29 @@ namespace Noggog.Notifying
 
         public abstract T Get(P2Int p);
 
-        public abstract void Set(P2IntValue<T> p, NotifyingFireParameters? cmds = null);
+        public abstract void Set(P2IntValue<T> p, NotifyingFireParameters cmds = null);
 
-        public void Unset(NotifyingUnsetParameters? cmds = null)
+        public void Unset(NotifyingUnsetParameters cmds = null)
         {
             HasBeenSet = false;
             Clear(cmds.ToFireParams());
         }
 
-        public abstract void Clear(NotifyingFireParameters? cmds = null);
+        public abstract void Clear(NotifyingFireParameters cmds = null);
 
-        public abstract bool Remove(P2IntValue<T> item, NotifyingFireParameters? cmds = null);
+        public abstract bool Remove(P2IntValue<T> item, NotifyingFireParameters cmds = null);
 
-        public abstract void SetTo(IEnumerable<P2IntValue<T>> enumer, NotifyingFireParameters? cmds = null);
+        public abstract void SetTo(IEnumerable<P2IntValue<T>> enumer, NotifyingFireParameters cmds = null);
 
-        public abstract void Add(P2IntValue<T> item, NotifyingFireParameters? cmds = null);
+        public abstract void Add(P2IntValue<T> item, NotifyingFireParameters cmds = null);
 
-        public abstract void Add(IEnumerable<P2IntValue<T>> items, NotifyingFireParameters? cmds = null);
+        public abstract void Add(IEnumerable<P2IntValue<T>> items, NotifyingFireParameters cmds = null);
 
         public abstract IEnumerator<P2IntValue<T>> GetEnumerator();
 
         IEnumerator IEnumerable.GetEnumerator() => this.GetEnumerator();
 
-        protected void FireChange(IEnumerable<ChangePoint<T>> changes, NotifyingFireParameters? cmds)
+        protected void FireChange(IEnumerable<ChangePoint<T>> changes, NotifyingFireParameters cmds)
         {
             List<Exception> exceptions = null;
 
@@ -157,7 +157,7 @@ namespace Noggog.Notifying
                 }
                 else
                 {
-                    cmds.Value.ExceptionHandler(ex);
+                    cmds.ExceptionHandler(ex);
                 }
             }
         }

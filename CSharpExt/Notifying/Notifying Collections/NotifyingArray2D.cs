@@ -44,24 +44,21 @@ namespace Noggog.Notifying
         {
         }
 
-        public override void Add(IEnumerable<P2IntValue<T>> items, NotifyingFireParameters? cmds = default(NotifyingFireParameters?))
+        public override void Add(IEnumerable<P2IntValue<T>> items, NotifyingFireParameters cmds = default(NotifyingFireParameters))
         {
             SetTo(items, cmds);
         }
 
-        public override void Add(P2IntValue<T> item, NotifyingFireParameters? cmds = default(NotifyingFireParameters?))
+        public override void Add(P2IntValue<T> item, NotifyingFireParameters cmds = default(NotifyingFireParameters))
         {
             Set(item, cmds);
         }
 
-        public override void Clear(NotifyingFireParameters? cmds = default(NotifyingFireParameters?))
+        public override void Clear(NotifyingFireParameters cmds = default(NotifyingFireParameters))
         {
-            if (cmds == null)
-            {
-                cmds = NotifyingFireParameters.Typical;
-            }
+            cmds = cmds ?? NotifyingFireParameters.Typical;
 
-            if (cmds.Value.MarkAsSet)
+            if (cmds.MarkAsSet)
             {
                 HasBeenSet = true;
             }
@@ -109,7 +106,7 @@ namespace Noggog.Notifying
             }
         }
 
-        public override bool Remove(P2IntValue<T> item, NotifyingFireParameters? cmds = default(NotifyingFireParameters?))
+        public override bool Remove(P2IntValue<T> item, NotifyingFireParameters cmds = default(NotifyingFireParameters))
         {
             cmds = ProcessCmds(cmds);
             var cur = arr[item.Y, item.X];
@@ -122,7 +119,7 @@ namespace Noggog.Notifying
             return true;
         }
 
-        public override void Set(P2IntValue<T> item, NotifyingFireParameters? cmds = default(NotifyingFireParameters?))
+        public override void Set(P2IntValue<T> item, NotifyingFireParameters cmds = default(NotifyingFireParameters))
         {
             cmds = ProcessCmds(cmds);
             var cur = arr[item.Y, item.X];
@@ -134,7 +131,7 @@ namespace Noggog.Notifying
                 cmds);
         }
 
-        public override void SetTo(IEnumerable<P2IntValue<T>> items, NotifyingFireParameters? cmds = default(NotifyingFireParameters?))
+        public override void SetTo(IEnumerable<P2IntValue<T>> items, NotifyingFireParameters cmds = default(NotifyingFireParameters))
         {
             throw new NotImplementedException("Need to implement the clearing of other non-set indices.");
             cmds = ProcessCmds(cmds);
@@ -189,7 +186,7 @@ namespace Noggog.Notifying
             return changes;
         }
 
-        public void Fill(T val, NotifyingFireParameters? cmds = default(NotifyingFireParameters?))
+        public void Fill(T val, NotifyingFireParameters cmds = default(NotifyingFireParameters))
         {
             cmds = ProcessCmds(cmds);
             if (HasSubscribers())
