@@ -63,6 +63,33 @@ namespace Noggog.Notifying
             }
         }
 
+        public void Subscribe(NotifyingSetItemSimpleCallback<T> callback, NotifyingSubscribeParameters cmds = null)
+        {
+            cmds = cmds ?? NotifyingSubscribeParameters.Typical;
+            if (cmds.FireInitial)
+            {
+                callback(new ChangeSet<T>(Item));
+            }
+        }
+
+        public void Subscribe(object owner, NotifyingSetItemSimpleCallback<T> callback, NotifyingSubscribeParameters cmds = null)
+        {
+            cmds = cmds ?? NotifyingSubscribeParameters.Typical;
+            if (cmds.FireInitial)
+            {
+                callback(new ChangeSet<T>(Item));
+            }
+        }
+
+        public void Subscribe<O>(O owner, NotifyingSetItemCallback<O, T> callback, NotifyingSubscribeParameters cmds = null)
+        {
+            cmds = cmds ?? NotifyingSubscribeParameters.Typical;
+            if (cmds.FireInitial)
+            {
+                callback(owner, new ChangeSet<T>(Item));
+            }
+        }
+
         void INotifyingItemGetter<T>.Unsubscribe(object owner)
         {
         }

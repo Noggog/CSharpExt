@@ -94,17 +94,17 @@ namespace Noggog.Notifying
             return this.dict.GetEnumerator();
         }
 
-        public void Unset(NotifyingUnsetParameters cmds)
+        public void Unset(NotifyingUnsetParameters cmds = null)
         {
             this.dict.Unset(cmds);
         }
 
-        public void Clear(NotifyingFireParameters cmds)
+        public void Clear(NotifyingFireParameters cmds = null)
         {
             this.dict.Clear(cmds);
         }
 
-        public void SetTo(IEnumerable<V> enumer, NotifyingFireParameters cmds)
+        public void SetTo(IEnumerable<V> enumer, NotifyingFireParameters cmds = null)
         {
             this.dict.SetTo(
                 enumer.Select(
@@ -114,7 +114,7 @@ namespace Noggog.Notifying
                 cmds);
         }
 
-        public void Set(IEnumerable<V> items, NotifyingFireParameters cmds)
+        public void Set(IEnumerable<V> items, NotifyingFireParameters cmds = null)
         {
             this.dict.Set(
                 items.Select(

@@ -42,6 +42,21 @@ namespace Noggog.Notifying
             throw new NotImplementedException();
         }
 
+        public void Subscribe(NotifyingSetItemSimpleCallback<T> callback, NotifyingSubscribeParameters cmds = null)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Subscribe(object owner, NotifyingSetItemSimpleCallback<T> callback, NotifyingSubscribeParameters cmds = null)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Subscribe<O>(O owner, NotifyingSetItemCallback<O, T> callback, NotifyingSubscribeParameters cmds = null)
+        {
+            throw new NotImplementedException();
+        }
+
         public void Subscribe<O>(O owner, NotifyingItemCallback<O, T> callback, NotifyingSubscribeParameters cmds = null)
         {
             object transl = subscriberConverter.Value.TryCreateValue(new WeakReferenceEquatable(owner));

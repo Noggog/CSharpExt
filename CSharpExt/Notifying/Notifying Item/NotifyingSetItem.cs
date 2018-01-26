@@ -148,8 +148,13 @@ namespace Noggog.Notifying
         }
 
         public T DefaultValue { get; private set; }
-        public bool HasBeenSet { get; set; }
-        protected SubscriptionHandler<NotifyingItemInternalCallback<T>> subscribers;
+        protected bool _HasBeenSet;
+        public bool HasBeenSet
+        {
+            get => _HasBeenSet;
+            set => SetHasBeenSet(value);
+        }
+        protected SubscriptionHandler<NotifyingSetItemInternalCallback<T>> subscribers;
 
         public NotifyingSetItem(
             T defaultVal = default(T),
@@ -157,26 +162,58 @@ namespace Noggog.Notifying
         {
             this.DefaultValue = defaultVal;
             this._item = defaultVal;
-            this.HasBeenSet = markAsSet;
+            this._HasBeenSet = markAsSet;
         }
 
-        public void Subscribe(Action callback, NotifyingSubscribeParameters cmds = null)
+        void INotifyingItemGetter<T>.Subscribe(Action callback, NotifyingSubscribeParameters cmds)
         {
-            this.Subscribe<object>(
+            ((INotifyingItemGetter<T>)this).Subscribe<object>(
                 owner: null,
                 callback: (o, c) => callback(),
                 cmds: cmds);
         }
 
-        public void Subscribe(object owner, Action callback, NotifyingSubscribeParameters cmds = null)
+        void INotifyingItemGetter<T>.Subscribe(object owner, Action callback, NotifyingSubscribeParameters cmds)
         {
-            this.Subscribe<object>(
+            ((INotifyingItemGetter<T>)this).Subscribe<object>(
                 owner: owner,
                 callback: (o, c) => callback(),
                 cmds: cmds);
         }
 
-        public void Subscribe(object owner, NotifyingItemSimpleCallback<T> callback, NotifyingSubscribeParameters cmds = null)
+        void INotifyingItemGetter<T>.Subscribe(object owner, NotifyingItemSimpleCallback<T> callback, NotifyingSubscribeParameters cmds)
+        {
+            ((INotifyingItemGetter<T>)this).Subscribe<object>(
+                owner: owner,
+                callback: (o, c) => callback(c),
+                cmds: cmds);
+        }
+
+        void INotifyingItemGetter<T>.Subscribe(NotifyingItemSimpleCallback<T> callback, NotifyingSubscribeParameters cmds)
+        {
+            ((INotifyingItemGetter<T>)this).Subscribe<object>(
+                owner: null, 
+                callback: (o, c) => callback(c), 
+                cmds: cmds);
+        }
+
+        void INotifyingItemGetter<T>.Subscribe<O>(O owner, NotifyingItemCallback<O, T> callback, NotifyingSubscribeParameters cmds)
+        {
+            this.Subscribe<O>(
+                owner: owner,
+                callback: (o, c) => callback(o, c),
+                cmds: cmds);
+        }
+
+        public void Subscribe(NotifyingSetItemSimpleCallback<T> callback, NotifyingSubscribeParameters cmds = null)
+        {
+            this.Subscribe<object>(
+                owner: null,
+                callback: (o, c) => callback(c),
+                cmds: cmds);
+        }
+
+        public void Subscribe(object owner, NotifyingSetItemSimpleCallback<T> callback, NotifyingSubscribeParameters cmds = null)
         {
             this.Subscribe<object>(
                 owner: owner,
@@ -184,26 +221,126 @@ namespace Noggog.Notifying
                 cmds: cmds);
         }
 
-        public void Subscribe(NotifyingItemSimpleCallback<T> callback, NotifyingSubscribeParameters cmds = null)
-        {
-            this.Subscribe<object>(
-                owner: null, 
-                callback: (o, c) => callback(c), 
-                cmds: cmds);
-        }
-
-        public void Subscribe<O>(O owner, NotifyingItemCallback<O, T> callback, NotifyingSubscribeParameters cmds = null)
+        public void Subscribe<O>(O owner, NotifyingSetItemCallback<O, T> callback, NotifyingSubscribeParameters cmds = null)
         {
             cmds = cmds ?? NotifyingSubscribeParameters.Typical;
             if (subscribers == null)
             {
-                subscribers = new SubscriptionHandler<NotifyingItemInternalCallback<T>>();
+                subscribers = new SubscriptionHandler<NotifyingSetItemInternalCallback<T>>();
             }
             subscribers.Add(owner, (own, change) => callback((O)own, change));
             if (cmds.FireInitial)
             {
-                callback(owner, new Change<T>(this.Item));
+                callback(owner, new ChangeSet<T>(this.Item, newSet: this.HasBeenSet));
             }
+        }
+
+        public void Bind(object owner, INotifyingSetItem<T> rhs, NotifyingBindParameters cmds = null)
+        {
+            this.Subscribe(
+                owner: owner,
+                callback: (c) =>
+                {
+                    rhs.Set(this.Item, this.HasBeenSet, cmds?.FireParameters);
+                },
+                cmds: cmds?.SubscribeParameters);
+            rhs.Subscribe(
+                owner: owner,
+                callback: (c) =>
+                {
+                    this.Item = c.New;
+                },
+                cmds: NotifyingSubscribeParameters.NoFire);
+        }
+
+        public void Bind<R>(object owner, INotifyingSetItem<R> rhs, Func<T, R> toConv, Func<R, T> fromConv, NotifyingBindParameters cmds = null)
+        {
+            this.Subscribe(
+                owner: owner,
+                callback: (c) =>
+                {
+                    rhs.Set(toConv(this.Item), this.HasBeenSet, cmds?.FireParameters);
+                },
+                cmds: cmds?.SubscribeParameters);
+            rhs.Subscribe(
+                owner: owner,
+                callback: (c) =>
+                {
+                    this.Item = fromConv(c.New);
+                },
+                cmds: NotifyingSubscribeParameters.NoFire);
+        }
+
+        public void Bind(object owner, INotifyingItem<T> rhs, NotifyingBindParameters cmds = null)
+        {
+            this.Subscribe(
+                owner: owner,
+                callback: (c) =>
+                {
+                    rhs.Set(this.Item, cmds?.FireParameters);
+                },
+                cmds: cmds?.SubscribeParameters);
+            rhs.Subscribe(
+                owner: owner,
+                callback: (c) =>
+                {
+                    this.Item = c.New;
+                },
+                cmds: NotifyingSubscribeParameters.NoFire);
+        }
+
+        public void Bind<R>(object owner, INotifyingItem<R> rhs, Func<T, R> toConv, Func<R, T> fromConv, NotifyingBindParameters cmds = null)
+        {
+            this.Subscribe(
+                owner: owner,
+                callback: (c) =>
+                {
+                    rhs.Set(toConv(this.Item), cmds?.FireParameters);
+                },
+                cmds: cmds?.SubscribeParameters);
+            rhs.Subscribe(
+                owner: owner,
+                callback: (c) =>
+                {
+                    this.Item = fromConv(c.New);
+                },
+                cmds: NotifyingSubscribeParameters.NoFire);
+        }
+
+        public void Bind(INotifyingSetItem<T> rhs, NotifyingBindParameters cmds = null)
+        {
+            this.Bind(
+                owner: null,
+                rhs: rhs,
+                cmds: cmds);
+        }
+
+        public void Bind<R>(INotifyingSetItem<R> rhs, Func<T, R> toConv, Func<R, T> fromConv, NotifyingBindParameters cmds = null)
+        {
+            this.Bind(
+                owner: null,
+                rhs: rhs,
+                toConv: toConv,
+                fromConv: fromConv,
+                cmds: cmds);
+        }
+
+        public void Bind(INotifyingItem<T> rhs, NotifyingBindParameters cmds = null)
+        {
+            this.Bind(
+                owner: null,
+                rhs: rhs,
+                cmds: cmds);
+        }
+
+        public void Bind<R>(INotifyingItem<R> rhs, Func<T, R> toConv, Func<R, T> fromConv, NotifyingBindParameters cmds = null)
+        {
+            this.Bind(
+                owner: null,
+                rhs: rhs,
+                toConv: toConv,
+                fromConv: fromConv,
+                cmds: cmds);
         }
 
         public void Unsubscribe(object owner)
@@ -223,21 +360,33 @@ namespace Noggog.Notifying
             this.DefaultValue = this._item;
         }
 
-        public virtual void Set(T value, NotifyingFireParameters cmd = null)
+        private void SetHasBeenSet(bool value)
+        {
+            Set(this.Item, hasBeenSet: value, cmd: NotifyingFireParameters.Typical);
+        }
+
+        public void Set(T value, NotifyingFireParameters cmd = null)
         {
             cmd = cmd ?? NotifyingFireParameters.Typical;
+            Set(value, cmd.MarkAsSet ? true : this.HasBeenSet, cmd);
+        }
 
-            if (cmd.MarkAsSet)
-            {
-                HasBeenSet = true;
-            }
-            if (cmd.ForceFire || !object.Equals(_item, value))
+        public virtual void Set(T value, bool hasBeenSet, NotifyingFireParameters cmd = null)
+        {
+            var oldSet = this.HasBeenSet;
+            if (cmd.ForceFire 
+                || oldSet != this.HasBeenSet 
+                || !object.Equals(_item, value))
             {
                 if (subscribers != null && subscribers.HasSubs)
                 {
                     var old = _item;
                     _item = value;
-                    Fire(old, value, cmd);
+                    Fire(new ChangeSet<T>(
+                        oldVal: old,
+                        oldSet: oldSet,
+                        newVal: value,
+                        newSet: true), cmd);
                 }
                 else
                 {
@@ -246,7 +395,7 @@ namespace Noggog.Notifying
             }
         }
 
-        protected void Fire(T old, T item, NotifyingFireParameters cmds = null)
+        protected void Fire(ChangeSet<T> change, NotifyingFireParameters cmds = null)
         {
             List<Exception> exceptions = null;
             using (var fireSubscribers = subscribers.GetSubs())
@@ -257,7 +406,7 @@ namespace Noggog.Notifying
                     {
                         try
                         {
-                            action(sub.Key, new Change<T>(old, _item));
+                            action(sub.Key, change);
                         }
                         catch (Exception ex)
                         {

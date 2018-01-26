@@ -24,14 +24,14 @@ namespace Noggog.Notifying
             this.converter = converter;
         }
 
-        public override void Set(T value, NotifyingFireParameters cmd = default(NotifyingFireParameters))
+        public override void Set(T value, bool hasBeenSet, NotifyingFireParameters cmd = default(NotifyingFireParameters))
         {
             if (value == null)
             {
                 value = noNullFallback();
             }
             value = converter(value);
-            base.Set(value, cmd);
+            base.Set(value, hasBeenSet, cmd);
             onSet(this.Item);
         }
     }
@@ -53,14 +53,14 @@ namespace Noggog.Notifying
             this.converter = converter;
         }
 
-        public override void Set(T value, NotifyingFireParameters cmd = default(NotifyingFireParameters))
+        public override void Set(T value, bool hasBeenSet, NotifyingFireParameters cmd = default(NotifyingFireParameters))
         {
             if (value == null)
             {
                 value = new T();
             }
             value = converter(value);
-            base.Set(value, cmd);
+            base.Set(value, hasBeenSet, cmd);
             onSet(this.Item);
         }
     }

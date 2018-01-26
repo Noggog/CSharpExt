@@ -21,15 +21,15 @@ namespace Noggog.Notifying
             this.converter = converter;
         }
 
-        public override void Set(T value, NotifyingFireParameters cmd = default(NotifyingFireParameters))
+        public override void Set(T value, bool hasBeenSet, NotifyingFireParameters cmd = default(NotifyingFireParameters))
         {
             if (value == null)
             {
-                base.Set(converter(noNullFallback()), cmd);
+                base.Set(converter(noNullFallback()), hasBeenSet, cmd);
             }
             else
             {
-                base.Set(converter(value), cmd);
+                base.Set(converter(value), hasBeenSet, cmd);
             }
         }
     }
@@ -48,15 +48,15 @@ namespace Noggog.Notifying
             this.converter = converter;
         }
 
-        public override void Set(T value, NotifyingFireParameters cmd = default(NotifyingFireParameters))
+        public override void Set(T value, bool hasBeenSet, NotifyingFireParameters cmd = default(NotifyingFireParameters))
         {
             if (value == null)
             {
-                base.Set(converter(new T()), cmd);
+                base.Set(converter(new T()), hasBeenSet, cmd);
             }
             else
             {
-                base.Set(converter(value), cmd);
+                base.Set(converter(value), hasBeenSet, cmd);
             }
         }
     }

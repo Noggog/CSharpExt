@@ -37,6 +37,26 @@ namespace Noggog.Notifying
         #region NotifyingItem interface
         public T Item { get => Source.Item; set => this.Set(value); }
 
+        public void Bind(object owner, INotifyingItem<T> rhs, NotifyingBindParameters cmds = null)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Bind<R>(object owner, INotifyingItem<R> rhs, Func<T, R> toConv, Func<R, T> fromConv, NotifyingBindParameters cmds = null)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Bind(INotifyingItem<T> rhs, NotifyingBindParameters cmds = null)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Bind<R>(INotifyingItem<R> rhs, Func<T, R> toConv, Func<R, T> fromConv, NotifyingBindParameters cmds = null)
+        {
+            throw new NotImplementedException();
+        }
+
         public void Set(T value, NotifyingFireParameters cmd)
         {
             var setting = this.incomingConverter(
@@ -128,6 +148,11 @@ namespace Noggog.Notifying
             this.Source.Set(this.outgoingConverter(value), cmds);
         }
 
+        public void Set(R item, bool hasBeenSet, NotifyingFireParameters cmds = null)
+        {
+            this.Source.Set(this.outgoingConverter(item), hasBeenSet, cmds);
+        }
+
         public void Subscribe(object owner, Action callback, NotifyingSubscribeParameters cmds = null)
         {
             this.Source.Subscribe(
@@ -185,6 +210,54 @@ namespace Noggog.Notifying
                 cmds: cmds);
         }
 
+        public void Subscribe(NotifyingSetItemSimpleCallback<R> callback, NotifyingSubscribeParameters cmds = null)
+        {
+            this.Source.Subscribe(
+                callback: (change) =>
+                {
+                    callback(
+                        new ChangeSet<R>(
+                            oldVal: this.incomingConverter(change.Old),
+                            oldSet: change.OldSet,
+                            newVal: this.incomingConverter(change.New),
+                            newSet: change.NewSet));
+                },
+                cmds: cmds);
+        }
+
+        public void Subscribe(object owner, NotifyingSetItemSimpleCallback<R> callback, NotifyingSubscribeParameters cmds = null)
+        {
+            this.Source.Subscribe(
+                owner: owner,
+                callback: (change) =>
+                {
+                    callback(
+                        new ChangeSet<R>(
+                            oldVal: this.incomingConverter(change.Old),
+                            oldSet: change.OldSet,
+                            newVal: this.incomingConverter(change.New),
+                            newSet: change.NewSet));
+                },
+                cmds: cmds);
+        }
+
+        public void Subscribe<O>(O owner, NotifyingSetItemCallback<O, R> callback, NotifyingSubscribeParameters cmds = null)
+        {
+            this.Source.Subscribe(
+                owner: owner,
+                callback: (ow, change) =>
+                {
+                    callback(
+                        ow,
+                        new ChangeSet<R>(
+                            oldVal: this.incomingConverter(change.Old),
+                            oldSet: change.OldSet,
+                            newVal: this.incomingConverter(change.New),
+                            newSet: change.NewSet));
+                },
+                cmds: cmds);
+        }
+
         public void Unsubscribe(object owner)
         {
             this.Source.Unsubscribe(owner);
@@ -193,6 +266,46 @@ namespace Noggog.Notifying
         public void SetHasBeenSet(bool on)
         {
             this.HasBeenSet = on;
+        }
+
+        public void Bind(object owner, INotifyingSetItem<R> rhs, NotifyingBindParameters cmds = null)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Bind<R1>(object owner, INotifyingSetItem<R1> rhs, Func<R, R1> toConv, Func<R1, R> fromConv, NotifyingBindParameters cmds = null)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Bind(INotifyingSetItem<R> rhs, NotifyingBindParameters cmds = null)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Bind<R1>(INotifyingSetItem<R1> rhs, Func<R, R1> toConv, Func<R1, R> fromConv, NotifyingBindParameters cmds = null)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Bind(object owner, INotifyingItem<R> rhs, NotifyingBindParameters cmds = null)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Bind<R1>(object owner, INotifyingItem<R1> rhs, Func<R, R1> toConv, Func<R1, R> fromConv, NotifyingBindParameters cmds = null)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Bind(INotifyingItem<R> rhs, NotifyingBindParameters cmds = null)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Bind<R1>(INotifyingItem<R1> rhs, Func<R, R1> toConv, Func<R1, R> fromConv, NotifyingBindParameters cmds = null)
+        {
+            throw new NotImplementedException();
         }
         #endregion
     }

@@ -263,6 +263,60 @@ namespace Noggog.Notifying
             }
         }
 
+        public void Bind(object owner, INotifyingItem<T> rhs, NotifyingBindParameters cmds = null)
+        {
+            this.Subscribe(
+                owner: owner,
+                callback: (c) =>
+                {
+                    rhs.Set(this.Item, cmds?.FireParameters);
+                },
+                cmds: cmds?.SubscribeParameters);
+            rhs.Subscribe(
+                owner: owner,
+                callback: (c) =>
+                {
+                    this.Item = c.New;
+                },
+                cmds: NotifyingSubscribeParameters.NoFire);
+        }
+
+        public void Bind<R>(object owner, INotifyingItem<R> rhs, Func<T, R> toConv, Func<R, T> fromConv, NotifyingBindParameters cmds = null)
+        {
+            this.Subscribe(
+                owner: owner,
+                callback: (c) =>
+                {
+                    rhs.Set(toConv(this.Item), cmds?.FireParameters);
+                },
+                cmds: cmds?.SubscribeParameters);
+            rhs.Subscribe(
+                owner: owner,
+                callback: (c) =>
+                {
+                    this.Item = fromConv(c.New);
+                },
+                cmds: NotifyingSubscribeParameters.NoFire);
+        }
+
+        public void Bind(INotifyingItem<T> rhs, NotifyingBindParameters cmds = null)
+        {
+            this.Bind(
+                owner: null,
+                rhs: rhs,
+                cmds: cmds);
+        }
+
+        public void Bind<R>(INotifyingItem<R> rhs, Func<T, R> toConv, Func<R, T> fromConv, NotifyingBindParameters cmds = null)
+        {
+            this.Bind(
+                owner: null,
+                rhs: rhs,
+                toConv: toConv,
+                fromConv: fromConv,
+                cmds: cmds);
+        }
+
         public static implicit operator T(NotifyingItem<T> item)
         {
             return item.Item;

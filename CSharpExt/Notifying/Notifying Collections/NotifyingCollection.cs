@@ -133,9 +133,12 @@ namespace Noggog.Notifying
 
         protected abstract ObjectPoolCheckout<List<ChangeAddRem<T>>> CompileCurrentEnumer();
 
-        protected NotifyingFireParameters ProcessCmds(NotifyingFireParameters cmds)
+        protected NotifyingFireParameters ProcessCmds(NotifyingFireParameters cmds = null)
         {
-            cmds = cmds ?? NotifyingFireParameters.Typical;
+            if (cmds == null)
+            {
+                cmds = NotifyingFireParameters.Typical;
+            }
             if (cmds.MarkAsSet)
             {
                 HasBeenSet = true;
@@ -290,7 +293,7 @@ namespace System
             this INotifyingCollection<T> not, 
             IHasBeenSetItemGetter<IEnumerable<T>> rhs, 
             IHasBeenSetItemGetter<IEnumerable<T>> def,
-            NotifyingFireParameters cmds)
+            NotifyingFireParameters cmds = null)
         {
             if (rhs.HasBeenSet)
             {
@@ -310,8 +313,8 @@ namespace System
             this INotifyingCollection<T> not,
             IHasBeenSetItemGetter<IEnumerable<T>> rhs, 
             INotifyingListGetter<T> def, 
-            NotifyingFireParameters cmds,
-            Func<T, T, T> converter)
+            Func<T, T, T> converter,
+            NotifyingFireParameters cmds = null)
         {
             if (rhs.HasBeenSet)
             {
