@@ -134,14 +134,8 @@ namespace Noggog.Notifying
         protected T _item;
         public T Item
         {
-            get
-            {
-                return _item;
-            }
-            set
-            {
-                Set(value, null);
-            }
+            get => _item;
+            set => Set(value, null);
         }
         
         protected SubscriptionHandler<NotifyingItemInternalCallback<T>> subscribers;
@@ -161,34 +155,35 @@ namespace Noggog.Notifying
             }
         }
 
-        public void Subscribe(object owner, Action callback, bool fireInitial = true)
+        public void Subscribe(object owner, Action callback, NotifyingSubscribeParameters cmds = null)
         {
-            this.Subscribe<object>(owner: owner, callback: (o, c) => callback(), fireInitial: fireInitial);
+            this.Subscribe<object>(owner: owner, callback: (o, c) => callback(), cmds: cmds);
         }
 
-        public void Subscribe(Action callback, bool fireInitial = true)
+        public void Subscribe(Action callback, NotifyingSubscribeParameters cmds = null)
         {
-            this.Subscribe<object>(owner: null, callback: (o, c) => callback(), fireInitial: fireInitial);
+            this.Subscribe<object>(owner: null, callback: (o, c) => callback(), cmds: cmds);
         }
 
-        public void Subscribe(object owner, NotifyingItemSimpleCallback<T> callback, bool fireInitial = true)
+        public void Subscribe(object owner, NotifyingItemSimpleCallback<T> callback, NotifyingSubscribeParameters cmds = null)
         {
-            this.Subscribe<object>(owner: owner, callback: (o, c) => callback(c), fireInitial: fireInitial);
+            this.Subscribe<object>(owner: owner, callback: (o, c) => callback(c), cmds: cmds);
         }
 
-        public void Subscribe(NotifyingItemSimpleCallback<T> callback, bool fireInitial = true)
+        public void Subscribe(NotifyingItemSimpleCallback<T> callback, NotifyingSubscribeParameters cmds = null)
         {
-            this.Subscribe<object>(owner: null, callback: (o, c) => callback(c), fireInitial: fireInitial);
+            this.Subscribe<object>(owner: null, callback: (o, c) => callback(c), cmds: cmds);
         }
 
-        public void Subscribe<O>(O owner, NotifyingItemCallback<O, T> callback, bool fireInitial = true)
+        public void Subscribe<O>(O owner, NotifyingItemCallback<O, T> callback, NotifyingSubscribeParameters cmds = null)
         {
+            cmds = cmds ?? NotifyingSubscribeParameters.Typical;
             if (subscribers == null)
             {
                 subscribers = pool.Get();
             }
             subscribers.Add(owner, (own, change) => callback((O)own, change));
-            if (fireInitial)
+            if (cmds.FireInitial)
             {
                 callback(owner, new Change<T>(this.Item));
             }

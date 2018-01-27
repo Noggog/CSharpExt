@@ -65,42 +65,42 @@ namespace Noggog.Notifying
             _child.SetCurrentAsDefault();
         }
 
-        public void Subscribe(Action callback, bool fireInitial = true)
+        public void Subscribe(Action callback, NotifyingSubscribeParameters cmds = null)
         {
             _child.Subscribe(
                 callback: callback,
-                fireInitial: fireInitial);
+                cmds: cmds);
         }
 
-        public void Subscribe(object owner, Action callback, bool fireInitial = true)
-        {
-            _child.Subscribe(
-                owner: owner,
-                callback: callback,
-                fireInitial: fireInitial);
-        }
-
-        public void Subscribe(object owner, NotifyingItemSimpleCallback<T> callback, bool fireInitial = true)
+        public void Subscribe(object owner, Action callback, NotifyingSubscribeParameters cmds = null)
         {
             _child.Subscribe(
                 owner: owner,
                 callback: callback,
-                fireInitial: fireInitial);
+                cmds: cmds);
         }
 
-        public void Subscribe(NotifyingItemSimpleCallback<T> callback, bool fireInitial = true)
+        public void Subscribe(object owner, NotifyingItemSimpleCallback<T> callback, NotifyingSubscribeParameters cmds = null)
+        {
+            _child.Subscribe(
+                owner: owner,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        public void Subscribe(NotifyingItemSimpleCallback<T> callback, NotifyingSubscribeParameters cmds = null)
         {
             _child.Subscribe(
                 callback: callback,
-                fireInitial: fireInitial);
+                cmds: cmds);
         }
 
-        public void Subscribe<O>(O owner, NotifyingItemCallback<O, T> callback, bool fireInitial = true)
+        public void Subscribe<O>(O owner, NotifyingItemCallback<O, T> callback, NotifyingSubscribeParameters cmds = null)
         {
             _child.Subscribe(
                 owner: owner, 
                 callback: callback,
-                fireInitial: fireInitial);
+                cmds: cmds);
         }
 
         public void Unset(NotifyingUnsetParameters cmds = null)

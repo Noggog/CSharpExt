@@ -12,16 +12,16 @@ namespace Noggog.Notifying
     {
         T this[int index] { get; }
         int IndexOf(T item);
-        void Subscribe<O>(O owner, NotifyingCollection<T, ChangeIndex<T>>.NotifyingCollectionCallback<O> callback, bool fireInitial);
-        void Subscribe(NotifyingCollection<T, ChangeIndex<T>>.NotifyingCollectionSimpleCallback callback, bool fireInitial);
+        void Subscribe<O>(O owner, NotifyingCollection<T, ChangeIndex<T>>.NotifyingCollectionCallback<O> callback, NotifyingSubscribeParameters cmds = null);
+        void Subscribe(NotifyingCollection<T, ChangeIndex<T>>.NotifyingCollectionSimpleCallback callback, NotifyingSubscribeParameters cmds = null);
     }
 
     public interface INotifyingList<T> : INotifyingListGetter<T>, INotifyingCollection<T>
     {
         new T this[int index] { get; set; }
-        void Insert(int index, T item, NotifyingFireParameters cmds);
-        void Set(int index, T item, NotifyingFireParameters cmds);
-        void RemoveAt(int index, NotifyingFireParameters cmds);
+        void Insert(int index, T item, NotifyingFireParameters cmds = null);
+        void Set(int index, T item, NotifyingFireParameters cmds = null);
+        void RemoveAt(int index, NotifyingFireParameters cmds = null);
     }
 
     public class NotifyingList<T> : NotifyingCollection<T, ChangeIndex<T>>, INotifyingList<T>
@@ -283,14 +283,14 @@ namespace Noggog.Notifying
             return changes;
         }
 
-        public void Subscribe<O>(O owner, NotifyingCollectionCallback<O> callback, bool fireInitial = true)
+        public void Subscribe<O>(O owner, NotifyingCollectionCallback<O> callback, NotifyingSubscribeParameters cmds = null)
         {
-            this.Subscribe_Internal(owner, callback, fireInitial);
+            this.Subscribe_Internal(owner, callback, cmds: cmds);
         }
 
-        public void Subscribe(NotifyingCollectionSimpleCallback callback, bool fireInitial = true)
+        public void Subscribe(NotifyingCollectionSimpleCallback callback, NotifyingSubscribeParameters cmds = null)
         {
-            this.Subscribe_Internal<object>(null, (o2, ch) => callback(ch), fireInitial);
+            this.Subscribe_Internal<object>(null, (o2, ch) => callback(ch), cmds: cmds);
         }
 
         public IEnumerator<T> GetEnumerator()
@@ -478,12 +478,12 @@ namespace System
 
             public R this[int index] => Converter(Orig[index]);
 
-            public void Subscribe_Enumerable<O>(O owner, NotifyingEnumerableCallback<O, R> callback, bool fireInitial = true)
+            public void Subscribe_Enumerable<O>(O owner, NotifyingEnumerableCallback<O, R> callback, NotifyingSubscribeParameters cmds = null)
             {
                 Orig.Subscribe_Enumerable(
                     owner,
                     (o2, changes) => callback(o2, changes.Select((c) => new ChangeAddRem<R>(this.Converter(c.Item), c.AddRem))),
-                    fireInitial);
+                    cmds: cmds);
             }
 
             public void Unsubscribe(object owner)
@@ -509,19 +509,19 @@ namespace System
                 throw new NotImplementedException();
             }
 
-            public void Subscribe<O>(O owner, NotifyingCollection<R, ChangeIndex<R>>.NotifyingCollectionCallback<O> callback, bool fireInitial)
+            public void Subscribe<O>(O owner, NotifyingCollection<R, ChangeIndex<R>>.NotifyingCollectionCallback<O> callback, NotifyingSubscribeParameters cmds = null)
             {
                 Orig.Subscribe<O>(
                     owner,
                     (o2, changes) => callback(o2, changes.Select((c) => new ChangeIndex<R>(Converter(c.Old), Converter(c.New), c.AddRem, c.Index))),
-                    fireInitial);
+                    cmds: cmds);
             }
 
-            public void Subscribe(NotifyingCollection<R, ChangeIndex<R>>.NotifyingCollectionSimpleCallback callback, bool fireInitial)
+            public void Subscribe(NotifyingCollection<R, ChangeIndex<R>>.NotifyingCollectionSimpleCallback callback, NotifyingSubscribeParameters cmds = null)
             {
                 Orig.Subscribe(
                     (changes) => callback(changes.Select((c) => new ChangeIndex<R>(Converter(c.Old), Converter(c.New), c.AddRem, c.Index))),
-                    fireInitial);
+                    cmds: cmds);
             }
         }
 
@@ -584,19 +584,19 @@ namespace System
                     });
             }
 
-            public void Subscribe_Enumerable<O>(O owner, NotifyingEnumerableCallback<O, R> callback, bool fireInitial)
+            public void Subscribe_Enumerable<O>(O owner, NotifyingEnumerableCallback<O, R> callback, NotifyingSubscribeParameters cmds = null)
             {
-                _internalList.Subscribe_Enumerable<O>(owner, callback, fireInitial);
+                _internalList.Subscribe_Enumerable<O>(owner, callback, cmds: cmds);
             }
 
-            public void Subscribe<O>(O owner, NotifyingCollection<R, ChangeIndex<R>>.NotifyingCollectionCallback<O> callback, bool fireInitial)
+            public void Subscribe<O>(O owner, NotifyingCollection<R, ChangeIndex<R>>.NotifyingCollectionCallback<O> callback, NotifyingSubscribeParameters cmds = null)
             {
-                _internalList.Subscribe(owner, callback, fireInitial);
+                _internalList.Subscribe(owner, callback, cmds: cmds);
             }
 
-            public void Subscribe(NotifyingCollection<R, ChangeIndex<R>>.NotifyingCollectionSimpleCallback callback, bool fireInitial)
+            public void Subscribe(NotifyingCollection<R, ChangeIndex<R>>.NotifyingCollectionSimpleCallback callback, NotifyingSubscribeParameters cmds = null)
             {
-                _internalList.Subscribe(callback, fireInitial);
+                _internalList.Subscribe(callback, cmds: cmds);
             }
 
             public void Unsubscribe(object owner)
@@ -626,17 +626,17 @@ namespace System
 
         public static void Subscribe<O, T>(this INotifyingListGetter<T> getter, O owner, NotifyingCollection<T, ChangeIndex<T>>.NotifyingCollectionCallback<O> callback)
         {
-            getter.Subscribe(owner, callback, fireInitial: true);
+            getter.Subscribe(owner, callback, cmds: NotifyingSubscribeParameters.Typical);
         }
 
         public static void Subscribe<T>(this INotifyingListGetter<T> getter, NotifyingCollection<T, ChangeIndex<T>>.NotifyingCollectionSimpleCallback callback)
         {
-            getter.Subscribe(callback, fireInitial: true);
+            getter.Subscribe(callback, cmds: NotifyingSubscribeParameters.Typical);
         }
 
         public static void Subscribe<O, T>(this INotifyingListGetter<T> getter, O owner, NotifyingCollection<T, ChangeIndex<T>>.NotifyingCollectionSimpleCallback callback, bool fireInitial = true)
         {
-            getter.Subscribe(owner, (o2, ch) => callback(ch), fireInitial);
+            getter.Subscribe(owner, (o2, ch) => callback(ch), cmds: NotifyingSubscribeParameters.Typical);
         }
 
         public static void SetToArray<T>(this INotifyingList<T> list, params T[] items)

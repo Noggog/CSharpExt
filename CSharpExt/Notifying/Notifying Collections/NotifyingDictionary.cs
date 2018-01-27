@@ -11,14 +11,14 @@ namespace Noggog.Notifying
         IEnumerable<V> Values { get; }
         V this[K key] { get; }
         bool TryGetValue(K key, out V val);
-        void Subscribe<O>(O owner, NotifyingCollection<KeyValuePair<K, V>, ChangeKeyed<K, V>>.NotifyingCollectionCallback<O> callback, bool fireInitial);
+        void Subscribe<O>(O owner, NotifyingCollection<KeyValuePair<K, V>, ChangeKeyed<K, V>>.NotifyingCollectionCallback<O> callback, NotifyingSubscribeParameters cmds = null);
     }
 
     public interface INotifyingDictionary<K, V> : INotifyingDictionaryGetter<K, V>, INotifyingCollection<KeyValuePair<K, V>>
     {
         new V this[K key] { get; set; }
-        void Set(K key, V val, NotifyingFireParameters cmds);
-        void Remove(K key, NotifyingFireParameters cmds);
+        void Set(K key, V val, NotifyingFireParameters cmds = null);
+        void Remove(K key, NotifyingFireParameters cmds = null);
     }
 
     public class NotifyingDictionary<K, V> : NotifyingCollection<KeyValuePair<K, V>, ChangeKeyed<K, V>>, INotifyingDictionary<K, V>
@@ -291,9 +291,9 @@ namespace Noggog.Notifying
             return changes;
         }
 
-        public void Subscribe<O>(O owner, NotifyingCollectionCallback<O> callback, bool fireInitial)
+        public void Subscribe<O>(O owner, NotifyingCollectionCallback<O> callback, NotifyingSubscribeParameters cmds = null)
         {
-            this.Subscribe_Internal(owner, callback, fireInitial);
+            this.Subscribe_Internal(owner, callback, cmds: cmds);
         }
 
         public IEnumerator<KeyValuePair<K, V>> GetEnumerator()
@@ -443,14 +443,9 @@ namespace Noggog.Notifying
 
     public static class INotifyingDictionaryGetterExt
     {
-        public static void Subscribe<O, K, V>(this INotifyingDictionaryGetter<K, V> getter, O owner, NotifyingCollection<KeyValuePair<K, V>, ChangeKeyed<K, V>>.NotifyingCollectionCallback<O> callback)
+        public static void Subscribe<O, K, V>(this INotifyingDictionaryGetter<K, V> getter, O owner, NotifyingCollection<KeyValuePair<K, V>, ChangeKeyed<K, V>>.NotifyingCollectionSimpleCallback callback, NotifyingSubscribeParameters cmds = null)
         {
-            getter.Subscribe(owner, callback, true);
-        }
-
-        public static void Subscribe<O, K, V>(this INotifyingDictionaryGetter<K, V> getter, O owner, NotifyingCollection<KeyValuePair<K, V>, ChangeKeyed<K, V>>.NotifyingCollectionSimpleCallback callback, bool fireInitial = true)
-        {
-            getter.Subscribe(owner, (o2, ch) => callback(ch), fireInitial);
+            getter.Subscribe(owner, (o2, ch) => callback(ch), cmds);
         }
 
         public static void Set<K, V>(this INotifyingDictionary<K, V> getter, K key, V val)

@@ -134,19 +134,19 @@ namespace Noggog.Notifying
             _child.RemoveAt(index, cmds);
         }
 
-        public void Subscribe<O>(O owner, NotifyingCollection<T, ChangeIndex<T>>.NotifyingCollectionCallback<O> callback, bool fireInitial = true)
+        public void Subscribe<O>(O owner, NotifyingCollection<T, ChangeIndex<T>>.NotifyingCollectionCallback<O> callback, NotifyingSubscribeParameters cmds = null)
         {
-            _child.Subscribe(owner, callback, fireInitial);
+            _child.Subscribe(owner, callback, cmds: cmds);
         }
 
-        public void Subscribe(NotifyingCollection<T, ChangeIndex<T>>.NotifyingCollectionSimpleCallback callback, bool fireInitial)
+        public void Subscribe(NotifyingCollection<T, ChangeIndex<T>>.NotifyingCollectionSimpleCallback callback, NotifyingSubscribeParameters cmds = null)
         {
-            _child.Subscribe(callback, fireInitial);
+            _child.Subscribe(callback, cmds: cmds);
         }
 
-        public void Subscribe_Enumerable<O>(O owner, NotifyingEnumerableCallback<O, T> callback, bool fireInitial = true)
+        public void Subscribe_Enumerable<O>(O owner, NotifyingEnumerableCallback<O, T> callback, NotifyingSubscribeParameters cmds = null)
         {
-            _child.Subscribe_Enumerable(owner, callback, fireInitial);
+            _child.Subscribe_Enumerable(owner, callback, cmds: cmds);
         }
 
         public void Unset(NotifyingUnsetParameters cmds = null)
