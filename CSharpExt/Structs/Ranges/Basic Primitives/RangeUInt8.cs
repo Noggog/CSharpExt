@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace Noggog
 {
-    public struct RangeUInt8 : IEquatable<RangeUInt8>
+    public struct RangeUInt8 : IEquatable<RangeUInt8>, IEnumerable<byte>
     {
         public readonly byte Min;
         public readonly byte Max;
@@ -163,6 +165,19 @@ namespace Noggog
         public static bool operator !=(RangeUInt8 c1, RangeUInt8 c2)
         {
             return !c1.Equals(c2);
+        }
+
+        public IEnumerator<byte> GetEnumerator()
+        {
+            for (byte i = this.Min; i <= this.Max; i++)
+            {
+                yield return i;
+            }
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return this.GetEnumerator();
         }
     }
 }
