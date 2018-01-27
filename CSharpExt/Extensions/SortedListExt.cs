@@ -96,6 +96,11 @@ namespace System
                 result = default(RangeInt32);
                 return false;
             }
+            if (lowEnd > highEnd)
+            {
+                result = default(RangeInt32);
+                return false;
+            }
             result = new RangeInt32(lowEnd, highEnd);
             return true;
         }

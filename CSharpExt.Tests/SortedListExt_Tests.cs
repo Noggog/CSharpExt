@@ -157,6 +157,17 @@ namespace CSharpExt.Tests
                 result: out var range);
             Assert.False(got);
         }
+
+        [Fact]
+        public void TryGetEncapsulatedIndices_Crossing()
+        {
+            var list = TypicalSortedList();
+            var got = list.TryGetEncapsulatedIndices(
+                lowerKey: LOW + 1,
+                higherKey: MEDIUM - 1,
+                result: out var range);
+            Assert.False(got);
+        }
         #endregion
     }
 }
