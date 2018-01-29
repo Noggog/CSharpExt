@@ -105,6 +105,25 @@ namespace System
             return true;
         }
 
+        public static bool TryGetEncapsulatedValues<K, V>(
+            this SortedList<K, V> sortedList,
+            K lowerKey,
+            K higherKey,
+            out IEnumerable<KeyValuePair<int, V>> result)
+        {
+            if (!TryGetEncapsulatedIndices(
+                sortedList: sortedList,
+                lowerKey: lowerKey,
+                higherKey: higherKey,
+                result: out var range))
+            {
+                result = null;
+                return false;
+            }
+            result = range.Select((i) => new KeyValuePair<int, V>(i, sortedList.Values[i]));
+            return true;
+        }
+
         public static void Add<K, V>(
             this SortedList<K, V> sortedList,
             IEnumerable<KeyValuePair<K, V>> vals)
