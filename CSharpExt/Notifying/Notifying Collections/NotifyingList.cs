@@ -206,7 +206,7 @@ namespace Noggog.Notifying
                         changes.Item.Add(
                             new ChangeIndex<T>(this.list[j], default(T), AddRemoveModify.Remove, j));
                     }
-                    this.list.RemoveEnd(i);
+                    this.list.RemoveToCount(i);
 
                     _count.Set(list.Count, cmds);
                     FireChange(changes.Item, cmds);
@@ -214,22 +214,7 @@ namespace Noggog.Notifying
             }
             else
             { // just internals
-                int i = 0;
-                foreach (var item in enumer)
-                {
-                    if (i >= this.list.Count)
-                    {
-                        this.list.Add(item);
-                    }
-                    else
-                    {
-                        this.list[i] = item;
-                    }
-                    i++;
-                }
-
-                this.list.RemoveEnd(i);
-
+                this.list.SetTo(enumer);
                 _count.Set(list.Count, cmds);
             }
 

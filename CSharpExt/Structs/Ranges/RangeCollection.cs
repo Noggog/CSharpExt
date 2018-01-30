@@ -11,6 +11,15 @@ namespace Noggog
     {
         List<RangeInt64> Ranges = new List<RangeInt64>();
 
+        public RangeCollection()
+        {
+        }
+
+        public RangeCollection(IEnumerable<RangeInt64> e)
+        {
+            this.Add(e);
+        }
+
         public void Add(RangeInt64 range)
         {
             this.Ranges.Add(range);
@@ -50,6 +59,44 @@ namespace Noggog
         {
             this.Add(
                 new RangeInt64(range.Min, range.Max));
+        }
+
+        public void Add(IEnumerable<RangeInt64> ranges)
+        {
+            foreach (var range in ranges)
+            {
+                this.Ranges.Add(range);
+            }
+        }
+
+        public void Add(IEnumerable<RangeInt8> ranges)
+        {
+            this.Add(ranges.Select((r) => new RangeInt64(r.Min, r.Max)));
+        }
+
+        public void Add(IEnumerable<RangeInt16> ranges)
+        {
+            this.Add(ranges.Select((r) => new RangeInt64(r.Min, r.Max)));
+        }
+
+        public void Add(IEnumerable<RangeInt32> ranges)
+        {
+            this.Add(ranges.Select((r) => new RangeInt64(r.Min, r.Max)));
+        }
+
+        public void Add(IEnumerable<RangeUInt8> ranges)
+        {
+            this.Add(ranges.Select((r) => new RangeInt64(r.Min, r.Max)));
+        }
+
+        public void Add(IEnumerable<RangeUInt16> ranges)
+        {
+            this.Add(ranges.Select((r) => new RangeInt64(r.Min, r.Max)));
+        }
+
+        public void Add(IEnumerable<RangeUInt32> ranges)
+        {
+            this.Add(ranges.Select((r) => new RangeInt64(r.Min, r.Max)));
         }
 
         public bool IsEncapsulated(long l)

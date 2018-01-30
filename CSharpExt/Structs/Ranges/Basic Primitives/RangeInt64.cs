@@ -1,9 +1,10 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace Noggog
 {
-    public struct RangeInt64 : IEquatable<RangeInt64>
+    public struct RangeInt64 : IEquatable<RangeInt64>, IEnumerable<long>
     {
         public readonly long Min;
         public readonly long Max;
@@ -207,6 +208,19 @@ namespace Noggog
                     }
                 }
             }
+        }
+
+        public IEnumerator<long> GetEnumerator()
+        {
+            for (long i = this.Min; i <= this.Max; i++)
+            {
+                yield return i;
+            }
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return this.GetEnumerator();
         }
     }
 }

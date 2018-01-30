@@ -96,7 +96,31 @@ namespace System
                 result = default(RangeInt32);
                 return false;
             }
+            if (lowEnd > highEnd)
+            {
+                result = default(RangeInt32);
+                return false;
+            }
             result = new RangeInt32(lowEnd, highEnd);
+            return true;
+        }
+
+        public static bool TryGetEncapsulatedValues<K, V>(
+            this SortedList<K, V> sortedList,
+            K lowerKey,
+            K higherKey,
+            out IEnumerable<KeyValuePair<int, V>> result)
+        {
+            if (!TryGetEncapsulatedIndices(
+                sortedList: sortedList,
+                lowerKey: lowerKey,
+                higherKey: higherKey,
+                result: out var range))
+            {
+                result = null;
+                return false;
+            }
+            result = range.Select((i) => new KeyValuePair<int, V>(i, sortedList.Values[i]));
             return true;
         }
 
