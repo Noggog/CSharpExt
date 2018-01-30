@@ -65,6 +65,7 @@ namespace System
         public static IEnumerable<T> And<T>(this T item, IEnumerable<T> enumer2)
         {
             yield return item;
+            if (enumer2 == null) yield break;
             foreach (var e in enumer2)
             {
                 yield return e;
