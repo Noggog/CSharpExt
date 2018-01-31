@@ -373,6 +373,7 @@ namespace Noggog.Notifying
 
         public virtual void Set(T value, bool hasBeenSet, NotifyingFireParameters cmd = null)
         {
+            cmd = cmd ?? NotifyingFireParameters.Typical;
             var oldSet = this.HasBeenSet;
             this._HasBeenSet = hasBeenSet;
             if (cmd.ForceFire 
