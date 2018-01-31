@@ -19,9 +19,9 @@ namespace System
             INotifyingItemGetter<T> item,
             NotifyingItemSimpleCallback<T> callback,
             Action<T> customDetachCallback = null,
-            bool fireInitial = true)
+            NotifyingSubscribeParameters cmds = null)
         {
-            SubscribeWithBoolGate<O, T>(gate, owner, item, (o2, change) => callback(change), customDetachCallback, fireInitial);
+            SubscribeWithBoolGate<O, T>(gate, owner, item, (o2, change) => callback(change), customDetachCallback, cmds);
         }
 
         public static void SubscribeWithBoolGate<O, T>(
@@ -30,7 +30,7 @@ namespace System
             INotifyingItemGetter<T> item,
             NotifyingItemCallback<O, T> callback,
             Action<T> customDetachCallback = null,
-            bool fireInitial = true)
+            NotifyingSubscribeParameters cmds = null)
         {
             bool attached = false;
             item.Subscribe<O>(
@@ -42,7 +42,7 @@ namespace System
                         callback(o2, change);
                     }
                 },
-                fireInitial);
+                cmds);
             gate.Subscribe<O>(
                 owner,
                 (o2, change) =>
@@ -71,23 +71,23 @@ namespace System
                         }
                     }
                 },
-                fireInitial);
+                cmds);
         }
 
         public static void Subscribe<O, T>(this INotifyingItemGetter<T> not, O owner, NotifyingItemCallback<O, T> callback)
         {
-            not.Subscribe(owner, callback, true);
+            not.Subscribe(owner, callback, NotifyingSubscribeParameters.Typical);
         }
 
-        public static void Subscribe<O, T>(this INotifyingItemGetter<T> not, O owner, NotifyingItemSimpleCallback<T> callback, bool fireInitial = true)
+        public static void Subscribe<O, T>(this INotifyingItemGetter<T> not, O owner, NotifyingItemSimpleCallback<T> callback, NotifyingSubscribeParameters cmds = null)
         {
-            not.Subscribe(owner, new NotifyingItemCallback<O, T>((o2, change) => callback(change)), fireInitial);
+            not.Subscribe(owner, new NotifyingItemCallback<O, T>((o2, change) => callback(change)), cmds);
         }
         
-        public static void Forward<T, R>(this INotifyingItemGetter<T> not, IHasItem<R> to, bool fireInitial = true)
+        public static void Forward<T, R>(this INotifyingItemGetter<T> not, IHasItem<R> to, NotifyingSubscribeParameters cmds = null)
             where T : R
         {
-            not.Subscribe(to, (change) => to.Item = change.New, fireInitial: fireInitial);
+            not.Subscribe(to, (change) => to.Item = change.New, cmds: cmds);
         }
 
         public static void Set<T>(this INotifyingItem<T> not, T value)
@@ -104,7 +104,7 @@ namespace System
             this INotifyingSetItem<T> not,
             INotifyingSetItemGetter<T> rhs,
             INotifyingSetItemGetter<T> def,
-            NotifyingFireParameters? cmds)
+            NotifyingFireParameters cmds)
         {
             if (rhs.HasBeenSet)
             {
@@ -124,7 +124,7 @@ namespace System
             this INotifyingSetItem<T> not,
             INotifyingSetItemGetter<T> rhs,
             INotifyingSetItemGetter<T> def,
-            NotifyingFireParameters? cmds,
+            NotifyingFireParameters cmds,
             Func<T, T, T> converter)
         {
             if (rhs.HasBeenSet)

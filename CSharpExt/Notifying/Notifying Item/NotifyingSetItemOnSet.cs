@@ -18,9 +18,9 @@ namespace Noggog.Notifying
             this.onSet = onSet;
         }
 
-        public override void Set(T value, NotifyingFireParameters? cmd = default(NotifyingFireParameters?))
+        public override void Set(T value, bool hasBeenSet, NotifyingFireParameters cmd = default(NotifyingFireParameters))
         {
-            base.Set(value, cmd);
+            base.Set(value, hasBeenSet, cmd);
             onSet(value);
         }
     }

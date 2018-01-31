@@ -42,7 +42,7 @@ namespace Noggog.Notifying
         public T DefaultValue => _child.DefaultValue;
 
         T IHasItemGetter<T>.Item => this.Item;
-        void IHasBeenSetItem<T>.Set(T value) => Set(value, cmd: null);
+        void IHasBeenSetItem<T>.Set(T value) => Set(value, cmds: null);
         void IHasBeenSetItem<T>.Unset() => Unset(cmds: null);
 
         public bool HasBeenSet
@@ -65,45 +65,68 @@ namespace Noggog.Notifying
             _child.SetCurrentAsDefault();
         }
 
-        public void Subscribe(Action callback, bool fireInitial = true)
+        public void Subscribe(Action callback, NotifyingSubscribeParameters cmds = null)
         {
             _child.Subscribe(
                 callback: callback,
-                fireInitial: fireInitial);
+                cmds: cmds);
         }
 
-        public void Subscribe(object owner, Action callback, bool fireInitial = true)
-        {
-            _child.Subscribe(
-                owner: owner,
-                callback: callback,
-                fireInitial: fireInitial);
-        }
-
-        public void Subscribe(object owner, NotifyingItemSimpleCallback<T> callback, bool fireInitial = true)
+        public void Subscribe(object owner, Action callback, NotifyingSubscribeParameters cmds = null)
         {
             _child.Subscribe(
                 owner: owner,
                 callback: callback,
-                fireInitial: fireInitial);
+                cmds: cmds);
         }
 
-        public void Subscribe(NotifyingItemSimpleCallback<T> callback, bool fireInitial = true)
+        public void Subscribe(object owner, NotifyingItemSimpleCallback<T> callback, NotifyingSubscribeParameters cmds = null)
+        {
+            _child.Subscribe(
+                owner: owner,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        public void Subscribe(NotifyingItemSimpleCallback<T> callback, NotifyingSubscribeParameters cmds = null)
         {
             _child.Subscribe(
                 callback: callback,
-                fireInitial: fireInitial);
+                cmds: cmds);
         }
 
-        public void Subscribe<O>(O owner, NotifyingItemCallback<O, T> callback, bool fireInitial = true)
+        public void Subscribe<O>(O owner, NotifyingItemCallback<O, T> callback, NotifyingSubscribeParameters cmds = null)
         {
             _child.Subscribe(
                 owner: owner, 
                 callback: callback,
-                fireInitial: fireInitial);
+                cmds: cmds);
         }
 
-        public void Unset(NotifyingUnsetParameters? cmds = null)
+        public void Subscribe(NotifyingSetItemSimpleCallback<T> callback, NotifyingSubscribeParameters cmds = null)
+        {
+            _child.Subscribe(
+                callback: callback,
+                cmds: cmds);
+        }
+
+        public void Subscribe(object owner, NotifyingSetItemSimpleCallback<T> callback, NotifyingSubscribeParameters cmds = null)
+        {
+            _child.Subscribe(
+                owner: owner,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        public void Subscribe<O>(O owner, NotifyingSetItemCallback<O, T> callback, NotifyingSubscribeParameters cmds = null)
+        {
+            _child.Subscribe(
+                owner: owner,
+                callback: callback,
+                cmds: cmds);
+        }
+
+        public void Unset(NotifyingUnsetParameters cmds = null)
         {
             _child.Unset(cmds);
             SwapBack(cmds);
@@ -121,7 +144,7 @@ namespace Noggog.Notifying
             this.HasBeenSwapped = true;
         }
 
-        private void SwapBack(NotifyingUnsetParameters? cmds, bool force = false)
+        private void SwapBack(NotifyingUnsetParameters cmds, bool force = false)
         {
             if (!HasBeenSwapped && ! force) return;
             this.HasBeenSwapped = false;
@@ -138,16 +161,62 @@ namespace Noggog.Notifying
                 });
         }
 
-        public void Set(T value, NotifyingFireParameters? cmd = null)
+        public void Set(T item, NotifyingFireParameters cmds = null)
         {
             SwapOver();
-            _child.Set(value, cmd);
+            _child.Set(item, cmds);
+        }
+
+        public void Set(T item, bool hasBeenSet, NotifyingFireParameters cmds = null)
+        {
+            SwapOver();
+            _child.Set(item, hasBeenSet, cmds);
         }
 
         public void SetHasBeenSet(bool on)
         {
             SwapOver();
             _child.HasBeenSet = on;
+        }
+
+        public void Bind(INotifyingSetItem<T> rhs, NotifyingBindParameters cmds = null)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Bind<R>(INotifyingSetItem<R> rhs, Func<T, R> toConv, Func<R, T> fromConv, NotifyingBindParameters cmds = null)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Bind(INotifyingItem<T> rhs, NotifyingBindParameters cmds = null)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Bind<R>(INotifyingItem<R> rhs, Func<T, R> toConv, Func<R, T> fromConv, NotifyingBindParameters cmds = null)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Bind(object owner, INotifyingSetItem<T> rhs, NotifyingBindParameters cmds = null)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Bind<R>(object owner, INotifyingSetItem<R> rhs, Func<T, R> toConv, Func<R, T> fromConv, NotifyingBindParameters cmds = null)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Bind(object ower, INotifyingItem<T> rhs, NotifyingBindParameters cmds = null)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Bind<R>(object owner, INotifyingItem<R> rhs, Func<T, R> toConv, Func<R, T> fromConv, NotifyingBindParameters cmds = null)
+        {
+            throw new NotImplementedException();
         }
     }
 }

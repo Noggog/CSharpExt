@@ -2,7 +2,7 @@
 
 namespace Noggog.Notifying
 {
-    public struct Change<T> : IEquatable<Change<T>>
+    public class Change<T> : IEquatable<Change<T>>
     {
         public readonly T Old;
         public readonly T New;

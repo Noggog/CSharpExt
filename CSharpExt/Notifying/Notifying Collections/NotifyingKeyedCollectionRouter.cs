@@ -55,7 +55,7 @@ namespace Noggog.Notifying
             ((INotifyingCollection<KeyValuePair<K, V>>)_base).Unsubscribe(this);
         }
 
-        private void SwapBack(NotifyingUnsetParameters? cmds)
+        private void SwapBack(NotifyingUnsetParameters cmds)
         {
             if (!HasBeenSwapped) return;
             _base.Subscribe(
@@ -66,30 +66,30 @@ namespace Noggog.Notifying
                 });
         }
 
-        public void Set(V val, NotifyingFireParameters? cmds)
+        public void Set(V val, NotifyingFireParameters cmds)
         {
             SwapOver();
             _child.Set(val, cmds);
         }
 
-        public bool Remove(K key, NotifyingFireParameters? cmds)
+        public bool Remove(K key, NotifyingFireParameters cmds)
         {
             SwapOver();
             return _child.Remove(key, cmds);
         }
 
-        public void Subscribe<O>(O owner, NotifyingCollection<KeyValuePair<K, V>, ChangeKeyed<K, V>>.NotifyingCollectionCallback<O> callback, bool fireInitial)
+        public void Subscribe<O>(O owner, NotifyingCollection<KeyValuePair<K, V>, ChangeKeyed<K, V>>.NotifyingCollectionCallback<O> callback, NotifyingSubscribeParameters cmds = null)
         {
-            _child.Subscribe(owner, callback, fireInitial);
+            _child.Subscribe(owner, callback, cmds);
         }
 
-        public void Unset(NotifyingUnsetParameters? cmds)
+        public void Unset(NotifyingUnsetParameters cmds)
         {
             SwapBack(cmds);
             _child.Unset(cmds);
         }
 
-        public void Clear(NotifyingFireParameters? cmds)
+        public void Clear(NotifyingFireParameters cmds)
         {
             SwapOver();
             _child.Clear(cmds);
@@ -100,9 +100,9 @@ namespace Noggog.Notifying
             return _child.TryGetValue(key, out val);
         }
 
-        public void Subscribe_Enumerable<O>(O owner, NotifyingEnumerableCallback<O, KeyValuePair<K, V>> callback, bool fireInitial)
+        public void Subscribe_Enumerable<O>(O owner, NotifyingEnumerableCallback<O, KeyValuePair<K, V>> callback, NotifyingSubscribeParameters cmds = null)
         {
-            _child.Subscribe_Enumerable<O>(owner, callback, fireInitial);
+            _child.Subscribe_Enumerable<O>(owner, callback, cmds: cmds);
         }
 
         public void Unsubscribe(object owner)
@@ -115,19 +115,19 @@ namespace Noggog.Notifying
             return ((INotifyingCollection<KeyValuePair<K, V>>)_child).GetEnumerator();
         }
 
-        public bool Remove(V item, NotifyingFireParameters? cmds)
+        public bool Remove(V item, NotifyingFireParameters cmds)
         {
             SwapOver();
             return _child.Remove(item, cmds);
         }
 
-        public void SetTo(IEnumerable<V> enumer, NotifyingFireParameters? cmds)
+        public void SetTo(IEnumerable<V> enumer, NotifyingFireParameters cmds)
         {
             SwapOver();
             _child.SetTo(enumer, cmds);
         }
 
-        public void Set(IEnumerable<V> items, NotifyingFireParameters? cmds)
+        public void Set(IEnumerable<V> items, NotifyingFireParameters cmds)
         {
             SwapOver();
             _child.Set(items, cmds);

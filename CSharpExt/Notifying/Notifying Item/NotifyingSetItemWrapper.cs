@@ -18,43 +18,75 @@ namespace Noggog.Notifying
 
         public bool HasBeenSet => true;
 
-        public void Subscribe(Action callback, bool fireInitial = true)
+        public void Subscribe(Action callback, NotifyingSubscribeParameters cmds = null)
         {
-            if (fireInitial)
+            cmds = cmds ?? NotifyingSubscribeParameters.Typical;
+            if (cmds.FireInitial)
             {
                 callback();
             }
         }
 
-        public void Subscribe(object owner, Action callback, bool fireInitial = true)
+        public void Subscribe(object owner, Action callback, NotifyingSubscribeParameters cmds = null)
         {
-            if (fireInitial)
+            cmds = cmds ?? NotifyingSubscribeParameters.Typical;
+            if (cmds.FireInitial)
             {
                 callback();
             }
         }
 
-        public void Subscribe(object owner, NotifyingItemSimpleCallback<T> callback, bool fireInitial = true)
+        public void Subscribe(object owner, NotifyingItemSimpleCallback<T> callback, NotifyingSubscribeParameters cmds = null)
         {
-            if (fireInitial)
+            cmds = cmds ?? NotifyingSubscribeParameters.Typical;
+            if (cmds.FireInitial)
             {
                 callback(new Change<T>(Item));
             }
         }
 
-        public void Subscribe(NotifyingItemSimpleCallback<T> callback, bool fireInitial = true)
+        public void Subscribe(NotifyingItemSimpleCallback<T> callback, NotifyingSubscribeParameters cmds = null)
         {
-            if (fireInitial)
+            cmds = cmds ?? NotifyingSubscribeParameters.Typical;
+            if (cmds.FireInitial)
             {
                 callback(new Change<T>(Item));
             }
         }
 
-        public void Subscribe<O>(O owner, NotifyingItemCallback<O, T> callback, bool fireInitial = true)
+        public void Subscribe<O>(O owner, NotifyingItemCallback<O, T> callback, NotifyingSubscribeParameters cmds = null)
         {
-            if (fireInitial)
+            cmds = cmds ?? NotifyingSubscribeParameters.Typical;
+            if (cmds.FireInitial)
             {
                 callback(owner, new Change<T>(Item));
+            }
+        }
+
+        public void Subscribe(NotifyingSetItemSimpleCallback<T> callback, NotifyingSubscribeParameters cmds = null)
+        {
+            cmds = cmds ?? NotifyingSubscribeParameters.Typical;
+            if (cmds.FireInitial)
+            {
+                callback(new ChangeSet<T>(Item));
+            }
+        }
+
+        public void Subscribe(object owner, NotifyingSetItemSimpleCallback<T> callback, NotifyingSubscribeParameters cmds = null)
+        {
+            cmds = cmds ?? NotifyingSubscribeParameters.Typical;
+            if (cmds.FireInitial)
+            {
+                callback(new ChangeSet<T>(Item));
+            }
+        }
+
+        public void Subscribe<O>(O owner, NotifyingSetItemCallback<O, T> callback, NotifyingSubscribeParameters cmds = null)
+        {
+            cmds = cmds ?? NotifyingSubscribeParameters.Typical;
+            if (cmds.FireInitial)
+            {
+                callback(owner, new ChangeSet<T>(Item));
             }
         }
 

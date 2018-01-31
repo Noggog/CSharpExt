@@ -2,7 +2,7 @@
 
 namespace Noggog.Notifying
 {
-    public struct ChangePoint<T> : IEquatable<ChangePoint<T>>
+    public class ChangePoint<T> : IEquatable<ChangePoint<T>>
     {
         public readonly T Old;
         public readonly T New;

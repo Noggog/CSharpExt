@@ -2,7 +2,7 @@
 
 namespace Noggog.Notifying
 {
-    public struct NotifyingUnsetParameters
+    public class NotifyingUnsetParameters
     {
         public static readonly NotifyingUnsetParameters Typical = new NotifyingUnsetParameters(
             exceptionHandler: null,
@@ -29,16 +29,16 @@ namespace Noggog.Notifying
 
     public static class NotifyingUnsetParametersExt
     {
-        public static NotifyingFireParameters? ToFireParams(this NotifyingUnsetParameters? param)
+        public static NotifyingFireParameters ToFireParams(this NotifyingUnsetParameters param)
         {
             if (param == null) return null;
             return new NotifyingFireParameters(
                 markAsSet: false,
-                exceptionHandler: param.Value.ExceptionHandler,
-                forceFire: param.Value.ForceFire);
+                exceptionHandler: param.ExceptionHandler,
+                forceFire: param.ForceFire);
         }
 
-        public static NotifyingUnsetParameters? ToUnsetParams(this NotifyingUnsetParameters? param)
+        public static NotifyingUnsetParameters ToUnsetParams(this NotifyingUnsetParameters param)
         {
             return param;
         }

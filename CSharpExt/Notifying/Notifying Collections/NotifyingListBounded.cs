@@ -33,7 +33,7 @@ namespace Noggog.Notifying
             this._MaxValue = max;
         }
 
-        public override void Set(int index, T item, NotifyingFireParameters? cmds = null)
+        public override void Set(int index, T item, NotifyingFireParameters cmds = null)
         {
             if (index == _MaxValue)
             {
@@ -42,7 +42,7 @@ namespace Noggog.Notifying
             base.Set(index, item, cmds);
         }
 
-        public override void Insert(int index, T item, NotifyingFireParameters? cmds = null)
+        public override void Insert(int index, T item, NotifyingFireParameters cmds = null)
         {
             if (this.list.Count == _MaxValue)
             {
@@ -51,7 +51,7 @@ namespace Noggog.Notifying
             base.Insert(index, item, cmds);
         }
 
-        public override void Add(T item, NotifyingFireParameters? cmds = null)
+        public override void Add(T item, NotifyingFireParameters cmds = null)
         {
             if (this.list.Count == _MaxValue)
             {
@@ -60,7 +60,7 @@ namespace Noggog.Notifying
             base.Add(item, cmds);
         }
 
-        public override void Add(IEnumerable<T> items, NotifyingFireParameters? cmds = null)
+        public override void Add(IEnumerable<T> items, NotifyingFireParameters cmds = null)
         {
             int count;
             if (items is ICollection<T> coll)
@@ -78,7 +78,7 @@ namespace Noggog.Notifying
             base.Add(items, cmds);
         }
 
-        public override void SetTo(IEnumerable<T> enumer, NotifyingFireParameters? cmds = null)
+        public override void SetTo(IEnumerable<T> enumer, NotifyingFireParameters cmds = null)
         {
             int count;
             if (enumer is ICollection<T> coll)

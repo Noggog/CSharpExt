@@ -10,7 +10,7 @@ namespace Noggog.Notifying
 {
     public interface INotifyingEnumerable<T> : IEnumerable<T>, IHasBeenSetItemGetter<IEnumerable<T>>
     {
-        void Subscribe_Enumerable<O>(O owner, NotifyingEnumerableCallback<O, T> callback, bool fireInitial);
+        void Subscribe_Enumerable<O>(O owner, NotifyingEnumerableCallback<O, T> callback, NotifyingSubscribeParameters cmds = null);
         void Unsubscribe(object owner);
         INotifyingItemGetter<int> CountProperty { get; }
         int Count { get; }
@@ -18,12 +18,12 @@ namespace Noggog.Notifying
 
     public interface INotifyingCollection<T> : INotifyingEnumerable<T>
     {
-        void Unset(NotifyingUnsetParameters? cmds);
-        void Clear(NotifyingFireParameters? cmds);
-        bool Remove(T item, NotifyingFireParameters? cmds);
-        void SetTo(IEnumerable<T> enumer, NotifyingFireParameters? cmds);
-        void Add(T item, NotifyingFireParameters? cmds);
-        void Add(IEnumerable<T> items, NotifyingFireParameters? cmds);
+        void Unset(NotifyingUnsetParameters cmds);
+        void Clear(NotifyingFireParameters cmds);
+        bool Remove(T item, NotifyingFireParameters cmds);
+        void SetTo(IEnumerable<T> enumer, NotifyingFireParameters cmds);
+        void Add(T item, NotifyingFireParameters cmds);
+        void Add(IEnumerable<T> items, NotifyingFireParameters cmds);
         new bool HasBeenSet { get; set; }
     }
 
@@ -78,15 +78,16 @@ namespace Noggog.Notifying
         protected void Subscribe_Internal<O>(
             O owner,
             NotifyingCollectionCallback<O> callback,
-            bool fireInitial)
+            NotifyingSubscribeParameters cmds = null)
         {
+            cmds = cmds ?? NotifyingSubscribeParameters.Typical;
             if (subscribers == null)
             {
                 subscribers = pool.Get();
             }
             subscribers.Add(owner, (o, ch) => callback((O)o, ch));
 
-            if (fireInitial)
+            if (cmds.FireInitial)
             {
                 using (var current = CompileCurrent())
                 {
@@ -98,15 +99,16 @@ namespace Noggog.Notifying
         public void Subscribe_Enumerable<O>(
             O owner,
             NotifyingEnumerableCallback<O, T> callback,
-            bool fireInitial)
+            NotifyingSubscribeParameters cmds = null)
         {
+            cmds = cmds ?? NotifyingSubscribeParameters.Typical;
             if (enumerSubscribers == null)
             {
                 enumerSubscribers = enumerPool.Get();
             }
             enumerSubscribers.Add(owner, (o, ch) => callback((O)o, ch));
 
-            if (fireInitial)
+            if (cmds.FireInitial)
             {
                 using (var current = CompileCurrentEnumer())
                 {
@@ -131,17 +133,17 @@ namespace Noggog.Notifying
 
         protected abstract ObjectPoolCheckout<List<ChangeAddRem<T>>> CompileCurrentEnumer();
 
-        protected NotifyingFireParameters ProcessCmds(NotifyingFireParameters? cmds)
+        protected NotifyingFireParameters ProcessCmds(NotifyingFireParameters cmds = null)
         {
             if (cmds == null)
             {
                 cmds = NotifyingFireParameters.Typical;
             }
-            if (cmds.Value.MarkAsSet)
+            if (cmds.MarkAsSet)
             {
                 HasBeenSet = true;
             }
-            return cmds.Value;
+            return cmds;
         }
     }
 }
@@ -177,12 +179,12 @@ namespace System
 
             IEnumerable<R> IHasItemGetter<IEnumerable<R>>.Item => Orig.Select<T, R>((t) => t);
 
-            public void Subscribe_Enumerable<O>(O owner, NotifyingEnumerableCallback<O, R> callback, bool fireInitial)
+            public void Subscribe_Enumerable<O>(O owner, NotifyingEnumerableCallback<O, R> callback, NotifyingSubscribeParameters cmds = null)
             {
                 Orig.Subscribe_Enumerable(
                     owner,
                     (o2, changes) => callback(o2, changes.Select((c) => new ChangeAddRem<R>((R)c.Item, c.AddRem))),
-                    fireInitial);
+                    cmds: cmds);
             }
 
             public void Unsubscribe(object owner)
@@ -205,14 +207,14 @@ namespace System
         }
         #endregion
 
-        public static void Subscribe_Enumerable<O, T>(this INotifyingEnumerable<T> getter, O owner, NotifyingEnumerableCallback<O, T> callback)
+        public static void Subscribe_Enumerable<O, T>(this INotifyingEnumerable<T> getter, O owner, NotifyingEnumerableCallback<O, T> callback = null)
         {
-            getter.Subscribe_Enumerable<O>(owner, callback, true);
+            getter.Subscribe_Enumerable<O>(owner, callback, NotifyingSubscribeParameters.Typical);
         }
 
-        public static void Subscribe_Enumerable<T>(this INotifyingEnumerable<T> getter, object owner, NotifyingEnumerableSimpleCallback<T> callback, bool fireInitial = true)
+        public static void Subscribe_Enumerable<T>(this INotifyingEnumerable<T> getter, object owner, NotifyingEnumerableSimpleCallback<T> callback, NotifyingSubscribeParameters cmds = null)
         {
-            getter.Subscribe_Enumerable(owner, (o2, changes) => callback(changes), fireInitial);
+            getter.Subscribe_Enumerable(owner, (o2, changes) => callback(changes), cmds);
         }
 
         public static void SetTo<T>(this INotifyingCollection<T> list, IEnumerable<T> enumer)
@@ -225,7 +227,7 @@ namespace System
             list.Unset(cmds: null);
         }
 
-        public static void Subscribe_Enumerable_Single<O, T>(this INotifyingEnumerable<T> get, O owner, Action<ChangeAddRem<T>> callback, bool fireInitial = true)
+        public static void Subscribe_Enumerable_Single<O, T>(this INotifyingEnumerable<T> get, O owner, Action<ChangeAddRem<T>> callback, NotifyingSubscribeParameters cmds = null)
         {
             get.Subscribe_Enumerable<O>(
                 owner,
@@ -236,10 +238,10 @@ namespace System
                         callback(change);
                     }
                 },
-                fireInitial);
+                cmds: cmds);
         }
 
-        public static void Subscribe_Enumerable_Single<O, T>(this INotifyingEnumerable<T> get, O owner, Action<O, ChangeAddRem<T>> callback, bool fireInitial = true)
+        public static void Subscribe_Enumerable_Single<O, T>(this INotifyingEnumerable<T> get, O owner, Action<O, ChangeAddRem<T>> callback, NotifyingSubscribeParameters cmds = null)
         {
             get.Subscribe_Enumerable<O>(
                 owner,
@@ -250,10 +252,10 @@ namespace System
                         callback(o2, change);
                     }
                 },
-                fireInitial);
+                cmds: cmds);
         }
 
-        public static void Subscribe_Enumerable_Single<T>(this INotifyingEnumerable<T> get, object owner, Action<object, ChangeAddRem<T>> callback, bool fireInitial = true)
+        public static void Subscribe_Enumerable_Single<T>(this INotifyingEnumerable<T> get, object owner, Action<object, ChangeAddRem<T>> callback, NotifyingSubscribeParameters cmds = null)
         {
             get.Subscribe_Enumerable(
                 owner,
@@ -264,7 +266,7 @@ namespace System
                         callback(o2, change);
                     }
                 },
-                fireInitial: fireInitial);
+                cmds: cmds);
         }
 
         public static void Clear<T>(this INotifyingCollection<T> not)
@@ -291,7 +293,7 @@ namespace System
             this INotifyingCollection<T> not, 
             IHasBeenSetItemGetter<IEnumerable<T>> rhs, 
             IHasBeenSetItemGetter<IEnumerable<T>> def,
-            NotifyingFireParameters? cmds)
+            NotifyingFireParameters cmds = null)
         {
             if (rhs.HasBeenSet)
             {
@@ -311,8 +313,8 @@ namespace System
             this INotifyingCollection<T> not,
             IHasBeenSetItemGetter<IEnumerable<T>> rhs, 
             INotifyingListGetter<T> def, 
-            NotifyingFireParameters? cmds,
-            Func<T, T, T> converter)
+            Func<T, T, T> converter,
+            NotifyingFireParameters cmds = null)
         {
             if (rhs.HasBeenSet)
             {
@@ -345,7 +347,7 @@ namespace System
         public static void SetIfSucceeded<T>(
             this INotifyingCollection<T> not,
             TryGet<IEnumerable<T>> tryGet,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             if (tryGet.Failed) return;
             not.SetTo(tryGet.Value, cmds);

@@ -21,13 +21,13 @@ namespace Noggog.Notifying
             this.onSet = onSet;
         }
 
-        public override void Set(T value, NotifyingFireParameters? cmd = default(NotifyingFireParameters?))
+        public override void Set(T value, bool hasBeenSet, NotifyingFireParameters cmd = null)
         {
             if (value == null)
             {
                 value = noNullFallback();
             }
-            base.Set(value, cmd);
+            base.Set(value, hasBeenSet, cmd);
             onSet(value);
         }
     }
@@ -46,13 +46,13 @@ namespace Noggog.Notifying
             this.onSet = onSet;
         }
 
-        public override void Set(T value, NotifyingFireParameters? cmd = default(NotifyingFireParameters?))
+        public override void Set(T value, bool hasBeenSet, NotifyingFireParameters cmd = null)
         {
             if (value == null)
             {
                 value = new T();
             }
-            base.Set(value, cmd);
+            base.Set(value, hasBeenSet, cmd);
             onSet(value);
         }
     }

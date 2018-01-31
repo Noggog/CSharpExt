@@ -126,6 +126,7 @@
     <Compile Include="Notifying\Notifying Collections\NotifyingContainer2D.cs" />
     <Compile Include="Notifying\Notifying Collections\NotifyingDictionary.cs" />
     <Compile Include="Notifying\Notifying Collections\NotifyingDictionaryRouter.cs" />
+    <Compile Include="Notifying\NotifyingBindParameters.cs" />
     <Compile Include="Notifying\NotifyingFireParameters.cs" />
     <Compile Include="Notifying\Notifying Item\NotifyingItem.cs" />
     <Compile Include="Notifying\Notifying Item\NotifyingItemConvertWrapper.cs" />
@@ -135,6 +136,7 @@
     <Compile Include="Notifying\Notifying Collections\NotifyingKeyedCollectionRouter.cs" />
     <Compile Include="Notifying\Notifying Collections\NotifyingList.cs" />
     <Compile Include="Notifying\Notifying Collections\NotifyingListRouter.cs" />
+    <Compile Include="Notifying\NotifyingSubscribeParameters.cs" />
     <Compile Include="Notifying\NotifyingUnsetParameters.cs" />
     <Compile Include="Notifying\SubscriptionHandler.cs" />
     <Compile Include="Printing\DepthPrinter.cs" />
@@ -147,6 +149,7 @@
     <Compile Include="Structs\Change\ChangeMod.cs" />
     <Compile Include="Structs\Change\ChangePoint.cs" />
     <Compile Include="Notifying\HasBeenSet\HasBeenSetItem.cs" />
+    <Compile Include="Structs\Change\ChangeSet.cs" />
     <Compile Include="Structs\DirectoryPath.cs" />
     <Compile Include="Structs\FilePath.cs" />
     <Compile Include="Structs\LifecycleActions.cs" />
