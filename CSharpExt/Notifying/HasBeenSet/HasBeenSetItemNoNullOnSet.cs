@@ -40,7 +40,7 @@ namespace Noggog.Notifying
             this.HasBeenSet = markAsSet;
         }
 
-        public void Set(T item)
+        public void Set(T item, bool hasBeenSet = true)
         {
             if (item == null)
             {
@@ -50,7 +50,7 @@ namespace Noggog.Notifying
             {
                 this._Item = item;
             }
-            this.HasBeenSet = true;
+            this.HasBeenSet = hasBeenSet;
             this.onSet(this._Item);
         }
 
@@ -106,7 +106,7 @@ namespace Noggog.Notifying
             this.HasBeenSet = markAsSet;
         }
 
-        public void Set(T item)
+        public void Set(T item, bool hasBeenSet = true)
         {
             if (item == null)
             {
@@ -116,7 +116,7 @@ namespace Noggog.Notifying
             {
                 this._Item = item;
             }
-            this.HasBeenSet = true;
+            this.HasBeenSet = hasBeenSet;
             this.onSet(this._Item);
         }
 
@@ -172,7 +172,7 @@ namespace Noggog.Notifying
             this.HasBeenSet = markAsSet;
         }
 
-        public void Set(T item)
+        public void Set(T item, bool hasBeenSet = true)
         {
             if (item == null)
             {
@@ -182,7 +182,7 @@ namespace Noggog.Notifying
             {
                 this._Item = item;
             }
-            this.HasBeenSet = true;
+            this.HasBeenSet = hasBeenSet;
             this.onSet(this._Item);
         }
 

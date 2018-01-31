@@ -32,10 +32,10 @@ namespace Noggog.Notifying
             this.HasBeenSet = markAsSet;
         }
 
-        public void Set(T item)
+        public void Set(T item, bool hasBeenSet = true)
         {
             this._Item = converter(item);
-            this.HasBeenSet = true;
+            this.HasBeenSet = hasBeenSet;
             this.onSet(this._Item);
         }
 

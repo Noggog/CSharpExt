@@ -156,10 +156,10 @@ namespace Noggog.Notifying
             this.HasBeenSet = markAsSet;
         }
 
-        public void Set(T item)
+        public void Set(T item, bool hasBeenSet = true)
         {
             this._Item = item;
-            this.HasBeenSet = true;
+            this.HasBeenSet = hasBeenSet;
         }
 
         public void Unset()

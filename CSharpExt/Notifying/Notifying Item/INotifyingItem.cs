@@ -27,7 +27,7 @@ namespace Noggog.Notifying
     public interface INotifyingItem<T> : INotifyingItemGetter<T>, IHasItem<T>
     {
         new T Item { get; set; }
-        void Set(T value, NotifyingFireParameters cmds = null);
+        void Set(T value, NotifyingFireParameters cmds);
         void Bind(object owner, INotifyingItem<T> rhs, NotifyingBindParameters cmds = null);
         void Bind<R>(object owner, INotifyingItem<R> rhs, Func<T, R> toConv, Func<R, T> fromConv, NotifyingBindParameters cmds = null);
         void Bind(INotifyingItem<T> rhs, NotifyingBindParameters cmds = null);
@@ -45,8 +45,8 @@ namespace Noggog.Notifying
     public interface INotifyingSetItem<T> : INotifyingItem<T>, IHasBeenSetItem<T>, INotifyingSetItemGetter<T>
     {
         new T Item { get; set; }
-        void Unset(NotifyingUnsetParameters cmds);
-        void Set(T item, bool hasBeenSet, NotifyingFireParameters cmds = null);
+        void Unset(NotifyingUnsetParameters cmds = null);
+        void Set(T item, bool hasBeenSet, NotifyingFireParameters cmds);
         void Bind(object owner, INotifyingSetItem<T> rhs, NotifyingBindParameters cmds = null);
         void Bind<R>(object owner, INotifyingSetItem<R> rhs, Func<T, R> toConv, Func<R, T> fromConv, NotifyingBindParameters cmds = null);
         void Bind(INotifyingSetItem<T> rhs, NotifyingBindParameters cmds = null);

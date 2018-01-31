@@ -445,7 +445,7 @@ namespace Noggog.Notifying
             }
         }
 
-        void IHasBeenSetItem<T>.Set(T value) => Set(value, cmd: null);
+        void IHasBeenSetItem<T>.Set(T value, bool hasBeenSet) => Set(value, hasBeenSet, cmd: null);
 
         void IHasBeenSetItem<T>.Unset() => Unset(cmds: null);
 

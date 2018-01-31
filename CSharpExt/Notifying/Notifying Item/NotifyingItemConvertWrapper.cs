@@ -120,7 +120,7 @@ namespace Noggog.Notifying
         #region NotifyingItem interface
         R INotifyingItem<R>.Item { get => this.incomingConverter(this.Source.Item); set => this.Source.Item = this.outgoingConverter(value); }
         R IHasBeenSetItem<R>.Item { get => this.incomingConverter(this.Source.Item); set => this.Source.Item = this.outgoingConverter(value); }
-        void IHasBeenSetItem<R>.Set(R value) => Set(value, cmds: null);
+        void IHasBeenSetItem<R>.Set(R value, bool hasBeenSet) => Set(value, hasBeenSet, cmds: null);
         void IHasBeenSetItem<R>.Unset() => Unset(cmds: null);
 
         public R DefaultValue => this.incomingConverter(this.Source.DefaultValue);

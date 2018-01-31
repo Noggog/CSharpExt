@@ -31,7 +31,7 @@ namespace Noggog.Notifying
         T DefaultValue { get; }
         new T Item { get; set; }
         new bool HasBeenSet { get; set; }
-        void Set(T value);
+        void Set(T item, bool hasBeenSet = true);
         void Unset();
         void SetCurrentAsDefault();
     }
@@ -50,17 +50,7 @@ namespace System
         public static void SetIfNotSet<T>(this IHasBeenSetItem<T> prop, T item, bool markAsSet = true)
         {
             if (prop.HasBeenSet) return;
-            prop.Item = item;
-            if (!markAsSet)
-            {
-                prop.HasBeenSet = false;
-            }
-        }
-
-        public static void SetIfNotSet<T>(this IHasBeenSetItem<T> prop, T item)
-        {
-            if (prop.HasBeenSet) return;
-            prop.Item = item;
+            prop.Set(item, markAsSet);
         }
     }
 }
