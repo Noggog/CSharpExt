@@ -13,6 +13,13 @@ namespace Noggog.Notifying
             this.AddRem = addRem;
         }
 
+        public ChangeAddRem<R> Convert<R>(Func<T, R> convert)
+        {
+            return new ChangeAddRem<R>(
+                item: convert(this.Item),
+                addRem: this.AddRem);
+        }
+
         public bool Equals(ChangeAddRem<T> other)
         {
             return this.AddRem == other.AddRem

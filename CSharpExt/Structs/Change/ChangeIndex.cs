@@ -9,10 +9,10 @@ namespace Noggog.Notifying
         public readonly AddRemoveModify AddRem;
         public readonly int Index;
 
-        public ChangeIndex(T oldItem, T item, AddRemoveModify addRem, int index)
+        public ChangeIndex(T oldItem, T newItem, AddRemoveModify addRem, int index)
         {
             this.Old = oldItem;
-            this.New = item;
+            this.New = newItem;
             this.AddRem = addRem;
             this.Index = index;
         }
@@ -23,6 +23,15 @@ namespace Noggog.Notifying
                 && this.Index == other.Index
                 && object.Equals(this.Old, other.Old)
                 && object.Equals(this.New, other.New);
+        }
+
+        public ChangeIndex<R> Convert<R>(Func<T, R> convert)
+        {
+            return new ChangeIndex<R>(
+                oldItem: convert(this.Old),
+                newItem: convert(this.New),
+                addRem: this.AddRem,
+                index: this.Index);
         }
 
         public override bool Equals(object obj)

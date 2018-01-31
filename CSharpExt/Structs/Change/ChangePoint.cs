@@ -9,9 +9,9 @@ namespace Noggog.Notifying
         public readonly AddRemoveModify AddRem;
         public readonly P2Int Point;
 
-        public ChangePoint(T old, T newVal, AddRemoveModify addRem, P2Int p)
+        public ChangePoint(T oldVal, T newVal, AddRemoveModify addRem, P2Int p)
         {
-            this.Old = old;
+            this.Old = oldVal;
             this.New = newVal;
             this.AddRem = addRem;
             this.Point = p;
@@ -23,6 +23,15 @@ namespace Noggog.Notifying
                 && this.Point.Equals(other.Point)
                 && object.Equals(this.Old, other.Old)
                 && object.Equals(this.New, other.New);
+        }
+
+        public ChangePoint<R> Convert<R>(Func<T, R> convert)
+        {
+            return new ChangePoint<R>(
+                oldVal: convert(this.Old),
+                newVal: convert(this.New),
+                addRem: this.AddRem,
+                p: this.Point);
         }
 
         public override bool Equals(object obj)

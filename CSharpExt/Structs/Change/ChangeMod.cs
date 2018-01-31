@@ -8,11 +8,19 @@ namespace Noggog.Notifying
         public readonly T New;
         public readonly AddRemoveModify AddRem;
 
-        public ChangeMod(T old, T item, AddRemoveModify addRem)
+        public ChangeMod(T oldVal, T newVal, AddRemoveModify addRem)
         {
-            this.Old = old;
-            this.New = item;
+            this.Old = oldVal;
+            this.New = newVal;
             this.AddRem = addRem;
+        }
+
+        public ChangeMod<R> Convert<R>(Func<T, R> convert)
+        {
+            return new ChangeMod<R>(
+                oldVal: convert(this.Old),
+                newVal: convert(this.New),
+                addRem: this.AddRem);
         }
 
         public bool Equals(ChangeMod<T> other)

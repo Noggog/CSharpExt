@@ -41,6 +41,15 @@ namespace Noggog.Notifying
         {
         }
 
+        public new ChangeSet<R> Convert<R>(Func<T, R> convert)
+        {
+            return new ChangeSet<R>(
+                oldVal: convert(this.Old),
+                oldSet: this.OldSet,
+                newVal: convert(this.New),
+                newSet: this.NewSet);
+        }
+
         public bool Equals(ChangeSet<T> other)
         {
             return this.OldSet == other.OldSet

@@ -19,6 +19,13 @@ namespace Noggog.Notifying
             New = newVal;
         }
 
+        public Change<R> Convert<R>(Func<T, R> convert)
+        {
+            return new Change<R>(
+                oldVal: convert(this.Old),
+                newVal: convert(this.New));
+        }
+
         public bool Equals(Change<T> other)
         {
             return object.Equals(this.Old, other.Old)
