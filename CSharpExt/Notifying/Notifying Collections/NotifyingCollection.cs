@@ -207,14 +207,29 @@ namespace System
         }
         #endregion
 
-        public static void Subscribe_Enumerable<O, T>(this INotifyingEnumerable<T> getter, O owner, NotifyingEnumerableCallback<O, T> callback = null)
+        public static void Subscribe_Enumerable<O, T>(
+            this INotifyingEnumerable<T> getter,
+            O owner,
+            NotifyingEnumerableCallback<O, T> callback = null)
         {
             getter.Subscribe_Enumerable<O>(owner, callback, NotifyingSubscribeParameters.Typical);
         }
 
-        public static void Subscribe_Enumerable<T>(this INotifyingEnumerable<T> getter, object owner, NotifyingEnumerableSimpleCallback<T> callback, NotifyingSubscribeParameters cmds = null)
+        public static void Subscribe_Enumerable<T>(
+            this INotifyingEnumerable<T> getter,
+            object owner,
+            NotifyingEnumerableSimpleCallback<T> callback,
+            NotifyingSubscribeParameters cmds = null)
         {
             getter.Subscribe_Enumerable(owner, (o2, changes) => callback(changes), cmds);
+        }
+
+        public static void Subscribe_Enumerable<T>(
+            this INotifyingEnumerable<T> getter,
+            NotifyingEnumerableSimpleCallback<T> callback,
+            NotifyingSubscribeParameters cmds = null)
+        {
+            getter.Subscribe_Enumerable<object>(owner: null, callback: (o2, changes) => callback(changes), cmds: cmds);
         }
 
         public static void SetTo<T>(this INotifyingCollection<T> list, IEnumerable<T> enumer)
@@ -227,7 +242,11 @@ namespace System
             list.Unset(cmds: null);
         }
 
-        public static void Subscribe_Enumerable_Single<O, T>(this INotifyingEnumerable<T> get, O owner, Action<ChangeAddRem<T>> callback, NotifyingSubscribeParameters cmds = null)
+        public static void Subscribe_Enumerable_Single<O, T>(
+            this INotifyingEnumerable<T> get,
+            O owner,
+            Action<ChangeAddRem<T>> callback,
+            NotifyingSubscribeParameters cmds = null)
         {
             get.Subscribe_Enumerable<O>(
                 owner,
@@ -241,7 +260,11 @@ namespace System
                 cmds: cmds);
         }
 
-        public static void Subscribe_Enumerable_Single<O, T>(this INotifyingEnumerable<T> get, O owner, Action<O, ChangeAddRem<T>> callback, NotifyingSubscribeParameters cmds = null)
+        public static void Subscribe_Enumerable_Single<O, T>(
+            this INotifyingEnumerable<T> get,
+            O owner, 
+            Action<O, ChangeAddRem<T>> callback,
+            NotifyingSubscribeParameters cmds = null)
         {
             get.Subscribe_Enumerable<O>(
                 owner,
@@ -255,7 +278,11 @@ namespace System
                 cmds: cmds);
         }
 
-        public static void Subscribe_Enumerable_Single<T>(this INotifyingEnumerable<T> get, object owner, Action<object, ChangeAddRem<T>> callback, NotifyingSubscribeParameters cmds = null)
+        public static void Subscribe_Enumerable_Single<T>(
+            this INotifyingEnumerable<T> get, 
+            object owner, 
+            Action<object, ChangeAddRem<T>> callback,
+            NotifyingSubscribeParameters cmds = null)
         {
             get.Subscribe_Enumerable(
                 owner,
@@ -264,6 +291,22 @@ namespace System
                     foreach (var change in changes)
                     {
                         callback(o2, change);
+                    }
+                },
+                cmds: cmds);
+        }
+
+        public static void Subscribe_Enumerable_Single<T>(
+            this INotifyingEnumerable<T> get, 
+            Action<ChangeAddRem<T>> callback,
+            NotifyingSubscribeParameters cmds = null)
+        {
+            get.Subscribe_Enumerable(
+                (changes) =>
+                {
+                    foreach (var change in changes)
+                    {
+                        callback(change);
                     }
                 },
                 cmds: cmds);
