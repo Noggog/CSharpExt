@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Noggog;
+using System;
 using System.Collections.Generic;
 
 namespace System
@@ -32,6 +33,52 @@ namespace System
                 dict[key] = ret;
             }
             return ret;
+        }
+
+        public static bool AddRemove<K, V>(this Dictionary<K, V> dict, K key, V value, AddRemove addRem)
+        {
+            switch (addRem)
+            {
+                case Noggog.AddRemove.Add:
+                    dict.Add(key, value);
+                    break;
+                case Noggog.AddRemove.Remove:
+                    return dict.Remove(key);
+                default:
+                    throw new NotImplementedException();
+            }
+            return false;
+        }
+
+        public static bool Modify<K, V>(this Dictionary<K, V> dict, K key, V value, AddRemove addRem)
+        {
+            switch (addRem)
+            {
+                case Noggog.AddRemove.Add:
+                    dict[key] = value;
+                    break;
+                case Noggog.AddRemove.Remove:
+                    return dict.Remove(key);
+                default:
+                    throw new NotImplementedException();
+            }
+            return false;
+        }
+
+        public static bool Modify<K, V>(this Dictionary<K, V> dict, K key, V value, AddRemoveModify addRem)
+        {
+            switch (addRem)
+            {
+                case Noggog.AddRemoveModify.Add:
+                case Noggog.AddRemoveModify.Modify:
+                    dict[key] = value;
+                    break;
+                case Noggog.AddRemoveModify.Remove:
+                    return dict.Remove(key);
+                default:
+                    throw new NotImplementedException();
+            }
+            return false;
         }
     }
 }
