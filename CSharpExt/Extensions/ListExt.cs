@@ -208,5 +208,27 @@ namespace System
             index = -1;
             return false;
         }
+
+        // Assumes list is already sorted
+        public static void InsertSorted<T>(this IList<T> list, T item, bool replaceDuplicate = false)
+        {
+            var index = list.BinarySearch(item);
+            if (index >= 0)
+            {
+                if (replaceDuplicate)
+                {
+                    list[index] = item;
+                }
+                else
+                {
+                    list.Insert(index, item);
+                }
+            }
+            else
+            {
+                var invert = ~index;
+                list.Insert(invert, item);
+            }
+        }
     }
 }
