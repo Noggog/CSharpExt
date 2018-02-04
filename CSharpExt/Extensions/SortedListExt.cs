@@ -133,5 +133,27 @@ namespace System
                 sortedList[val.Key] = val.Value;
             }
         }
+
+        public static V TryCreate<K, V>(
+            this SortedList<K, V> sortedList,
+            K key,
+            Func<V> newVal)
+        {
+            if (sortedList.TryGetValue(key, out var v)) return v;
+            v = newVal();
+            sortedList[key] = v;
+            return v;
+        }
+
+        public static V TryCreate<K, V>(
+            this SortedList<K, V> sortedList,
+            K key)
+            where V : new()
+        {
+            if (sortedList.TryGetValue(key, out var v)) return v;
+            v = new V();
+            sortedList[key] = v;
+            return v;
+        }
     }
 }
