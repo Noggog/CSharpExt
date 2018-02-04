@@ -10,12 +10,16 @@ namespace Noggog
     {
         public static int Min(IEnumerable<int> e)
         {
-            int rhs = int.MaxValue;
+            int? rhs = null;
             foreach (var i in e)
             {
-                rhs = Math.Min(i, rhs);
+                rhs = Math.Min(i, rhs ?? int.MaxValue);
             }
-            return rhs;
+            if (rhs == null)
+            {
+                throw new ArgumentException("Enumerable contained no items.");
+            }
+            return rhs.Value;
         }
 
         public static int Min(params int[] e)
@@ -25,12 +29,16 @@ namespace Noggog
 
         public static int Max(IEnumerable<int> e)
         {
-            int rhs = int.MinValue;
+            int? rhs = null;
             foreach (var i in e)
             {
-                rhs = Math.Max(i, rhs);
+                rhs = Math.Max(i, rhs ?? int.MinValue);
             }
-            return rhs;
+            if (rhs == null)
+            {
+                throw new ArgumentException("Enumerable contained no items.");
+            }
+            return rhs.Value;
         }
 
         public static int Max(params int[] e)
