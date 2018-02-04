@@ -29,9 +29,14 @@ namespace System
                     high = index - 1;
                 }
             }
-            if (comp.Compare(list[low], value) < 0)
+            var c = comp.Compare(list[low], value);
+            if (c < 0)
             {
                 low++;
+            }
+            else if (c == 0)
+            {
+                return low;
             }
             return ~low;
         }

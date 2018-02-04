@@ -30,7 +30,7 @@ namespace CSharpExt.Tests
         public void BinarySearch_Typical()
         {
             var list = TypicalSortedList();
-            var result = list.BinarySearch(TYPICAL_NOT_EXISTS);
+            var result = ListExt.BinarySearch(list, TYPICAL_NOT_EXISTS);
             Assert.Equal(~2, result);
         }
 
@@ -38,15 +38,26 @@ namespace CSharpExt.Tests
         public void BinarySearch_Equal()
         {
             var list = TypicalSortedList();
-            var result = list.BinarySearch(MEDIUM);
+            var result = ListExt.BinarySearch(list, MEDIUM);
             Assert.Equal(1, result);
+        }
+
+        [Fact]
+        public void BinarySearch_EqualWithOne()
+        {
+            var list = new List<int>()
+            {
+                MEDIUM
+            };
+            var result = ListExt.BinarySearch(list, MEDIUM);
+            Assert.Equal(0, result);
         }
 
         [Fact]
         public void BinarySearch_None()
         {
             var list = TypicalSortedList();
-            var result = list.BinarySearch(TOO_HIGH);
+            var result = ListExt.BinarySearch(list, TOO_HIGH);
             Assert.Equal(~3, result);
         }
 
@@ -54,7 +65,7 @@ namespace CSharpExt.Tests
         public void BinarySearch_FromLowest()
         {
             var list = TypicalSortedList();
-            var result = list.BinarySearch(TOO_LOW);
+            var result = ListExt.BinarySearch(list, TOO_LOW);
             Assert.Equal(~0, result);
         }
         #endregion
