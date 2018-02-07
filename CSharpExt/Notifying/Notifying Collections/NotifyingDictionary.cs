@@ -328,67 +328,73 @@ namespace Noggog.Notifying
         {
             List<Exception> exceptions = null;
 
-            using (var fireSubscribers = this.subscribers.GetSubs())
+            if (this.subscribers != null)
             {
-                foreach (var sub in fireSubscribers)
+                using (var fireSubscribers = this.subscribers.GetSubs())
                 {
-                    foreach (var eventItem in sub.Value)
+                    foreach (var sub in fireSubscribers)
                     {
-                        try
+                        foreach (var eventItem in sub.Value)
                         {
-                            eventItem(sub.Key, changes);
-                        }
-                        catch (Exception ex)
-                        {
-                            if (exceptions == null)
+                            try
                             {
-                                exceptions = new List<Exception>();
+                                eventItem(sub.Key, changes);
                             }
-                            exceptions.Add(ex);
+                            catch (Exception ex)
+                            {
+                                if (exceptions == null)
+                                {
+                                    exceptions = new List<Exception>();
+                                }
+                                exceptions.Add(ex);
+                            }
                         }
                     }
                 }
             }
 
-            if (this.enumerSubscribers.HasSubs)
+            if (this.enumerSubscribers != null)
             {
-                using (var enumerChanges = fireEnumerPool.Checkout())
+                if (this.enumerSubscribers.HasSubs)
                 {
-                    foreach (var change in changes)
+                    using (var enumerChanges = fireEnumerPool.Checkout())
                     {
-                        switch (change.AddRem)
+                        foreach (var change in changes)
                         {
-                            case AddRemoveModify.Add:
-                                enumerChanges.Item.Add(new ChangeAddRem<KeyValuePair<K, V>>(new KeyValuePair<K, V>(change.Key, change.New), AddRemove.Add));
-                                break;
-                            case AddRemoveModify.Remove:
-                                enumerChanges.Item.Add(new ChangeAddRem<KeyValuePair<K, V>>(new KeyValuePair<K, V>(change.Key, change.Old), AddRemove.Remove));
-                                break;
-                            case AddRemoveModify.Modify:
-                                enumerChanges.Item.Add(new ChangeAddRem<KeyValuePair<K, V>>(new KeyValuePair<K, V>(change.Key, change.Old), AddRemove.Remove));
-                                enumerChanges.Item.Add(new ChangeAddRem<KeyValuePair<K, V>>(new KeyValuePair<K, V>(change.Key, change.New), AddRemove.Add));
-                                break;
-                            default:
-                                break;
-                        }
-                    }
-                    using (var fireSubscribers = this.enumerSubscribers.GetSubs())
-                    {
-                        foreach (var sub in fireSubscribers)
-                        {
-                            foreach (var eventItem in sub.Value)
+                            switch (change.AddRem)
                             {
-                                try
+                                case AddRemoveModify.Add:
+                                    enumerChanges.Item.Add(new ChangeAddRem<KeyValuePair<K, V>>(new KeyValuePair<K, V>(change.Key, change.New), AddRemove.Add));
+                                    break;
+                                case AddRemoveModify.Remove:
+                                    enumerChanges.Item.Add(new ChangeAddRem<KeyValuePair<K, V>>(new KeyValuePair<K, V>(change.Key, change.Old), AddRemove.Remove));
+                                    break;
+                                case AddRemoveModify.Modify:
+                                    enumerChanges.Item.Add(new ChangeAddRem<KeyValuePair<K, V>>(new KeyValuePair<K, V>(change.Key, change.Old), AddRemove.Remove));
+                                    enumerChanges.Item.Add(new ChangeAddRem<KeyValuePair<K, V>>(new KeyValuePair<K, V>(change.Key, change.New), AddRemove.Add));
+                                    break;
+                                default:
+                                    break;
+                            }
+                        }
+                        using (var fireSubscribers = this.enumerSubscribers.GetSubs())
+                        {
+                            foreach (var sub in fireSubscribers)
+                            {
+                                foreach (var eventItem in sub.Value)
                                 {
-                                    eventItem(sub.Key, enumerChanges.Item);
-                                }
-                                catch (Exception ex)
-                                {
-                                    if (exceptions == null)
+                                    try
                                     {
-                                        exceptions = new List<Exception>();
+                                        eventItem(sub.Key, enumerChanges.Item);
                                     }
-                                    exceptions.Add(ex);
+                                    catch (Exception ex)
+                                    {
+                                        if (exceptions == null)
+                                        {
+                                            exceptions = new List<Exception>();
+                                        }
+                                        exceptions.Add(ex);
+                                    }
                                 }
                             }
                         }
