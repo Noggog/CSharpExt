@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using Noggog.Containers.Pools;
 using Noggog.Notifying;
 
@@ -131,6 +132,7 @@ namespace Noggog.Notifying
                 onReturn: (s) => s.Clear()),
             200);
 
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected T _item;
         public T Item
         {
@@ -320,6 +322,11 @@ namespace Noggog.Notifying
         public static implicit operator T(NotifyingItem<T> item)
         {
             return item.Item;
+        }
+
+        public override string ToString()
+        {
+            return Item?.ToString();
         }
     }
 }

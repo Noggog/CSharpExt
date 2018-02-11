@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using Noggog.Containers.Pools;
 using Noggog.Notifying;
 
@@ -140,6 +141,7 @@ namespace Noggog.Notifying
 
     public class NotifyingSetItem<T> : INotifyingSetItem<T>
     {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected T _item;
         public T Item
         {
@@ -148,6 +150,7 @@ namespace Noggog.Notifying
         }
 
         public T DefaultValue { get; private set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected bool _HasBeenSet;
         public bool HasBeenSet
         {
@@ -453,6 +456,11 @@ namespace Noggog.Notifying
         public static implicit operator T(NotifyingSetItem<T> item)
         {
             return item.Item;
+        }
+
+        public override string ToString()
+        {
+            return $"{(this.HasBeenSet ? "Set" : "Unset")}: {Item?.ToString()}";
         }
     }
 }

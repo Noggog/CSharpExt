@@ -4,6 +4,7 @@ using Noggog.Notifying;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 namespace Noggog.Notifying
@@ -30,11 +31,13 @@ namespace Noggog.Notifying
 
         protected static ObjectListPool<ChangeIndex<T>> firePool = new ObjectListPool<ChangeIndex<T>>(200);
 
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected NotifyingItem<int> _count = new NotifyingItem<int>();
-
         public INotifyingItemGetter<int> CountProperty => _count;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public int Count => _count.Item;
 
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected List<T> list = pool.Get();
 
         public IEnumerable<T> List => list;
