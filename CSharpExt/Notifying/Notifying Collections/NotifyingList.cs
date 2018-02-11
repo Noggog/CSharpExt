@@ -274,13 +274,19 @@ namespace Noggog.Notifying
         [DebuggerStepThrough]
         public void Subscribe<O>(O owner, NotifyingCollectionCallback<O> callback, NotifyingSubscribeParameters cmds = null)
         {
-            this.Subscribe_Internal(owner, callback, cmds: cmds);
+            this.Subscribe_Internal(
+                owner: owner, 
+                callback: (own, change) => callback((O)own, change), 
+                cmds: cmds);
         }
 
         [DebuggerStepThrough]
         public void Subscribe(NotifyingCollectionSimpleCallback callback, NotifyingSubscribeParameters cmds = null)
         {
-            this.Subscribe_Internal<object>(null, (o2, ch) => callback(ch), cmds: cmds);
+            this.Subscribe_Internal(
+                owner: null, 
+                callback: (o2, ch) => callback(ch), 
+                cmds: cmds);
         }
 
         public IEnumerator<T> GetEnumerator()
@@ -574,16 +580,19 @@ namespace System
                     });
             }
 
+            [DebuggerStepThrough]
             public void Subscribe_Enumerable<O>(O owner, NotifyingEnumerableCallback<O, R> callback, NotifyingSubscribeParameters cmds = null)
             {
-                _internalList.Subscribe_Enumerable<O>(owner, callback, cmds: cmds);
+                _internalList.Subscribe_Enumerable(owner, callback, cmds: cmds);
             }
 
+            [DebuggerStepThrough]
             public void Subscribe<O>(O owner, NotifyingCollection<R, ChangeIndex<R>>.NotifyingCollectionCallback<O> callback, NotifyingSubscribeParameters cmds = null)
             {
                 _internalList.Subscribe(owner, callback, cmds: cmds);
             }
 
+            [DebuggerStepThrough]
             public void Subscribe(NotifyingCollection<R, ChangeIndex<R>>.NotifyingCollectionSimpleCallback callback, NotifyingSubscribeParameters cmds = null)
             {
                 _internalList.Subscribe(callback, cmds: cmds);

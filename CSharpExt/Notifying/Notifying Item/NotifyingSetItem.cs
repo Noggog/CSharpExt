@@ -171,36 +171,36 @@ namespace Noggog.Notifying
         [DebuggerStepThrough]
         void INotifyingItemGetter<T>.Subscribe(Action callback, NotifyingSubscribeParameters cmds)
         {
-            ((INotifyingItemGetter<T>)this).Subscribe<object>(
+            this.SubscribeInternal(
                 owner: null,
-                callback: (o, c) => callback(),
+                callback: (own, change) => callback(),
                 cmds: cmds);
         }
 
         [DebuggerStepThrough]
         void INotifyingItemGetter<T>.Subscribe(object owner, Action callback, NotifyingSubscribeParameters cmds)
         {
-            ((INotifyingItemGetter<T>)this).Subscribe<object>(
+            this.SubscribeInternal(
                 owner: owner,
-                callback: (o, c) => callback(),
+                callback: (own, change) => callback(),
                 cmds: cmds);
         }
 
         [DebuggerStepThrough]
         void INotifyingItemGetter<T>.Subscribe(object owner, NotifyingItemSimpleCallback<T> callback, NotifyingSubscribeParameters cmds)
         {
-            ((INotifyingItemGetter<T>)this).Subscribe<object>(
+            this.SubscribeInternal(
                 owner: owner,
-                callback: (o, c) => callback(c),
+                callback: (own, change) => callback(change),
                 cmds: cmds);
         }
 
         [DebuggerStepThrough]
         void INotifyingItemGetter<T>.Subscribe(NotifyingItemSimpleCallback<T> callback, NotifyingSubscribeParameters cmds)
         {
-            ((INotifyingItemGetter<T>)this).Subscribe<object>(
-                owner: null, 
-                callback: (o, c) => callback(c), 
+            this.SubscribeInternal(
+                owner: null,
+                callback: (own, change) => callback(change),
                 cmds: cmds);
         }
 
@@ -209,36 +209,45 @@ namespace Noggog.Notifying
         {
             this.Subscribe<O>(
                 owner: owner,
-                callback: (o, c) => callback(o, c),
+                callback: (own, change) => callback(own, change),
                 cmds: cmds);
         }
 
         [DebuggerStepThrough]
         public void Subscribe(NotifyingSetItemSimpleCallback<T> callback, NotifyingSubscribeParameters cmds = null)
         {
-            this.Subscribe<object>(
+            this.SubscribeInternal(
                 owner: null,
-                callback: (o, c) => callback(c),
+                callback: (own, change) => callback(change),
                 cmds: cmds);
         }
 
         [DebuggerStepThrough]
         public void Subscribe(object owner, NotifyingSetItemSimpleCallback<T> callback, NotifyingSubscribeParameters cmds = null)
         {
-            this.Subscribe<object>(
+            this.SubscribeInternal(
                 owner: owner,
-                callback: (o, c) => callback(c),
+                callback: (own, change) => callback(change),
                 cmds: cmds);
         }
 
+        [DebuggerStepThrough]
         public void Subscribe<O>(O owner, NotifyingSetItemCallback<O, T> callback, NotifyingSubscribeParameters cmds = null)
+        {
+            this.SubscribeInternal(
+                owner: owner,
+                callback: (own, change) => callback((O)own, change),
+                cmds: cmds);
+        }
+
+        internal void SubscribeInternal(object owner, NotifyingSetItemInternalCallback<T> callback, NotifyingSubscribeParameters cmds = null)
         {
             cmds = cmds ?? NotifyingSubscribeParameters.Typical;
             if (subscribers == null)
             {
                 subscribers = new SubscriptionHandler<NotifyingSetItemInternalCallback<T>>();
             }
-            subscribers.Add(owner, (own, change) => callback((O)own, change));
+            subscribers.Add(owner, callback);
             if (cmds.FireInitial)
             {
                 callback(owner, new ChangeSet<T>(this.Item, newSet: this.HasBeenSet));

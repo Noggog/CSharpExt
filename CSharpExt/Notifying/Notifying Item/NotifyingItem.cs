@@ -139,7 +139,7 @@ namespace Noggog.Notifying
             get => _item;
             set => Set(value, null);
         }
-        
+
         protected SubscriptionHandler<NotifyingItemInternalCallback<T>> subscribers;
 
         public NotifyingItem(
@@ -160,35 +160,41 @@ namespace Noggog.Notifying
         [DebuggerStepThrough]
         public void Subscribe(object owner, Action callback, NotifyingSubscribeParameters cmds = null)
         {
-            this.Subscribe<object>(owner: owner, callback: (o, c) => callback(), cmds: cmds);
+            this.SubscribeInternal(owner: owner, callback: (o, c) => callback(), cmds: cmds);
         }
 
         [DebuggerStepThrough]
         public void Subscribe(Action callback, NotifyingSubscribeParameters cmds = null)
         {
-            this.Subscribe<object>(owner: null, callback: (o, c) => callback(), cmds: cmds);
+            this.SubscribeInternal(owner: null, callback: (o, c) => callback(), cmds: cmds);
         }
 
         [DebuggerStepThrough]
         public void Subscribe(object owner, NotifyingItemSimpleCallback<T> callback, NotifyingSubscribeParameters cmds = null)
         {
-            this.Subscribe<object>(owner: owner, callback: (o, c) => callback(c), cmds: cmds);
+            this.SubscribeInternal(owner: owner, callback: (o, c) => callback(c), cmds: cmds);
         }
 
         [DebuggerStepThrough]
         public void Subscribe(NotifyingItemSimpleCallback<T> callback, NotifyingSubscribeParameters cmds = null)
         {
-            this.Subscribe<object>(owner: null, callback: (o, c) => callback(c), cmds: cmds);
+            this.SubscribeInternal(owner: null, callback: (o, c) => callback(c), cmds: cmds);
         }
 
+        [DebuggerStepThrough]
         public void Subscribe<O>(O owner, NotifyingItemCallback<O, T> callback, NotifyingSubscribeParameters cmds = null)
+        {
+            this.SubscribeInternal(owner, (own, change) => callback((O)own, change), cmds);
+        }
+
+        internal void SubscribeInternal(object owner, NotifyingItemInternalCallback<T> callback, NotifyingSubscribeParameters cmds = null)
         {
             cmds = cmds ?? NotifyingSubscribeParameters.Typical;
             if (subscribers == null)
             {
                 subscribers = pool.Get();
             }
-            subscribers.Add(owner, (own, change) => callback((O)own, change));
+            subscribers.Add(owner, callback);
             if (cmds.FireInitial)
             {
                 callback(owner, new Change<T>(this.Item));
@@ -204,7 +210,7 @@ namespace Noggog.Notifying
         public virtual void Set(T value, NotifyingFireParameters cmds = null)
         {
             cmds = cmds ?? NotifyingFireParameters.Typical;
-            
+
             if (cmds.ForceFire || !object.Equals(_item, value))
             {
                 if (subscribers != null && subscribers.HasSubs)

@@ -75,9 +75,9 @@ namespace Noggog.Notifying
             return false;
         }
 
-        protected void Subscribe_Internal<O>(
-            O owner,
-            NotifyingCollectionCallback<O> callback,
+        internal void Subscribe_Internal(
+            object owner,
+            NotifyingCollectionInternalCallback callback,
             NotifyingSubscribeParameters cmds = null)
         {
             cmds = cmds ?? NotifyingSubscribeParameters.Typical;
@@ -85,7 +85,7 @@ namespace Noggog.Notifying
             {
                 subscribers = pool.Get();
             }
-            subscribers.Add(owner, (o, ch) => callback((O)o, ch));
+            subscribers.Add(owner, callback);
 
             if (cmds.FireInitial)
             {
@@ -101,12 +101,23 @@ namespace Noggog.Notifying
             NotifyingEnumerableCallback<O, T> callback,
             NotifyingSubscribeParameters cmds = null)
         {
+            this.Subscribe_Enumerable_Internal(
+                owner: owner,
+                callback: (own, change) => callback((O)own, change),
+                cmds: cmds);
+        }
+
+        internal void Subscribe_Enumerable_Internal(
+            object owner,
+            NotifyingInternalEnumerableCallback<T> callback,
+            NotifyingSubscribeParameters cmds = null)
+        {
             cmds = cmds ?? NotifyingSubscribeParameters.Typical;
             if (enumerSubscribers == null)
             {
                 enumerSubscribers = enumerPool.Get();
             }
-            enumerSubscribers.Add(owner, (o, ch) => callback((O)o, ch));
+            enumerSubscribers.Add(owner, callback);
 
             if (cmds.FireInitial)
             {

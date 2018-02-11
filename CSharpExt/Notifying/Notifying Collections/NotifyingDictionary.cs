@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Collections.Generic;
 using Noggog.Containers.Pools;
+using System.Diagnostics;
 
 namespace Noggog.Notifying
 {
@@ -291,9 +292,13 @@ namespace Noggog.Notifying
             return changes;
         }
 
+        [DebuggerStepThrough]
         public void Subscribe<O>(O owner, NotifyingCollectionCallback<O> callback, NotifyingSubscribeParameters cmds = null)
         {
-            this.Subscribe_Internal(owner, callback, cmds: cmds);
+            this.Subscribe_Internal(
+                owner: owner, 
+                callback: (own, change) => callback((O)own, change), 
+                cmds: cmds);
         }
 
         public IEnumerator<KeyValuePair<K, V>> GetEnumerator()
