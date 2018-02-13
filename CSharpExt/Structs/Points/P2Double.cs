@@ -7,16 +7,9 @@ namespace Noggog
         public readonly double X;
         public readonly double Y;
 
-        public P2Double(double x, double y)
-        {
-            this.X = x;
-            this.Y = y;
-        }
-
-        public override string ToString()
-        {
-            return $"({X}, {Y})";
-        }
+        public double Length => Math.Sqrt(X * X + Y * Y);
+        public double Magnitude => Length;
+        public double SqrMagnitude => (X * X + Y * Y);
 
         public P2Double Normalized
         {
@@ -31,6 +24,17 @@ namespace Noggog
             Math.Abs(this.X),
             Math.Abs(this.Y));
 
+        public P2Double(double x, double y)
+        {
+            this.X = x;
+            this.Y = y;
+        }
+
+        public override string ToString()
+        {
+            return $"({X}, {Y})";
+        }
+
         public P2Double Normalize()
         {
             var length = Length;
@@ -39,13 +43,7 @@ namespace Noggog
                 this.Y / length);
         }
 
-        public double Length => Math.Sqrt(X * X + Y * Y);
-
         public static double Dot(P2Double v1, P2Double v2) => v1.X * v2.X + v1.Y * v2.Y;
-
-        public double Magnitude => Length;
-
-        public double SqrMagnitude => (X * X + Y * Y);
 
         public double Distance(P2Double p2) => (this - p2).Magnitude;
 
@@ -104,11 +102,6 @@ namespace Noggog
         public P2Double Max(double c)
         {
             return new P2Double(Math.Max(X, c), Math.Max(Y, c));
-        }
-
-        public static P2Double Max(P2Double p, double c)
-        {
-            return new P2Double(Math.Max(p.X, c), Math.Max(p.Y, c));
         }
 
         public static P2Double operator -(P2Double c1)
