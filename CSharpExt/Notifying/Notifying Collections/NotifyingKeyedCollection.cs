@@ -39,8 +39,8 @@ namespace Noggog.Notifying
         public INotifyingItemGetter<int> CountProperty => dict.CountProperty;
         public int Count => dict.Count;
 
-        public IEnumerable<K> Keys => dict.Keys;
-        public IEnumerable<V> Values => dict.Values;
+        public ICollection<K> Keys => dict.Keys;
+        public ICollection<V> Values => dict.Values;
         public IEnumerable<KeyValuePair<K, V>> KeyedValues => dict;
 
         IEnumerable<KeyValuePair<K, V>> IHasItemGetter<IEnumerable<KeyValuePair<K, V>>>.Item => dict;

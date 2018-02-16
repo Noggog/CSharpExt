@@ -14,7 +14,7 @@ namespace System
             }
         }
 
-        public static V TryCreateValue<K, V>(this Dictionary<K, V> dict, K key)
+        public static V TryCreateValue<K, V>(this IDictionary<K, V> dict, K key)
             where V : new()
         {
             if (!dict.TryGetValue(key, out V ret))
@@ -25,7 +25,7 @@ namespace System
             return ret;
         }
 
-        public static V TryCreateValue<K, V>(this Dictionary<K, V> dict, K key, Func<V> getNew)
+        public static V TryCreateValue<K, V>(this IDictionary<K, V> dict, K key, Func<V> getNew)
         {
             if (!dict.TryGetValue(key, out V ret))
             {
@@ -35,7 +35,7 @@ namespace System
             return ret;
         }
 
-        public static bool AddRemove<K, V>(this Dictionary<K, V> dict, K key, V value, AddRemove addRem)
+        public static bool AddRemove<K, V>(this IDictionary<K, V> dict, K key, V value, AddRemove addRem)
         {
             switch (addRem)
             {
@@ -50,7 +50,7 @@ namespace System
             return false;
         }
 
-        public static bool Modify<K, V>(this Dictionary<K, V> dict, K key, V value, AddRemove addRem)
+        public static bool Modify<K, V>(this IDictionary<K, V> dict, K key, V value, AddRemove addRem)
         {
             switch (addRem)
             {
@@ -65,7 +65,7 @@ namespace System
             return false;
         }
 
-        public static bool Modify<K, V>(this Dictionary<K, V> dict, K key, V value, AddRemoveModify addRem)
+        public static bool Modify<K, V>(this IDictionary<K, V> dict, K key, V value, AddRemoveModify addRem)
         {
             switch (addRem)
             {

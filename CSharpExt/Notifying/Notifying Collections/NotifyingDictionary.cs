@@ -8,18 +8,22 @@ namespace Noggog.Notifying
 {
     public interface INotifyingDictionaryGetter<K, V> : INotifyingEnumerable<KeyValuePair<K, V>>
     {
-        IEnumerable<K> Keys { get; }
-        IEnumerable<V> Values { get; }
+        ICollection<K> Keys { get; }
+        ICollection<V> Values { get; }
         V this[K key] { get; }
         bool TryGetValue(K key, out V val);
         void Subscribe<O>(O owner, NotifyingCollection<KeyValuePair<K, V>, ChangeKeyed<K, V>>.NotifyingCollectionCallback<O> callback, NotifyingSubscribeParameters cmds = null);
     }
 
-    public interface INotifyingDictionary<K, V> : INotifyingDictionaryGetter<K, V>, INotifyingCollection<KeyValuePair<K, V>>
+    public interface INotifyingDictionary<K, V> : INotifyingDictionaryGetter<K, V>, INotifyingCollection<KeyValuePair<K, V>>, IDictionary<K, V>
     {
+        new ICollection<K> Keys { get; }
+        new ICollection<V> Values { get; }
+        new int Count { get; }
         new V this[K key] { get; set; }
         void Set(K key, V val, NotifyingFireParameters cmds = null);
-        void Remove(K key, NotifyingFireParameters cmds = null);
+        bool Remove(K key, NotifyingFireParameters cmds = null);
+        new bool TryGetValue(K key, out V val);
     }
 
     public class NotifyingDictionary<K, V> : NotifyingCollection<KeyValuePair<K, V>, ChangeKeyed<K, V>>, INotifyingDictionary<K, V>
@@ -35,8 +39,8 @@ namespace Noggog.Notifying
         private Func<V, V> valConv;
 
         public IEnumerable<KeyValuePair<K, V>> Dict => dict;
-        public IEnumerable<K> Keys => dict.Keys;
-        public IEnumerable<V> Values => dict.Values;
+        public ICollection<K> Keys => dict.Keys;
+        public ICollection<V> Values => dict.Values;
 
         IEnumerable<KeyValuePair<K, V>> IHasItemGetter<IEnumerable<KeyValuePair<K, V>>>.Item => dict;
 
@@ -169,11 +173,6 @@ namespace Noggog.Notifying
                 }
                 return false;
             }
-        }
-
-        void INotifyingDictionary<K, V>.Remove(K key, NotifyingFireParameters cmds)
-        {
-            this.Remove(key, cmds);
         }
 
         public void SetTo(IEnumerable<KeyValuePair<K, V>> items, NotifyingFireParameters cmds = null)
@@ -450,6 +449,54 @@ namespace Noggog.Notifying
         {
             return this.dict.TryGetValue(key, out val);
         }
+
+        #region IDictionary
+        bool ICollection<KeyValuePair<K, V>>.IsReadOnly => false;
+
+        public bool ContainsKey(K key)
+        {
+            return dict.ContainsKey(key);
+        }
+
+        void IDictionary<K, V>.Add(K key, V value)
+        {
+            if (this.ContainsKey(key))
+            {
+                throw new ArgumentException("Dictionary already contained key.");
+            }
+            this.Set(key, value);
+        }
+
+        bool IDictionary<K, V>.Remove(K key)
+        {
+            return this.Remove(key);
+        }
+
+        void ICollection<KeyValuePair<K, V>>.Add(KeyValuePair<K, V> item)
+        {
+            ((IDictionary<K, V>)this).Add(item.Key, item.Value);
+        }
+
+        void ICollection<KeyValuePair<K, V>>.Clear()
+        {
+            this.Clear();
+        }
+
+        public bool Contains(KeyValuePair<K, V> item)
+        {
+            return this.dict.Contains(item);
+        }
+
+        void ICollection<KeyValuePair<K, V>>.CopyTo(KeyValuePair<K, V>[] array, int arrayIndex)
+        {
+            ((ICollection<KeyValuePair<K, V>>)this.dict).CopyTo(array, arrayIndex);
+        }
+
+        bool ICollection<KeyValuePair<K, V>>.Remove(KeyValuePair<K, V> item)
+        {
+            return this.Remove(item.Key);
+        }
+        #endregion
     }
 
     public static class INotifyingDictionaryGetterExt

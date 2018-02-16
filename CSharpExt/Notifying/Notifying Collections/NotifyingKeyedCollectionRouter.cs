@@ -29,9 +29,9 @@ namespace Noggog.Notifying
 
         public IEnumerable<KeyValuePair<K, V>> KeyedValues => _child.KeyedValues;
 
-        public IEnumerable<K> Keys => _child.Keys;
+        public ICollection<K> Keys => _child.Keys;
 
-        public IEnumerable<V> Values => _child.Values;
+        public ICollection<V> Values => _child.Values;
 
         IEnumerable<KeyValuePair<K, V>> IHasItemGetter<IEnumerable<KeyValuePair<K, V>>>.Item => _child.Item;
 
