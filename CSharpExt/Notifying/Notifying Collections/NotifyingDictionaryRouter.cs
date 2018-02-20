@@ -28,13 +28,17 @@ namespace Noggog.Notifying
             }
         }
 
-        public ICollection<K> Keys => _child.Keys;
+        public ICollectionGetter<K> Keys => _child.Keys;
 
-        public ICollection<V> Values => _child.Values;
+        public ICollectionGetter<V> Values => _child.Values;
 
         IEnumerable<KeyValuePair<K, V>> IHasItemGetter<IEnumerable<KeyValuePair<K, V>>>.Item => _child.Item;
 
         public bool IsReadOnly => _child.IsReadOnly;
+
+        ICollection<K> IDictionary<K, V>.Keys => ((IDictionary<K, V>)_child).Keys;
+
+        ICollection<V> IDictionary<K, V>.Values => ((IDictionary<K, V>)_child).Values;
 
         public V this[K key]
         {
@@ -192,6 +196,16 @@ namespace Noggog.Notifying
         void ICollection<KeyValuePair<K, V>>.CopyTo(KeyValuePair<K, V>[] array, int arrayIndex)
         {
             _child.CopyTo(array, arrayIndex);
+        }
+
+        void ICollectionGetter<KeyValuePair<K, V>>.CopyTo(KeyValuePair<K, V>[] array, int arrayIndex)
+        {
+            this._child.CopyTo(array, arrayIndex);
+        }
+
+        void INotifyingDictionaryGetter<K, V>.CopyTo(KeyValuePair<K, V>[] array, int arrayIndex)
+        {
+            this._child.CopyTo(array, arrayIndex);
         }
 
         bool ICollection<KeyValuePair<K, V>>.Remove(KeyValuePair<K, V> item)

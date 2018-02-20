@@ -29,15 +29,13 @@ namespace Noggog.Notifying
 
         public IEnumerable<KeyValuePair<K, V>> KeyedValues => _child.KeyedValues;
 
-        public ICollection<K> Keys => _child.Keys;
+        public ICollectionGetter<K> Keys => _child.Keys;
 
-        public ICollection<V> Values => _child.Values;
+        public ICollectionGetter<V> Values => _child.Values;
 
         IEnumerable<KeyValuePair<K, V>> IHasItemGetter<IEnumerable<KeyValuePair<K, V>>>.Item => _child.Item;
 
         public Func<V, K> KeyGetter => _child.KeyGetter;
-
-        V INotifyingDictionaryGetter<K, V>.this[K key] => _child[key];
 
         public V this[K key] => _child[key];
 
@@ -133,9 +131,24 @@ namespace Noggog.Notifying
             _child.Set(items, cmds);
         }
 
+        void ICollectionGetter<KeyValuePair<K, V>>.CopyTo(KeyValuePair<K, V>[] array, int arrayIndex)
+        {
+            ((ICollection<KeyValuePair<K, V>>)this._child).CopyTo(array, arrayIndex);
+        }
+
+        void INotifyingDictionaryGetter<K, V>.CopyTo(KeyValuePair<K, V>[] array, int arrayIndex)
+        {
+            ((ICollection<KeyValuePair<K, V>>)this._child).CopyTo(array, arrayIndex);
+        }
+
         IEnumerator IEnumerable.GetEnumerator()
         {
             return this.GetEnumerator();
+        }
+
+        public bool Contains(KeyValuePair<K, V> item)
+        {
+            return _child.Contains(item);
         }
     }
 }

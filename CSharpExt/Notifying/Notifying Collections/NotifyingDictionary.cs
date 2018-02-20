@@ -6,19 +6,17 @@ using System.Diagnostics;
 
 namespace Noggog.Notifying
 {
-    public interface INotifyingDictionaryGetter<K, V> : INotifyingEnumerable<KeyValuePair<K, V>>
+    public interface INotifyingDictionaryGetter<K, V> : INotifyingEnumerable<KeyValuePair<K, V>>, IDictionaryGetter<K, V>
     {
-        ICollection<K> Keys { get; }
-        ICollection<V> Values { get; }
-        V this[K key] { get; }
-        bool TryGetValue(K key, out V val);
+        new bool Contains(KeyValuePair<K, V> item);
+        new void CopyTo(KeyValuePair<K, V>[] array, int arrayIndex);
         void Subscribe<O>(O owner, NotifyingCollection<KeyValuePair<K, V>, ChangeKeyed<K, V>>.NotifyingCollectionCallback<O> callback, NotifyingSubscribeParameters cmds = null);
     }
 
     public interface INotifyingDictionary<K, V> : INotifyingDictionaryGetter<K, V>, INotifyingCollection<KeyValuePair<K, V>>, IDictionary<K, V>
     {
-        new ICollection<K> Keys { get; }
-        new ICollection<V> Values { get; }
+        new ICollectionGetter<K> Keys { get; }
+        new ICollectionGetter<V> Values { get; }
         new int Count { get; }
         new V this[K key] { get; set; }
         void Set(K key, V val, NotifyingFireParameters cmds = null);
@@ -39,8 +37,8 @@ namespace Noggog.Notifying
         private Func<V, V> valConv;
 
         public IEnumerable<KeyValuePair<K, V>> Dict => dict;
-        public ICollection<K> Keys => dict.Keys;
-        public ICollection<V> Values => dict.Values;
+        public ICollectionGetter<K> Keys => new CollectionGetterWrapper<K>(dict.Keys);
+        public ICollectionGetter<V> Values => new CollectionGetterWrapper<V>(dict.Values);
 
         IEnumerable<KeyValuePair<K, V>> IHasItemGetter<IEnumerable<KeyValuePair<K, V>>>.Item => dict;
 
@@ -453,6 +451,10 @@ namespace Noggog.Notifying
         #region IDictionary
         bool ICollection<KeyValuePair<K, V>>.IsReadOnly => false;
 
+        ICollection<K> IDictionary<K, V>.Keys => this.dict.Keys;
+
+        ICollection<V> IDictionary<K, V>.Values => this.dict.Values;
+
         public bool ContainsKey(K key)
         {
             return dict.ContainsKey(key);
@@ -485,6 +487,16 @@ namespace Noggog.Notifying
         public bool Contains(KeyValuePair<K, V> item)
         {
             return this.dict.Contains(item);
+        }
+
+        void ICollectionGetter<KeyValuePair<K, V>>.CopyTo(KeyValuePair<K, V>[] array, int arrayIndex)
+        {
+            ((ICollection<KeyValuePair<K, V>>)this.dict).CopyTo(array, arrayIndex);
+        }
+
+        void INotifyingDictionaryGetter<K, V>.CopyTo(KeyValuePair<K, V>[] array, int arrayIndex)
+        {
+            ((ICollection<KeyValuePair<K, V>>)this.dict).CopyTo(array, arrayIndex);
         }
 
         void ICollection<KeyValuePair<K, V>>.CopyTo(KeyValuePair<K, V>[] array, int arrayIndex)
