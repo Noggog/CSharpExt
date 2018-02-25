@@ -413,9 +413,9 @@ namespace Noggog
 
         public bool Equals(P3Double rhs)
         {
-            return this.X == rhs.X
-                && this.Y == rhs.Y
-                && this.Z == rhs.Z;
+            return this.X.EqualsWithin(rhs.X)
+                && this.Y.EqualsWithin(rhs.Y)
+                && this.Z.EqualsWithin(rhs.Z);
         }
 
         public override int GetHashCode()
@@ -426,6 +426,16 @@ namespace Noggog
         public override string ToString()
         {
             return $"({X}, {Y}, {Z})";
+        }
+
+        public static bool operator ==(P3Double obj1, P3Double obj2)
+        {
+            return obj1.Equals(obj2);
+        }
+
+        public static bool operator !=(P3Double obj1, P3Double obj2)
+        {
+            return !obj1.Equals(obj2);
         }
 
         public static P3Double operator +(P3Double p1, P3Double p2)
@@ -476,16 +486,6 @@ namespace Noggog
         public static P3Double operator *(P3Double p1, P3Double p2)
         {
             return new P3Double(p1.X * p2.X, p1.Y * p2.Y, p1.Z * p2.Z);
-        }
-
-        public static bool operator ==(P3Double p1, P3Double p2)
-        {
-            return p1.X == p2.X && p1.Y == p2.Y && p1.Z == p2.Z;
-        }
-
-        public static bool operator !=(P3Double p1, P3Double p2)
-        {
-            return p1.X != p2.X || p1.Y != p2.Y || p1.Z != p2.Z;
         }
         
         public static explicit operator P2Double(P3Double point)

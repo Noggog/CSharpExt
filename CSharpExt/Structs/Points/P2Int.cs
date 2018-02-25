@@ -251,6 +251,16 @@ namespace Noggog
             return false;
         }
 
+        public static bool operator ==(P2Int obj1, P2Int obj2)
+        {
+            return obj1.Equals(obj2);
+        }
+
+        public static bool operator !=(P2Int obj1, P2Int obj2)
+        {
+            return !obj1.Equals(obj2);
+        }
+
         public static P2Int operator +(P2Int p1, P2Int p2)
         {
             return p1.Shift(p2);
@@ -269,16 +279,6 @@ namespace Noggog
         public static P2Int operator *(P2Int p1, int num)
         {
             return new P2Int(p1.X * num, p1.Y * num);
-        }
-
-        public static bool operator ==(P2Int p1, P2Int p2)
-        {
-            return p1.X == p2.X && p1.Y == p2.Y;
-        }
-
-        public static bool operator !=(P2Int p1, P2Int p2)
-        {
-            return p1.X != p2.X || p1.Y != p2.Y;
         }
 
         public static implicit operator P2Int(P2Double point)

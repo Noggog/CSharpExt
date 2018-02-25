@@ -91,6 +91,16 @@ namespace Noggog
             return $"({X},{Y},{Z}";
         }
 
+        public static bool operator ==(P3UInt16 obj1, P3UInt16 obj2)
+        {
+            return obj1.Equals(obj2);
+        }
+
+        public static bool operator !=(P3UInt16 obj1, P3UInt16 obj2)
+        {
+            return !obj1.Equals(obj2);
+        }
+
         public static P3UInt16 operator +(P3UInt16 p1, P3UInt16 p2)
         {
             return p1.Shift(p2);
@@ -129,16 +139,6 @@ namespace Noggog
         public static P3UInt16 operator /(P3UInt16 p1, ushort num)
         {
             return new P3UInt16((ushort)(p1.X / num), (ushort)(p1.Y / num), (ushort)(p1.Z / num));
-        }
-
-        public static bool operator ==(P3UInt16 p1, P3UInt16 p2)
-        {
-            return p1.X == p2.X && p1.Y == p2.Y && p1.Z == p2.Z;
-        }
-
-        public static bool operator !=(P3UInt16 p1, P3UInt16 p2)
-        {
-            return p1.X != p2.X || p1.Y != p2.Y || p1.Z != p2.Z;
         }
 
         public static explicit operator P3Double(P3UInt16 point)

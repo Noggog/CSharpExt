@@ -158,6 +158,7 @@
     <Compile Include="Structs\Numbers\UDouble.cs" />
     <Compile Include="Structs\Numbers\UInt.cs" />
     <Compile Include="Structs\Numbers\ULong.cs" />
+    <Compile Include="Structs\Points\P3Float.cs" />
     <Compile Include="Structs\Points\P2Float.cs" />
     <Compile Include="Structs\Points\P2Double.cs" />
     <Compile Include="Structs\Points\P2Int.cs" />

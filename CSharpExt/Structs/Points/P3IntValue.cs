@@ -75,7 +75,7 @@ namespace Noggog
         {
             return HashHelper.GetHashCode(X, Y, Z).CombineHashCode(Value);
         }
-
+        
         public static bool operator ==(P3IntValue<T> left, P3IntValue<T> right)
         {
             return Equals(left, right);

@@ -104,6 +104,16 @@ namespace Noggog
             return new P2Double(Math.Max(X, c), Math.Max(Y, c));
         }
 
+        public static bool operator ==(P2Double obj1, P2Double obj2)
+        {
+            return obj1.Equals(obj2);
+        }
+
+        public static bool operator !=(P2Double obj1, P2Double obj2)
+        {
+            return !obj1.Equals(obj2);
+        }
+
         public static P2Double operator -(P2Double c1)
         {
             return new P2Double(-c1.X, -c1.Y);
