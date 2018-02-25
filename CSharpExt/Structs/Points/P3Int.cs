@@ -31,20 +31,6 @@ namespace Noggog
             this.Z = z;
         }
 
-        public P3Int(P3Double vec)
-        {
-            this.X = (int)Math.Round(vec.X);
-            this.Y = (int)Math.Round(vec.Y);
-            this.Z = (int)Math.Round(vec.Z);
-        }
-
-        public P3Int(double x, double y, double z)
-        {
-            this.X = (int)Math.Round(x);
-            this.Y = (int)Math.Round(y);
-            this.Z = (int)Math.Round(z);
-        }
-
         public static bool TryParse(string str, out P3Int ret)
         {
             if (str == null)
@@ -60,9 +46,9 @@ namespace Noggog
                 return false;
             }
 
-            if (!double.TryParse(split[0], out double x)
-                || !double.TryParse(split[1], out double y)
-                || !double.TryParse(split[2], out double z))
+            if (!int.TryParse(split[0], out int x)
+                || !int.TryParse(split[1], out int y)
+                || !int.TryParse(split[2], out int z))
             {
                 ret = default(P3Int);
                 return false;

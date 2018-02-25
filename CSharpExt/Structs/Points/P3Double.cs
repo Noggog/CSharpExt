@@ -487,11 +487,6 @@ namespace Noggog
         {
             return p1.X != p2.X || p1.Y != p2.Y || p1.Z != p2.Z;
         }
-
-        public static explicit operator P3Int(P3Double point)
-        {
-            return new P3Int(point.X, point.Y, point.Z);
-        }
         
         public static explicit operator P2Double(P3Double point)
         {
