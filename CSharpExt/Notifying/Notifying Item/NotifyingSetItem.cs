@@ -169,7 +169,7 @@ namespace Noggog.Notifying
         }
 
         [DebuggerStepThrough]
-        void INotifyingItemGetter<T>.Subscribe(Action callback, NotifyingSubscribeParameters cmds)
+        public void Subscribe(Action callback, NotifyingSubscribeParameters cmds)
         {
             this.SubscribeInternal(
                 owner: null,
@@ -178,7 +178,7 @@ namespace Noggog.Notifying
         }
 
         [DebuggerStepThrough]
-        void INotifyingItemGetter<T>.Subscribe(object owner, Action callback, NotifyingSubscribeParameters cmds)
+        public void Subscribe(object owner, Action callback, NotifyingSubscribeParameters cmds)
         {
             this.SubscribeInternal(
                 owner: owner,
