@@ -39,8 +39,8 @@ namespace Noggog.Notifying
         public INotifyingItemGetter<int> CountProperty => dict.CountProperty;
         public int Count => dict.Count;
 
-        public IEnumerable<K> Keys => dict.Keys;
-        public IEnumerable<V> Values => dict.Values;
+        public ICollectionGetter<K> Keys => dict.Keys;
+        public ICollectionGetter<V> Values => dict.Values;
         public IEnumerable<KeyValuePair<K, V>> KeyedValues => dict;
 
         IEnumerable<KeyValuePair<K, V>> IHasItemGetter<IEnumerable<KeyValuePair<K, V>>>.Item => dict;
@@ -134,10 +134,25 @@ namespace Noggog.Notifying
             if (((INotifyingEnumerable<V>)lhs).CountProperty.Item != ((INotifyingEnumerable<V>)rhs).CountProperty.Item) return false;
             return lhs.Values.SequenceEqual(rhs.Values);
         }
-        
+
+        void ICollectionGetter<KeyValuePair<K, V>>.CopyTo(KeyValuePair<K, V>[] array, int arrayIndex)
+        {
+            ((ICollection<KeyValuePair<K, V>>)this.dict).CopyTo(array, arrayIndex);
+        }
+
+        void INotifyingDictionaryGetter<K, V>.CopyTo(KeyValuePair<K, V>[] array, int arrayIndex)
+        {
+            ((ICollection<KeyValuePair<K, V>>)this.dict).CopyTo(array, arrayIndex);
+        }
+
         IEnumerator IEnumerable.GetEnumerator()
         {
             return this.GetEnumerator();
+        }
+
+        public bool Contains(KeyValuePair<K, V> item)
+        {
+            return this.dict.Contains(item);
         }
     }
 }

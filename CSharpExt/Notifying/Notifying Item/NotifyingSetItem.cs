@@ -169,7 +169,7 @@ namespace Noggog.Notifying
         }
 
         [DebuggerStepThrough]
-        void INotifyingItemGetter<T>.Subscribe(Action callback, NotifyingSubscribeParameters cmds)
+        public void Subscribe(Action callback, NotifyingSubscribeParameters cmds)
         {
             this.SubscribeInternal(
                 owner: null,
@@ -178,7 +178,7 @@ namespace Noggog.Notifying
         }
 
         [DebuggerStepThrough]
-        void INotifyingItemGetter<T>.Subscribe(object owner, Action callback, NotifyingSubscribeParameters cmds)
+        public void Subscribe(object owner, Action callback, NotifyingSubscribeParameters cmds)
         {
             this.SubscribeInternal(
                 owner: owner,
@@ -385,21 +385,21 @@ namespace Noggog.Notifying
 
         private void SetHasBeenSet(bool value)
         {
-            Set(this.Item, hasBeenSet: value, cmd: NotifyingFireParameters.Typical);
+            Set(this.Item, hasBeenSet: value, cmds: NotifyingFireParameters.Typical);
         }
 
-        public void Set(T value, NotifyingFireParameters cmd = null)
+        public void Set(T value, NotifyingFireParameters cmds = null)
         {
-            cmd = cmd ?? NotifyingFireParameters.Typical;
-            Set(value, cmd.MarkAsSet ? true : this.HasBeenSet, cmd);
+            cmds = cmds ?? NotifyingFireParameters.Typical;
+            Set(value, cmds.MarkAsSet ? true : this.HasBeenSet, cmds);
         }
 
-        public virtual void Set(T value, bool hasBeenSet, NotifyingFireParameters cmd = null)
+        public virtual void Set(T value, bool hasBeenSet, NotifyingFireParameters cmds = null)
         {
-            cmd = cmd ?? NotifyingFireParameters.Typical;
+            cmds = cmds ?? NotifyingFireParameters.Typical;
             var oldSet = this.HasBeenSet;
             this._HasBeenSet = hasBeenSet;
-            if (cmd.ForceFire 
+            if (cmds.ForceFire 
                 || oldSet != this.HasBeenSet 
                 || !object.Equals(_item, value))
             {
@@ -411,7 +411,7 @@ namespace Noggog.Notifying
                         oldVal: old,
                         oldSet: oldSet,
                         newVal: value,
-                        newSet: true), cmd);
+                        newSet: true), cmds);
                 }
                 else
                 {
@@ -469,7 +469,7 @@ namespace Noggog.Notifying
             }
         }
 
-        void IHasBeenSetItem<T>.Set(T value, bool hasBeenSet) => Set(value, hasBeenSet, cmd: null);
+        void IHasBeenSetItem<T>.Set(T value, bool hasBeenSet) => Set(value, hasBeenSet, cmds: null);
 
         void IHasBeenSetItem<T>.Unset() => Unset(cmds: null);
 

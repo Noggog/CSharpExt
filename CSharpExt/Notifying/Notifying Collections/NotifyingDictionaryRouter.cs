@@ -28,13 +28,17 @@ namespace Noggog.Notifying
             }
         }
 
-        public IEnumerable<K> Keys => _child.Keys;
+        public ICollectionGetter<K> Keys => _child.Keys;
 
-        public IEnumerable<V> Values => _child.Values;
+        public ICollectionGetter<V> Values => _child.Values;
 
         IEnumerable<KeyValuePair<K, V>> IHasItemGetter<IEnumerable<KeyValuePair<K, V>>>.Item => _child.Item;
 
-        V INotifyingDictionaryGetter<K, V>.this[K key] => _child[key];
+        public bool IsReadOnly => _child.IsReadOnly;
+
+        ICollection<K> IDictionary<K, V>.Keys => ((IDictionary<K, V>)_child).Keys;
+
+        ICollection<V> IDictionary<K, V>.Values => ((IDictionary<K, V>)_child).Values;
 
         public V this[K key]
         {
@@ -75,16 +79,16 @@ namespace Noggog.Notifying
                 });
         }
 
-        public void Set(K key, V val, NotifyingFireParameters cmds)
+        public void Set(K key, V val, NotifyingFireParameters cmds = null)
         {
             SwapOver();
             _child.Set(key, val, cmds);
         }
 
-        public void Remove(K key, NotifyingFireParameters cmds)
+        public bool Remove(K key, NotifyingFireParameters cmds = null)
         {
             SwapOver();
-            _child.Remove(key, cmds);
+            return _child.Remove(key, cmds);
         }
 
         public void Subscribe<O>(O owner, NotifyingCollection<KeyValuePair<K, V>, ChangeKeyed<K, V>>.NotifyingCollectionCallback<O> callback, NotifyingSubscribeParameters cmds = null)
@@ -92,37 +96,37 @@ namespace Noggog.Notifying
             _child.Subscribe(owner, callback, cmds);
         }
 
-        public void Unset(NotifyingUnsetParameters cmds)
+        public void Unset(NotifyingUnsetParameters cmds = null)
         {
             SwapBack();
             _child.Unset(cmds);
         }
 
-        public void Clear(NotifyingFireParameters cmds)
+        public void Clear(NotifyingFireParameters cmds = null)
         {
             SwapOver();
             _child.Clear(cmds);
         }
 
-        public bool Remove(KeyValuePair<K, V> item, NotifyingFireParameters cmds)
+        public bool Remove(KeyValuePair<K, V> item, NotifyingFireParameters cmds = null)
         {
             SwapOver();
             return _child.Remove(item, cmds);
         }
 
-        public void SetTo(IEnumerable<KeyValuePair<K, V>> enumer, NotifyingFireParameters cmds)
+        public void SetTo(IEnumerable<KeyValuePair<K, V>> enumer, NotifyingFireParameters cmds = null)
         {
             SwapOver();
             _child.SetTo(enumer, cmds);
         }
 
-        public void Add(KeyValuePair<K, V> item, NotifyingFireParameters cmds)
+        public void Add(KeyValuePair<K, V> item, NotifyingFireParameters cmds = null)
         {
             SwapOver();
             _child.Add(item, cmds);
         }
 
-        public void Add(IEnumerable<KeyValuePair<K, V>> items, NotifyingFireParameters cmds)
+        public void Add(IEnumerable<KeyValuePair<K, V>> items, NotifyingFireParameters cmds = null)
         {
             SwapOver();
             _child.Add(items, cmds);
@@ -152,5 +156,63 @@ namespace Noggog.Notifying
         {
             return _child.TryGetValue(key, out val);
         }
+
+        #region IDictionary
+
+        public bool ContainsKey(K key)
+        {
+            return _child.ContainsKey(key);
+        }
+
+        void IDictionary<K, V>.Add(K key, V value)
+        {
+            SwapOver();
+            _child.Add(key, value);
+        }
+
+        bool IDictionary<K, V>.Remove(K key)
+        {
+            SwapOver();
+            return _child.Remove(key);
+        }
+
+        void ICollection<KeyValuePair<K, V>>.Add(KeyValuePair<K, V> item)
+        {
+            SwapOver();
+            _child.Add(item);
+        }
+
+        void ICollection<KeyValuePair<K, V>>.Clear()
+        {
+            SwapOver();
+            _child.Clear();
+        }
+
+        public bool Contains(KeyValuePair<K, V> item)
+        {
+            return _child.Contains(item);
+        }
+
+        void ICollection<KeyValuePair<K, V>>.CopyTo(KeyValuePair<K, V>[] array, int arrayIndex)
+        {
+            _child.CopyTo(array, arrayIndex);
+        }
+
+        void ICollectionGetter<KeyValuePair<K, V>>.CopyTo(KeyValuePair<K, V>[] array, int arrayIndex)
+        {
+            this._child.CopyTo(array, arrayIndex);
+        }
+
+        void INotifyingDictionaryGetter<K, V>.CopyTo(KeyValuePair<K, V>[] array, int arrayIndex)
+        {
+            this._child.CopyTo(array, arrayIndex);
+        }
+
+        bool ICollection<KeyValuePair<K, V>>.Remove(KeyValuePair<K, V> item)
+        {
+            SwapOver();
+            return _child.Remove(item);
+        }
+        #endregion
     }
 }
