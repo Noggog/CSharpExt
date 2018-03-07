@@ -38,7 +38,7 @@ namespace Noggog.Notifying
             }
         }
 
-        private List<T> GetFireList()
+        public List<T> GetFireList()
         {
             lock (this)
             {

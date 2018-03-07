@@ -332,24 +332,21 @@ namespace Noggog.Notifying
 
             if (this.subscribers != null)
             {
-                using (var fireSubscribers = this.subscribers.GetSubs())
+                foreach (var sub in this.subscribers.GetSubs())
                 {
-                    foreach (var sub in fireSubscribers)
+                    foreach (var eventItem in sub.Value)
                     {
-                        foreach (var eventItem in sub.Value)
+                        try
                         {
-                            try
+                            eventItem(sub.Key, changes);
+                        }
+                        catch (Exception ex)
+                        {
+                            if (exceptions == null)
                             {
-                                eventItem(sub.Key, changes);
+                                exceptions = new List<Exception>();
                             }
-                            catch (Exception ex)
-                            {
-                                if (exceptions == null)
-                                {
-                                    exceptions = new List<Exception>();
-                                }
-                                exceptions.Add(ex);
-                            }
+                            exceptions.Add(ex);
                         }
                     }
                 }
@@ -379,24 +376,21 @@ namespace Noggog.Notifying
                                     break;
                             }
                         }
-                        using (var fireSubscribers = this.enumerSubscribers.GetSubs())
+                        foreach (var sub in this.enumerSubscribers.GetSubs())
                         {
-                            foreach (var sub in fireSubscribers)
+                            foreach (var eventItem in sub.Value)
                             {
-                                foreach (var eventItem in sub.Value)
+                                try
                                 {
-                                    try
+                                    eventItem(sub.Key, enumerChanges.Item);
+                                }
+                                catch (Exception ex)
+                                {
+                                    if (exceptions == null)
                                     {
-                                        eventItem(sub.Key, enumerChanges.Item);
+                                        exceptions = new List<Exception>();
                                     }
-                                    catch (Exception ex)
-                                    {
-                                        if (exceptions == null)
-                                        {
-                                            exceptions = new List<Exception>();
-                                        }
-                                        exceptions.Add(ex);
-                                    }
+                                    exceptions.Add(ex);
                                 }
                             }
                         }

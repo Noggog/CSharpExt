@@ -423,24 +423,21 @@ namespace Noggog.Notifying
         protected void Fire(ChangeSet<T> change, NotifyingFireParameters cmds = null)
         {
             List<Exception> exceptions = null;
-            using (var fireSubscribers = subscribers.GetSubs())
+            foreach (var sub in subscribers.GetSubs())
             {
-                foreach (var sub in fireSubscribers)
+                foreach (var action in sub.Value)
                 {
-                    foreach (var action in sub.Value)
+                    try
                     {
-                        try
+                        action(sub.Key, change);
+                    }
+                    catch (Exception ex)
+                    {
+                        if (exceptions == null)
                         {
-                            action(sub.Key, change);
+                            exceptions = new List<Exception>();
                         }
-                        catch (Exception ex)
-                        {
-                            if (exceptions == null)
-                            {
-                                exceptions = new List<Exception>();
-                            }
-                            exceptions.Add(ex);
-                        }
+                        exceptions.Add(ex);
                     }
                 }
             }

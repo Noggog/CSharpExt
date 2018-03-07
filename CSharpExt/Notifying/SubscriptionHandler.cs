@@ -8,144 +8,92 @@ namespace Noggog.Notifying
     public class SubscriptionHandler<T>
     {
         private static readonly object NEVER_UNSUB = new object();
-        public readonly static ObjectListPool<T> pool = new ObjectListPool<T>(500);
-        readonly static ObjectDictionaryListPool<WeakReferenceEquatable, T> dictPool = new ObjectDictionaryListPool<WeakReferenceEquatable, T>(pool, 250);
-
-        Dictionary<WeakReferenceEquatable, List<T>> subscribers;
-        Dictionary<WeakReferenceEquatable, List<T>> fireSubscribers;
+        
+        Dictionary<WeakReferenceEquatable, FireList<T>> subscribers;
+        List<KeyValuePair<WeakReferenceEquatable, List<T>>> fireSubscribers;
         private bool reloadFireList = true;
         public bool HasSubs => subscribers?.Count > 0;
-
-        ~SubscriptionHandler()
-        {
-            if (subscribers != null)
-            {
-                dictPool.Return(subscribers);
-                subscribers = null;
-            }
-            if (fireSubscribers != null)
-            {
-                dictPool.Return(fireSubscribers);
-                fireSubscribers = null;
-            }
-        }
+        private object _lock = new object();
 
         public void Add(object owner, T item)
         {
-            if (subscribers == null)
+            lock (_lock)
             {
-                subscribers = dictPool.Get();
+                if (subscribers == null)
+                {
+                    subscribers = new Dictionary<WeakReferenceEquatable, FireList<T>>();
+                }
+                if (owner == null)
+                {
+                    owner = NEVER_UNSUB;
+                }
+                subscribers.TryCreateValue(
+                    new WeakReferenceEquatable(owner),
+                    () => new FireList<T>()).Add(item);
+                reloadFireList = true;
             }
-            if (owner == null)
-            {
-                owner = NEVER_UNSUB;
-            }
-            subscribers.TryCreateValue(
-                new WeakReferenceEquatable(owner),
-                () => pool.Get()).Add(item);
-            reloadFireList = true;
         }
 
         public bool Remove(object owner)
         {
-            if (subscribers == null) return false;
-            if (owner == null) return false;
-            var weakRef = new WeakReferenceEquatable(owner);
-            if (subscribers.TryGetValue(weakRef, out List<T> list))
+            lock (_lock)
             {
-                if (!subscribers.Remove(weakRef))
+                if (subscribers == null) return false;
+                if (owner == null) return false;
+                var weakRef = new WeakReferenceEquatable(owner);
+                if (subscribers.Remove(weakRef))
                 {
-                    throw new DataMisalignedException();
+                    reloadFireList = true;
+                    return true;
                 }
-                pool.Return(list);
-                reloadFireList = true;
-                return true;
+                return false;
             }
-            return false;
         }
 
         public void Clear()
         {
-            if (subscribers != null)
+            lock (_lock)
             {
-                dictPool.Return(subscribers);
-                subscribers = null;
-            }
-            if (fireSubscribers != null)
-            {
-                dictPool.Return(fireSubscribers);
-                fireSubscribers = null;
-            }
-            reloadFireList = true;
-        }
-
-        public struct SubscriptionCheckout : IDisposable, IEnumerable<KeyValuePair<object, List<T>>>
-        {
-            private readonly Dictionary<WeakReferenceEquatable, List<T>> subscribers;
-            private readonly Dictionary<WeakReferenceEquatable, List<T>> oldList;
-
-            public SubscriptionCheckout(
-                Dictionary<WeakReferenceEquatable, List<T>> old,
-                Dictionary<WeakReferenceEquatable, List<T>> toFire)
-            {
-                this.subscribers = toFire;
-                this.oldList = old;
-            }
-
-            public void Dispose()
-            {
-                if (oldList != null)
+                if (subscribers != null)
                 {
-                    pool.Return(oldList.Values);
-                    dictPool.Return(oldList);
+                    subscribers.Clear();
+                    subscribers = null;
                 }
-            }
-
-            public IEnumerator<KeyValuePair<object, List<T>>> GetEnumerator()
-            {
-                if (this.subscribers == null) yield break;
-                foreach (var sub in this.subscribers)
+                if (fireSubscribers != null)
                 {
-                    var item = sub.Key.Target;
-                    if (!sub.Key.IsAlive)
-                    {
-                        this.subscribers.Remove(sub.Key);
-                        continue;
-                    }
-                    yield return new KeyValuePair<object, List<T>>(item, sub.Value);
+                    fireSubscribers.Clear();
+                    fireSubscribers = null;
                 }
-            }
-
-            IEnumerator IEnumerable.GetEnumerator()
-            {
-                return this.GetEnumerator();
+                reloadFireList = true;
             }
         }
 
-        public SubscriptionCheckout GetSubs()
+        public IEnumerable<KeyValuePair<WeakReferenceEquatable, List<T>>> GetSubs()
         {
-            if (!this.HasSubs) return new SubscriptionCheckout();
-            if (!reloadFireList) return new SubscriptionCheckout(null, this.fireSubscribers);
-
-            reloadFireList = false;
-            var oldList = fireSubscribers;
-
-            // Get fresh list
-            fireSubscribers = dictPool.Get();
-
-            // Fill with callbacks
-            foreach (var sub in subscribers)
+            lock (_lock)
             {
-                if (!sub.Key.IsAlive) continue;
-                var list = pool.Get();
-                foreach (var item in sub.Value)
+                if (!this.HasSubs) return EnumerableExt<KeyValuePair<WeakReferenceEquatable, List<T>>>.EMPTY;
+                if (!reloadFireList)
                 {
-                    list.Add(item);
+                    return fireSubscribers;
                 }
-                fireSubscribers[sub.Key] = list;
-            }
 
-            return new SubscriptionCheckout(oldList, fireSubscribers);
+                reloadFireList = false;
+
+                // Get fresh list
+                fireSubscribers = new List<KeyValuePair<WeakReferenceEquatable, List<T>>>(subscribers.Count);
+
+                // Fill with callbacks
+                foreach (var sub in subscribers)
+                {
+                    if (!sub.Key.IsAlive) continue;
+                    fireSubscribers.Add(new KeyValuePair<WeakReferenceEquatable, List<T>>(
+                        sub.Key,
+                        sub.Value.GetFireList()));
+                }
+
+                return fireSubscribers;
+            }
         }
     }
 }
