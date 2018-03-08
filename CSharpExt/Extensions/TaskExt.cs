@@ -30,10 +30,10 @@ namespace System
         {
             if (!timeoutMS.HasValue)
             {
-                await task;
+                await task.ConfigureAwait(false);
                 return false;
             }
-            var retTask = await Task.WhenAny(task, Task.Delay(timeoutMS.Value));
+            var retTask = await Task.WhenAny(task, Task.Delay(timeoutMS.Value)).ConfigureAwait(false);
             if (retTask == task) return false;
             if (throwIfTimeout) throw new TimeoutException($"{taskMessage} took longer than {timeoutMS.Value}ms.");
             return true;
@@ -48,12 +48,12 @@ namespace System
         {
             if (!timeoutMS.HasValue)
             {
-                return TryGet<T>.Fail(await task);
+                return TryGet<T>.Fail(await task.ConfigureAwait(false));
             }
-            var retTask = await Task.WhenAny(task, Task.Delay(timeoutMS.Value));
+            var retTask = await Task.WhenAny(task, Task.Delay(timeoutMS.Value)).ConfigureAwait(false);
             if (retTask == task)
             {
-                return TryGet<T>.Fail(await task);
+                return TryGet<T>.Fail(await task.ConfigureAwait(false));
             }
             if (throwIfTimeout) throw new TimeoutException($"{taskMessage} took longer than {timeoutMS.Value}ms.");
             return TryGet<T>.Create(successful: true);
@@ -68,14 +68,46 @@ namespace System
         {
             if (!timeoutMS.HasValue)
             {
-                return await task;
+                return await task.ConfigureAwait(false);
             }
-            var retTask = await Task.WhenAny(task, Task.Delay(timeoutMS.Value));
+            var retTask = await Task.WhenAny(task, Task.Delay(timeoutMS.Value)).ConfigureAwait(false);
             if (retTask == task)
             {
-                return await task;
+                return await task.ConfigureAwait(false);
             }
             throw new TimeoutException($"{taskMessage} took longer than {timeoutMS.Value}ms.");
+        }
+
+        public static async Task<bool> TimeoutButContinue(this Task task, int? timeoutMS, Action timeout)
+        {
+            if (!timeoutMS.HasValue)
+            {
+                await task.ConfigureAwait(false);
+                return false;
+            }
+            var retTask = await Task.WhenAny(task, Task.Delay(timeoutMS.Value)).ConfigureAwait(false);
+            if (retTask == task)
+            {
+                return false;
+            }
+            timeout();
+            await task;
+            return true;
+        }
+
+        public static async Task<T> TimeoutButContinue<T>(this Task<T> task, int? timeoutMS, Action timeout)
+        {
+            if (!timeoutMS.HasValue)
+            {
+                return await task.ConfigureAwait(false);
+            }
+            var retTask = await Task.WhenAny(task, Task.Delay(timeoutMS.Value)).ConfigureAwait(false);
+            if (retTask == task)
+            {
+                return await task.ConfigureAwait(false);
+            }
+            timeout();
+            return await task;
         }
 
         public static async Task DoThenComplete(TaskCompletionSource tcs, Func<Task> action)

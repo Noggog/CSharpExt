@@ -159,11 +159,13 @@
     <Compile Include="Structs\Numbers\UDouble.cs" />
     <Compile Include="Structs\Numbers\UInt.cs" />
     <Compile Include="Structs\Numbers\ULong.cs" />
+    <Compile Include="Structs\Points\P3Float.cs" />
     <Compile Include="Structs\Points\P2Float.cs" />
     <Compile Include="Structs\Points\P2Double.cs" />
     <Compile Include="Structs\Points\P2Int.cs" />
     <Compile Include="Structs\Points\P2IntValue.cs" />
     <Compile Include="Structs\Points\P3Double.cs" />
+    <Compile Include="Structs\Points\P3UInt16.cs" />
     <Compile Include="Structs\Points\P3Int.cs" />
     <Compile Include="Structs\Points\P3IntValue.cs" />
     <Compile Include="Structs\Ranges\Basic Primitives\RangeUDouble.cs" />

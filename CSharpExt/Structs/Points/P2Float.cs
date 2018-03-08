@@ -87,11 +87,6 @@ namespace Noggog
                 this.Y);
         }
 
-        public static P2Float Max(float p1, float p2, float c1, float c2)
-        {
-            return new P2Float(Math.Max(p1, c1), Math.Max(p2, c2));
-        }
-
         public static P2Float Max(P2Float p, P2Float c)
         {
             return new P2Float(Math.Max(p.X, c.X), Math.Max(p.Y, c.Y));
@@ -100,6 +95,16 @@ namespace Noggog
         public P2Float Max(float c)
         {
             return new P2Float(Math.Max(X, c), Math.Max(Y, c));
+        }
+
+        public static bool operator ==(P2Float obj1, P2Float obj2)
+        {
+            return obj1.Equals(obj2);
+        }
+
+        public static bool operator !=(P2Float obj1, P2Float obj2)
+        {
+            return !obj1.Equals(obj2);
         }
 
         public static P2Float operator -(P2Float c1)

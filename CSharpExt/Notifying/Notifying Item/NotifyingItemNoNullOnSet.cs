@@ -18,6 +18,10 @@ namespace Noggog.Notifying
         {
             this.noNullFallback = noNullFallback;
             this.onSet = onSet;
+            if (defaultVal == null)
+            {
+                this._item = noNullFallback();
+            }
         }
 
         public override void Set(T value, NotifyingFireParameters cmd = default(NotifyingFireParameters))
