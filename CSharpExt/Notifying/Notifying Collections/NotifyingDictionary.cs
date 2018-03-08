@@ -8,6 +8,7 @@ namespace Noggog.Notifying
 {
     public interface INotifyingDictionaryGetter<K, V> : INotifyingEnumerable<KeyValuePair<K, V>>, IDictionaryGetter<K, V>
     {
+        new int Count { get; }
         new bool Contains(KeyValuePair<K, V> item);
         new void CopyTo(KeyValuePair<K, V>[] array, int arrayIndex);
         void Subscribe<O>(O owner, NotifyingCollection<KeyValuePair<K, V>, ChangeKeyed<K, V>>.NotifyingCollectionCallback<O> callback, NotifyingSubscribeParameters cmds = null);
