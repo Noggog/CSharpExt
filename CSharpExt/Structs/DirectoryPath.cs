@@ -58,6 +58,11 @@ namespace Noggog
             return this._dirInfo?.FullName;
         }
 
+        public FilePath GetFile(string filePath)
+        {
+            return new FilePath(System.IO.Path.Combine(this.Path, filePath));
+        }
+
         public bool IsSubfolderOf(DirectoryPath rhs)
         {
             return this._dirInfo.IsSubfolderOf(rhs._dirInfo);
