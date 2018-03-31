@@ -18,6 +18,14 @@ namespace Noggog
         public string Path => _fullPath;
         public string RelativePath => _originalPath;
         public string Name => _fileInfo.Name;
+        public bool Exists
+        {
+            get
+            {
+                _fileInfo.Refresh();
+                return _fileInfo.Exists;
+            }
+        }
 
         public FilePath(string path)
         {
