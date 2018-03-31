@@ -38,11 +38,11 @@ namespace System
             return false;
         }
 
-        public static bool CountGreaterThan(this IEnumerable enumer, int count)
+        public static bool CountGreaterThan(this IEnumerable enumer, uint count)
         {
             foreach (var e in enumer)
             {
-                if (count-- < 0)
+                if (count-- <= 0)
                 {
                     return true;
                 }
