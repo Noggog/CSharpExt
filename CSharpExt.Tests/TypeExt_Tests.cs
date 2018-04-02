@@ -170,6 +170,7 @@ namespace CSharpExt.Tests
             Assert.False(typeof(SubGenClass).InheritsFrom(typeof(IGenInterface<SubClass>), excludeSelf: false));
         }
 
+        // Unit test to mark desired missing feature
         [Fact]
         public void GenInterface_Unspecified()
         {
