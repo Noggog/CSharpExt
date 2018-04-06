@@ -90,7 +90,6 @@
     <Compile Include="Extensions\StringExt.cs" />
     <Compile Include="Extensions\SymbolExtensions.cs" />
     <Compile Include="Extensions\TypeExt.cs" />
-    <Compile Include="Extensions\UInt8Ext.cs" />
     <Compile Include="Extensions\XmlExt.cs" />
     <Compile Include="Containers\Common\IDictionaryGetter.cs" />
     <Compile Include="Notifying\HasBeenSet\HasBeenSetGetter.cs" />
