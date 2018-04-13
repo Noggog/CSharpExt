@@ -9,17 +9,17 @@ namespace Noggog.Utility
 {
     public class TempFolder : IDisposable
     {
-        public DirectoryInfo Dir { get; private set; }
+        public DirectoryPath Dir { get; private set; }
         public bool DeleteAfter = true;
 
         public TempFolder(bool deleteAfter = true)
         {
-            this.Dir = new DirectoryInfo(Path.Combine(Path.GetTempPath(), Path.GetRandomFileName()));
+            this.Dir = new DirectoryPath(Path.Combine(Path.GetTempPath(), Path.GetRandomFileName()));
             this.Dir.Create();
             this.DeleteAfter = deleteAfter;
         }
 
-        public TempFolder(DirectoryInfo dir, bool deleteAfter = true)
+        public TempFolder(DirectoryPath dir, bool deleteAfter = true)
         {
             this.Dir = dir;
             if (!dir.Exists)
@@ -27,6 +27,11 @@ namespace Noggog.Utility
                 this.Dir.Create();
             }
             this.DeleteAfter = deleteAfter;
+        }
+
+        public TempFolder(string addedFolderPath)
+            : this(new DirectoryPath(Path.Combine(Path.GetTempPath(), addedFolderPath)))
+        {
         }
 
         public void Dispose()
