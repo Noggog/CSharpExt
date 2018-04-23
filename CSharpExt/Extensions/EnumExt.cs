@@ -166,6 +166,12 @@ namespace System
             return default(TEnum);
         }
 
+        public static bool IsFlagsEnum<TEnum>(this TEnum e)
+            where TEnum : struct, IComparable, IConvertible
+        {
+            return typeof(TEnum).GetCustomAttributes<FlagsAttribute>().Any();
+        }
+
         #region Type Dictionaries
         private static object _loadLock = new object();
         private static Dictionary<StringCaseAgnostic, Type> enums;
@@ -208,6 +214,7 @@ namespace System
     }
 
     public static class EnumExt<T>
+        where T : struct, IComparable, IConvertible
     {
         private static Lazy<T[]> _Values = new Lazy<T[]>(() =>
         {
@@ -219,6 +226,15 @@ namespace System
             return ret.ToArray();
         });
         public static T[] Values => _Values.Value;
+        
+        public static bool IsFlagsEnum()
+        {
+            foreach (var attr in typeof(T).GetCustomAttributes<FlagsAttribute>())
+            {
+                return true;
+            }
+            return false;
+        }
     }
 
     static class EnumStrings<T> where T : struct, IComparable, IConvertible
