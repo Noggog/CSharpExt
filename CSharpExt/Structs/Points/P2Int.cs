@@ -148,13 +148,6 @@ namespace Noggog
             return $"({X},{Y})";
         }
 
-        public P2Int Take(out int x, out int y)
-        {
-            x = Math.Sign(this.X);
-            y = Math.Sign(this.Y);
-            return Shift(-x, -y);
-        }
-
         public static void Rotate(P2Int p, out P2Int outP, ClockRotation rotation)
         {
             switch (rotation)
@@ -279,11 +272,6 @@ namespace Noggog
         public static P2Int operator *(P2Int p1, int num)
         {
             return new P2Int(p1.X * num, p1.Y * num);
-        }
-
-        public static implicit operator P2Int(P2Double point)
-        {
-            return new P2Int((int)Math.Round(point.X), (int)Math.Round(point.Y));
         }
     }
 }
