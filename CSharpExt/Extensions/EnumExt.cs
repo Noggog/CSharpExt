@@ -107,6 +107,21 @@ namespace System
             return EnumStrings<T>.GetEnumString(enumVal);
         }
 
+        // Slower
+        public static bool TryToStringFast_Enum_Only<T>(this T e, out string str)
+            where T : struct, IComparable, IConvertible
+        {
+            IConvertible cv = (IConvertible)e;
+            return EnumStrings<T>.TryGetEnumString(cv.ToInt32(CultureInfo.InvariantCulture), out str);
+        }
+
+        // Faster
+        public static bool TryToStringFast_Enum_Only<T>(int enumVal, out string str)
+            where T : struct, IComparable, IConvertible
+        {
+            return EnumStrings<T>.TryGetEnumString(enumVal, out str);
+        }
+
         public static string ToStringFast_Enum_Only(Type enumType, int index)
         {
             if (!NameDictionary.TryGetValue(enumType, out Dictionary<int, string> arr))
@@ -256,9 +271,15 @@ namespace System
                 throw new Exception("Generic type must be an enumeration");
             }
         }
+
         public static string GetEnumString(int enumValue)
         {
             return _strings[enumValue];
+        }
+
+        public static bool TryGetEnumString(int enumValue, out string str)
+        {
+            return _strings.TryGetValue(enumValue, out str);
         }
     }
 }
