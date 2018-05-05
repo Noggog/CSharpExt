@@ -29,8 +29,8 @@ namespace Noggog.Utility
             this.DeleteAfter = deleteAfter;
         }
 
-        public TempFolder(string addedFolderPath)
-            : this(new DirectoryPath(Path.Combine(Path.GetTempPath(), addedFolderPath)))
+        public TempFolder(string addedFolderPath, bool deleteAfter = true)
+            : this(new DirectoryPath(Path.Combine(Path.GetTempPath(), addedFolderPath)), deleteAfter: deleteAfter)
         {
         }
 
