@@ -41,7 +41,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BinaryMemoryStream_Tests.cs" />
+    <Compile Include="BinaryReadStream_Tests.cs" />
     <Compile Include="EnumerableExt_Tests.cs" />
+    <Compile Include="IBinaryStream_Tests.cs" />
     <Compile Include="ListExt_Tests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RangeInt64_Tests.cs" />
