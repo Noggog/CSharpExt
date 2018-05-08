@@ -6,6 +6,9 @@ namespace System
 {
     public static class ByteExt
     {
+        [DllImport("msvcrt.dll", CallingConvention = CallingConvention.Cdecl)]
+        static extern int memcmp(byte[] b1, byte[] b2, long count);
+
         public static bool IsInRange(this byte d, byte min, byte max)
         {
             if (d < min) return false;
@@ -59,9 +62,14 @@ namespace System
             }
             return new string(result);
         }
+        
+        public static unsafe bool EqualsFast(this byte[] b1, byte[] b2)
+        {
+            return b1.Length == b2.Length && memcmp(b1, b2, b1.Length) == 0;
+        }
 
         [ReliabilityContract(Consistency.WillNotCorruptState, Cer.MayFail)]
-        public static unsafe bool EqualsFast(this byte[] strA, byte[] strB)
+        public static unsafe bool CharBytesEqualsFast(byte[] strA, byte[] strB)
         {
             if (strA == null && strB == null) return true;
             if (strA == null || strB == null) return false;
