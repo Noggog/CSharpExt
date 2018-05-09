@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using Noggog.Containers.Pools;
 using Noggog.Notifying;
 
 namespace Noggog.Notifying
 {
     public class NotifyingSetItemOnSet<T> : NotifyingSetItem<T>
     {
-        Action<T> onSet;
+        private readonly Action<T> onSet;
 
         public NotifyingSetItemOnSet(
             Action<T> onSet,

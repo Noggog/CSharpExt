@@ -1,15 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using Noggog.Containers.Pools;
 using Noggog.Notifying;
 
 namespace Noggog.Notifying
 {
     public class NotifyingItemNoNullOnSetConverter<T> : NotifyingItem<T>
     {
-        Func<T> noNullFallback;
-        Action<T> onSet;
-        Func<T, T> converter;
+        private readonly Func<T> noNullFallback;
+        private readonly Action<T> onSet;
+        private readonly Func<T, T> converter;
 
         public NotifyingItemNoNullOnSetConverter(
             Func<T> noNullFallback,
@@ -42,8 +41,8 @@ namespace Noggog.Notifying
     public class NotifyingItemNoNullDirectOnSetConverter<T> : NotifyingItem<T>
         where T : new()
     {
-        Action<T> onSet;
-        Func<T, T> converter;
+        private readonly Action<T> onSet;
+        private readonly Func<T, T> converter;
 
         public NotifyingItemNoNullDirectOnSetConverter(
             Action<T> onSet,

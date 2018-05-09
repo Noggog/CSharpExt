@@ -122,9 +122,7 @@
     <Compile Include="Notifying\Notifying Item\NotifyingItemNoNull.cs" />
     <Compile Include="Notifying\Notifying Item\NotifyingItemExt.cs" />
     <Compile Include="Notifying\Notifying Item\NotifyingSetItemWrapper.cs" />
-    <Compile Include="Notifying\Notifying Collections\NotifyingArray2D.cs" />
     <Compile Include="Notifying\Notifying Collections\NotifyingCollection.cs" />
-    <Compile Include="Notifying\Notifying Collections\NotifyingContainer2D.cs" />
     <Compile Include="Notifying\Notifying Collections\NotifyingDictionary.cs" />
     <Compile Include="Notifying\Notifying Collections\NotifyingDictionaryRouter.cs" />
     <Compile Include="Notifying\NotifyingBindParameters.cs" />

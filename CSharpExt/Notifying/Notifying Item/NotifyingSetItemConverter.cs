@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using Noggog.Containers.Pools;
 using Noggog.Notifying;
 
 namespace Noggog.Notifying
 {
     public class NotifyingSetItemConverter<T> : NotifyingSetItem<T>
     {
-        Func<T, T> converter;
+        private readonly Func<T, T> converter;
 
         public NotifyingSetItemConverter(
             Func<T, T> converter,

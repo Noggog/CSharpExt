@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using System.Collections.Generic;
-using Noggog.Containers.Pools;
 using System.Diagnostics;
 
 namespace Noggog.Notifying
@@ -27,15 +26,11 @@ namespace Noggog.Notifying
 
     public class NotifyingDictionary<K, V> : NotifyingCollection<KeyValuePair<K, V>, ChangeKeyed<K, V>>, INotifyingDictionary<K, V>
     {
-        protected static ObjectDictionaryPool<K, V> pool = new ObjectDictionaryPool<K, V>(100);
-        protected static ObjectPool<HashSet<K>> setToPool = new ObjectPool<HashSet<K>>(() => new HashSet<K>(), maxInstances: 100);
-        protected static ObjectListPool<ChangeKeyed<K, V>> firePool = new ObjectListPool<ChangeKeyed<K, V>>(200);
-
         protected NotifyingItem<int> _count = new NotifyingItem<int>();
         public INotifyingItemGetter<int> CountProperty => _count;
         public int Count => _count.Item;
-        private Dictionary<K, V> dict = pool.Get();
-        private Func<V, V> valConv;
+        private readonly Dictionary<K, V> dict = new Dictionary<K, V>();
+        private readonly Func<V, V> valConv;
 
         public IEnumerable<KeyValuePair<K, V>> Dict => dict;
         public ICollectionGetter<K> Keys => new CollectionGetterWrapper<K>(dict.Keys);
@@ -49,25 +44,10 @@ namespace Noggog.Notifying
             this.valConv = valConv ?? ((i) => i);
         }
 
-        ~NotifyingDictionary()
-        {
-            if (dict != null)
-            {
-                pool.Return(dict);
-                dict = null;
-            }
-        }
-
         public V this[K key]
         {
-            get
-            {
-                return dict[key];
-            }
-            set
-            {
-                Set(key, value);
-            }
+            get => dict[key];
+            set => Set(key, value);
         }
 
         public void Set(K key, V item, NotifyingFireParameters cmds = null)
@@ -102,33 +82,31 @@ namespace Noggog.Notifying
             cmds = ProcessCmds(cmds);
             if (HasSubscribers())
             {
-                using (var changes = firePool.Checkout())
+                List<ChangeKeyed<K, V>> changes = new List<ChangeKeyed<K, V>>();
+                foreach (var item in items)
                 {
-                    foreach (var item in items)
+                    if (dict.TryGetValue(item.Key, out V oldVal))
                     {
-                        if (dict.TryGetValue(item.Key, out V oldVal))
-                        {
-                            changes.Item.Add(
-                                new ChangeKeyed<K, V>(
-                                    item.Key,
-                                    oldVal,
-                                    item.Value,
-                                    AddRemoveModify.Modify));
-                        }
-                        else
-                        {
-                            changes.Item.Add(
-                                new ChangeKeyed<K, V>(
-                                    item.Key,
-                                    default(V),
-                                    item.Value,
-                                    AddRemoveModify.Add));
-                        }
-                        dict[item.Key] = valConv(item.Value);
+                        changes.Add(
+                            new ChangeKeyed<K, V>(
+                                item.Key,
+                                oldVal,
+                                item.Value,
+                                AddRemoveModify.Modify));
                     }
-                    _count.Set(dict.Count, cmds);
-                    FireChange(changes.Item, cmds);
+                    else
+                    {
+                        changes.Add(
+                            new ChangeKeyed<K, V>(
+                                item.Key,
+                                default(V),
+                                item.Value,
+                                AddRemoveModify.Add));
+                    }
+                    dict[item.Key] = valConv(item.Value);
                 }
+                _count.Set(dict.Count, cmds);
+                FireChange(changes, cmds);
             }
             else
             {
@@ -179,52 +157,48 @@ namespace Noggog.Notifying
             cmds = ProcessCmds(cmds);
             if (HasSubscribers())
             {
-                using (var changes = firePool.Checkout())
+                List<ChangeKeyed<K, V>> changes = new List<ChangeKeyed<K, V>>();
+                HashSet<K> set = new HashSet<K>();
+                set.Add(this.dict.Keys);
+                foreach (var item in items)
                 {
-                    using (var set = setToPool.Checkout())
+                    if (dict.TryGetValue(item.Key, out V oldVal))
                     {
-                        set.Item.Add(this.dict.Keys);
-                        foreach (var item in items)
-                        {
-                            if (dict.TryGetValue(item.Key, out V oldVal))
-                            {
-                                changes.Item.Add(
-                                    new ChangeKeyed<K, V>(
-                                        item.Key,
-                                        oldVal,
-                                        item.Value,
-                                        AddRemoveModify.Modify));
-                            }
-                            else
-                            {
-                                changes.Item.Add(
-                                    new ChangeKeyed<K, V>(
-                                        item.Key,
-                                        default(V),
-                                        item.Value,
-                                        AddRemoveModify.Add));
-                            }
-                            dict[item.Key] = valConv(item.Value);
-                            set.Item.Remove(item.Key);
-                        }
-
-                        foreach (var toRem in set.Item)
-                        {
-                            if (dict.TryGetValue(toRem, out V oldVal))
-                            {
-                                dict.Remove(toRem);
-                                changes.Item.Add(
-                                    new ChangeKeyed<K, V>(
-                                        toRem,
-                                        oldVal,
-                                        default(V),
-                                        AddRemoveModify.Remove));
-                            }
-                        }
+                        changes.Add(
+                            new ChangeKeyed<K, V>(
+                                item.Key,
+                                oldVal,
+                                item.Value,
+                                AddRemoveModify.Modify));
                     }
-                    _count.Set(dict.Count, cmds);
-                    FireChange(changes.Item, cmds);
+                    else
+                    {
+                        changes.Add(
+                            new ChangeKeyed<K, V>(
+                                item.Key,
+                                default(V),
+                                item.Value,
+                                AddRemoveModify.Add));
+                    }
+                    dict[item.Key] = valConv(item.Value);
+                    set.Remove(item.Key);
                 }
+
+                foreach (var toRem in set)
+                {
+                    if (dict.TryGetValue(toRem, out V oldVal))
+                    {
+                        dict.Remove(toRem);
+                        changes.Add(
+                            new ChangeKeyed<K, V>(
+                                toRem,
+                                oldVal,
+                                default(V),
+                                AddRemoveModify.Remove));
+                    }
+                }
+                _count.Set(dict.Count, cmds);
+                FireChange(changes, cmds);
             }
             else
             {
@@ -245,22 +219,20 @@ namespace Noggog.Notifying
 
             if (HasSubscribers())
             { // Will be firing
-                using (var changes = firePool.Checkout())
+                var changes = new List<ChangeKeyed<K, V>>(dict.Count);
+                foreach (var item in dict)
                 {
-                    foreach (var item in dict)
-                    {
-                        changes.Item.Add(
-                            new ChangeKeyed<K, V>(
-                                item.Key,
-                                item.Value,
-                                default(V),
-                                AddRemoveModify.Remove));
-                    }
-
-                    dict.Clear();
-                    _count.Set(0, cmds);
-                    FireChange(changes.Item, cmds);
+                    changes.Add(
+                        new ChangeKeyed<K, V>(
+                            item.Key,
+                            item.Value,
+                            default(V),
+                            AddRemoveModify.Remove));
                 }
+
+                dict.Clear();
+                _count.Set(0, cmds);
+                FireChange(changes, cmds);
             }
             else
             { // just internals
@@ -275,12 +247,12 @@ namespace Noggog.Notifying
             Clear(cmds.ToFireParams());
         }
 
-        protected override ObjectPoolCheckout<List<ChangeKeyed<K, V>>> CompileCurrent()
+        protected override ICollection<ChangeKeyed<K, V>> CompileCurrent()
         {
-            var changes = firePool.Checkout();
+            var changes = new List<ChangeKeyed<K, V>>(dict.Count);
             foreach (var item in dict)
             {
-                changes.Item.Add(
+                changes.Add(
                     new ChangeKeyed<K, V>(
                         item.Key,
                         default(V),
@@ -314,12 +286,12 @@ namespace Noggog.Notifying
             return this;
         }
 
-        protected override ObjectPoolCheckout<List<ChangeAddRem<KeyValuePair<K, V>>>> CompileCurrentEnumer()
+        protected override ICollection<ChangeAddRem<KeyValuePair<K, V>>> CompileCurrentEnumer()
         {
-            var changes = fireEnumerPool.Checkout();
+            var changes = new List<ChangeAddRem<KeyValuePair<K, V>>>(dict.Count);
             foreach (var item in dict)
             {
-                changes.Item.Add(
+                changes.Add(
                     new ChangeAddRem<KeyValuePair<K, V>>(
                         item,
                         AddRemove.Add));
@@ -357,42 +329,40 @@ namespace Noggog.Notifying
             {
                 if (this.enumerSubscribers.HasSubs)
                 {
-                    using (var enumerChanges = fireEnumerPool.Checkout())
+                    var enumerChanges = new List<ChangeAddRem<KeyValuePair<K, V>>>();
+                    foreach (var change in changes)
                     {
-                        foreach (var change in changes)
+                        switch (change.AddRem)
                         {
-                            switch (change.AddRem)
-                            {
-                                case AddRemoveModify.Add:
-                                    enumerChanges.Item.Add(new ChangeAddRem<KeyValuePair<K, V>>(new KeyValuePair<K, V>(change.Key, change.New), AddRemove.Add));
-                                    break;
-                                case AddRemoveModify.Remove:
-                                    enumerChanges.Item.Add(new ChangeAddRem<KeyValuePair<K, V>>(new KeyValuePair<K, V>(change.Key, change.Old), AddRemove.Remove));
-                                    break;
-                                case AddRemoveModify.Modify:
-                                    enumerChanges.Item.Add(new ChangeAddRem<KeyValuePair<K, V>>(new KeyValuePair<K, V>(change.Key, change.Old), AddRemove.Remove));
-                                    enumerChanges.Item.Add(new ChangeAddRem<KeyValuePair<K, V>>(new KeyValuePair<K, V>(change.Key, change.New), AddRemove.Add));
-                                    break;
-                                default:
-                                    break;
-                            }
+                            case AddRemoveModify.Add:
+                                enumerChanges.Add(new ChangeAddRem<KeyValuePair<K, V>>(new KeyValuePair<K, V>(change.Key, change.New), AddRemove.Add));
+                                break;
+                            case AddRemoveModify.Remove:
+                                enumerChanges.Add(new ChangeAddRem<KeyValuePair<K, V>>(new KeyValuePair<K, V>(change.Key, change.Old), AddRemove.Remove));
+                                break;
+                            case AddRemoveModify.Modify:
+                                enumerChanges.Add(new ChangeAddRem<KeyValuePair<K, V>>(new KeyValuePair<K, V>(change.Key, change.Old), AddRemove.Remove));
+                                enumerChanges.Add(new ChangeAddRem<KeyValuePair<K, V>>(new KeyValuePair<K, V>(change.Key, change.New), AddRemove.Add));
+                                break;
+                            default:
+                                break;
                         }
-                        foreach (var sub in this.enumerSubscribers.GetSubs())
+                    }
+                    foreach (var sub in this.enumerSubscribers.GetSubs())
+                    {
+                        foreach (var eventItem in sub.Value)
                         {
-                            foreach (var eventItem in sub.Value)
+                            try
                             {
-                                try
+                                eventItem(sub.Key, enumerChanges);
+                            }
+                            catch (Exception ex)
+                            {
+                                if (exceptions == null)
                                 {
-                                    eventItem(sub.Key, enumerChanges.Item);
+                                    exceptions = new List<Exception>();
                                 }
-                                catch (Exception ex)
-                                {
-                                    if (exceptions == null)
-                                    {
-                                        exceptions = new List<Exception>();
-                                    }
-                                    exceptions.Add(ex);
-                                }
+                                exceptions.Add(ex);
                             }
                         }
                     }

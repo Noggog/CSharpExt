@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using Noggog.Containers.Pools;
 using Noggog.Notifying;
 
 namespace Noggog.Notifying
 {
     public class NotifyingItemNoNullConverter<T> : NotifyingItem<T>
     {
-        Func<T> noNullFallback;
-        Func<T, T> converter;
+        private readonly Func<T> noNullFallback;
+        private readonly Func<T, T> converter;
 
         public NotifyingItemNoNullConverter(
             Func<T> noNullFallback,
@@ -40,7 +39,7 @@ namespace Noggog.Notifying
     public class NotifyingItemNoNullDirectConverter<T> : NotifyingItem<T>
         where T : new()
     {
-        Func<T, T> converter;
+        private readonly Func<T, T> converter;
 
         public NotifyingItemNoNullDirectConverter(
             Func<T, T> converter,

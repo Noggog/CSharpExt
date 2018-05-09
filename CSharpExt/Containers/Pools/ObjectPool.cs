@@ -8,9 +8,9 @@ namespace Noggog.Containers.Pools
         private static ObjectPool<T> _instance;
 
         public int MaxInstancesPooled;
-        List<T> list = new List<T>();
-        LifecycleActions<T> actions;
-        Func<T> creator;
+        private readonly Queue<T> storage = new Queue<T>();
+        private readonly LifecycleActions<T> actions;
+        private readonly Func<T> creator;
 
         public ObjectPool(
             Func<T> creator,
@@ -25,14 +25,14 @@ namespace Noggog.Containers.Pools
         public T Get()
         {
             T t;
-            if (list.Count == 0)
+            if (storage.Count == 0)
             {
                 t = creator();
                 actions.OnCreate?.Invoke(t);
             }
             else
             {
-                t = list.Take();
+                t = storage.Dequeue();
             }
             actions.OnGet?.Invoke(t);
             return t;
@@ -57,9 +57,9 @@ namespace Noggog.Containers.Pools
 
             actions.OnReturn?.Invoke(item);
 
-            if (list.Count < MaxInstancesPooled)
+            if (storage.Count < MaxInstancesPooled)
             {
-                list.Add(item);
+                storage.Enqueue(item);
                 return true;
             }
 

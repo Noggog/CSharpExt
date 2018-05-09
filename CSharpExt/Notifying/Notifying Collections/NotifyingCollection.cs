@@ -2,7 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Noggog.Containers.Pools;
 using Noggog.Notifying;
 using Noggog;
 
@@ -33,19 +32,6 @@ namespace Noggog.Notifying
 
     public abstract class NotifyingCollection<T, F>
     {
-        static ObjectPool<SubscriptionHandler<NotifyingCollectionInternalCallback>> pool = new ObjectPool<SubscriptionHandler<NotifyingCollectionInternalCallback>>(
-            () => new SubscriptionHandler<NotifyingCollectionInternalCallback>(),
-            new LifecycleActions<SubscriptionHandler<NotifyingCollectionInternalCallback>>(
-                onReturn: (s) => s.Clear()),
-            200);
-        static ObjectPool<SubscriptionHandler<NotifyingInternalEnumerableCallback<T>>> enumerPool = new ObjectPool<SubscriptionHandler<NotifyingInternalEnumerableCallback<T>>>(
-            () => new SubscriptionHandler<NotifyingInternalEnumerableCallback<T>>(),
-            new LifecycleActions<SubscriptionHandler<NotifyingInternalEnumerableCallback<T>>>(
-                onReturn: (s) => s.Clear()),
-            200);
-
-        protected static ObjectListPool<ChangeAddRem<T>> fireEnumerPool = new ObjectListPool<ChangeAddRem<T>>(100);
-
         public delegate void NotifyingCollectionSimpleCallback(IEnumerable<F> changes);
         public delegate void NotifyingCollectionInternalCallback(object owner, IEnumerable<F> changes);
         public delegate void NotifyingCollectionCallback<O>(O owner, IEnumerable<F> changes);
@@ -53,20 +39,6 @@ namespace Noggog.Notifying
         protected SubscriptionHandler<NotifyingCollectionInternalCallback> subscribers;
         protected SubscriptionHandler<NotifyingInternalEnumerableCallback<T>> enumerSubscribers;
         public bool HasBeenSet { get; set; }
-
-        ~NotifyingCollection()
-        {
-            if (subscribers != null)
-            {
-                pool.Return(subscribers);
-                subscribers = null;
-            }
-            if (enumerSubscribers != null)
-            {
-                enumerPool.Return(enumerSubscribers);
-                enumerSubscribers = null;
-            }
-        }
 
         public virtual bool HasSubscribers()
         {
@@ -83,16 +55,13 @@ namespace Noggog.Notifying
             cmds = cmds ?? NotifyingSubscribeParameters.Typical;
             if (subscribers == null)
             {
-                subscribers = pool.Get();
+                subscribers = new SubscriptionHandler<NotifyingCollectionInternalCallback>();
             }
             subscribers.Add(owner, callback);
 
             if (cmds.FireInitial)
             {
-                using (var current = CompileCurrent())
-                {
-                    callback(owner, current.Item);
-                }
+                callback(owner, CompileCurrent());
             }
         }
 
@@ -115,34 +84,25 @@ namespace Noggog.Notifying
             cmds = cmds ?? NotifyingSubscribeParameters.Typical;
             if (enumerSubscribers == null)
             {
-                enumerSubscribers = enumerPool.Get();
+                enumerSubscribers = new SubscriptionHandler<NotifyingInternalEnumerableCallback<T>>();
             }
             enumerSubscribers.Add(owner, callback);
 
             if (cmds.FireInitial)
             {
-                using (var current = CompileCurrentEnumer())
-                {
-                    callback(owner, current.Item);
-                }
+                callback(owner, CompileCurrentEnumer());
             }
         }
 
         public virtual void Unsubscribe(object owner)
         {
-            if (subscribers != null)
-            {
-                subscribers.Remove(owner);
-            }
-            if (enumerSubscribers != null)
-            {
-                enumerSubscribers.Remove(owner);
-            }
+            subscribers?.Remove(owner);
+            enumerSubscribers?.Remove(owner);
         }
 
-        protected abstract ObjectPoolCheckout<List<F>> CompileCurrent();
+        protected abstract ICollection<F> CompileCurrent();
 
-        protected abstract ObjectPoolCheckout<List<ChangeAddRem<T>>> CompileCurrentEnumer();
+        protected abstract ICollection<ChangeAddRem<T>> CompileCurrentEnumer();
 
         protected NotifyingFireParameters ProcessCmds(NotifyingFireParameters cmds = null)
         {

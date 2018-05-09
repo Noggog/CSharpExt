@@ -1,5 +1,4 @@
 ﻿using Noggog;
-using Noggog.Containers.Pools;
 using Noggog.Notifying;
 using System;
 using System.Collections;
@@ -27,10 +26,6 @@ namespace Noggog.Notifying
 
     public class NotifyingList<T> : NotifyingCollection<T, ChangeIndex<T>>, INotifyingList<T>
     {
-        protected static ObjectListPool<T> pool = new ObjectListPool<T>(100);
-
-        protected static ObjectListPool<ChangeIndex<T>> firePool = new ObjectListPool<ChangeIndex<T>>(200);
-
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected NotifyingItem<int> _count = new NotifyingItem<int>();
         public INotifyingItemGetter<int> CountProperty => _count;
@@ -38,29 +33,13 @@ namespace Noggog.Notifying
         public int Count => _count.Item;
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected List<T> list = pool.Get();
-
+        protected List<T> list = new List<T>();
         public IEnumerable<T> List => list;
-
-        ~NotifyingList()
-        {
-            if (list == null)
-            {
-                pool.Return(list);
-                list = null;
-            }
-        }
 
         public T this[int index]
         {
-            get
-            {
-                return list[index];
-            }
-            set
-            {
-                Set(index, value);
-            }
+            get => list[index];
+            set => Set(index, value);
         }
 
         public virtual void Set(int index, T item, NotifyingFireParameters cmds = null)
@@ -123,17 +102,17 @@ namespace Noggog.Notifying
             cmds = ProcessCmds(cmds);
             if (HasSubscribers())
             {
+                // ToDo
+                // Remove multiple enumerations of items
                 list.AddRange(items);
-                using (var changes = firePool.Checkout())
+                var changes = new List<ChangeIndex<T>>();
+                int curCount = list.Count;
+                foreach (var item in items)
                 {
-                    int curCount = list.Count;
-                    foreach (var item in items)
-                    {
-                        changes.Item.Add(new ChangeIndex<T>(default(T), item, AddRemoveModify.Add, curCount++));
-                    }
-                    _count.Set(list.Count, cmds);
-                    FireChange(changes.Item, cmds);
+                    changes.Add(new ChangeIndex<T>(default(T), item, AddRemoveModify.Add, curCount++));
                 }
+                _count.Set(list.Count, cmds);
+                FireChange(changes, cmds);
             }
             else
             {
@@ -182,38 +161,36 @@ namespace Noggog.Notifying
             List<Exception> exceptions = null;
             if (HasSubscribers())
             { // Will be firing
-                using (var changes = firePool.Checkout())
+                var changes = new List<ChangeIndex<T>>();
+                int i = 0;
+                foreach (var item in enumer)
                 {
-                    int i = 0;
-                    foreach (var item in enumer)
+                    if (i >= this.list.Count)
                     {
-                        if (i >= this.list.Count)
-                        {
-                            this.list.Add(item);
+                        this.list.Add(item);
 
-                            changes.Item.Add(
-                                new ChangeIndex<T>(default(T), item, AddRemoveModify.Add, i));
-                        }
-                        else if (!object.ReferenceEquals(this.list[i], item))
-                        {
-                            var cur = this.list[i];
-                            this.list[i] = item;
-                            changes.Item.Add(
-                                new ChangeIndex<T>(cur, item, AddRemoveModify.Modify, i));
-                        }
-                        i++;
+                        changes.Add(
+                            new ChangeIndex<T>(default(T), item, AddRemoveModify.Add, i));
                     }
-
-                    for (int j = this.list.Count - 1; j >= 0 && j >= i; j--)
-                    { // Remove later indices going backwards
-                        changes.Item.Add(
-                            new ChangeIndex<T>(this.list[j], default(T), AddRemoveModify.Remove, j));
+                    else if (!object.ReferenceEquals(this.list[i], item))
+                    {
+                        var cur = this.list[i];
+                        this.list[i] = item;
+                        changes.Add(
+                            new ChangeIndex<T>(cur, item, AddRemoveModify.Modify, i));
                     }
-                    this.list.RemoveToCount(i);
-
-                    _count.Set(list.Count, cmds);
-                    FireChange(changes.Item, cmds);
+                    i++;
                 }
+
+                for (int j = this.list.Count - 1; j >= 0 && j >= i; j--)
+                { // Remove later indices going backwards
+                    changes.Add(
+                        new ChangeIndex<T>(this.list[j], default(T), AddRemoveModify.Remove, j));
+                }
+                this.list.RemoveToCount(i);
+
+                _count.Set(list.Count, cmds);
+                FireChange(changes, cmds);
             }
             else
             { // just internals
@@ -235,18 +212,16 @@ namespace Noggog.Notifying
 
             if (HasSubscribers())
             { // Will be firing
-                using (var changes = firePool.Checkout())
-                {
-                    for (int i = 0; i < this.list.Count; i++)
-                    { // Remove later indices going backwards
-                        changes.Item.Add(
-                            new ChangeIndex<T>(this.list[i], default(T), AddRemoveModify.Remove, i));
-                    }
-
-                    list.Clear();
-                    _count.Set(0, cmds);
-                    FireChange(changes.Item, cmds);
+                var changes = new List<ChangeIndex<T>>(this.list.Count);
+                for (int i = 0; i < this.list.Count; i++)
+                { // Remove later indices going backwards
+                    changes.Add(
+                        new ChangeIndex<T>(this.list[i], default(T), AddRemoveModify.Remove, i));
                 }
+
+                list.Clear();
+                _count.Set(0, cmds);
+                FireChange(changes, cmds);
             }
             else
             { // just internals
@@ -261,12 +236,12 @@ namespace Noggog.Notifying
             Clear(cmds.ToFireParams());
         }
 
-        protected override ObjectPoolCheckout<List<ChangeIndex<T>>> CompileCurrent()
+        protected override ICollection<ChangeIndex<T>> CompileCurrent()
         {
-            var changes = firePool.Checkout();
+            var changes = new List<ChangeIndex<T>>(list.Count);
             for (int i = 0; i < list.Count; i++)
             {
-                changes.Item.Add(new ChangeIndex<T>(default(T), list[i], AddRemoveModify.Add, i));
+                changes.Add(new ChangeIndex<T>(default(T), list[i], AddRemoveModify.Add, i));
             }
             return changes;
         }
@@ -304,12 +279,12 @@ namespace Noggog.Notifying
             return this;
         }
 
-        protected override ObjectPoolCheckout<List<ChangeAddRem<T>>> CompileCurrentEnumer()
+        protected override ICollection<ChangeAddRem<T>> CompileCurrentEnumer()
         {
-            var changes = fireEnumerPool.Checkout();
+            var changes = new List<ChangeAddRem<T>>(list.Count);
             for (int i = 0; i < list.Count; i++)
             {
-                changes.Item.Add(new ChangeAddRem<T>(list[i], AddRemove.Add));
+                changes.Add(new ChangeAddRem<T>(list[i], AddRemove.Add));
             }
             return changes;
         }
@@ -342,42 +317,40 @@ namespace Noggog.Notifying
 
             if (this.enumerSubscribers != null && this.enumerSubscribers.HasSubs)
             {
-                using (var enumerChanges = fireEnumerPool.Checkout())
+                var enumerChanges = new List<ChangeAddRem<T>>();
+                foreach (var change in changes)
                 {
-                    foreach (var change in changes)
+                    switch (change.AddRem)
                     {
-                        switch (change.AddRem)
-                        {
-                            case AddRemoveModify.Add:
-                                enumerChanges.Item.Add(new ChangeAddRem<T>(change.New, AddRemove.Add));
-                                break;
-                            case AddRemoveModify.Remove:
-                                enumerChanges.Item.Add(new ChangeAddRem<T>(change.Old, AddRemove.Remove));
-                                break;
-                            case AddRemoveModify.Modify:
-                                enumerChanges.Item.Add(new ChangeAddRem<T>(change.Old, AddRemove.Remove));
-                                enumerChanges.Item.Add(new ChangeAddRem<T>(change.New, AddRemove.Add));
-                                break;
-                            default:
-                                break;
-                        }
+                        case AddRemoveModify.Add:
+                            enumerChanges.Add(new ChangeAddRem<T>(change.New, AddRemove.Add));
+                            break;
+                        case AddRemoveModify.Remove:
+                            enumerChanges.Add(new ChangeAddRem<T>(change.Old, AddRemove.Remove));
+                            break;
+                        case AddRemoveModify.Modify:
+                            enumerChanges.Add(new ChangeAddRem<T>(change.Old, AddRemove.Remove));
+                            enumerChanges.Add(new ChangeAddRem<T>(change.New, AddRemove.Add));
+                            break;
+                        default:
+                            break;
                     }
-                    foreach (var sub in this.enumerSubscribers.GetSubs())
+                }
+                foreach (var sub in this.enumerSubscribers.GetSubs())
+                {
+                    foreach (var eventItem in sub.Value)
                     {
-                        foreach (var eventItem in sub.Value)
+                        try
                         {
-                            try
+                            eventItem(sub.Key, enumerChanges);
+                        }
+                        catch (Exception ex)
+                        {
+                            if (exceptions == null)
                             {
-                                eventItem(sub.Key, enumerChanges.Item);
+                                exceptions = new List<Exception>();
                             }
-                            catch (Exception ex)
-                            {
-                                if (exceptions == null)
-                                {
-                                    exceptions = new List<Exception>();
-                                }
-                                exceptions.Add(ex);
-                            }
+                            exceptions.Add(ex);
                         }
                     }
                 }

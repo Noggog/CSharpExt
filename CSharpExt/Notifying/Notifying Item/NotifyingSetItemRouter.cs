@@ -8,8 +8,8 @@ namespace Noggog.Notifying
     */
     public class NotifyingSetItemRouter<T> : INotifyingSetItem<T>
     {
-        INotifyingSetItemGetter<T> _base;
-        INotifyingSetItem<T> _child;
+        private readonly INotifyingSetItemGetter<T> _base;
+        private readonly INotifyingSetItem<T> _child;
 
         public bool HasBeenSwapped { get; private set; }
 

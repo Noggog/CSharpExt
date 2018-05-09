@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using Noggog.Containers.Pools;
 using Noggog.Notifying;
 
 namespace Noggog.Notifying
@@ -126,12 +125,6 @@ namespace Noggog.Notifying
 
     public class NotifyingItem<T> : INotifyingItem<T>
     {
-        static ObjectPool<SubscriptionHandler<NotifyingItemInternalCallback<T>>> pool = new ObjectPool<SubscriptionHandler<NotifyingItemInternalCallback<T>>>(
-            () => new SubscriptionHandler<NotifyingItemInternalCallback<T>>(),
-            new LifecycleActions<SubscriptionHandler<NotifyingItemInternalCallback<T>>>(
-                onReturn: (s) => s.Clear()),
-            200);
-
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected T _item;
         public T Item
@@ -146,15 +139,6 @@ namespace Noggog.Notifying
             T defaultVal = default(T))
         {
             this._item = defaultVal;
-        }
-
-        ~NotifyingItem()
-        {
-            if (subscribers != null)
-            {
-                pool.Return(subscribers);
-                subscribers = null;
-            }
         }
 
         [DebuggerStepThrough]
@@ -192,7 +176,7 @@ namespace Noggog.Notifying
             cmds = cmds ?? NotifyingSubscribeParameters.Typical;
             if (subscribers == null)
             {
-                subscribers = pool.Get();
+                subscribers = new SubscriptionHandler<NotifyingItemInternalCallback<T>>();
             }
             subscribers.Add(owner, callback);
             if (cmds.FireInitial)
