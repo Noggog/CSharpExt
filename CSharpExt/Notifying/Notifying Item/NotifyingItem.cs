@@ -135,8 +135,11 @@ namespace Noggog.Notifying
 
         protected SubscriptionHandler<NotifyingItemInternalCallback<T>> subscribers;
 
-        public NotifyingItem(
-            T defaultVal = default(T))
+        public NotifyingItem()
+        {
+        }
+
+        public NotifyingItem(T defaultVal)
         {
             this._item = defaultVal;
         }
