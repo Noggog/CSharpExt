@@ -34,7 +34,11 @@ namespace System
                 return false;
             }
             var retTask = await Task.WhenAny(task, Task.Delay(timeoutMS.Value)).ConfigureAwait(false);
-            if (retTask == task) return false;
+            if (retTask == task)
+            {
+                await task;
+                return false;
+            }
             if (throwIfTimeout) throw new TimeoutException($"{taskMessage} took longer than {timeoutMS.Value}ms.");
             return true;
         }
@@ -88,6 +92,7 @@ namespace System
             var retTask = await Task.WhenAny(task, Task.Delay(timeoutMS.Value)).ConfigureAwait(false);
             if (retTask == task)
             {
+                await task;
                 return false;
             }
             timeout();
