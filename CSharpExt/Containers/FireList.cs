@@ -2,18 +2,22 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Noggog.Notifying
+namespace Noggog
 {
+    /*
+     * Threadsafe list that copies to a second internal dictionary when modified mid usage
+     */
     public class FireList<T> : IEnumerable<T>
     {
-        List<T> _list = new List<T>();
-        List<T> _fireList;
+        private readonly object _lock = new object();
+        private readonly List<T> _list = new List<T>();
+        private List<T> _fireList;
 
         public int Count => GetFireList().Count;
 
         public void Add(T t)
         {
-            lock (this)
+            lock (_lock)
             {
                 _list.Add(t);
                 _fireList = null;
@@ -22,7 +26,7 @@ namespace Noggog.Notifying
 
         public void Remove(T t)
         {
-            lock (this)
+            lock (_lock)
             {
                 _list.Remove(t);
                 _fireList = null;
@@ -31,7 +35,7 @@ namespace Noggog.Notifying
 
         public void Clear()
         {
-            lock (this)
+            lock (_lock)
             {
                 _list.Clear();
                 _fireList = null;
@@ -40,7 +44,7 @@ namespace Noggog.Notifying
 
         public List<T> GetFireList()
         {
-            lock (this)
+            lock (_lock)
             {
                 if (_fireList == null)
                 {

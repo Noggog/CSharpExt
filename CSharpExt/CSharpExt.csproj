@@ -46,6 +46,7 @@
     <Compile Include="Comparers\ReferenceEqualityComparer.cs" />
     <Compile Include="Comparers\WeakReferenceEquatable.cs" />
     <Compile Include="Containers\Common\ICollectionGetter.cs" />
+    <Compile Include="Containers\FireDictionary.cs" />
     <Compile Include="Containers\FireList.cs" />
     <Compile Include="Containers\Pools\ObjectDictionaryListPool.cs" />
     <Compile Include="Containers\Pools\ObjectDictionaryPool.cs" />
@@ -60,6 +61,7 @@
     <Compile Include="Enums\ClockRotation.cs" />
     <Compile Include="Extensions\ActionExt.cs" />
     <Compile Include="Extensions\ArrayExt.cs" />
+    <Compile Include="Extensions\BitVector32Ext.cs" />
     <Compile Include="Extensions\DictionaryExt.cs" />
     <Compile Include="Extensions\DirectoryInfoExt.cs" />
     <Compile Include="Extensions\DoubleExt.cs" />
