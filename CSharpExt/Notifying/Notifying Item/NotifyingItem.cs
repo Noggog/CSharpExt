@@ -133,6 +133,8 @@ namespace Noggog.Notifying
             set => Set(value, null);
         }
 
+        public T DefaultValue => default(T);
+
         protected SubscriptionHandler<NotifyingItemInternalCallback<T>> subscribers;
 
         public NotifyingItem()
@@ -323,6 +325,11 @@ namespace Noggog.Notifying
         public override string ToString()
         {
             return Item?.ToString();
+        }
+
+        public void Unset()
+        {
+            this.Item = default(T);
         }
     }
 }

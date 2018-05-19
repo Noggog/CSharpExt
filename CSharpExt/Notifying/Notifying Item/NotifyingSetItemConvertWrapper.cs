@@ -119,11 +119,6 @@ namespace Noggog.Notifying
             this.Set(value, hasBeenSet: hasBeenSet, cmds: null);
         }
 
-        public void SetCurrentAsDefault()
-        {
-            this.Source.SetCurrentAsDefault();
-        }
-
         public void Subscribe(Action callback, NotifyingSubscribeParameters cmds = null)
         {
             this.Source.Subscribe(
@@ -222,7 +217,7 @@ namespace Noggog.Notifying
         R INotifyingItem<R>.Item { get => this.incomingConverter(this.Source.Item); set => this.Source.Item = this.outgoingConverter(value); }
         R IHasBeenSetItem<R>.Item { get => this.incomingConverter(this.Source.Item); set => this.Source.Item = this.outgoingConverter(value); }
         void IHasBeenSetItem<R>.Set(R value, bool hasBeenSet) => Set(value, hasBeenSet, cmds: null);
-        void IHasBeenSetItem<R>.Unset() => Unset(cmds: null);
+        void IHasItem<R>.Unset() => Unset(cmds: null);
 
         public R DefaultValue => this.incomingConverter(this.Source.DefaultValue);
 
@@ -237,11 +232,6 @@ namespace Noggog.Notifying
         public void Unset(NotifyingUnsetParameters cmds)
         {
             this.Source.Unset(cmds);
-        }
-
-        public void SetCurrentAsDefault()
-        {
-            this.Source.SetCurrentAsDefault();
         }
 
         public void Set(R value, NotifyingFireParameters cmds = null)

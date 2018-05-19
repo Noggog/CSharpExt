@@ -9,7 +9,9 @@ namespace Noggog.Notifying
 {
     public interface IHasItem<T> : IHasItemGetter<T>
     {
+        T DefaultValue { get; }
         new T Item { get; set; }
+        void Unset();
     }
 
     public interface IHasItemGetter<T>
@@ -28,12 +30,9 @@ namespace Noggog.Notifying
 
     public interface IHasBeenSetItem<T> : IHasItem<T>, IHasBeenSetItemGetter<T>
     {
-        T DefaultValue { get; }
         new T Item { get; set; }
         new bool HasBeenSet { get; set; }
         void Set(T item, bool hasBeenSet = true);
-        void Unset();
-        void SetCurrentAsDefault();
     }
 }
 

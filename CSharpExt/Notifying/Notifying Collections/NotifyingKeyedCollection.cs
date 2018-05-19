@@ -261,5 +261,18 @@ namespace System
             if (tryGet.Failed) return;
             not.SetTo(tryGet.Value, cmds);
         }
+
+        public static void SetIfSucceededOrDefault<K, V>(
+            this INotifyingKeyedCollection<K, V> not,
+            TryGet<IEnumerable<V>> tryGet,
+            NotifyingFireParameters cmds = null)
+        {
+            if (tryGet.Failed)
+            {
+                not.Unset();
+                return;
+            }
+            not.SetTo(tryGet.Value, cmds);
+        }
     }
 }

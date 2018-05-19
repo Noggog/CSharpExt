@@ -552,7 +552,7 @@ namespace Noggog.Notifying
 
         void IHasBeenSetItem<T>.Set(T value, bool hasBeenSet) => Set(value, hasBeenSet, cmds: null);
 
-        void IHasBeenSetItem<T>.Unset() => Unset(cmds: null);
+        void IHasItem<T>.Unset() => Unset(cmds: null);
 
         public static implicit operator T(NotifyingSetItem<T> item)
         {
@@ -562,6 +562,11 @@ namespace Noggog.Notifying
         public override string ToString()
         {
             return $"{(this.HasBeenSet ? "Set" : "Unset")}: {Item?.ToString()}";
+        }
+
+        public void Unset()
+        {
+            throw new NotImplementedException();
         }
     }
 }
