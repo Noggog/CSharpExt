@@ -69,6 +69,7 @@
     <Compile Include="Extensions\HashHelper.cs" />
     <Compile Include="Extensions\HashSetExt.cs" />
     <Compile Include="Extensions\ICollectionExt.cs" />
+    <Compile Include="Extensions\IDisposableExt.cs" />
     <Compile Include="Extensions\Int8Ext.cs" />
     <Compile Include="Extensions\ByteExt.cs" />
     <Compile Include="Extensions\MathExt.cs" />
