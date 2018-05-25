@@ -64,5 +64,18 @@ namespace System
                 not.Item = tryGet.Value;
             }
         }
+
+        public static void SetIfSucceededOrDefault<T, R>(this IHasItem<T> not, TryGet<R> tryGet)
+            where R : T
+        {
+            if (tryGet.Succeeded)
+            {
+                not.Item = tryGet.Value;
+            }
+            else
+            {
+                not.Unset();
+            }
+        }
     }
 }

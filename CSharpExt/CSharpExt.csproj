@@ -46,6 +46,7 @@
     <Compile Include="Comparers\ReferenceEqualityComparer.cs" />
     <Compile Include="Comparers\WeakReferenceEquatable.cs" />
     <Compile Include="Containers\Common\ICollectionGetter.cs" />
+    <Compile Include="Containers\FireDictionary.cs" />
     <Compile Include="Containers\FireList.cs" />
     <Compile Include="Containers\Pools\ObjectDictionaryListPool.cs" />
     <Compile Include="Containers\Pools\ObjectDictionaryPool.cs" />
@@ -60,6 +61,7 @@
     <Compile Include="Enums\ClockRotation.cs" />
     <Compile Include="Extensions\ActionExt.cs" />
     <Compile Include="Extensions\ArrayExt.cs" />
+    <Compile Include="Extensions\BitVector32Ext.cs" />
     <Compile Include="Extensions\DictionaryExt.cs" />
     <Compile Include="Extensions\DirectoryInfoExt.cs" />
     <Compile Include="Extensions\DoubleExt.cs" />
@@ -105,12 +107,20 @@
     <Compile Include="Notifying\HasBeenSet\IHasBeenSet.cs" />
     <Compile Include="Notifying\Notifying Collections\NotifyingListBounded.cs" />
     <Compile Include="Notifying\Notifying Item\INotifyingItem.cs" />
+    <Compile Include="Notifying\Notifying Item\NotifyingSetItemConverterDefault.cs" />
+    <Compile Include="Notifying\Notifying Item\NotifyingSetItemConverterOnSetDefault.cs" />
+    <Compile Include="Notifying\Notifying Item\NotifyingSetItemDefault.cs" />
     <Compile Include="Notifying\Notifying Item\NotifyingSetItemConvertWrapper.cs" />
+    <Compile Include="Notifying\Notifying Item\NotifyingSetItemNoNullConverterDefault.cs" />
+    <Compile Include="Notifying\Notifying Item\NotifyingSetItemNoNullDefault.cs" />
+    <Compile Include="Notifying\Notifying Item\NotifyingSetItemNoNullOnSetConverterDefault.cs" />
+    <Compile Include="Notifying\Notifying Item\NotifyingSetItemNoNullOnSetDefault.cs" />
     <Compile Include="Notifying\Notifying Item\NotifyingSetItemNoNullOnSetConverter.cs" />
     <Compile Include="Notifying\Notifying Item\NotifyingSetItemNoNullOnSet.cs" />
     <Compile Include="Notifying\Notifying Item\NotifyingSetItemNoNullConverter.cs" />
     <Compile Include="Notifying\Notifying Item\NotifyingSetItemNoNull.cs" />
     <Compile Include="Notifying\Notifying Item\NotifyingSetItemConverterOnSet.cs" />
+    <Compile Include="Notifying\Notifying Item\NotifyingSetItemOnSetDefault.cs" />
     <Compile Include="Notifying\Notifying Item\NotifyingSetItemOnSet.cs" />
     <Compile Include="Notifying\Notifying Item\NotifyingSetItemConverter.cs" />
     <Compile Include="Notifying\Notifying Item\NotifyingSetItem.cs" />

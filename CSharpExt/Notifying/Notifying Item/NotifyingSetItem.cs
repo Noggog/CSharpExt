@@ -9,6 +9,7 @@ namespace Noggog.Notifying
     {
         public static INotifyingSetItem<T> Factory<T>(
             T defaultVal = default(T),
+            bool revertToDefaultOnUnset = false,
             bool markAsSet = false,
             Func<T> noNullFallback = null,
             Action<T> onSet = null,
@@ -20,34 +21,74 @@ namespace Noggog.Notifying
                 {
                     if (converter == null)
                     {
-                        return new NotifyingSetItem<T>(
-                            defaultVal: defaultVal,
-                            markAsSet: markAsSet);
+                        if (revertToDefaultOnUnset)
+                        {
+                            return new NotifyingSetItemDefault<T>(
+                                defaultVal: defaultVal,
+                                markAsSet: markAsSet);
+                        }
+                        else
+                        {
+                            return new NotifyingSetItem<T>(
+                                defaultVal: defaultVal,
+                                markAsSet: markAsSet);
+                        }
                     }
                     else
                     {
-                        return new NotifyingSetItemConverter<T>(
-                            converter,
-                            defaultVal: defaultVal,
-                            markAsSet: markAsSet);
+                        if (revertToDefaultOnUnset)
+                        {
+                            return new NotifyingSetItemConverterDefault<T>(
+                                converter,
+                                defaultVal: defaultVal,
+                                markAsSet: markAsSet);
+                        }
+                        else
+                        {
+                            return new NotifyingSetItemConverter<T>(
+                                converter,
+                                defaultVal: defaultVal,
+                                markAsSet: markAsSet);
+                        }
                     }
                 }
                 else
                 {
                     if (converter == null)
                     {
-                        return new NotifyingSetItemOnSet<T>(
-                            onSet: onSet,
-                            defaultVal: defaultVal,
-                            markAsSet: markAsSet);
+                        if (revertToDefaultOnUnset)
+                        {
+                            return new NotifyingSetItemOnSetDefault<T>(
+                                onSet: onSet,
+                                defaultVal: defaultVal,
+                                markAsSet: markAsSet);
+                        }
+                        else
+                        {
+                            return new NotifyingSetItemOnSet<T>(
+                                onSet: onSet,
+                                defaultVal: defaultVal,
+                                markAsSet: markAsSet);
+                        }
                     }
                     else
                     {
-                        return new NotifyingSetItemConverterOnSet<T>(
-                            converter: converter,
-                            onSet: onSet,
-                            defaultVal: defaultVal,
-                            markAsSet: markAsSet);
+                        if (revertToDefaultOnUnset)
+                        {
+                            return new NotifyingSetItemConverterOnSetDefault<T>(
+                                converter: converter,
+                                onSet: onSet,
+                                defaultVal: defaultVal,
+                                markAsSet: markAsSet);
+                        }
+                        else
+                        {
+                            return new NotifyingSetItemConverterOnSet<T>(
+                                converter: converter,
+                                onSet: onSet,
+                                defaultVal: defaultVal,
+                                markAsSet: markAsSet);
+                        }
                     }
                 }
             }
@@ -57,38 +98,82 @@ namespace Noggog.Notifying
                 {
                     if (converter == null)
                     {
-                        return new NotifyingSetItemNoNull<T>(
-                            noNullFallback: noNullFallback,
-                            defaultVal: defaultVal,
-                            markAsSet: markAsSet);
+                        if (revertToDefaultOnUnset)
+                        {
+                            return new NotifyingSetItemNoNullDefault<T>(
+                                noNullFallback: noNullFallback,
+                                defaultVal: defaultVal,
+                                markAsSet: markAsSet);
+                        }
+                        else
+                        {
+                            return new NotifyingSetItemNoNull<T>(
+                                noNullFallback: noNullFallback,
+                                defaultVal: defaultVal,
+                                markAsSet: markAsSet);
+                        }
                     }
                     else
                     {
-                        return new NotifyingSetItemNoNullConverter<T>(
-                            noNullFallback: noNullFallback,
-                            converter: converter,
-                            defaultVal: defaultVal,
-                            markAsSet: markAsSet);
+                        if (revertToDefaultOnUnset)
+                        {
+                            return new NotifyingSetItemNoNullConverterDefault<T>(
+                                noNullFallback: noNullFallback,
+                                converter: converter,
+                                defaultVal: defaultVal,
+                                markAsSet: markAsSet);
+                        }
+                        else
+                        {
+                            return new NotifyingSetItemNoNullConverter<T>(
+                                noNullFallback: noNullFallback,
+                                converter: converter,
+                                defaultVal: defaultVal,
+                                markAsSet: markAsSet);
+                        }
                     }
                 }
                 else
                 {
                     if (converter == null)
                     {
-                        return new NotifyingSetItemNoNullOnSet<T>(
-                            noNullFallback: noNullFallback,
-                            onSet: onSet,
-                            defaultVal: defaultVal,
-                            markAsSet: markAsSet);
+                        if (revertToDefaultOnUnset)
+                        {
+                            return new NotifyingSetItemNoNullOnSetDefault<T>(
+                                noNullFallback: noNullFallback,
+                                onSet: onSet,
+                                defaultVal: defaultVal,
+                                markAsSet: markAsSet);
+                        }
+                        else
+                        {
+                            return new NotifyingSetItemNoNullOnSet<T>(
+                                noNullFallback: noNullFallback,
+                                onSet: onSet,
+                                defaultVal: defaultVal,
+                                markAsSet: markAsSet);
+                        }
                     }
                     else
                     {
-                        return new NotifyingSetItemNoNullOnSetConverter<T>(
-                            noNullFallback: noNullFallback,
-                            onSet: onSet,
-                            converter: converter,
-                            defaultVal: defaultVal,
-                            markAsSet: markAsSet);
+                        if (revertToDefaultOnUnset)
+                        {
+                            return new NotifyingSetItemNoNullOnSetConverterDefault<T>(
+                                noNullFallback: noNullFallback,
+                                onSet: onSet,
+                                converter: converter,
+                                defaultVal: defaultVal,
+                                markAsSet: markAsSet);
+                        }
+                        else
+                        {
+                            return new NotifyingSetItemNoNullOnSetConverter<T>(
+                                noNullFallback: noNullFallback,
+                                onSet: onSet,
+                                converter: converter,
+                                defaultVal: defaultVal,
+                                markAsSet: markAsSet);
+                        }
                     }
                 }
             }
@@ -148,7 +233,8 @@ namespace Noggog.Notifying
             set => Set(value, null);
         }
 
-        public T DefaultValue { get; private set; }
+        public virtual T DefaultValue => default(T);
+
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected bool _HasBeenSet;
         public bool HasBeenSet
@@ -162,7 +248,6 @@ namespace Noggog.Notifying
             T defaultVal = default(T),
             bool markAsSet = false)
         {
-            this.DefaultValue = defaultVal;
             this._item = defaultVal;
             this._HasBeenSet = markAsSet;
         }
@@ -371,15 +456,15 @@ namespace Noggog.Notifying
             subscribers.Remove(owner);
         }
 
-        public void Unset(NotifyingUnsetParameters cmds = null)
+        public virtual void Unset(NotifyingUnsetParameters cmds = null)
         {
             HasBeenSet = false;
-            Set(DefaultValue, cmds.ToFireParams());
+            Set(default(T), cmds.ToFireParams());
         }
 
-        public void SetCurrentAsDefault()
+        public virtual void SetCurrentAsDefault()
         {
-            this.DefaultValue = this._item;
+            throw new ArgumentException("Cannot set currenta s default on a notifying propery");
         }
 
         private void SetHasBeenSet(bool value)
@@ -467,7 +552,7 @@ namespace Noggog.Notifying
 
         void IHasBeenSetItem<T>.Set(T value, bool hasBeenSet) => Set(value, hasBeenSet, cmds: null);
 
-        void IHasBeenSetItem<T>.Unset() => Unset(cmds: null);
+        void IHasItem<T>.Unset() => Unset(cmds: null);
 
         public static implicit operator T(NotifyingSetItem<T> item)
         {
@@ -477,6 +562,11 @@ namespace Noggog.Notifying
         public override string ToString()
         {
             return $"{(this.HasBeenSet ? "Set" : "Unset")}: {Item?.ToString()}";
+        }
+
+        public void Unset()
+        {
+            throw new NotImplementedException();
         }
     }
 }

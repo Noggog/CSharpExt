@@ -35,8 +35,10 @@ namespace Noggog.Notifying
         }
 
         #region NotifyingItem interface
-        public T Item { get => Source.Item; set => this.Set(value); }
+        public T DefaultValue => Source.DefaultValue;
 
+        public T Item { get => Source.Item; set => this.Set(value); }
+        
         public void Bind(object owner, INotifyingItem<T> rhs, NotifyingBindParameters cmds = null)
         {
             throw new NotImplementedException();
@@ -94,6 +96,11 @@ namespace Noggog.Notifying
             this.Source.Subscribe(owner: owner, callback: callback, cmds: cmds);
         }
 
+        public void Unset()
+        {
+            Source.Unset();
+        }
+
         public void Unsubscribe(object owner)
         {
             this.Source.Unsubscribe(owner);
@@ -121,7 +128,7 @@ namespace Noggog.Notifying
         R INotifyingItem<R>.Item { get => this.incomingConverter(this.Source.Item); set => this.Source.Item = this.outgoingConverter(value); }
         R IHasBeenSetItem<R>.Item { get => this.incomingConverter(this.Source.Item); set => this.Source.Item = this.outgoingConverter(value); }
         void IHasBeenSetItem<R>.Set(R value, bool hasBeenSet) => Set(value, hasBeenSet, cmds: null);
-        void IHasBeenSetItem<R>.Unset() => Unset(cmds: null);
+        void IHasItem<R>.Unset() => Unset(cmds: null);
 
         public R DefaultValue => this.incomingConverter(this.Source.DefaultValue);
 
@@ -136,11 +143,6 @@ namespace Noggog.Notifying
         public void Unset(NotifyingUnsetParameters cmds)
         {
             this.Source.Unset(cmds);
-        }
-
-        public void SetCurrentAsDefault()
-        {
-            this.Source.SetCurrentAsDefault();
         }
 
         public void Set(R value, NotifyingFireParameters cmds)

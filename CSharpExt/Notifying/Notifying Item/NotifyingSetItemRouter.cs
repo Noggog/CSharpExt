@@ -43,7 +43,7 @@ namespace Noggog.Notifying
 
         T IHasItemGetter<T>.Item => this.Item;
         void IHasBeenSetItem<T>.Set(T value, bool hasBeenSet) => Set(value, hasBeenSet, cmds: null);
-        void IHasBeenSetItem<T>.Unset() => Unset(cmds: null);
+        void IHasItem<T>.Unset() => Unset(cmds: null);
 
         public bool HasBeenSet
         {
@@ -57,12 +57,6 @@ namespace Noggog.Notifying
                 SwapOver();
                 _child.HasBeenSet = value;
             }
-        }
-
-        public void SetCurrentAsDefault()
-        {
-            SwapOver();
-            _child.SetCurrentAsDefault();
         }
 
         public void Subscribe(Action callback, NotifyingSubscribeParameters cmds = null)

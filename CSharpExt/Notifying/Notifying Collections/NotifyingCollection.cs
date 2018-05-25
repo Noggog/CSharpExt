@@ -366,5 +366,18 @@ namespace System
             if (tryGet.Failed) return;
             not.SetTo(tryGet.Value, cmds);
         }
+
+        public static void SetIfSucceededOrDefault<T>(
+            this INotifyingCollection<T> not,
+            TryGet<IEnumerable<T>> tryGet,
+            NotifyingFireParameters cmds = null)
+        {
+            if (tryGet.Failed)
+            {
+                not.Unset();
+                return;
+            }
+            not.SetTo(tryGet.Value, cmds);
+        }
     }
 }
