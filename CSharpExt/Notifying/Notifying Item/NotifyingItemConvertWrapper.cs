@@ -38,26 +38,6 @@ namespace Noggog.Notifying
         public T DefaultValue => Source.DefaultValue;
 
         public T Item { get => Source.Item; set => this.Set(value); }
-        
-        public void Bind(object owner, INotifyingItem<T> rhs, NotifyingBindParameters cmds = null)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Bind<R>(object owner, INotifyingItem<R> rhs, Func<T, R> toConv, Func<R, T> fromConv, NotifyingBindParameters cmds = null)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Bind(INotifyingItem<T> rhs, NotifyingBindParameters cmds = null)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Bind<R>(INotifyingItem<R> rhs, Func<T, R> toConv, Func<R, T> fromConv, NotifyingBindParameters cmds = null)
-        {
-            throw new NotImplementedException();
-        }
 
         public void Set(T value, NotifyingFireParameters cmd)
         {
@@ -268,46 +248,6 @@ namespace Noggog.Notifying
         public void SetHasBeenSet(bool on)
         {
             this.HasBeenSet = on;
-        }
-
-        public void Bind(object owner, INotifyingSetItem<R> rhs, NotifyingBindParameters cmds = null)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Bind<R1>(object owner, INotifyingSetItem<R1> rhs, Func<R, R1> toConv, Func<R1, R> fromConv, NotifyingBindParameters cmds = null)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Bind(INotifyingSetItem<R> rhs, NotifyingBindParameters cmds = null)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Bind<R1>(INotifyingSetItem<R1> rhs, Func<R, R1> toConv, Func<R1, R> fromConv, NotifyingBindParameters cmds = null)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Bind(object owner, INotifyingItem<R> rhs, NotifyingBindParameters cmds = null)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Bind<R1>(object owner, INotifyingItem<R1> rhs, Func<R, R1> toConv, Func<R1, R> fromConv, NotifyingBindParameters cmds = null)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Bind(INotifyingItem<R> rhs, NotifyingBindParameters cmds = null)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Bind<R1>(INotifyingItem<R1> rhs, Func<R, R1> toConv, Func<R1, R> fromConv, NotifyingBindParameters cmds = null)
-        {
-            throw new NotImplementedException();
         }
         #endregion
     }

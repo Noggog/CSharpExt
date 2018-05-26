@@ -77,6 +77,8 @@ namespace Noggog.Notifying
             foreach (var sub in subscribers)
             {
                 if (!sub.Key.IsAlive) continue;
+                // ToDo
+                // Remove dead owners
                 fireSubscribers.Add(new KeyValuePair<WeakReferenceEquatable, List<T>>(
                     sub.Key,
                     sub.Value.GetFireList()));

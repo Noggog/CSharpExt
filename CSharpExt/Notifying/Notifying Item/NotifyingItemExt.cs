@@ -1,6 +1,7 @@
 ﻿using Noggog.Notifying;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -146,6 +147,136 @@ namespace System
             {
                 not.Unset(cmds.ToUnsetParams());
             }
+        }
+
+        public static void Bind<T>(this INotifyingItem<T> item, object owner, INotifyingItem<T> rhs, NotifyingBindParameters cmds = null)
+        {
+            item.Subscribe(
+                owner: owner,
+                callback: (c) =>
+                {
+                    rhs.Set(item.Item, cmds?.FireParameters);
+                },
+                cmds: cmds?.SubscribeParameters);
+            rhs.Subscribe(
+                owner: owner,
+                callback: (c) =>
+                {
+                    item.Item = c.New;
+                },
+                cmds: NotifyingSubscribeParameters.NoFire);
+        }
+
+        public static void Bind<T, R>(this INotifyingItem<T> item, object owner, INotifyingItem<R> rhs, Func<T, R> toConv, Func<R, T> fromConv, NotifyingBindParameters cmds = null)
+        {
+            item.Subscribe(
+                owner: owner,
+                callback: (c) =>
+                {
+                    rhs.Set(toConv(item.Item), cmds?.FireParameters);
+                },
+                cmds: cmds?.SubscribeParameters);
+            rhs.Subscribe(
+                owner: owner,
+                callback: (c) =>
+                {
+                    item.Item = fromConv(c.New);
+                },
+                cmds: NotifyingSubscribeParameters.NoFire);
+        }
+
+        [DebuggerStepThrough]
+        public static void Bind<T>(this INotifyingItem<T> item, INotifyingItem<T> rhs, NotifyingBindParameters cmds = null)
+        {
+            item.Bind<T>(
+                owner: null,
+                rhs: rhs,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        public static void Bind<T, R>(this INotifyingItem<T> item, INotifyingItem<R> rhs, Func<T, R> toConv, Func<R, T> fromConv, NotifyingBindParameters cmds = null)
+        {
+            item.Bind<T, R>(
+                owner: null,
+                rhs: rhs,
+                toConv: toConv,
+                fromConv: fromConv,
+                cmds: cmds);
+        }
+
+        public static void Bind<T>(this INotifyingSetItem<T> item, object owner, INotifyingSetItem<T> rhs, NotifyingBindParameters cmds = null)
+        {
+            item.Subscribe(
+                owner: owner,
+                callback: (c) =>
+                {
+                    rhs.Set(item.Item, item.HasBeenSet, cmds?.FireParameters);
+                },
+                cmds: cmds?.SubscribeParameters);
+            rhs.Subscribe(
+                owner: owner,
+                callback: (c) =>
+                {
+                    item.Item = c.New;
+                },
+                cmds: NotifyingSubscribeParameters.NoFire);
+        }
+
+        public static void Bind<T, R>(this INotifyingSetItem<T> item, object owner, INotifyingSetItem<R> rhs, Func<T, R> toConv, Func<R, T> fromConv, NotifyingBindParameters cmds = null)
+        {
+            item.Subscribe(
+                owner: owner,
+                callback: (c) =>
+                {
+                    rhs.Set(toConv(item.Item), item.HasBeenSet, cmds?.FireParameters);
+                },
+                cmds: cmds?.SubscribeParameters);
+            rhs.Subscribe(
+                owner: owner,
+                callback: (c) =>
+                {
+                    item.Item = fromConv(c.New);
+                },
+                cmds: NotifyingSubscribeParameters.NoFire);
+        }
+
+        [DebuggerStepThrough]
+        public static void Bind<T>(this INotifyingSetItem<T> item, INotifyingSetItem<T> rhs, NotifyingBindParameters cmds = null)
+        {
+            item.Bind(
+                owner: null,
+                rhs: rhs,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        public static void Bind<T, R>(this INotifyingSetItem<T> item, INotifyingSetItem<R> rhs, Func<T, R> toConv, Func<R, T> fromConv, NotifyingBindParameters cmds = null)
+        {
+            item.Bind(
+                owner: null,
+                rhs: rhs,
+                toConv: toConv,
+                fromConv: fromConv,
+                cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        public static void Subscribe<T>(this INotifyingItemGetter<T> item, Action callback, NotifyingSubscribeParameters cmds = null)
+        {
+            item.Subscribe(owner: null, callback: callback, cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        public static void Subscribe<T>(this INotifyingItemGetter<T> item, NotifyingItemSimpleCallback<T> callback, NotifyingSubscribeParameters cmds = null)
+        {
+            item.Subscribe(owner: null, callback: callback, cmds: cmds);
+        }
+
+        [DebuggerStepThrough]
+        public static void Subscribe<T>(this INotifyingSetItemGetter<T> item, NotifyingSetItemSimpleCallback<T> callback, NotifyingSubscribeParameters cmds = null)
+        {
+            item.Subscribe(owner: null, callback: callback, cmds: cmds);
         }
     }
 }

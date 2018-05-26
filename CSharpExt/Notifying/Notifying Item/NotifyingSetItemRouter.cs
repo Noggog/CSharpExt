@@ -149,7 +149,6 @@ namespace Noggog.Notifying
                     owner._child.Set(
                         change.New, 
                         new NotifyingFireParameters(
-                            markAsSet: _base.HasBeenSet, 
                             exceptionHandler: cmds?.ExceptionHandler, 
                             forceFire: cmds?.ForceFire ?? false));
                 });
@@ -171,46 +170,6 @@ namespace Noggog.Notifying
         {
             SwapOver();
             _child.HasBeenSet = on;
-        }
-
-        public void Bind(INotifyingSetItem<T> rhs, NotifyingBindParameters cmds = null)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Bind<R>(INotifyingSetItem<R> rhs, Func<T, R> toConv, Func<R, T> fromConv, NotifyingBindParameters cmds = null)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Bind(INotifyingItem<T> rhs, NotifyingBindParameters cmds = null)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Bind<R>(INotifyingItem<R> rhs, Func<T, R> toConv, Func<R, T> fromConv, NotifyingBindParameters cmds = null)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Bind(object owner, INotifyingSetItem<T> rhs, NotifyingBindParameters cmds = null)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Bind<R>(object owner, INotifyingSetItem<R> rhs, Func<T, R> toConv, Func<R, T> fromConv, NotifyingBindParameters cmds = null)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Bind(object ower, INotifyingItem<T> rhs, NotifyingBindParameters cmds = null)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Bind<R>(object owner, INotifyingItem<R> rhs, Func<T, R> toConv, Func<R, T> fromConv, NotifyingBindParameters cmds = null)
-        {
-            throw new NotImplementedException();
         }
     }
 }

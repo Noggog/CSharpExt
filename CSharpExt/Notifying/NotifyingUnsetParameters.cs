@@ -33,7 +33,6 @@ namespace Noggog.Notifying
         {
             if (param == null) return null;
             return new NotifyingFireParameters(
-                markAsSet: false,
                 exceptionHandler: param.ExceptionHandler,
                 forceFire: param.ForceFire);
         }

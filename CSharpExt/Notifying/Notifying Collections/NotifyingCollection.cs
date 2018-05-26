@@ -110,10 +110,7 @@ namespace Noggog.Notifying
             {
                 cmds = NotifyingFireParameters.Typical;
             }
-            if (cmds.MarkAsSet)
-            {
-                HasBeenSet = true;
-            }
+            HasBeenSet = true;
             return cmds;
         }
     }

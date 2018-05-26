@@ -154,10 +154,7 @@ namespace Noggog.Notifying
         {
             cmds = cmds ?? NotifyingFireParameters.Typical;
 
-            if (cmds.MarkAsSet)
-            {
-                HasBeenSet = true;
-            }
+            HasBeenSet = true;
             List<Exception> exceptions = null;
             if (HasSubscribers())
             { // Will be firing

@@ -12,7 +12,6 @@ namespace Noggog
      */
     public class FireDictionary<K, V> : IDictionary<K, V>
     {
-        private readonly object _lock = new object();
         private readonly Dictionary<K, V> _dict = new Dictionary<K, V>();
         private Dictionary<K, V> _fireDict;
 
@@ -29,7 +28,7 @@ namespace Noggog
 
         public void Set(K key, V value)
         {
-            lock (_lock)
+            lock (_dict)
             {
                 _dict[key] = value;
                 _fireDict = null;
@@ -38,7 +37,7 @@ namespace Noggog
 
         public void Add(K key, V value)
         {
-            lock (_lock)
+            lock (_dict)
             {
                 _dict.Add(key, value);
                 _fireDict = null;
@@ -47,7 +46,7 @@ namespace Noggog
 
         public void Add(KeyValuePair<K, V> item)
         {
-            lock (_lock)
+            lock (_dict)
             {
                 _dict.Add(item.Key, item.Value);
                 _fireDict = null;
@@ -56,7 +55,7 @@ namespace Noggog
 
         public void Clear()
         {
-            lock (_lock)
+            lock (_dict)
             {
                 _dict.Clear();
                 if (_fireDict.Count > 0)
@@ -88,7 +87,7 @@ namespace Noggog
 
         public bool Remove(K key)
         {
-            lock (_lock)
+            lock (_dict)
             {
                 if (!_dict.Remove(key)) return false;
                 _fireDict = null;
@@ -98,7 +97,7 @@ namespace Noggog
 
         public bool Remove(KeyValuePair<K, V> item)
         {
-            lock (_lock)
+            lock (_dict)
             {
                 if (!((IDictionary<K, V>)_dict).Remove(item)) return false;
                 _fireDict = null;
@@ -108,12 +107,23 @@ namespace Noggog
 
         public bool TryGetValue(K key, out V value)
         {
-            return GetFireDictionary().TryGetValue(key, out value);
+            lock (_dict)
+            {
+                return _dict.TryGetValue(key, out value);
+            }
+        }
+
+        public V TryCreateValue(K key, Func<V> newFunc)
+        {
+            lock (_dict)
+            {
+                return _dict.TryCreateValue(key, newFunc);
+            }
         }
 
         public IDictionary<K, V> GetFireDictionary()
         {
-            lock (_lock)
+            lock (_dict)
             {
                 if (_fireDict == null)
                 {

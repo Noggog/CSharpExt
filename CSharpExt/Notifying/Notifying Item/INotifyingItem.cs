@@ -16,9 +16,7 @@ namespace Noggog.Notifying
     public interface INotifyingItemGetter<T> : IHasItemGetter<T>
     {
         new T Item { get; }
-        void Subscribe(Action callback, NotifyingSubscribeParameters cmds = null);
-        void Subscribe(object owner,Action callback, NotifyingSubscribeParameters cmds = null);
-        void Subscribe(NotifyingItemSimpleCallback<T> callback, NotifyingSubscribeParameters cmds = null);
+        void Subscribe(object owner, Action callback, NotifyingSubscribeParameters cmds = null);
         void Subscribe(object owner, NotifyingItemSimpleCallback<T> callback, NotifyingSubscribeParameters cmds = null);
         void Subscribe<O>(O owner, NotifyingItemCallback<O, T> callback, NotifyingSubscribeParameters cmds = null);
         void Unsubscribe(object owner);
@@ -28,16 +26,11 @@ namespace Noggog.Notifying
     {
         new T Item { get; set; }
         void Set(T value, NotifyingFireParameters cmds);
-        void Bind(object owner, INotifyingItem<T> rhs, NotifyingBindParameters cmds = null);
-        void Bind<R>(object owner, INotifyingItem<R> rhs, Func<T, R> toConv, Func<R, T> fromConv, NotifyingBindParameters cmds = null);
-        void Bind(INotifyingItem<T> rhs, NotifyingBindParameters cmds = null);
-        void Bind<R>(INotifyingItem<R> rhs, Func<T, R> toConv, Func<R, T> fromConv, NotifyingBindParameters cmds = null);
     }
 
     public interface INotifyingSetItemGetter<T> : IHasBeenSetItemGetter<T>, INotifyingItemGetter<T>
     {
         new T Item { get; }
-        void Subscribe(NotifyingSetItemSimpleCallback<T> callback, NotifyingSubscribeParameters cmds = null);   
         void Subscribe(object owner, NotifyingSetItemSimpleCallback<T> callback, NotifyingSubscribeParameters cmds = null);
         void Subscribe<O>(O owner, NotifyingSetItemCallback<O, T> callback, NotifyingSubscribeParameters cmds = null);
     }
@@ -47,9 +40,5 @@ namespace Noggog.Notifying
         new T Item { get; set; }
         void Unset(NotifyingUnsetParameters cmds = null);
         void Set(T item, bool hasBeenSet, NotifyingFireParameters cmds);
-        void Bind(object owner, INotifyingSetItem<T> rhs, NotifyingBindParameters cmds = null);
-        void Bind<R>(object owner, INotifyingSetItem<R> rhs, Func<T, R> toConv, Func<R, T> fromConv, NotifyingBindParameters cmds = null);
-        void Bind(INotifyingSetItem<T> rhs, NotifyingBindParameters cmds = null);
-        void Bind<R>(INotifyingSetItem<R> rhs, Func<T, R> toConv, Func<R, T> fromConv, NotifyingBindParameters cmds = null);
     }
 }

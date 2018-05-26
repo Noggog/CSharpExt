@@ -280,15 +280,6 @@ namespace Noggog.Notifying
         }
 
         [DebuggerStepThrough]
-        void INotifyingItemGetter<T>.Subscribe(NotifyingItemSimpleCallback<T> callback, NotifyingSubscribeParameters cmds)
-        {
-            this.SubscribeInternal(
-                owner: null,
-                callback: (own, change) => callback(change),
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
         void INotifyingItemGetter<T>.Subscribe<O>(O owner, NotifyingItemCallback<O, T> callback, NotifyingSubscribeParameters cmds)
         {
             this.Subscribe<O>(
@@ -338,118 +329,6 @@ namespace Noggog.Notifying
             }
         }
 
-        public void Bind(object owner, INotifyingSetItem<T> rhs, NotifyingBindParameters cmds = null)
-        {
-            this.Subscribe(
-                owner: owner,
-                callback: (c) =>
-                {
-                    rhs.Set(this.Item, this.HasBeenSet, cmds?.FireParameters);
-                },
-                cmds: cmds?.SubscribeParameters);
-            rhs.Subscribe(
-                owner: owner,
-                callback: (c) =>
-                {
-                    this.Item = c.New;
-                },
-                cmds: NotifyingSubscribeParameters.NoFire);
-        }
-
-        public void Bind<R>(object owner, INotifyingSetItem<R> rhs, Func<T, R> toConv, Func<R, T> fromConv, NotifyingBindParameters cmds = null)
-        {
-            this.Subscribe(
-                owner: owner,
-                callback: (c) =>
-                {
-                    rhs.Set(toConv(this.Item), this.HasBeenSet, cmds?.FireParameters);
-                },
-                cmds: cmds?.SubscribeParameters);
-            rhs.Subscribe(
-                owner: owner,
-                callback: (c) =>
-                {
-                    this.Item = fromConv(c.New);
-                },
-                cmds: NotifyingSubscribeParameters.NoFire);
-        }
-
-        public void Bind(object owner, INotifyingItem<T> rhs, NotifyingBindParameters cmds = null)
-        {
-            this.Subscribe(
-                owner: owner,
-                callback: (c) =>
-                {
-                    rhs.Set(this.Item, cmds?.FireParameters);
-                },
-                cmds: cmds?.SubscribeParameters);
-            rhs.Subscribe(
-                owner: owner,
-                callback: (c) =>
-                {
-                    this.Item = c.New;
-                },
-                cmds: NotifyingSubscribeParameters.NoFire);
-        }
-
-        public void Bind<R>(object owner, INotifyingItem<R> rhs, Func<T, R> toConv, Func<R, T> fromConv, NotifyingBindParameters cmds = null)
-        {
-            this.Subscribe(
-                owner: owner,
-                callback: (c) =>
-                {
-                    rhs.Set(toConv(this.Item), cmds?.FireParameters);
-                },
-                cmds: cmds?.SubscribeParameters);
-            rhs.Subscribe(
-                owner: owner,
-                callback: (c) =>
-                {
-                    this.Item = fromConv(c.New);
-                },
-                cmds: NotifyingSubscribeParameters.NoFire);
-        }
-
-        [DebuggerStepThrough]
-        public void Bind(INotifyingSetItem<T> rhs, NotifyingBindParameters cmds = null)
-        {
-            this.Bind(
-                owner: null,
-                rhs: rhs,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        public void Bind<R>(INotifyingSetItem<R> rhs, Func<T, R> toConv, Func<R, T> fromConv, NotifyingBindParameters cmds = null)
-        {
-            this.Bind(
-                owner: null,
-                rhs: rhs,
-                toConv: toConv,
-                fromConv: fromConv,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        public void Bind(INotifyingItem<T> rhs, NotifyingBindParameters cmds = null)
-        {
-            this.Bind(
-                owner: null,
-                rhs: rhs,
-                cmds: cmds);
-        }
-
-        [DebuggerStepThrough]
-        public void Bind<R>(INotifyingItem<R> rhs, Func<T, R> toConv, Func<R, T> fromConv, NotifyingBindParameters cmds = null)
-        {
-            this.Bind(
-                owner: null,
-                rhs: rhs,
-                toConv: toConv,
-                fromConv: fromConv,
-                cmds: cmds);
-        }
-
         public void Unsubscribe(object owner)
         {
             if (subscribers == null) return;
@@ -475,7 +354,7 @@ namespace Noggog.Notifying
         public void Set(T value, NotifyingFireParameters cmds = null)
         {
             cmds = cmds ?? NotifyingFireParameters.Typical;
-            Set(value, cmds.MarkAsSet ? true : this.HasBeenSet, cmds);
+            Set(value, hasBeenSet: true, cmds: cmds);
         }
 
         public virtual void Set(T value, bool hasBeenSet, NotifyingFireParameters cmds = null)
