@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Noggog
 {
-    public class BinaryReadStream : IBinaryStream
+    public class BinaryReadStream : Stream, IBinaryStream
     {
         public const int NearnessLength = 20;
         public static readonly byte[] NearnessBuffer = new byte[NearnessLength];
@@ -23,10 +23,10 @@ namespace Noggog
         private int InternalStreamRemaining => _internalMemoryStream.Remaining - _posOffset;
         private bool forceReload;
 
-        public long Length => _length;
+        public override long Length => _length;
         public long Remaining => _length - this.Position;
         public bool Complete => _length <= this.Position;
-        public long Position { get => _streamPos - InternalStreamRemaining; set => SetPosition(value); }
+        public override long Position { get => _streamPos - InternalStreamRemaining; set => SetPosition(value); }
 
         public BinaryReadStream(Stream stream, int bufferSize = 4096, bool dispose = true)
         {
@@ -131,7 +131,7 @@ namespace Noggog
             return Read(buffer, offset: 0, amount: buffer.Length);
         }
 
-        public int Read(byte[] buffer, int offset, int amount)
+        public override int Read(byte[] buffer, int offset, int amount)
         {
             if (amount < InternalStreamRemaining)
             {
@@ -193,7 +193,7 @@ namespace Noggog
             return _internalMemoryStream.ReadUInt8();
         }
 
-        public byte ReadByte()
+        public override int ReadByte()
         {
             LoadPosition(1);
             return _internalMemoryStream.ReadUInt8();
@@ -276,13 +276,56 @@ namespace Noggog
             return BinaryUtility.BytesToString(arr, 0, amount + numRead);
         }
 
-        public void Dispose()
+        protected override void Dispose(bool disposing)
         {
+            base.Dispose(disposing);
             if (this._dispose)
             {
                 this._stream.Dispose();
             }
             this._internalMemoryStream.Dispose();
         }
+
+        #region Stream
+        public override bool CanRead => true;
+
+        public override bool CanSeek => true;
+
+        public override bool CanWrite => false;
+
+        public override void Flush()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override long Seek(long offset, SeekOrigin origin)
+        {
+            switch (origin)
+            {
+                case SeekOrigin.Begin:
+                    this.Position = offset;
+                    break;
+                case SeekOrigin.Current:
+                    this.Position += offset;
+                    break;
+                case SeekOrigin.End:
+                    this.Position = this.Length + offset;
+                    break;
+                default:
+                    throw new NotImplementedException();
+            }
+            return this.Position;
+        }
+
+        public override void SetLength(long value)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void Write(byte[] buffer, int offset, int count)
+        {
+            throw new NotImplementedException();
+        }
+        #endregion
     }
 }

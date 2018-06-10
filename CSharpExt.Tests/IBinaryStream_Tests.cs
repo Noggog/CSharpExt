@@ -193,7 +193,7 @@ namespace CSharpExt.Tests
         {
             var stream = GetStream(TYPICAL_TEST_LENGTH);
             stream.Position = 3;
-            var result = stream.ReadByte();
+            var result = stream.ReadUInt8();
             Assert.Equal(TYPICAL_TEST_LENGTH, stream.Length);
             Assert.Equal(4, stream.Position);
             Assert.Equal(TYPICAL_TEST_LENGTH - 4, stream.Remaining);

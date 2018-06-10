@@ -12,12 +12,10 @@ namespace Noggog
         long Length { get; }
         long Remaining { get; }
         bool Complete { get; }
-
         int Read(byte[] buffer, int offset, int amount);
         int Read(byte[] buffer);
         byte[] ReadBytes(int amount);
         bool ReadBool();
-        byte ReadByte();
         byte ReadUInt8();
         ushort ReadUInt16();
         uint ReadUInt32();
