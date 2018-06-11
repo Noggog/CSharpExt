@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -27,5 +28,6 @@ namespace Noggog
         float ReadFloat();
         double ReadDouble();
         string ReadString(int amount);
+        void WriteTo(Stream stream, int amount);
     }
 }

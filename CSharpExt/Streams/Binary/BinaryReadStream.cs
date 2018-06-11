@@ -143,7 +143,7 @@ namespace Noggog
                 Array.Copy(_data, _internalMemoryStream.Position, buffer, offset, amount);
                 _internalMemoryStream.Position += amount;
                 return amount;
-            } 
+            }
 
             // Copy remaining
             var remaining = InternalStreamRemaining;
@@ -325,6 +325,18 @@ namespace Noggog
         public override void Write(byte[] buffer, int offset, int count)
         {
             throw new NotImplementedException();
+        }
+
+        public void WriteTo(Stream stream, int amount)
+        {
+            while (amount > 0)
+            {
+                LoadPosition(amount);
+                var internalRemaining = InternalStreamRemaining;
+                var toRead = amount < internalRemaining ? amount : internalRemaining;
+                _internalMemoryStream.WriteTo(stream, toRead);
+                amount -= toRead;
+            }
         }
         #endregion
     }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -136,6 +137,12 @@ namespace Noggog
         public void Dispose()
         {
             this._data = null;
+        }
+
+        public void WriteTo(Stream stream, int amount)
+        {
+            _pos += amount;
+            stream.Write(_data, _pos - amount, amount);
         }
     }
 }
