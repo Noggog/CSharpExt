@@ -48,10 +48,12 @@
     <Compile Include="Containers\Common\ICollectionGetter.cs" />
     <Compile Include="Containers\FireDictionary.cs" />
     <Compile Include="Containers\FireList.cs" />
+    <Compile Include="Containers\Interfaces\ISortedList.cs" />
     <Compile Include="Containers\Pools\ObjectDictionaryListPool.cs" />
     <Compile Include="Containers\Pools\ObjectDictionaryPool.cs" />
     <Compile Include="Containers\Pools\ObjectListPool.cs" />
     <Compile Include="Containers\Pools\ObjectPool.cs" />
+    <Compile Include="Containers\SortingList.cs" />
     <Compile Include="Convenience Classes\TaskCompletionSource.cs" />
     <Compile Include="Enums\AddRemove.cs" />
     <Compile Include="Enums\AddRemoveModify.cs" />
@@ -75,6 +77,7 @@
     <Compile Include="Extensions\ByteExt.cs" />
     <Compile Include="Extensions\MathExt.cs" />
     <Compile Include="Extensions\PathExt.cs" />
+    <Compile Include="Extensions\PreSortedListExt.cs" />
     <Compile Include="Extensions\SortedListExt.cs" />
     <Compile Include="Extensions\TaskExt.cs" />
     <Compile Include="Extensions\UInt64Ext.cs" />

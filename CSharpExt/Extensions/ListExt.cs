@@ -6,6 +6,42 @@ namespace System
 {
     public static class ListExt
     {
+        public static int BinarySearch<T>(this IReadOnlyList<T> list, T value)
+        {
+            if (list.Count == 0) return ~0;
+            var comp = Comparer<T>.Default;
+            int low = 0;
+            int high = list.Count - 1;
+            while (low < high)
+            {
+                var index = low + (high - low) / 2;
+                var result = comp.Compare(list[index], value);
+                if (result == 0)
+                {
+                    return index;
+                }
+                else if (result < 0)
+                {
+                    low = index + 1;
+                }
+                else
+                {
+                    high = index - 1;
+                }
+            }
+            var c = comp.Compare(list[low], value);
+            if (c < 0)
+            {
+                low++;
+            }
+            else if (c == 0)
+            {
+                return low;
+            }
+            return ~low;
+        }
+
+        // IList does not implement IReadOnlyList
         public static int BinarySearch<T>(this IList<T> list, T value)
         {
             if (list.Count == 0) return ~0;
@@ -41,12 +77,18 @@ namespace System
             return ~low;
         }
 
-        public static bool InRange<T>(this IList<T> list, int index)
+        // To avoid compiler confusion
+        public static int BinarySearch<T>(this List<T> list, T value)
+        {
+            return BinarySearch<T>((IReadOnlyList<T>)list, value);
+        }
+
+        public static bool InRange<T>(this IReadOnlyList<T> list, int index)
         {
             return index >= 0 && index < list.Count;
         }
 
-        public static bool TryGet<T>(this IList<T> list, int index, out T item)
+        public static bool TryGet<T>(this IReadOnlyList<T> list, int index, out T item)
         {
             if (!InRange(list, index))
             {
@@ -57,7 +99,7 @@ namespace System
             return true;
         }
 
-        public static T TryGet<T>(this IList<T> list, int index)
+        public static T TryGet<T>(this IReadOnlyList<T> list, int index)
         {
             if (!InRange(list, index))
             {
@@ -207,28 +249,6 @@ namespace System
 
             index = -1;
             return false;
-        }
-
-        // Assumes list is already sorted
-        public static void InsertSorted<T>(this IList<T> list, T item, bool replaceDuplicate = false)
-        {
-            var index = list.BinarySearch(item);
-            if (index >= 0)
-            {
-                if (replaceDuplicate)
-                {
-                    list[index] = item;
-                }
-                else
-                {
-                    list.Insert(index, item);
-                }
-            }
-            else
-            {
-                var invert = ~index;
-                list.Insert(invert, item);
-            }
         }
     }
 }
