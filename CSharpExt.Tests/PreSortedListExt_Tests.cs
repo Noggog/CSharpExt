@@ -8,7 +8,7 @@ using Xunit;
 
 namespace CSharpExt.Tests
 {
-    public class SortedListExt_Tests
+    public class PreSortedListExt_Tests
     {
         public const int TOO_LOW = -44;
         public const int LOW = -11;
@@ -17,13 +17,14 @@ namespace CSharpExt.Tests
         public const int TYPICAL_NOT_EXISTS = 55;
         public const int TOO_HIGH = 100;
 
-        private SortedList<int, int> TypicalSortedList()
+        private List<int> TypicalSortedList()
         {
-            var list = new SortedList<int, int>();
-            list[LOW] = 2;
-            list[MEDIUM] = 6;
-            list[HIGH] = 1;
-            return list;
+            return new List<int>()
+            {
+                LOW,
+                MEDIUM,
+                HIGH
+            };
         }
 
         #region TryGetIndexInDirection
@@ -31,8 +32,9 @@ namespace CSharpExt.Tests
         public void TryGetIndexInDirection_Higher_Typical()
         {
             var list = TypicalSortedList();
-            var got = list.TryGetIndexInDirection(
-                key: TYPICAL_NOT_EXISTS,
+            var got = PreSortedListExt.TryGetIndexInDirection(
+                sortedList: list,
+                item: TYPICAL_NOT_EXISTS,
                 higher: true,
                 result: out var result);
             Assert.True(got);
@@ -43,8 +45,9 @@ namespace CSharpExt.Tests
         public void TryGetIndexInDirection_Higher_Equal()
         {
             var list = TypicalSortedList();
-            var got = list.TryGetIndexInDirection(
-                key: MEDIUM,
+            var got = PreSortedListExt.TryGetIndexInDirection(
+                sortedList: list,
+                item: MEDIUM,
                 higher: true,
                 result: out var result);
             Assert.True(got);
@@ -55,8 +58,9 @@ namespace CSharpExt.Tests
         public void TryGetIndexInDirection_Higher_None()
         {
             var list = TypicalSortedList();
-            var got = list.TryGetIndexInDirection(
-                key: 88,
+            var got = PreSortedListExt.TryGetIndexInDirection(
+                sortedList: list,
+                item: 88,
                 higher: true,
                 result: out var result);
             Assert.False(got);
@@ -67,8 +71,9 @@ namespace CSharpExt.Tests
         public void TryGetIndexInDirection_Higher_FromLowest()
         {
             var list = TypicalSortedList();
-            var got = list.TryGetIndexInDirection(
-                key: TOO_LOW,
+            var got = PreSortedListExt.TryGetIndexInDirection(
+                sortedList: list,
+                item: TOO_LOW,
                 higher: true,
                 result: out var result);
             Assert.True(got);
@@ -79,8 +84,9 @@ namespace CSharpExt.Tests
         public void TryGetIndexInDirection_Lower_Typical()
         {
             var list = TypicalSortedList();
-            var got = list.TryGetIndexInDirection(
-                key: TYPICAL_NOT_EXISTS,
+            var got = PreSortedListExt.TryGetIndexInDirection(
+                sortedList: list,
+                item: TYPICAL_NOT_EXISTS,
                 higher: false,
                 result: out var result);
             Assert.True(got);
@@ -91,8 +97,9 @@ namespace CSharpExt.Tests
         public void TryGetIndexInDirection_Lower_Equal()
         {
             var list = TypicalSortedList();
-            var got = list.TryGetIndexInDirection(
-                key: MEDIUM,
+            var got = PreSortedListExt.TryGetIndexInDirection(
+                sortedList: list,
+                item: MEDIUM,
                 higher: false,
                 result: out var result);
             Assert.True(got);
@@ -103,8 +110,9 @@ namespace CSharpExt.Tests
         public void TryGetIndexInDirection_Lower_None()
         {
             var list = TypicalSortedList();
-            var got = list.TryGetIndexInDirection(
-                key: TOO_LOW,
+            var got = PreSortedListExt.TryGetIndexInDirection(
+                sortedList: list,
+                item: TOO_LOW,
                 higher: false,
                 result: out var result);
             Assert.False(got);
@@ -115,8 +123,9 @@ namespace CSharpExt.Tests
         public void TryGetIndexInDirection_Lower_FromHighest()
         {
             var list = TypicalSortedList();
-            var got = list.TryGetIndexInDirection(
-                key: TOO_HIGH,
+            var got = PreSortedListExt.TryGetIndexInDirection(
+                sortedList: list,
+                item: TOO_HIGH,
                 higher: false,
                 result: out var result);
             Assert.True(got);
@@ -128,7 +137,8 @@ namespace CSharpExt.Tests
         public void TryGetEncapsulatedIndices_Typical()
         {
             var list = TypicalSortedList();
-            var got = list.TryGetEncapsulatedIndices(
+            var got = PreSortedListExt.TryGetEncapsulatedIndices(
+                sortedList: list,
                 lowerKey: MEDIUM,
                 higherKey: TOO_HIGH,
                 result: out var range);
@@ -140,7 +150,8 @@ namespace CSharpExt.Tests
         public void TryGetEncapsulatedIndices_Above()
         {
             var list = TypicalSortedList();
-            var got = list.TryGetEncapsulatedIndices(
+            var got = PreSortedListExt.TryGetEncapsulatedIndices(
+                sortedList: list,
                 lowerKey: TOO_HIGH,
                 higherKey: TOO_HIGH + 5,
                 result: out var range);
@@ -151,7 +162,8 @@ namespace CSharpExt.Tests
         public void TryGetEncapsulatedIndices_Below()
         {
             var list = TypicalSortedList();
-            var got = list.TryGetEncapsulatedIndices(
+            var got = PreSortedListExt.TryGetEncapsulatedIndices(
+                sortedList: list,
                 lowerKey: TOO_LOW - 5,
                 higherKey: TOO_LOW,
                 result: out var range);
@@ -162,7 +174,8 @@ namespace CSharpExt.Tests
         public void TryGetEncapsulatedIndices_Crossing()
         {
             var list = TypicalSortedList();
-            var got = list.TryGetEncapsulatedIndices(
+            var got = PreSortedListExt.TryGetEncapsulatedIndices(
+                sortedList: list,
                 lowerKey: LOW + 1,
                 higherKey: MEDIUM - 1,
                 result: out var range);

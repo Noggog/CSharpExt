@@ -11,11 +11,13 @@ namespace Noggog
     {
         private readonly IList<T> _list;
 
-        public T this[int index] { get => ((IList<T>)_list)[index]; set => ((IList<T>)_list)[index] = value; }
+        public T this[int index]
+        {
+            get => _list[index];
+            set => _list[index] = value;
+        }
 
-        public int Count => ((IList<T>)_list).Count;
-
-        public bool IsReadOnly => ((IList<T>)_list).IsReadOnly;
+        public int Count => _list.Count;
 
         public SortingList()
         {
@@ -38,10 +40,44 @@ namespace Noggog
             return new SortingList<T>(list);
         }
 
-        public void Set(T item)
+        //
+        // Adds item to the sorting list at the index it sorts into.
+        // If collisions occur, the given item will replace the existing.
+        // 
+        // Parameters:
+        //    item: Item to put into the list
+        public void Add(T item)
         {
-            _list.BinarySearch(item);
-            ((IList<T>)_list).Add(item);
+            Add(item, replaceIfMatch: true);
+        }
+
+        /*
+         * Adds item to the sorting list at the index it sorts into.
+         * 
+         * Parameters:
+         *    item: Item to put into the list
+         * 
+         *    replaceIfMatch:
+         *     Swaps the given item into the list if there is a collision.
+         *     False will discard the given item if a match occurs, and leave
+         *     the existing value
+         * 
+         * Returns: true if there was a match, whether it was replaced or not
+         */
+        public bool Add(T item, bool replaceIfMatch)
+        {
+            var search = _list.BinarySearch(item);
+            if (search >= 0)
+            {
+                if (replaceIfMatch)
+                {
+                    _list[search] = item;
+                }
+                return true;
+            }
+            search = ~search;
+            _list.Insert(search, item);
+            return false;
         }
 
         public void Clear()
@@ -51,7 +87,7 @@ namespace Noggog
 
         public bool Contains(T item)
         {
-            return ((IList<T>)_list).Contains(item);
+            return ListExt.BinarySearch(_list, item) >= 0;
         }
 
         public void CopyTo(T[] array, int arrayIndex)
@@ -66,17 +102,17 @@ namespace Noggog
 
         public int IndexOf(T item)
         {
-            return ((IList<T>)_list).IndexOf(item);
-        }
-
-        public void Insert(int index, T item)
-        {
-            ((IList<T>)_list).Insert(index, item);
+            var search = ListExt.BinarySearch(_list, item);
+            if (search < 0) return -1;
+            return search;
         }
 
         public bool Remove(T item)
         {
-            return ((IList<T>)_list).Remove(item);
+            var search = _list.BinarySearch(item);
+            if (search < 0) return false;
+            _list.RemoveAt(search);
+            return true;
         }
 
         public void RemoveAt(int index)
@@ -87,15 +123,21 @@ namespace Noggog
         #region Hidden Interface Functions
         void ICollection<T>.Add(T item)
         {
-            _list.BinarySearch(item);
-            ((IList<T>)_list).Add(item);
+            this.Add(item);
         }
-        #endregion
+
+        bool ICollection<T>.IsReadOnly => false;
 
         IEnumerator IEnumerable.GetEnumerator()
         {
             return ((IList<T>)_list).GetEnumerator();
         }
+
+        void IList<T>.Insert(int index, T item)
+        {
+            throw new NotImplementedException("Cannot insert at a specific index on a sorted list.");
+        }
+        #endregion
 
         #region PreSortedListExt
         public bool TryGetIndexInDirection(T item, bool higher, out int result)

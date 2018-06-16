@@ -9,7 +9,7 @@ namespace System
 {
     public static class SortedListExt
     {
-        public static bool TryGetInDirectionIndex<K, V>(
+        public static bool TryGetIndexInDirection<K, V>(
             this SortedList<K, V> sortedList,
             K key,
             bool higher, 
@@ -54,7 +54,7 @@ namespace System
             bool higher, 
             out KeyValuePair<int, V> result)
         {
-            if (!sortedList.TryGetInDirectionIndex(
+            if (!sortedList.TryGetIndexInDirection(
                 key: key,
                 higher: higher,
                 result: out int index))
@@ -80,7 +80,7 @@ namespace System
                 result = default(RangeInt32);
                 return false;
             }
-            if (!sortedList.TryGetInDirectionIndex(
+            if (!sortedList.TryGetIndexInDirection(
                 key: lowerKey,
                 higher: true,
                 result: out var lowEnd))
@@ -88,7 +88,7 @@ namespace System
                 result = default(RangeInt32);
                 return false;
             }
-            if (!sortedList.TryGetInDirectionIndex(
+            if (!sortedList.TryGetIndexInDirection(
                 key: higherKey,
                 higher: false,
                 result: out var highEnd))

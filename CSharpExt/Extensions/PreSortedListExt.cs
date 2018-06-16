@@ -8,42 +8,73 @@ namespace Noggog
 {
     public static class PreSortedListExt
     {
+        public static bool HasInDirection<T>(
+            IReadOnlyList<T> sortedList,
+            T item,
+            bool higher)
+        {
+            return TryGetIndexInDirection(
+                sortedList,
+                item,
+                higher,
+                out int result);
+        }
+
         public static bool TryGetIndexInDirection<T>(
             IReadOnlyList<T> sortedList,
             T item,
             bool higher,
             out int result)
         {
-            var binSearch = sortedList.BinarySearch(item);
-            if (binSearch >= 0)
+            var searchResult = sortedList.BinarySearch(item);
+            if (searchResult >= 0)
             { // found
-                result = binSearch;
+                result = searchResult;
                 return true;
             }
 
-            binSearch = ~binSearch;
+            searchResult = ~searchResult;
             if (higher)
             {
-                if (binSearch == sortedList.Count)
+                if (searchResult == sortedList.Count)
                 {
                     result = -1;
                     return false;
                 }
-                result = binSearch;
+                result = searchResult;
                 return true;
             }
             else
             {
-                if (binSearch == 0)
+                if (searchResult == 0)
                 {
                     result = -1;
                     return false;
                 }
                 else
                 {
-                    result = binSearch - 1;
+                    result = searchResult - 1;
                     return true;
                 }
+            }
+        }
+
+        public static int? TryGetIndexInDirection<T>(
+            IReadOnlyList<T> sortedList,
+            T item,
+            bool higher)
+        {
+            if (TryGetIndexInDirection<T>(
+                sortedList,
+                item,
+                higher,
+                out var result))
+            {
+                return result;
+            }
+            else
+            {
+                return null;
             }
         }
 

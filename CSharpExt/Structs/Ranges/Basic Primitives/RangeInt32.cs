@@ -11,6 +11,7 @@ namespace Noggog
         public float Average => ((Max - Min) / 2f) + Min;
         public int Difference => this.Max - this.Min;
         public uint Width => (uint)(this.Max - this.Min + 1);
+        public int IntWidth => this.Max - this.Min + 1;
 
         public RangeInt32(int val1, int val2)
         {
