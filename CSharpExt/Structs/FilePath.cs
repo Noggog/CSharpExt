@@ -26,6 +26,14 @@ namespace Noggog
                 return _fileInfo.Exists;
             }
         }
+        public long Length
+        {
+            get
+            {
+                _fileInfo.Refresh();
+                return _fileInfo.Length;
+            }
+        }
 
         public FilePath(string path)
         {
@@ -67,7 +75,11 @@ namespace Noggog
 
         public void Delete()
         {
-            this._fileInfo.Delete();
+            this._fileInfo.Refresh();
+            if (this._fileInfo.Exists)
+            {
+                this._fileInfo.Delete();
+            }
         }
 
         public override int GetHashCode()
@@ -78,6 +90,11 @@ namespace Noggog
         public override string ToString()
         {
             return this._fileInfo?.FullName;
+        }
+
+        public FileStream OpenRead()
+        {
+            return _fileInfo.OpenRead();
         }
 
         public static implicit operator FilePath(FileInfo info)

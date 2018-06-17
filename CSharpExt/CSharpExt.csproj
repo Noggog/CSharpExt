@@ -202,6 +202,7 @@
     <Compile Include="Utility\ArgsQuerying\ArgsQueryConsoleManager.cs" />
     <Compile Include="Utility\ArgsQuerying\ArgsQueryManager.cs" />
     <Compile Include="Utility\DelegateBuilder.cs" />
+    <Compile Include="Utility\FileComparison.cs" />
     <Compile Include="Utility\TempFile.cs" />
     <Compile Include="Utility\TempFolder.cs" />
     <Compile Include="XML\DocumentWrapper.cs" />
