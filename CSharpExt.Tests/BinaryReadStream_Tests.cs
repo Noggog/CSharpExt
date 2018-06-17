@@ -26,7 +26,7 @@ namespace CSharpExt.Tests
             return ret;
         }
 
-        public override IBinaryStream GetStream(int length) => GetBinaryReadStream(length);
+        public override IBinaryReadStream GetStream(int length) => GetBinaryReadStream(length);
 
         [Fact]
         public void SetPositionToRightPastBuffer()

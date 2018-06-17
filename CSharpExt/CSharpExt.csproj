@@ -154,10 +154,13 @@
     <Compile Include="Printing\DepthPrinter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RandomSource.cs" />
+    <Compile Include="Streams\Binary\BinaryMemoryWriteStream.cs" />
     <Compile Include="Streams\Binary\BinaryReadStream.cs" />
-    <Compile Include="Streams\Binary\BinaryMemoryStream.cs" />
+    <Compile Include="Streams\Binary\BinaryMemoryReadStream.cs" />
     <Compile Include="Streams\Binary\BinaryUtility.cs" />
-    <Compile Include="Streams\Binary\IBinaryStream.cs" />
+    <Compile Include="Streams\Binary\BinaryWriteStream.cs" />
+    <Compile Include="Streams\Binary\IBinaryWriteStream.cs" />
+    <Compile Include="Streams\Binary\IBinaryReadStream.cs" />
     <Compile Include="Structs\Change\Change.cs" />
     <Compile Include="Structs\Change\ChangeAddRem.cs" />
     <Compile Include="Structs\Change\ChangeIndex.cs" />

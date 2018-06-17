@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Noggog
 {
-    public class BinaryReadStream : Stream, IBinaryStream
+    public class BinaryReadStream : Stream, IBinaryReadStream
     {
         public const int NearnessLength = 20;
         public static readonly byte[] NearnessBuffer = new byte[NearnessLength];
@@ -16,7 +16,7 @@ namespace Noggog
         internal long _streamPos;
         internal readonly long _length;
         internal bool CompleteBuffering => _streamPos == _length;
-        internal readonly BinaryMemoryStream _internalMemoryStream;
+        internal readonly BinaryMemoryReadStream _internalMemoryStream;
         internal bool _dispose;
         internal int _internalBufferLength;
         internal int _posOffset;
@@ -38,7 +38,7 @@ namespace Noggog
             this._stream = stream;
             this._length = this._stream.Length;
             this._data = new byte[bufferSize];
-            this._internalMemoryStream = new BinaryMemoryStream(this._data);
+            this._internalMemoryStream = new BinaryMemoryReadStream(this._data);
             this._internalMemoryStream.Position = _data.Length;
             this._internalBufferLength = _data.Length;
         }

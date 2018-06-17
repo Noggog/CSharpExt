@@ -12,9 +12,9 @@ namespace CSharpExt.Tests
         // No actual edge, but let the tests do their thing
         public override int EdgeLocation => 100;
 
-        public override IBinaryStream GetStream(int length)
+        public override IBinaryReadStream GetStream(int length)
         {
-            return new BinaryMemoryStream(
+            return new BinaryMemoryReadStream(
                 GetByteArray(length));
         }
     }

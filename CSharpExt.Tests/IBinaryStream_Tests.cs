@@ -11,7 +11,7 @@ namespace CSharpExt.Tests
     public abstract class IBinaryStream_Tests
     {
         public const int TYPICAL_TEST_LENGTH = 56;
-        public abstract IBinaryStream GetStream(int length);
+        public abstract IBinaryReadStream GetStream(int length);
         public abstract int EdgeLocation { get; }
 
         public byte[] GetByteArray(int size)

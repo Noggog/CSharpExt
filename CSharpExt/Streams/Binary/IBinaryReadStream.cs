@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Noggog
 {
-    public interface IBinaryStream : IDisposable
+    public interface IBinaryReadStream : IDisposable
     {
         long Position { get; set; }
         long Length { get; }

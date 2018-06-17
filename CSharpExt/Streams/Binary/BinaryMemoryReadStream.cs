@@ -7,33 +7,24 @@ using System.Threading.Tasks;
 
 namespace Noggog
 {
-    public class BinaryMemoryStream : IBinaryStream
+    public class BinaryMemoryReadStream : IBinaryReadStream
     {
         internal int _pos;
         internal byte[] _data;
-        public int Position { get => this._pos; set => SetPosition(value); }
+        public int Position { get => this._pos; set => _pos = value; }
         public int Length => this._data.Length;
         public int Remaining => this._data.Length - this._pos;
         public bool Complete => this._data.Length <= this._pos;
 
-        #region IBinaryStream
-        long IBinaryStream.Position { get => _pos; set => SetPosition(checked((int)value)); }
-        long IBinaryStream.Length => this._data.Length;
-        long IBinaryStream.Remaining => this._data.Length - this._pos;
+        #region IBinaryReadStream
+        long IBinaryReadStream.Position { get => _pos; set => _pos = checked((int)value); }
+        long IBinaryReadStream.Length => this._data.Length;
+        long IBinaryReadStream.Remaining => this._data.Length - this._pos;
         #endregion
 
-        public BinaryMemoryStream(byte[] data)
+        public BinaryMemoryReadStream(byte[] data)
         {
             this._data = data;
-        }
-
-        private void SetPosition(int pos)
-        {
-            if (pos < 0)
-            {
-                throw new ArgumentException("Cannot move position to a negative value.");
-            }
-            _pos = pos;
         }
 
         public int Read(byte[] buffer)
