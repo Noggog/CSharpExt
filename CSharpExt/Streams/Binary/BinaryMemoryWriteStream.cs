@@ -36,7 +36,7 @@ namespace Noggog
             Array.Copy(buffer, 0, _data, _pos, _data.Length);
         }
 
-        public void WriteBool(bool b)
+        public void Write(bool b)
         {
             if (b)
             {
@@ -48,49 +48,18 @@ namespace Noggog
             }
         }
 
-        public void WriteUInt8(byte b)
+        public void Write(byte b)
         {
             _data[_pos++] = b;
         }
 
-        public void WriteUInt16(ushort value)
+        public void Write(ushort value)
         {
             _data[_pos++] = (byte)value;
             _data[_pos++] = (byte)(value >> 8);
         }
 
-        public void WriteUInt32(uint value)
-        {
-            _data[_pos++] = (byte)value;
-            _data[_pos++] = (byte)(value >> 8);
-            _data[_pos++] = (byte)(value >> 0x10);
-            _data[_pos++] = (byte)(value >> 0x18);
-        }
-
-        public void WriteUInt64(ulong value)
-        {
-            _data[_pos++] = (byte)value;
-            _data[_pos++] = (byte)(value >> 8);
-            _data[_pos++] = (byte)(value >> 0x10);
-            _data[_pos++] = (byte)(value >> 0x18);
-            _data[_pos++] = (byte)(value >> 0x20);
-            _data[_pos++] = (byte)(value >> 0x28);
-            _data[_pos++] = (byte)(value >> 0x30);
-            _data[_pos++] = (byte)(value >> 0x38);
-        }
-
-        public void WriteInt8(sbyte value)
-        {
-            _data[_pos++] = (byte)value;
-        }
-
-        public void WriteInt16(short value)
-        {
-            _data[_pos++] = (byte)value;
-            _data[_pos++] = (byte)(value >> 8);
-        }
-
-        public void WriteInt32(int value)
+        public void Write(uint value)
         {
             _data[_pos++] = (byte)value;
             _data[_pos++] = (byte)(value >> 8);
@@ -98,7 +67,7 @@ namespace Noggog
             _data[_pos++] = (byte)(value >> 0x18);
         }
 
-        public void WriteInt64(long value)
+        public void Write(ulong value)
         {
             _data[_pos++] = (byte)value;
             _data[_pos++] = (byte)(value >> 8);
@@ -110,17 +79,48 @@ namespace Noggog
             _data[_pos++] = (byte)(value >> 0x38);
         }
 
-        public void WriteFloat(float value)
+        public void Write(sbyte value)
         {
-            WriteInt32(new Int32SingleUnion(value).AsInt32);
+            _data[_pos++] = (byte)value;
         }
 
-        public void WriteDouble(double value)
+        public void Write(short value)
         {
-            WriteInt64(BitConverter.DoubleToInt64Bits(value));
+            _data[_pos++] = (byte)value;
+            _data[_pos++] = (byte)(value >> 8);
         }
 
-        public void WriteString(string str)
+        public void Write(int value)
+        {
+            _data[_pos++] = (byte)value;
+            _data[_pos++] = (byte)(value >> 8);
+            _data[_pos++] = (byte)(value >> 0x10);
+            _data[_pos++] = (byte)(value >> 0x18);
+        }
+
+        public void Write(long value)
+        {
+            _data[_pos++] = (byte)value;
+            _data[_pos++] = (byte)(value >> 8);
+            _data[_pos++] = (byte)(value >> 0x10);
+            _data[_pos++] = (byte)(value >> 0x18);
+            _data[_pos++] = (byte)(value >> 0x20);
+            _data[_pos++] = (byte)(value >> 0x28);
+            _data[_pos++] = (byte)(value >> 0x30);
+            _data[_pos++] = (byte)(value >> 0x38);
+        }
+
+        public void Write(float value)
+        {
+            Write(new Int32SingleUnion(value).AsInt32);
+        }
+
+        public void Write(double value)
+        {
+            Write(BitConverter.DoubleToInt64Bits(value));
+        }
+
+        public void Write(string str)
         {
             for (int i = 0; i < str.Length; i++)
             {

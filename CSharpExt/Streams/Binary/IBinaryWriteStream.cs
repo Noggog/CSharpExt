@@ -13,17 +13,17 @@ namespace Noggog
         long Length { get; }
         void Write(byte[] buffer, int offset, int amount);
         void Write(byte[] buffer);
-        void WriteBool(bool value);
-        void WriteUInt8(byte value);
-        void WriteUInt16(ushort value);
-        void WriteUInt32(uint value);
-        void WriteUInt64(ulong value);
-        void WriteInt8(sbyte value);
-        void WriteInt16(short value);
-        void WriteInt32(int value);
-        void WriteInt64(long value);
-        void WriteFloat(float value);
-        void WriteDouble(double value);
-        void WriteString(string value);
+        void Write(bool value);
+        void Write(byte value);
+        void Write(ushort value);
+        void Write(uint value);
+        void Write(ulong value);
+        void Write(sbyte value);
+        void Write(short value);
+        void Write(int value);
+        void Write(long value);
+        void Write(float value);
+        void Write(double value);
+        void Write(string value);
     }
 }

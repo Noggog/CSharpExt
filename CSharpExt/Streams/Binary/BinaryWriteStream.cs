@@ -7,18 +7,27 @@ using System.Threading.Tasks;
 
 namespace Noggog
 {
-    public class BinaryWriteStream : IBinaryWriteStream
+    public class BinaryWriteStream : Stream, IBinaryWriteStream
     {
         public readonly Stream _stream;
         internal readonly byte[] _data;
         internal bool _dispose;
-        internal long _streamPos;
+        internal long _streamFrontlinePos;
+        internal long _pos;
         internal readonly BinaryMemoryWriteStream _internalMemoryStream;
         private int InternalStreamRemaining => _internalMemoryStream.Remaining;
 
-        public long Position { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public override long Position
+        {
+            get => _pos;
+            set => SetPosition(value);
+        }
 
-        public long Length => throw new NotImplementedException();
+        public override long Length => _streamFrontlinePos + _internalMemoryStream.Position;
+
+        public override bool CanRead => false;
+        public override bool CanSeek => true;
+        public override bool CanWrite => true;
 
         public BinaryWriteStream(Stream stream, int bufferSize = 4096, bool dispose = true)
         {
@@ -33,21 +42,26 @@ namespace Noggog
         {
         }
 
-        public void Flush()
+        public override void Flush()
         {
             if (_internalMemoryStream.Position == 0) return;
             var amountWritten = _internalMemoryStream.Position;
             _stream.Write(_data, 0, amountWritten);
             _internalMemoryStream.Position = 0;
-            _streamPos += amountWritten;
+            _streamFrontlinePos += amountWritten;
             _internalMemoryStream.Position = 0;
-            if (_streamPos != _stream.Position)
+            if (_streamFrontlinePos != _stream.Position)
             {
                 throw new ArgumentException();
             }
         }
 
-        private void LoadPosition(int amount)
+        private void SetPosition(long pos)
+        {
+
+        }
+
+        private void LoadAmount(int amount)
         {
             if (InternalStreamRemaining < amount)
             {
@@ -55,81 +69,82 @@ namespace Noggog
             }
         }
 
-        public void Dispose()
+        protected override void Dispose(bool disposing)
         {
+            base.Dispose(disposing);
             if (this._dispose)
             {
                 this._stream.Dispose();
             }
         }
 
-        public void WriteBool(bool value)
+        public void Write(bool value)
         {
-            LoadPosition(1);
-            _internalMemoryStream.WriteBool(value);
+            LoadAmount(1);
+            _internalMemoryStream.Write(value);
         }
 
-        public void WriteUInt8(byte value)
+        public void Write(byte value)
         {
-            LoadPosition(1);
-            _internalMemoryStream.WriteUInt8(value);
+            LoadAmount(1);
+            _internalMemoryStream.Write(value);
         }
 
-        public void WriteUInt16(ushort value)
+        public void Write(ushort value)
         {
-            LoadPosition(2);
-            _internalMemoryStream.WriteUInt16(value);
+            LoadAmount(2);
+            _internalMemoryStream.Write(value);
         }
 
-        public void WriteUInt32(uint value)
+        public void Write(uint value)
         {
-            LoadPosition(4);
-            _internalMemoryStream.WriteUInt32(value);
+            LoadAmount(4);
+            _internalMemoryStream.Write(value);
         }
 
-        public void WriteUInt64(ulong value)
+        public void Write(ulong value)
         {
-            LoadPosition(8);
-            _internalMemoryStream.WriteUInt64(value);
+            LoadAmount(8);
+            _internalMemoryStream.Write(value);
         }
 
-        public void WriteInt8(sbyte value)
+        public void Write(sbyte value)
         {
-            LoadPosition(1);
-            _internalMemoryStream.WriteInt8(value);
+            LoadAmount(1);
+            _internalMemoryStream.Write(value);
         }
 
-        public void WriteInt16(short value)
+        public void Write(short value)
         {
-            LoadPosition(2);
-            _internalMemoryStream.WriteInt16(value);
+            LoadAmount(2);
+            _internalMemoryStream.Write(value);
         }
 
-        public void WriteInt32(int value)
+        public void Write(int value)
         {
-            LoadPosition(4);
-            _internalMemoryStream.WriteInt32(value);
+            LoadAmount(4);
+            _internalMemoryStream.Write(value);
         }
 
-        public void WriteInt64(long value)
+        public void Write(long value)
         {
-            LoadPosition(8);
-            _internalMemoryStream.WriteInt64(value);
+            LoadAmount(8);
+            _internalMemoryStream.Write(value);
         }
 
-        public void WriteFloat(float value)
+        public void Write(float value)
         {
-            LoadPosition(4);
-            _internalMemoryStream.WriteFloat(value);
+            LoadAmount(4);
+            _internalMemoryStream.Write(value);
         }
 
-        public void WriteDouble(double value)
+        public void Write(double value)
         {
-            LoadPosition(8);
-            _internalMemoryStream.WriteDouble(value);
+            LoadAmount(8);
+            _internalMemoryStream.Write(value);
         }
 
-        public void Write(byte[] buffer, int offset, int amount)
+        public override void Write(byte[] buffer, int offset, int amount)
         {
             if (amount <= _internalMemoryStream.Remaining)
             {
@@ -142,7 +157,22 @@ namespace Noggog
             throw new NotImplementedException();
         }
 
-        public void WriteString(string value)
+        public void Write(string value)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override long Seek(long offset, SeekOrigin origin)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void SetLength(long value)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override int Read(byte[] buffer, int offset, int count)
         {
             throw new NotImplementedException();
         }
