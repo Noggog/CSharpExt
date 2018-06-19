@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -34,7 +35,8 @@ namespace Noggog
             out IEnumerable<KeyValuePair<int, T>> result);
     }
 
-    public interface ISortedList<T> : ISortedListGetter<T>, IList<T>
+    public interface ISortedList<T> : ISortedListGetter<T>, IList<T>, ICollection
     {
+        bool Add(T item, bool replaceIfMatch);
     }
 }

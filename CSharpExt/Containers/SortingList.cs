@@ -128,6 +128,10 @@ namespace Noggog
 
         bool ICollection<T>.IsReadOnly => false;
 
+        public object SyncRoot => throw new NotImplementedException();
+
+        public bool IsSynchronized => throw new NotImplementedException();
+
         IEnumerator IEnumerable.GetEnumerator()
         {
             return ((IList<T>)_list).GetEnumerator();
@@ -136,6 +140,11 @@ namespace Noggog
         void IList<T>.Insert(int index, T item)
         {
             throw new NotImplementedException("Cannot insert at a specific index on a sorted list.");
+        }
+
+        public void CopyTo(Array array, int index)
+        {
+            throw new NotImplementedException();
         }
         #endregion
 

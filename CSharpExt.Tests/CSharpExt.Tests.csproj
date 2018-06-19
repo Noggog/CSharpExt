@@ -51,8 +51,10 @@
     <Compile Include="RangeCollection_Tests.cs" />
     <Compile Include="RangeInt64_Tests.cs" />
     <Compile Include="SortedListExt_Tests.cs" />
+    <Compile Include="SortingListDictionary_Tests.cs" />
     <Compile Include="SortingList_Tests.cs" />
     <Compile Include="TypeExt_Tests.cs" />
+    <Compile Include="WrappedInt.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CSharpExt\CSharpExt.csproj">

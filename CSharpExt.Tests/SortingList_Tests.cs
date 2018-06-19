@@ -21,45 +21,6 @@ namespace CSharpExt.Tests
         public static WrappedInt MissingLowItem => new WrappedInt(-1000);
         public static WrappedInt MissingHighItem => new WrappedInt(1000);
 
-        #region Helper Class
-        public class WrappedInt : IComparable, IComparable<WrappedInt>, IEquatable<WrappedInt>
-        {
-            public readonly int Int;
-
-            public WrappedInt(int i)
-            {
-                this.Int = i;
-            }
-
-            public int CompareTo(WrappedInt other)
-            {
-                return Int.CompareTo(other.Int);
-            }
-
-            public int CompareTo(object obj)
-            {
-                if (!(obj is WrappedInt rhs)) return 0;
-                return CompareTo(rhs);
-            }
-
-            public override bool Equals(object obj)
-            {
-                if (!(obj is WrappedInt rhs)) return false;
-                return Equals(rhs);
-            }
-
-            public override int GetHashCode()
-            {
-                return Int.GetHashCode();
-            }
-
-            public bool Equals(WrappedInt other)
-            {
-                return Int == other.Int;
-            }
-        }
-        #endregion
-
         public List<WrappedInt> TypicalBareList()
         {
             return new List<WrappedInt>()
@@ -391,7 +352,7 @@ namespace CSharpExt.Tests
         public void Contains_Missing()
         {
             var list = Typical();
-            Assert.Equal(-1, list.IndexOf(MissingMiddleItem));
+            Assert.DoesNotContain(MissingMiddleItem, list);
         }
         #endregion
 

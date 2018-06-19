@@ -49,11 +49,13 @@
     <Compile Include="Containers\FireDictionary.cs" />
     <Compile Include="Containers\FireList.cs" />
     <Compile Include="Containers\Interfaces\ISortedList.cs" />
+    <Compile Include="Containers\Interfaces\ISortingListDictionary.cs" />
     <Compile Include="Containers\Pools\ObjectDictionaryListPool.cs" />
     <Compile Include="Containers\Pools\ObjectDictionaryPool.cs" />
     <Compile Include="Containers\Pools\ObjectListPool.cs" />
     <Compile Include="Containers\Pools\ObjectPool.cs" />
     <Compile Include="Containers\SortingList.cs" />
+    <Compile Include="Containers\SortingListDictionary.cs" />
     <Compile Include="Convenience Classes\TaskCompletionSource.cs" />
     <Compile Include="Enums\AddRemove.cs" />
     <Compile Include="Enums\AddRemoveModify.cs" />
