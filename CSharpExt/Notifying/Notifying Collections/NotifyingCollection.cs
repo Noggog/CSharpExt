@@ -20,9 +20,9 @@ namespace Noggog.Notifying
         void Unset(NotifyingUnsetParameters cmds);
         void Clear(NotifyingFireParameters cmds);
         bool Remove(T item, NotifyingFireParameters cmds);
-        void SetTo(IEnumerable<T> enumer, NotifyingFireParameters cmds);
-        void Add(T item, NotifyingFireParameters cmds);
-        void Add(IEnumerable<T> items, NotifyingFireParameters cmds);
+        void SetTo(IEnumerable<T> enumer, NotifyingFireParameters cmds = null);
+        void Add(T item, NotifyingFireParameters cmds = null);
+        void Add(IEnumerable<T> items, NotifyingFireParameters cmds = null);
         new bool HasBeenSet { get; set; }
     }
 

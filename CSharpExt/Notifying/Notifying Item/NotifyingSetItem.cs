@@ -442,10 +442,5 @@ namespace Noggog.Notifying
         {
             return $"{(this.HasBeenSet ? "Set" : "Unset")}: {Item?.ToString()}";
         }
-
-        public void Unset()
-        {
-            throw new NotImplementedException();
-        }
     }
 }
