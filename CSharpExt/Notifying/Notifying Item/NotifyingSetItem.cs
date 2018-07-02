@@ -346,9 +346,23 @@ namespace Noggog.Notifying
             throw new ArgumentException("Cannot set currenta s default on a notifying propery");
         }
 
-        private void SetHasBeenSet(bool value)
+        private void SetHasBeenSet(bool hasBeenSet)
         {
-            Set(this.Item, hasBeenSet: value, cmds: NotifyingFireParameters.Typical);
+            var cmds = NotifyingFireParameters.Typical;
+            var oldSet = this.HasBeenSet;
+            this._HasBeenSet = hasBeenSet;
+            if (cmds.ForceFire
+                || oldSet != this.HasBeenSet)
+            {
+                if (subscribers != null && subscribers.HasSubs)
+                {
+                    Fire(new ChangeSet<T>(
+                        oldVal: _item,
+                        oldSet: oldSet,
+                        newVal: _item,
+                        newSet: true), cmds);
+                }
+            }
         }
 
         public void Set(T value, NotifyingFireParameters cmds = null)
