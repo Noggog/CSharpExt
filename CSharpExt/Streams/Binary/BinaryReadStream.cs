@@ -28,6 +28,8 @@ namespace Noggog
         public bool Complete => _length <= this.Position;
         public override long Position { get => _streamPos - InternalStreamRemaining; set => SetPosition(value); }
 
+        public bool CheckUnderlyingStreamPosition = false;
+
         public BinaryReadStream(Stream stream, int bufferSize = 4096, bool dispose = true)
         {
             if (stream.Position != 0)
@@ -87,7 +89,8 @@ namespace Noggog
             {
                 throw new ArgumentException();
             }
-            if (_streamPos != _stream.Position)
+            if (CheckUnderlyingStreamPosition 
+                && _streamPos != _stream.Position)
             {
                 throw new ArgumentException();
             }
