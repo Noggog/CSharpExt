@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
 
 namespace System
@@ -249,6 +250,16 @@ namespace System
                 return true;
             }
             return false;
+        }
+
+        public static readonly Func<long, T> Convert = GenerateConverter();
+        static Func<long, T> GenerateConverter()
+        {
+            var parameter = Expression.Parameter(typeof(long));
+            var dynamicMethod = Expression.Lambda<Func<long, T>>(
+                Expression.Convert(parameter, typeof(T)),
+                parameter);
+            return dynamicMethod.Compile();
         }
     }
 
