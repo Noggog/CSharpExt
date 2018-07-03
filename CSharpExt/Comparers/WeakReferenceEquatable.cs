@@ -2,7 +2,7 @@
 
 namespace Noggog
 {
-    public class WeakReferenceEquatable
+    public class WeakReferenceEquatable : IEquatable<WeakReferenceEquatable>, IEquatable<WeakReference>
     {
         private readonly int _targetHashCode;
         private readonly WeakReference _weakReferenceToTarget;
@@ -21,11 +21,33 @@ namespace Noggog
 
         public override bool Equals(object obj)
         {
-            if (!(obj is WeakReferenceEquatable rhs)) return false;
-            if (_targetHashCode != rhs.GetHashCode()) return false;
-            if (this.IsAlive != rhs.IsAlive) return false;
+            if (obj is WeakReferenceEquatable rhs)
+            {
+                return this.Equals(rhs);
+            }
+            else if (obj is WeakReference weakRef)
+            {
+                return this.Equals(weakRef);
+            }
+            else
+            {
+                if (!this.IsAlive) return false;
+                return object.Equals(this.Target, obj);
+            }
+        }
+
+        public bool Equals(WeakReferenceEquatable other)
+        {
+            if (this.IsAlive != other.IsAlive) return false;
             if (!this.IsAlive) return true;
-            return object.Equals(Target, rhs.Target);
+            return object.Equals(this.Target, other.Target);
+        }
+
+        public bool Equals(WeakReference other)
+        {
+            if (this.IsAlive != other.IsAlive) return false;
+            if (!this.IsAlive) return true;
+            return object.Equals(this.Target, other.Target);
         }
     }
 }
