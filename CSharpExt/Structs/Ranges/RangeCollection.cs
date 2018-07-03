@@ -11,6 +11,7 @@ namespace Noggog
     {
         internal List<long> startingIndices = new List<long>();
         internal List<long> endingIndices = new List<long>();
+        public bool Empty => startingIndices.Count == 0;
 
         public RangeCollection()
         {
@@ -186,6 +187,11 @@ namespace Noggog
 
         public bool TryGetCurrentRange(long l, out RangeInt64 range)
         {
+            if (this.startingIndices.Count == 0)
+            {
+                range = default(RangeInt64);
+                return false;
+            }
             // Get start
             if (!PreSortedListExt.TryGetInDirection(
                 this.startingIndices,
