@@ -82,6 +82,7 @@
     <Compile Include="Extensions\PathExt.cs" />
     <Compile Include="Extensions\PreSortedListExt.cs" />
     <Compile Include="Extensions\SortedListExt.cs" />
+    <Compile Include="Extensions\StreamExt.cs" />
     <Compile Include="Extensions\TaskExt.cs" />
     <Compile Include="Extensions\UInt64Ext.cs" />
     <Compile Include="Extensions\UInt32Ext.cs" />
