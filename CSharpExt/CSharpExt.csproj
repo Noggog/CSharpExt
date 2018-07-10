@@ -165,6 +165,7 @@
     <Compile Include="Streams\Binary\BinaryWriteStream.cs" />
     <Compile Include="Streams\Binary\IBinaryWriteStream.cs" />
     <Compile Include="Streams\Binary\IBinaryReadStream.cs" />
+    <Compile Include="Streams\Binary\BasicSubstitutionRangeStream.cs" />
     <Compile Include="Streams\Binary\MemoryTributary.cs" />
     <Compile Include="Structs\Change\Change.cs" />
     <Compile Include="Structs\Change\ChangeAddRem.cs" />

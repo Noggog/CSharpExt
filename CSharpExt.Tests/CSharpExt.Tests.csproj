@@ -41,6 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BasicSubstitutionStream_Tests.cs" />
     <Compile Include="BinaryMemoryStream_Tests.cs" />
     <Compile Include="BinaryReadStream_Tests.cs" />
     <Compile Include="EnumerableExt_Tests.cs" />
