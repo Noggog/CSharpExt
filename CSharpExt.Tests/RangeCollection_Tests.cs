@@ -377,5 +377,57 @@ namespace CSharpExt.Tests
             Assert.Equal(10, range.Max);
         }
         #endregion
+
+        #region TryGetCurrentOrNextRange
+        [Fact]
+        public void TryGetCurrentOrNextRange_Empty()
+        {
+            var coll = new RangeCollection();
+            Assert.False(coll.TryGetCurrentOrNextRange(3, out var range));
+        }
+
+        [Fact]
+        public void TryGetCurrentOrNextRange_Inside()
+        {
+            var coll = Typical_Sparse();
+            Assert.True(coll.TryGetCurrentOrNextRange(1, out var range));
+            Assert.Equal(-3, range.Min);
+            Assert.Equal(3, range.Max);
+        }
+
+        [Fact]
+        public void TryGetCurrentOrNextRange_BetweenRanges()
+        {
+            var coll = Typical_Sparse();
+            Assert.True(coll.TryGetCurrentOrNextRange(4, out var range));
+            Assert.Equal(7, range.Min);
+            Assert.Equal(13, range.Max);
+        }
+
+        [Fact]
+        public void TryGetCurrentOrNextRange_End()
+        {
+            var coll = Typical_Sparse();
+            Assert.False(coll.TryGetCurrentOrNextRange(114, out var range));
+        }
+
+        [Fact]
+        public void TryGetCurrentOrNextRange_Start()
+        {
+            var coll = Typical_Sparse();
+            Assert.True(coll.TryGetCurrentOrNextRange(-114, out var range));
+            Assert.Equal(-13, range.Min);
+            Assert.Equal(-7, range.Max);
+        }
+
+        [Fact]
+        public void TryGetCurrentOrNextRange()
+        {
+            var coll = Typical_Overlap();
+            Assert.True(coll.TryGetCurrentOrNextRange(8, out var range));
+            Assert.Equal(3, range.Min);
+            Assert.Equal(10, range.Max);
+        }
+        #endregion
     }
 }

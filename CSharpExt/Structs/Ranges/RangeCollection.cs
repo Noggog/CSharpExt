@@ -225,5 +225,65 @@ namespace Noggog
             range = new RangeInt64(startingResult.Value, endingResult.Value);
             return true;
         }
+
+        public bool TryGetCurrentOrNextRange(long l, out RangeInt64 range)
+        {
+            if (this.startingIndices.Count == 0)
+            {
+                range = default(RangeInt64);
+                return false;
+            }
+
+            // Get end
+            if (!PreSortedListExt.TryGetInDirection(
+                this.endingIndices,
+                item: l,
+                higher: true,
+                result: out var endingResult))
+            {
+                range = default(RangeInt64);
+                return false;
+            }
+
+            // Get earlier start, ensure earlier end comes before it
+            if (PreSortedListExt.TryGetInDirection(
+                this.startingIndices,
+                item: l,
+                higher: false,
+                result: out var startingResult))
+            {
+                if (PreSortedListExt.TryGetInDirection(
+                    this.endingIndices,
+                    item: l,
+                    higher: false,
+                    result: out var earlierEndingResult))
+                {
+                    if (earlierEndingResult.Value < startingResult.Value)
+                    {
+                        range = new RangeInt64(startingResult.Value, endingResult.Value);
+                        return true;
+                    }
+                }
+                else
+                {
+                    range = new RangeInt64(startingResult.Value, endingResult.Value);
+                    return true;
+                }
+            }
+
+            // Get later start
+            if (!PreSortedListExt.TryGetInDirection(
+                this.startingIndices,
+                item: l,
+                higher: true,
+                result: out startingResult))
+            {
+                range = default(RangeInt64);
+                return false;
+            }
+
+            range = new RangeInt64(startingResult.Value, endingResult.Value);
+            return true;
+        }
     }
 }
