@@ -11,13 +11,17 @@ namespace Noggog
     {
         internal int _pos;
         internal byte[] _data;
-        public int Position { get => this._pos; set => _pos = value; }
+        public int Position
+        {
+            get => this._pos;
+            set => SetPosition(value);
+        }
         public int Length => this._data.Length;
         public int Remaining => this._data.Length - this._pos;
         public bool Complete => this._data.Length <= this._pos;
 
         #region IBinaryReadStream
-        long IBinaryReadStream.Position { get => _pos; set => _pos = checked((int)value); }
+        long IBinaryReadStream.Position { get => _pos; set => SetPosition(checked((int)value)); }
         long IBinaryReadStream.Length => this._data.Length;
         long IBinaryReadStream.Remaining => this._data.Length - this._pos;
         #endregion
@@ -49,6 +53,15 @@ namespace Noggog
             Array.Copy(_data, _pos, ret, 0, amount);
             _pos += amount;
             return ret;
+        }
+
+        private void SetPosition(int value)
+        {
+            if (value < 0)
+            {
+                throw new ArgumentException("Cannot set to a negative position");
+            }
+            _pos = value;
         }
 
         public bool ReadBool()
