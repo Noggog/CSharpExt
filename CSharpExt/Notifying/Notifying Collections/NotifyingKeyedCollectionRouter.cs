@@ -150,5 +150,10 @@ namespace Noggog.Notifying
         {
             return _child.Contains(item);
         }
+
+        public bool ContainsKey(K key)
+        {
+            return _child.ContainsKey(key);
+        }
     }
 }

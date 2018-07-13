@@ -154,6 +154,11 @@ namespace Noggog.Notifying
         {
             return this.dict.Contains(item);
         }
+
+        public bool ContainsKey(K key)
+        {
+            return this.dict.ContainsKey(key);
+        }
     }
 }
 
