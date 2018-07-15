@@ -36,6 +36,13 @@ namespace Noggog
         {
         }
 
+        public static RangeUInt64 FactoryFromLength(ulong loc, ulong length)
+        {
+            return new RangeUInt64(
+                loc,
+                loc + length - 1);
+        }
+
         public static RangeUInt64 Parse(string str)
         {
             if (!TryParse(str, out RangeUInt64 rd))

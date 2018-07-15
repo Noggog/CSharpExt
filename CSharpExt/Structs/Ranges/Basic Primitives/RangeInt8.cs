@@ -36,6 +36,13 @@ namespace Noggog
         {
         }
 
+        public static RangeInt8 FactoryFromLength(sbyte loc, sbyte length)
+        {
+            return new RangeInt8(
+                loc,
+                (sbyte)(loc + length - 1));
+        }
+
         public static RangeInt8 Parse(string str)
         {
             if (!TryParse(str, out RangeInt8 rd))
