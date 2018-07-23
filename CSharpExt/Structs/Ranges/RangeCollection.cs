@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,8 +7,7 @@ using System.Threading.Tasks;
 
 namespace Noggog
 {
-    // Poor internal implementation.  Functional API shell to be improved later.
-    public class RangeCollection
+    public class RangeCollection : IEnumerable<RangeInt64>
     {
         internal List<long> startingIndices = new List<long>();
         internal List<long> endingIndices = new List<long>();
@@ -284,6 +284,21 @@ namespace Noggog
 
             range = new RangeInt64(startingResult.Value, endingResult.Value);
             return true;
+        }
+
+        public IEnumerator<RangeInt64> GetEnumerator()
+        {
+            for (int i = 0; i < this.startingIndices.Count; i++)
+            {
+                yield return new RangeInt64(
+                    this.startingIndices[i],
+                    this.endingIndices[i]);
+            }
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return this.GetEnumerator();
         }
     }
 }
