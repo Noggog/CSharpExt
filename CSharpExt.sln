@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSharpExt", "CSharpExt\CSha
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSharpExt.Tests", "CSharpExt.Tests\CSharpExt.Tests.csproj", "{7445A66B-6B75-4B65-BB6D-D7DA88318985}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSharpExt.Rx", "CSharpExt.Rx\CSharpExt.Rx.csproj", "{89BE6417-94E1-45E8-9C7B-34A177C2F719}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,8 +23,15 @@ Global
 		{7445A66B-6B75-4B65-BB6D-D7DA88318985}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7445A66B-6B75-4B65-BB6D-D7DA88318985}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7445A66B-6B75-4B65-BB6D-D7DA88318985}.Release|Any CPU.Build.0 = Release|Any CPU
+		{89BE6417-94E1-45E8-9C7B-34A177C2F719}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{89BE6417-94E1-45E8-9C7B-34A177C2F719}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{89BE6417-94E1-45E8-9C7B-34A177C2F719}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{89BE6417-94E1-45E8-9C7B-34A177C2F719}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {1BE0FEDD-D58D-448A-ABC4-412B678D33F8}
 	EndGlobalSection
 EndGlobal
