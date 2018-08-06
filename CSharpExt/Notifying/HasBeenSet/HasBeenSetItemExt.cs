@@ -37,7 +37,7 @@ namespace System
         {
             if (rhs.HasBeenSet)
             {
-                if (def == null)
+                if (def != null)
                 {
                     not.Set(converter(rhs.Item, def.Item));
                 }
