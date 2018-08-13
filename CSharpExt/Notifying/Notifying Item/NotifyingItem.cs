@@ -271,9 +271,14 @@ namespace Noggog.Notifying
             return Item?.ToString();
         }
 
-        public void Unset()
+        public void Unset(NotifyingUnsetParameters cmds = null)
         {
-            this.Item = default(T);
+            this.Set(default(T), cmds.ToFireParams());
+        }
+
+        void IHasItem<T>.Unset()
+        {
+            this.Unset(cmds: null);
         }
     }
 }
