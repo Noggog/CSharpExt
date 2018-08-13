@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -26,6 +27,13 @@ namespace ReactiveUI
             {
                 reactiveObj.RaiseAndSetIfChanged(ref hasBeenSet, newHasBeenSet, propertyName: hasBeenSetName);
             }
+        }
+
+        public static IObservable<TRet> WhenAny<TSender, TRet>(
+            this TSender This,
+            Expression<Func<TSender, TRet>> property1)
+        {
+            return This.WhenAny(property1, selector: x => x.GetValue());
         }
     }
 }
