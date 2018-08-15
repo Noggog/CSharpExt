@@ -59,5 +59,10 @@ namespace System.Reactive.Linq
             source.Subscribe(subject);
             return Observable.Create<T>((observer) => subject.Subscribe(observer));
         }
+
+        public static IDisposable Subscribe<T>(this IObservable<T> source, Action action)
+        {
+            return source.Subscribe((i) => action());
+        }
     }
 }
