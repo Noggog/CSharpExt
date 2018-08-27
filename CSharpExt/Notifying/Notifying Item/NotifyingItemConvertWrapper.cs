@@ -76,10 +76,12 @@ namespace Noggog.Notifying
             this.Source.Subscribe(owner: owner, callback: callback, cmds: cmds);
         }
 
-        public void Unset()
+        public void Unset(NotifyingUnsetParameters cmds = null)
         {
-            Source.Unset();
+            Source.Unset(cmds);
         }
+
+        void IHasItem<T>.Unset() => Unset(null);
 
         public void Unsubscribe(object owner)
         {
