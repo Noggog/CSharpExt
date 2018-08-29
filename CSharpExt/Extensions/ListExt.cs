@@ -124,58 +124,6 @@ namespace System
             return item;
         }
 
-        public static T RandomTake<T>(this List<T> list, RandomSource rand)
-        {
-            RandomTake(list, rand, out T item);
-            return item;
-        }
-
-        public static bool RandomTake<T>(this List<T> list, RandomSource rand, out T item)
-        {
-            if (list.Count == 0)
-            {
-                item = default(T);
-                return false;
-            }
-            int r = rand.Next(list.Count);
-            item = list[r];
-            list.RemoveAt(r);
-            return true;
-        }
-
-        public static bool Random<T>(this List<T> list, RandomSource rand, out T item)
-        {
-            if (list.Count == 0)
-            {
-                item = default(T);
-                return false;
-            }
-            item = list[rand.Next(list.Count)];
-            return true;
-        }
-
-        public static T Random<T>(this List<T> list, RandomSource rand)
-        {
-            if (list.Count > 0)
-            {
-                return list[rand.Next(list.Count)];
-            }
-            return default(T);
-        }
-
-        public static IEnumerable<T> Random<T>(this List<T> list, RandomSource rand, int amount)
-        {
-            foreach (T t in list.Randomize(rand))
-            {
-                if (amount <= 0)
-                {
-                    break;
-                }
-                yield return t;
-                amount--;
-            }
-        }
-
         public static bool TryRemoveAt<T>(this List<T> list, int index)
         {
             if (list.Count > index)
