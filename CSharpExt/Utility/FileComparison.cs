@@ -22,22 +22,12 @@ namespace Noggog.Utility
             int iterations = (int)Math.Ceiling((double)first.Length / BYTES_TO_READ);
 
             using (FileStream fs1 = first.OpenRead())
-            using (FileStream fs2 = second.OpenRead())
             {
-                byte[] one = new byte[BYTES_TO_READ];
-                byte[] two = new byte[BYTES_TO_READ];
-
-                for (int i = 0; i < iterations; i++)
+                using (FileStream fs2 = second.OpenRead())
                 {
-                    fs1.Read(one, 0, BYTES_TO_READ);
-                    fs2.Read(two, 0, BYTES_TO_READ);
-
-                    if (BitConverter.ToInt64(one, 0) != BitConverter.ToInt64(two, 0))
-                        return false;
+                    return fs1.ContentsEqual(fs2);
                 }
             }
-
-            return true;
         }
     }
 }
