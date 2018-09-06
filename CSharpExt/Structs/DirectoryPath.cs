@@ -68,9 +68,9 @@ namespace Noggog
             return this._dirInfo.IsSubfolderOf(rhs._dirInfo);
         }
 
-        public bool DeleteEntireFolder(bool disableReadOnly = true)
+        public bool DeleteEntireFolder(bool disableReadOnly = true, bool deleteFolderItself = true)
         {
-            return this._dirInfo.DeleteEntireFolder(disableReadOnly);
+            return this._dirInfo.DeleteEntireFolder(disableReadOnly, deleteFolderItself: deleteFolderItself);
         }
 
         public void DeleteContainedFiles(bool recursive)

@@ -5,7 +5,7 @@ namespace System
 {
     public static class DirectoryInfoExt
     {
-        public static bool DeleteEntireFolder(this DirectoryInfo dir, bool disableReadonly = true)
+        public static bool DeleteEntireFolder(this DirectoryInfo dir, bool disableReadonly = true, bool deleteFolderItself = true)
         {
             if (!dir.Exists()) return true;
             bool pass = true;
@@ -30,6 +30,7 @@ namespace System
             {
                 subDir.DeleteEntireFolder(disableReadonly);
             }
+            if (!deleteFolderItself) return true;
             dir.Refresh();
             if (dir.GetFiles().Length == 0)
             {
