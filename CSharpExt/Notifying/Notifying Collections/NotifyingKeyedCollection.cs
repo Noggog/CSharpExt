@@ -204,6 +204,16 @@ namespace System
             dict.SetTo(enumer.Select((kv) => kv.Value), NotifyingFireParameters.Typical);
         }
 
+        public static V TryCreateValue<K, V>(this INotifyingKeyedCollection<K, V> dict, K key, Func<K, V> getNew)
+        {
+            if (!dict.TryGetValue(key, out V ret))
+            {
+                ret = getNew(key);
+                dict.Set(ret);
+            }
+            return ret;
+        }
+
         public static void SetToWithDefault<K, V>(
             this INotifyingKeyedCollection<K, V> not,
             INotifyingKeyedCollectionGetter<K, V> rhs,
