@@ -17,6 +17,9 @@ namespace Noggog
         public bool Exists => _dirInfo.Exists();
         public string Path => _fullPath;
         public string Name => _dirInfo.Name;
+        public bool Empty => !_dirInfo.EnumerateFiles().Any()
+            && !_dirInfo.EnumerateDirectories().Any();
+        public DirectoryInfo Info => _dirInfo;
 
         public DirectoryPath(string path)
         {
@@ -102,6 +105,32 @@ namespace Noggog
             foreach (var file in this._dirInfo.EnumerateFiles())
             {
                 yield return new FilePath(file.FullName);
+            }
+        }
+
+        public IEnumerable<FileInfo> EnumerateAllFileInfos()
+        {
+            return this._dirInfo.EnumerateAllFiles();
+        }
+
+        public IEnumerable<FilePath> EnumerateAllFiles()
+        {
+            foreach (var file in this._dirInfo.EnumerateAllFiles())
+            {
+                yield return new FilePath(file.FullName);
+            }
+        }
+
+        public IEnumerable<DirectoryInfo> EnumerateAllDirectoryInfos(bool includeSelf)
+        {
+            return this._dirInfo.EnumerateAllDirectories(includeSelf);
+        }
+
+        public IEnumerable<DirectoryPath> EnumerateAllDirectories(bool includeSelf)
+        {
+            foreach (var file in this._dirInfo.EnumerateAllDirectories(includeSelf))
+            {
+                yield return new DirectoryPath(file.FullName);
             }
         }
 

@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace System
 {
@@ -69,6 +72,26 @@ namespace System
                     }
                 }
             }
+        }
+
+        public static IEnumerable<FileInfo> EnumerateAllFiles(this DirectoryInfo dir)
+        {
+            return dir.EnumerateFiles()
+                .Concat(dir.EnumerateDirectories()
+                    .SelectMany(d => d.EnumerateAllFiles()));
+        }
+
+        // Ensures that the higher directories iterate first before lower directories
+        public static IEnumerable<DirectoryInfo> EnumerateAllDirectories(this DirectoryInfo dir, bool includeSelf)
+        {
+            var ret = dir.EnumerateDirectories()
+                .Concat(dir.EnumerateDirectories()
+                .SelectMany(d => d.EnumerateAllDirectories(includeSelf: false)));
+            if (includeSelf)
+            {
+                ret = dir.Single().Concat(ret);
+            }
+            return ret;
         }
 
         public static bool IsSubfolderOf(this DirectoryInfo dir, DirectoryInfo potentialParent)

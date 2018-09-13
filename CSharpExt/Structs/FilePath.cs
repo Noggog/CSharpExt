@@ -34,6 +34,7 @@ namespace Noggog
                 return _fileInfo.Length;
             }
         }
+        public FileInfo Info => _fileInfo;
 
         public FilePath(string path)
         {
