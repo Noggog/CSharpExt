@@ -242,6 +242,17 @@ namespace System
                 yield return list;
             }
         }
+
+        public static IEnumerable<R> WhereCastable<T, R>(this IEnumerable<T> en)
+        {
+            foreach (var item in en)
+            {
+                if (item is R rhs)
+                {
+                    yield return rhs;
+                }
+            }
+        }
     }
 
     public static class EnumerableExt<T>
