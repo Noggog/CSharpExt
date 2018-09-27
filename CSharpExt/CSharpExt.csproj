@@ -72,6 +72,7 @@
     <Compile Include="Extensions\DoubleExt.cs" />
     <Compile Include="Extensions\EnumerableExt.cs" />
     <Compile Include="Extensions\EnumExt.cs" />
+    <Compile Include="Extensions\EqualityComparerExt.cs" />
     <Compile Include="Extensions\FloatExt.cs" />
     <Compile Include="Extensions\HashHelper.cs" />
     <Compile Include="Extensions\HashSetExt.cs" />
