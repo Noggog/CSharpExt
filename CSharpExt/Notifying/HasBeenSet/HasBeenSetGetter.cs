@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace Noggog.Notifying
 {
-    public class HasBeenSetGetter : IHasBeenSet
+    public class HasBeenSetGetter : IHasBeenSetGetter
     {
         public static readonly HasBeenSetGetter NotBeenSet_Instance = new HasBeenSetGetter(false);
         public static readonly HasBeenSetGetter HasBeenSet_Instance = new HasBeenSetGetter(true);
 
         public readonly bool HasBeenSet;
-        bool IHasBeenSet.HasBeenSet => this.HasBeenSet;
+        bool IHasBeenSetGetter.HasBeenSet => this.HasBeenSet;
 
         public HasBeenSetGetter(bool on)
         {

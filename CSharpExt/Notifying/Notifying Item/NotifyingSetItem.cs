@@ -335,11 +335,16 @@ namespace Noggog.Notifying
             subscribers.Remove(owner);
         }
 
-        public virtual void Unset(NotifyingUnsetParameters cmds = null)
+        public virtual void Unset(NotifyingUnsetParameters cmds)
         {
             Set(value: default(T), 
                 hasBeenSet: false, 
                 cmds: cmds.ToFireParams());
+        }
+
+        public void Unset()
+        {
+            Unset(cmds: null);
         }
 
         public virtual void SetCurrentAsDefault()
@@ -446,7 +451,7 @@ namespace Noggog.Notifying
 
         void IHasBeenSetItem<T>.Set(T value, bool hasBeenSet) => Set(value, hasBeenSet, cmds: null);
 
-        void IHasItem<T>.Unset() => Unset(cmds: null);
+        void IHasBeenSet.Unset() => Unset(cmds: null);
 
         public static implicit operator T(NotifyingSetItem<T> item)
         {

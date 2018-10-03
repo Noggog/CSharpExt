@@ -43,7 +43,6 @@ namespace Noggog.Notifying
 
         T IHasItemGetter<T>.Item => this.Item;
         void IHasBeenSetItem<T>.Set(T value, bool hasBeenSet) => Set(value, hasBeenSet, cmds: null);
-        void IHasItem<T>.Unset() => Unset(cmds: null);
 
         public bool HasBeenSet
         {
@@ -120,11 +119,13 @@ namespace Noggog.Notifying
                 cmds: cmds);
         }
 
-        public void Unset(NotifyingUnsetParameters cmds = null)
+        public void Unset(NotifyingUnsetParameters cmds)
         {
             _child.Unset(cmds);
             SwapBack(cmds);
         }
+
+        public void Unset() => Unset(cmds: null);
 
         public void Unsubscribe(object owner)
         {

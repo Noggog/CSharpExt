@@ -1,0 +1,114 @@
+﻿using DynamicData;
+using Noggog.Notifying;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reactive.Subjects;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace CSharpExt.Rx
+{
+    public class SourceSetList<T> : ISourceSetList<T>
+    {
+        private readonly BehaviorSubject<bool> _hasBeenSet = new BehaviorSubject<bool>(false);
+        private readonly SourceList<T> _source;
+
+        public SourceSetList(IObservable<IChangeSet<T>> source = null)
+        {
+            this._source = new SourceList<T>(source);
+        }
+
+        public IObservable<int> CountChanged => _source.CountChanged;
+
+        public IEnumerable<T> Items => _source.Items;
+
+        public int Count => _source.Count;
+
+        public IEnumerable<T> DefaultValue => Enumerable.Empty<T>();
+
+        IEnumerable<T> IHasItemGetter<IEnumerable<T>>.Item
+        {
+            get => _source.Items;
+        }
+
+        public bool HasBeenSet
+        {
+            get => _hasBeenSet.Value;
+            set => _hasBeenSet.OnNext(value);
+        }
+
+        IObservable<IEnumerable<T>> IHasItemRxGetter<IEnumerable<T>>.ItemObservable => 
+            this._source
+            .Connect()
+            .QueryWhenChanged(q => q);
+
+        public IObservable<bool> HasBeenSetObservable => this._hasBeenSet;
+
+        public T this[int index]
+        {
+            get => _source.Items.ElementAt(index);
+            set => _source.Edit(l => l[index] = value);
+        }
+
+        public IObservable<IChangeSet<T>> Connect(Func<T, bool> predicate = null)
+        {
+            return _source.Connect(predicate);
+        }
+
+        public void Dispose()
+        {
+            _source.Dispose();
+        }
+
+        public void Edit(Action<IExtendedList<T>> updateAction)
+        {
+            Edit(updateAction, hasBeenSet: true);
+        }
+
+        public virtual void Edit(Action<IExtendedList<T>> updateAction, bool hasBeenSet)
+        {
+            if (!hasBeenSet)
+            {
+                _source.Edit(updateAction);
+                this.HasBeenSet = true;
+            }
+            else
+            {
+                this.HasBeenSet = false;
+                _source.Edit(updateAction);
+            }
+        }
+
+        public void OnCompleted()
+        {
+            _source.OnCompleted();
+        }
+
+        public void OnError(Exception exception)
+        {
+            _source.OnError(exception);
+        }
+
+        public void Unset()
+        {
+            this.HasBeenSet = false;
+            this.Clear();
+        }
+
+        public IEnumerator<T> GetEnumerator()
+        {
+            return this._source.Items.GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return this.GetEnumerator();
+        }
+
+        public void Add(T item) => SourceListEditConvenienceEx.Add(this, item);
+
+        public void AddRange(IEnumerable<T> item) => SourceListEditConvenienceEx.AddRange(this, item);
+    }
+}

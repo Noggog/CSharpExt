@@ -44,8 +44,17 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BufferUntilSubscribed.cs" />
+    <Compile Include="Containers\SouceSetCache.cs" />
+    <Compile Include="Containers\SourceBoundedSetList.cs" />
+    <Compile Include="Containers\SourceSetList.cs" />
     <Compile Include="Extensions\ObservableExt.cs" />
-    <Compile Include="Extensions\SourceListEx.cs" />
+    <Compile Include="Extensions\SourceCacheExt.cs" />
+    <Compile Include="Extensions\SourceListExt.cs" />
+    <Compile Include="Interfaces\IHasItemRx.cs" />
+    <Compile Include="Interfaces\IObservableSetCache.cs" />
+    <Compile Include="Interfaces\IObservableSetList.cs" />
+    <Compile Include="Interfaces\ISourceSetCache.cs" />
+    <Compile Include="Interfaces\ISourceSetList.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -65,5 +74,6 @@
       <Name>CSharpExt</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

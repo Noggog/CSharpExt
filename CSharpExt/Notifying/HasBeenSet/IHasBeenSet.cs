@@ -19,20 +19,26 @@ namespace Noggog.Notifying
         T Item { get; }
     }
 
-    public interface IHasBeenSet
+    public interface IHasBeenSet : IHasBeenSetGetter
+    {
+        new bool HasBeenSet { get; set; }
+        void Unset();
+    }
+
+    public interface IHasBeenSetGetter
     {
         bool HasBeenSet { get; }
     }
 
-    public interface IHasBeenSetItemGetter<T> : IHasBeenSet, IHasItemGetter<T>
+    public interface IHasBeenSetItemGetter<T> : IHasBeenSetGetter, IHasItemGetter<T>
     {
     }
 
-    public interface IHasBeenSetItem<T> : IHasItem<T>, IHasBeenSetItemGetter<T>
+    public interface IHasBeenSetItem<T> : IHasItem<T>, IHasBeenSetItemGetter<T>, IHasBeenSet
     {
         new T Item { get; set; }
-        new bool HasBeenSet { get; set; }
         void Set(T item, bool hasBeenSet = true);
+        new void Unset();
     }
 }
 

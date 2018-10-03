@@ -49,7 +49,7 @@ namespace Noggog.Notifying
 
         public bool HasBeenSet => this.Source.HasBeenSet;
 
-        bool IHasBeenSetItem<T>.HasBeenSet
+        bool IHasBeenSet.HasBeenSet
         {
             get => this.Source.HasBeenSet;
             set => this.Source.HasBeenSet = value;
@@ -301,6 +301,8 @@ namespace Noggog.Notifying
         {
             this.Source.Unsubscribe(owner);
         }
+
+        public void Unset() => Unset(cmds: null);
         #endregion
     }
 }

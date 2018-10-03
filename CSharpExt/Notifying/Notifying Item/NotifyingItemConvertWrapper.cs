@@ -110,7 +110,7 @@ namespace Noggog.Notifying
         R INotifyingItem<R>.Item { get => this.incomingConverter(this.Source.Item); set => this.Source.Item = this.outgoingConverter(value); }
         R IHasBeenSetItem<R>.Item { get => this.incomingConverter(this.Source.Item); set => this.Source.Item = this.outgoingConverter(value); }
         void IHasBeenSetItem<R>.Set(R value, bool hasBeenSet) => Set(value, hasBeenSet, cmds: null);
-        void IHasItem<R>.Unset() => Unset(cmds: null);
+        void IHasBeenSet.Unset() => Unset(cmds: null);
 
         public R DefaultValue => this.incomingConverter(this.Source.DefaultValue);
 
@@ -251,6 +251,8 @@ namespace Noggog.Notifying
         {
             this.HasBeenSet = on;
         }
+
+        public void Unset() => Unset(cmds: null);
         #endregion
     }
 }
