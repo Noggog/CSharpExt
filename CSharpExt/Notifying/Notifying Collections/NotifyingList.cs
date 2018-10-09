@@ -8,9 +8,9 @@ using System.Linq;
 
 namespace Noggog.Notifying
 {
-    public interface INotifyingListGetter<T> : INotifyingEnumerable<T>
+    public interface INotifyingListGetter<T> : INotifyingEnumerable<T>, IReadOnlyList<T>
     {
-        T this[int index] { get; }
+        new int Count { get; }
         int IndexOf(T item);
         void Subscribe<O>(O owner, NotifyingCollection<T, ChangeIndex<T>>.NotifyingCollectionCallback<O> callback, NotifyingSubscribeParameters cmds = null);
         void Subscribe(NotifyingCollection<T, ChangeIndex<T>>.NotifyingCollectionSimpleCallback callback, NotifyingSubscribeParameters cmds = null);

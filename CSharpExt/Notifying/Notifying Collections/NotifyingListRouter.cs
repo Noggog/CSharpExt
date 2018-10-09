@@ -51,7 +51,7 @@ namespace Noggog.Notifying
             }
         }
          
-        T INotifyingListGetter<T>.this[int index] => this[index];
+        T IReadOnlyList<T>.this[int index] => this[index];
 
         public INotifyingItemGetter<int> CountProperty => _child.CountProperty;
 
