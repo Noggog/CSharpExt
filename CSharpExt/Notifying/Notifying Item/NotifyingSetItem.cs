@@ -337,8 +337,9 @@ namespace Noggog.Notifying
 
         public virtual void Unset(NotifyingUnsetParameters cmds = null)
         {
-            HasBeenSet = false;
-            Set(default(T), cmds.ToFireParams());
+            Set(value: default(T), 
+                hasBeenSet: false, 
+                cmds: cmds.ToFireParams());
         }
 
         public virtual void SetCurrentAsDefault()
