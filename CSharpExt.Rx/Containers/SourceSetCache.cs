@@ -11,12 +11,12 @@ using System.Threading.Tasks;
 
 namespace CSharpExt.Rx
 {
-    public class SouceSetCache<V, K> : ISourceSetCache<V, K>
+    public class SourceSetCache<V, K> : ISourceSetCache<V, K>
     {
         private readonly BehaviorSubject<bool> _hasBeenSet = new BehaviorSubject<bool>(false);
         private readonly SourceCache<V, K> _source;
 
-        public SouceSetCache(Func<V, K> keySelector)
+        public SourceSetCache(Func<V, K> keySelector)
         {
             this._source = new SourceCache<V, K>(keySelector);
         }

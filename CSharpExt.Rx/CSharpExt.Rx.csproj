@@ -44,7 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BufferUntilSubscribed.cs" />
-    <Compile Include="Containers\SouceSetCache.cs" />
+    <Compile Include="Containers\SourceSetCache.cs" />
     <Compile Include="Containers\SourceBoundedSetList.cs" />
     <Compile Include="Containers\SourceSetList.cs" />
     <Compile Include="Extensions\ObservableExt.cs" />

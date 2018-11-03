@@ -39,8 +39,8 @@ namespace CSharpExt.Rx
 
         public static void SetToWithDefault<V, K>(
             this ISourceSetCache<V, K> not,
-            ISourceSetCache<V, K> rhs,
-            ISourceSetCache<V, K> def,
+            IObservableSetCache<V, K> rhs,
+            IObservableSetCache<V, K> def,
             Func<V, V, V> converter)
         {
             if (rhs.HasBeenSet)
