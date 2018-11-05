@@ -62,7 +62,7 @@ namespace Noggog.Notifying
 
         public IEnumerable<KeyValuePair<WeakReferenceEquatable, List<T>>> GetSubs()
         {
-            if (!this.HasSubs) return EnumerableExt<KeyValuePair<WeakReferenceEquatable, List<T>>>.EMPTY;
+            if (!this.HasSubs) return EnumerableExt<KeyValuePair<WeakReferenceEquatable, List<T>>>.Empty;
             if (!reloadFireList)
             {
                 return fireSubscribers;

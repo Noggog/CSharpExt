@@ -45,13 +45,13 @@ namespace CSharpExt.Tests
         [Fact]
         public void CountGreaterThan_EmptyTypical()
         {
-            Assert.False(EnumerableExt<int>.EMPTY.CountGreaterThan(2));
+            Assert.False(EnumerableExt<int>.Empty.CountGreaterThan(2));
         }
 
         [Fact]
         public void CountGreaterThan_EmptyZero()
         {
-            Assert.False(EnumerableExt<int>.EMPTY.CountGreaterThan(0));
+            Assert.False(EnumerableExt<int>.Empty.CountGreaterThan(0));
         }
         #endregion
     }
