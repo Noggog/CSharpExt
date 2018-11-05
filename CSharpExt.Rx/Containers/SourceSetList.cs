@@ -69,7 +69,7 @@ namespace CSharpExt.Rx
 
         public virtual void Edit(Action<IExtendedList<T>> updateAction, bool hasBeenSet)
         {
-            if (!hasBeenSet)
+            if (hasBeenSet)
             {
                 _source.Edit(updateAction);
                 this.HasBeenSet = true;

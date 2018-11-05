@@ -70,7 +70,7 @@ namespace CSharpExt.Rx
 
         public void Edit(Action<ISourceUpdater<V, K>> updateAction, bool hasBeenSet)
         {
-            if (!hasBeenSet)
+            if (hasBeenSet)
             {
                 _source.Edit(updateAction);
                 this.HasBeenSet = true;
