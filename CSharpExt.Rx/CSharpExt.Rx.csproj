@@ -48,6 +48,7 @@
     <Compile Include="Containers\SourceSetCache.cs" />
     <Compile Include="Containers\SourceBoundedSetList.cs" />
     <Compile Include="Containers\SourceSetList.cs" />
+    <Compile Include="Extensions\ObservableCacheExt.cs" />
     <Compile Include="Extensions\ObservableExt.cs" />
     <Compile Include="Extensions\SourceCacheExt.cs" />
     <Compile Include="Extensions\SourceListExt.cs" />
