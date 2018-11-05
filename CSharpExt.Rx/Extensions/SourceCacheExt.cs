@@ -1,4 +1,5 @@
-﻿using DynamicData;
+﻿using CSharpExt.Rx;
+using DynamicData;
 using Noggog.Notifying;
 using System;
 using System.Collections.Generic;
@@ -6,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CSharpExt.Rx
+namespace System
 {
     public static class SourceCacheExt
     {

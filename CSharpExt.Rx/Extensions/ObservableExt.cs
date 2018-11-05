@@ -8,8 +8,9 @@ using System.Reactive.Disposables;
 using System.Reactive.Subjects;
 using System.Reactive.Concurrency;
 using CSharpExt.Rx;
+using System.Reactive.Linq;
 
-namespace System.Reactive.Linq
+namespace System
 {
     public static class ObservableExt
     {
