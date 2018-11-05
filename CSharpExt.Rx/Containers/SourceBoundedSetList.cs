@@ -21,6 +21,7 @@ namespace CSharpExt.Rx
         public SourceBoundedSetList(int max = int.MaxValue, IObservable<IChangeSet<T>> source = null)
             : base(source)
         {
+            this.MaxValue = max;
         }
 
         public override void Edit(Action<IExtendedList<T>> updateAction, bool hasBeenSet)
