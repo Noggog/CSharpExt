@@ -75,5 +75,11 @@ namespace System
                 not.Unset();
             }
         }
+
+        public static TObject AddOrUpdateReturn<TObject, TKey>(this ISourceCache<TObject, TKey> source, TObject item)
+        {
+            source.AddOrUpdate(item);
+            return item;
+        }
     }
 }
