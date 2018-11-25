@@ -42,7 +42,7 @@ namespace Noggog
 
         public override int GetHashCode()
         {
-            return this.Upper.GetHashCode();
+            return HashHelper.GetHashCode(this.Upper);
         }
 
         public static implicit operator string(StringCaseAgnostic ag)
