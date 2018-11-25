@@ -7,8 +7,7 @@ using System.Threading.Tasks;
 
 namespace CSharpExt.Rx
 {
-    public interface IObservableSetCache<V, K> : IObservableCache<V, K>, IHasItemRxGetter<IEnumerable<V>>, IEnumerable<V>
+    public interface IObservableSetCache<V, K> : IObservableCache<V, K>, IHasItemRxGetter<IEnumerable<V>>
     {
-        bool TryGetValue(K key, out V val);
     }
 }

@@ -32,12 +32,10 @@ namespace CSharpExt.Rx
         public IObservable<int> CountChanged => _source.CountChanged;
 
         public IEnumerable<V> DefaultValue => Enumerable.Empty<V>();
-
-        public IEnumerable<V> Item
-        {
-            get => _source.Items;
-            set => _source.SetTo(value);
-        }
+        
+        IEnumerable<V> IHasBeenSetItem<IEnumerable<V>>.Item { get => _source.Items; set => _source.SetTo(value); }
+        IEnumerable<V> IHasItem<IEnumerable<V>>.Item { get => _source.Items; set => _source.SetTo(value); }
+        IEnumerable<V> IHasItemGetter<IEnumerable<V>>.Item => _source.Items;
 
         public bool HasBeenSet
         {
@@ -51,6 +49,10 @@ namespace CSharpExt.Rx
             .QueryWhenChanged(q => q.Items);
 
         public IObservable<bool> HasBeenSetObservable => this._hasBeenSet;
+
+        IEnumerable<V> IReadOnlyDictionary<K, V>.Values => this.Items;
+
+        public V this[K key] => this._source[key];
 
         public IObservable<IChangeSet<V, K>> Connect(Func<V, bool> predicate = null)
         {
@@ -115,11 +117,6 @@ namespace CSharpExt.Rx
             return _source.Watch(key);
         }
 
-        public IEnumerator<V> GetEnumerator()
-        {
-            return this._source.Items.GetEnumerator();
-        }
-
         IEnumerator IEnumerable.GetEnumerator()
         {
             return this.GetEnumerator();
@@ -132,6 +129,16 @@ namespace CSharpExt.Rx
                 l.Load(item);
             },
             hasBeenSet: hasBeenSet);
+        }
+
+        public bool ContainsKey(K key)
+        {
+            return this._source.ContainsKey(key);
+        }
+
+        public IEnumerator<KeyValuePair<K, V>> GetEnumerator()
+        {
+            return this._source.GetEnumerator();
         }
     }
 }

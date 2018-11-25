@@ -46,6 +46,8 @@ namespace CSharpExt.Rx
 
         public IObservable<bool> HasBeenSetObservable => this._hasBeenSet;
 
+        bool ICollection<T>.IsReadOnly => false;
+
         public T this[int index]
         {
             get => _source.Items.ElementAt(index);
@@ -110,5 +112,40 @@ namespace CSharpExt.Rx
         public void Add(T item) => SourceListEditConvenienceEx.Add(this, item);
 
         public void AddRange(IEnumerable<T> item) => SourceListEditConvenienceEx.AddRange(this, item);
+
+        public int IndexOf(T item)
+        {
+            return this._source.IndexOf(item);
+        }
+
+        void IList<T>.Insert(int index, T item)
+        {
+            this.Insert(index, item);
+        }
+
+        void IList<T>.RemoveAt(int index)
+        {
+            this.RemoveAt(index);
+        }
+
+        void ICollection<T>.Clear()
+        {
+            this.Clear();
+        }
+
+        public bool Contains(T item)
+        {
+            return this._source.Contains(item);
+        }
+
+        public void CopyTo(T[] array, int arrayIndex)
+        {
+            this._source.CopyTo(array, arrayIndex);
+        }
+
+        bool ICollection<T>.Remove(T item)
+        {
+            return this.Remove(item);
+        }
     }
 }

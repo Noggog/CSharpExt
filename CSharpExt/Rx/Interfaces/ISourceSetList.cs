@@ -12,7 +12,7 @@ namespace CSharpExt.Rx
     {
         new T this[int index] { get; set; }
         void Edit(Action<IExtendedList<T>> updateAction, bool hasBeenSet);
-        void Add(T item);
         void AddRange(IEnumerable<T> item);
+        new int Count { get; }
     }
 }

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace CSharpExt.Rx
 {
-    public interface ISourceSetCache<V, K> : ISourceCache<V, K>, IHasBeenSetItemRx<IEnumerable<V>>, IObservableSetCache<V, K>, IEnumerable<V>
+    public interface ISourceSetCache<V, K> : ISourceCache<V, K>, IHasBeenSetItemRx<IEnumerable<V>>, IObservableSetCache<V, K>
     {
         void Edit(Action<ISourceUpdater<V, K>> updateAction, bool hasBeenSet);
     }

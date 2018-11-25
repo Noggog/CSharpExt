@@ -237,11 +237,8 @@
     <Compile Include="XML\ElementWrapper.cs" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="DynamicData">
-      <Version>6.6.1.2507</Version>
-    </PackageReference>
     <PackageReference Include="ReactiveUI">
-      <Version>9.2.2</Version>
+      <Version>9.3.5</Version>
     </PackageReference>
     <PackageReference Include="System.Reactive">
       <Version>4.1.2</Version>
@@ -249,6 +246,12 @@
     <PackageReference Include="System.ValueTuple">
       <Version>4.5.0</Version>
     </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\DynamicData\DynamicData\DynamicData.csproj">
+      <Project>{6c3ece8b-4127-4356-b379-8068b08efb37}</Project>
+      <Name>DynamicData</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
