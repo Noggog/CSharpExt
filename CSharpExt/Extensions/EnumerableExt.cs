@@ -253,6 +253,18 @@ namespace System
                 }
             }
         }
+
+        public static IEnumerable<T> Distinct<T, R>(this IEnumerable<T> en, Func<T, R> distinctionSelector)
+        {
+            HashSet<R> existing = new HashSet<R>();
+            foreach (var item in en)
+            {
+                if (existing.Add(distinctionSelector(item)))
+                {
+                    yield return item;
+                }
+            }
+        }
     }
 
     public static class EnumerableExt<T>
