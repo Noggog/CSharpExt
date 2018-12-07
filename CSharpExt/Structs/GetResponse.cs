@@ -2,7 +2,7 @@
 
 namespace Noggog
 {
-    public struct GetResponse<T> : IEquatable<GetResponse<T>>
+    public struct GetResponse<T> : IEquatable<GetResponse<T>>, IErrorResponse
     {
         public static readonly GetResponse<T> Failure = new GetResponse<T>();
 
@@ -23,6 +23,9 @@ namespace Noggog
                 return _reason;
             }
         }
+
+        bool IErrorResponse.Succeeded => this.Succeeded;
+        Exception IErrorResponse.Exception => this.Exception;
 
         private GetResponse(
             bool succeeded,
