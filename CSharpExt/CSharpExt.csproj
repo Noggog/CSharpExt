@@ -1,265 +1,34 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{C56B9607-41CF-4F59-9EEF-F79D57309EDA}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Noggog</RootNamespace>
-    <AssemblyName>Noggog</AssemblyName>
-    <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <LangVersion>7.1</LangVersion>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <LangVersion>7.3</LangVersion>
+    <NoWarn>1701;1702; 1998</NoWarn>
+    <WarningsAsErrors>NU1605, CS4014</WarningsAsErrors>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <LangVersion>7.3</LangVersion>
+    <NoWarn>1701;1702; 1998</NoWarn>
+    <WarningsAsErrors>NU1605, CS4014</WarningsAsErrors>
   </PropertyGroup>
+
   <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Xml" />
+    <PackageReference Include="ReactiveUI" Version="9.4.1" />
+    <PackageReference Include="System.Reactive" Version="4.1.2" />
   </ItemGroup>
+
   <ItemGroup>
-    <Compile Include="Comparers\ReferenceEqualityComparer.cs" />
-    <Compile Include="Comparers\WeakReferenceEquatable.cs" />
-    <Compile Include="Containers\Common\ICollectionGetter.cs" />
-    <Compile Include="Containers\FireDictionary.cs" />
-    <Compile Include="Containers\FireList.cs" />
-    <Compile Include="Containers\Interfaces\ISortedList.cs" />
-    <Compile Include="Containers\Interfaces\ISortingListDictionary.cs" />
-    <Compile Include="Containers\Pools\ObjectDictionaryListPool.cs" />
-    <Compile Include="Containers\Pools\ObjectDictionaryPool.cs" />
-    <Compile Include="Containers\Pools\ObjectListPool.cs" />
-    <Compile Include="Containers\Pools\ObjectPool.cs" />
-    <Compile Include="Containers\SortingList.cs" />
-    <Compile Include="Containers\SortingListDictionary.cs" />
-    <Compile Include="Convenience Classes\TaskCompletionSource.cs" />
-    <Compile Include="Enums\AddRemove.cs" />
-    <Compile Include="Enums\AddRemoveModify.cs" />
-    <Compile Include="Enums\Axis.cs" />
-    <Compile Include="Enums\AxisDirection.cs" />
-    <Compile Include="Enums\GridLoc.cs" />
-    <Compile Include="Enums\ClockRotation.cs" />
-    <Compile Include="Extensions\ActionExt.cs" />
-    <Compile Include="Extensions\ArrayExt.cs" />
-    <Compile Include="Extensions\BitVector32Ext.cs" />
-    <Compile Include="Extensions\DictionaryExt.cs" />
-    <Compile Include="Extensions\DirectoryInfoExt.cs" />
-    <Compile Include="Extensions\DoubleExt.cs" />
-    <Compile Include="Extensions\EnumerableExt.cs" />
-    <Compile Include="Extensions\EnumExt.cs" />
-    <Compile Include="Extensions\EqualityComparerExt.cs" />
-    <Compile Include="Extensions\FloatExt.cs" />
-    <Compile Include="Extensions\HashHelper.cs" />
-    <Compile Include="Extensions\HashSetExt.cs" />
-    <Compile Include="Extensions\ICollectionExt.cs" />
-    <Compile Include="Extensions\IDisposableExt.cs" />
-    <Compile Include="Extensions\Int8Ext.cs" />
-    <Compile Include="Extensions\ByteExt.cs" />
-    <Compile Include="Extensions\MathExt.cs" />
-    <Compile Include="Extensions\PathExt.cs" />
-    <Compile Include="Extensions\PreSortedListExt.cs" />
-    <Compile Include="Extensions\SortedListExt.cs" />
-    <Compile Include="Extensions\StreamExt.cs" />
-    <Compile Include="Extensions\TaskExt.cs" />
-    <Compile Include="Extensions\UInt64Ext.cs" />
-    <Compile Include="Extensions\UInt32Ext.cs" />
-    <Compile Include="Extensions\UInt16Ext.cs" />
-    <Compile Include="Extensions\Int16Ext.cs" />
-    <Compile Include="Extensions\Int64Ext.cs" />
-    <Compile Include="Extensions\Int32Ext.cs" />
-    <Compile Include="Extensions\ListExt.cs" />
-    <Compile Include="Extensions\ObjectExt.cs" />
-    <Compile Include="Extensions\QueueExt.cs" />
-    <Compile Include="Extensions\RangeDoubleExt.cs" />
-    <Compile Include="Extensions\RangeIntExt.cs" />
-    <Compile Include="Extensions\StackExt.cs" />
-    <Compile Include="Extensions\StringExt.cs" />
-    <Compile Include="Extensions\SymbolExtensions.cs" />
-    <Compile Include="Extensions\TypeExt.cs" />
-    <Compile Include="Extensions\XmlExt.cs" />
-    <Compile Include="Containers\Common\IDictionaryGetter.cs" />
-    <Compile Include="Notifying\HasBeenSet\HasBeenSetGetter.cs" />
-    <Compile Include="Notifying\HasBeenSet\HasBeenSetItemConverterOnSet.cs" />
-    <Compile Include="Notifying\HasBeenSet\HasBeenSetItemConverter.cs" />
-    <Compile Include="Notifying\HasBeenSet\HasBeenSetItemExt.cs" />
-    <Compile Include="Notifying\HasBeenSet\HasBeenSetItemNoNullOnSetConverter.cs" />
-    <Compile Include="Notifying\HasBeenSet\HasBeenSetItemNoNullOnSet.cs" />
-    <Compile Include="Notifying\HasBeenSet\HasBeenSetItemNoNullConverter.cs" />
-    <Compile Include="Notifying\HasBeenSet\HasBeenSetItemNoNull.cs" />
-    <Compile Include="Notifying\HasBeenSet\HasBeenSetItemOnSet.cs" />
-    <Compile Include="Notifying\HasBeenSet\IHasBeenSet.cs" />
-    <Compile Include="Notifying\Notifying Collections\NotifyingListBounded.cs" />
-    <Compile Include="Notifying\Notifying Item\INotifyingItem.cs" />
-    <Compile Include="Notifying\Notifying Item\NotifyingSetItemConverterDefault.cs" />
-    <Compile Include="Notifying\Notifying Item\NotifyingSetItemConverterOnSetDefault.cs" />
-    <Compile Include="Notifying\Notifying Item\NotifyingSetItemDefault.cs" />
-    <Compile Include="Notifying\Notifying Item\NotifyingSetItemConvertWrapper.cs" />
-    <Compile Include="Notifying\Notifying Item\NotifyingSetItemNoNullConverterDefault.cs" />
-    <Compile Include="Notifying\Notifying Item\NotifyingSetItemNoNullDefault.cs" />
-    <Compile Include="Notifying\Notifying Item\NotifyingSetItemNoNullOnSetConverterDefault.cs" />
-    <Compile Include="Notifying\Notifying Item\NotifyingSetItemNoNullOnSetDefault.cs" />
-    <Compile Include="Notifying\Notifying Item\NotifyingSetItemNoNullOnSetConverter.cs" />
-    <Compile Include="Notifying\Notifying Item\NotifyingSetItemNoNullOnSet.cs" />
-    <Compile Include="Notifying\Notifying Item\NotifyingSetItemNoNullConverter.cs" />
-    <Compile Include="Notifying\Notifying Item\NotifyingSetItemNoNull.cs" />
-    <Compile Include="Notifying\Notifying Item\NotifyingSetItemConverterOnSet.cs" />
-    <Compile Include="Notifying\Notifying Item\NotifyingSetItemOnSetDefault.cs" />
-    <Compile Include="Notifying\Notifying Item\NotifyingSetItemOnSet.cs" />
-    <Compile Include="Notifying\Notifying Item\NotifyingSetItemConverter.cs" />
-    <Compile Include="Notifying\Notifying Item\NotifyingSetItem.cs" />
-    <Compile Include="Notifying\Notifying Item\NotifyingItemOnSet.cs" />
-    <Compile Include="Notifying\Notifying Item\NotifyingItemConverterOnSet.cs" />
-    <Compile Include="Notifying\Notifying Item\NotifyingItemConverter.cs" />
-    <Compile Include="Notifying\Notifying Item\NotifyingItemNoNullOnSetConverter.cs" />
-    <Compile Include="Notifying\Notifying Item\NotifyingItemNoNullOnSet.cs" />
-    <Compile Include="Notifying\Notifying Item\NotifyingItemNoNullConverter.cs" />
-    <Compile Include="Notifying\Notifying Item\NotifyingItemNoNull.cs" />
-    <Compile Include="Notifying\Notifying Item\NotifyingItemExt.cs" />
-    <Compile Include="Notifying\Notifying Item\NotifyingSetItemWrapper.cs" />
-    <Compile Include="Notifying\Notifying Collections\NotifyingCollection.cs" />
-    <Compile Include="Notifying\Notifying Collections\NotifyingDictionary.cs" />
-    <Compile Include="Notifying\Notifying Collections\NotifyingDictionaryRouter.cs" />
-    <Compile Include="Notifying\NotifyingBindParameters.cs" />
-    <Compile Include="Notifying\NotifyingFireParameters.cs" />
-    <Compile Include="Notifying\Notifying Item\NotifyingItem.cs" />
-    <Compile Include="Notifying\Notifying Item\NotifyingItemConvertWrapper.cs" />
-    <Compile Include="Notifying\Notifying Item\NotifyingSetItemForwarder.cs" />
-    <Compile Include="Notifying\Notifying Item\NotifyingSetItemRouter.cs" />
-    <Compile Include="Notifying\Notifying Collections\NotifyingKeyedCollection.cs" />
-    <Compile Include="Notifying\Notifying Collections\NotifyingKeyedCollectionRouter.cs" />
-    <Compile Include="Notifying\Notifying Collections\NotifyingList.cs" />
-    <Compile Include="Notifying\Notifying Collections\NotifyingListRouter.cs" />
-    <Compile Include="Notifying\NotifyingSubscribeParameters.cs" />
-    <Compile Include="Notifying\NotifyingUnsetParameters.cs" />
-    <Compile Include="Notifying\SubscriptionHandler.cs" />
-    <Compile Include="Printing\DepthPrinter.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RandomSource.cs" />
-    <Compile Include="Rx\BufferUntilSubscribed.cs" />
-    <Compile Include="Rx\Containers\SourceBoundedSetList.cs" />
-    <Compile Include="Rx\Containers\SourceSetCache.cs" />
-    <Compile Include="Rx\Containers\SourceSetList.cs" />
-    <Compile Include="Rx\Extensions\ChangeSetExt.cs" />
-    <Compile Include="Rx\Extensions\ObservableCacheExt.cs" />
-    <Compile Include="Rx\Extensions\ObservableExt.cs" />
-    <Compile Include="Rx\Extensions\ReactiveObjectExt.cs" />
-    <Compile Include="Rx\Extensions\SourceCacheExt.cs" />
-    <Compile Include="Rx\Extensions\SourceListExt.cs" />
-    <Compile Include="Rx\Interfaces\IHasItemRx.cs" />
-    <Compile Include="Rx\Interfaces\IObservableSetCache.cs" />
-    <Compile Include="Rx\Interfaces\IObservableSetList.cs" />
-    <Compile Include="Rx\Interfaces\ISourceSetCache.cs" />
-    <Compile Include="Rx\Interfaces\ISourceSetList.cs" />
-    <Compile Include="Streams\Binary\BinaryMemoryWriteStream.cs" />
-    <Compile Include="Streams\Binary\BinaryReadStream.cs" />
-    <Compile Include="Streams\Binary\BinaryMemoryReadStream.cs" />
-    <Compile Include="Streams\Binary\BinaryUtility.cs" />
-    <Compile Include="Streams\Binary\BinaryWriteStream.cs" />
-    <Compile Include="Streams\Binary\IBinaryWriteStream.cs" />
-    <Compile Include="Streams\Binary\IBinaryReadStream.cs" />
-    <Compile Include="Streams\Binary\BasicSubstitutionRangeStream.cs" />
-    <Compile Include="Streams\Binary\MemoryTributary.cs" />
-    <Compile Include="Structs\Change\Change.cs" />
-    <Compile Include="Structs\Change\ChangeAddRem.cs" />
-    <Compile Include="Structs\Change\ChangeIndex.cs" />
-    <Compile Include="Structs\Change\ChangeKeyed.cs" />
-    <Compile Include="Structs\Change\ChangeMod.cs" />
-    <Compile Include="Structs\Change\ChangePoint.cs" />
-    <Compile Include="Notifying\HasBeenSet\HasBeenSetItem.cs" />
-    <Compile Include="Structs\Change\ChangeSet.cs" />
-    <Compile Include="Structs\DirectoryPath.cs" />
-    <Compile Include="Structs\ErrorResponse.cs" />
-    <Compile Include="Structs\FilePath.cs" />
-    <Compile Include="Structs\LifecycleActions.cs" />
-    <Compile Include="Structs\MemberAccessor.cs" />
-    <Compile Include="Structs\Numbers\Percent.cs" />
-    <Compile Include="Structs\Numbers\UDouble.cs" />
-    <Compile Include="Structs\Numbers\UInt.cs" />
-    <Compile Include="Structs\Numbers\ULong.cs" />
-    <Compile Include="Structs\Points\P2Int16.cs" />
-    <Compile Include="Structs\Points\P3Float.cs" />
-    <Compile Include="Structs\Points\P2Float.cs" />
-    <Compile Include="Structs\Points\P2Double.cs" />
-    <Compile Include="Structs\Points\P2Int.cs" />
-    <Compile Include="Structs\Points\P2IntValue.cs" />
-    <Compile Include="Structs\Points\P3Double.cs" />
-    <Compile Include="Structs\Points\P3UInt16.cs" />
-    <Compile Include="Structs\Points\P3Int.cs" />
-    <Compile Include="Structs\Points\P3IntValue.cs" />
-    <Compile Include="Structs\Ranges\Basic Primitives\RangeUDouble.cs" />
-    <Compile Include="Structs\Ranges\Basic Primitives\RangeDouble.cs" />
-    <Compile Include="Structs\Ranges\Basic Primitives\RangeFloat.cs" />
-    <Compile Include="Structs\Ranges\Basic Primitives\RangeInt64.cs" />
-    <Compile Include="Structs\Ranges\Basic Primitives\RangeUInt64.cs" />
-    <Compile Include="Structs\Ranges\Basic Primitives\RangeUInt32.cs" />
-    <Compile Include="Structs\Ranges\Basic Primitives\RangeUInt16.cs" />
-    <Compile Include="Structs\Ranges\Basic Primitives\RangeUInt8.cs" />
-    <Compile Include="Structs\Ranges\Basic Primitives\RangeInt8.cs" />
-    <Compile Include="Structs\Ranges\Basic Primitives\RangeInt16.cs" />
-    <Compile Include="Structs\Ranges\Basic Primitives\RangeInt32.cs" />
-    <Compile Include="Structs\Ranges\RangeCollection.cs" />
-    <Compile Include="Structs\StringCaseAgnostic.cs" />
-    <Compile Include="Structs\GetResponse.cs" />
-    <Compile Include="Structs\TryGet.cs" />
-    <Compile Include="Utility\ArgsQuerying\ArgsQueryConsoleManager.cs" />
-    <Compile Include="Utility\ArgsQuerying\ArgsQueryManager.cs" />
-    <Compile Include="Utility\DelegateBuilder.cs" />
-    <Compile Include="Utility\FileComparison.cs" />
-    <Compile Include="Utility\FolderCleaner.cs" />
-    <Compile Include="Utility\TempFile.cs" />
-    <Compile Include="Utility\TempFolder.cs" />
-    <Compile Include="XML\DocumentWrapper.cs" />
-    <Compile Include="XML\ElementWrapper.cs" />
+    <ProjectReference Include="..\..\DynamicData\DynamicData\DynamicData.csproj" />
   </ItemGroup>
+
   <ItemGroup>
-    <PackageReference Include="ReactiveUI">
-      <Version>9.3.5</Version>
-    </PackageReference>
-    <PackageReference Include="System.Reactive">
-      <Version>4.1.2</Version>
-    </PackageReference>
-    <PackageReference Include="System.ValueTuple">
-      <Version>4.5.0</Version>
-    </PackageReference>
+    <Folder Include="Properties\" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\DynamicData\DynamicData\DynamicData.csproj">
-      <Project>{6c3ece8b-4127-4356-b379-8068b08efb37}</Project>
-      <Name>DynamicData</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+
 </Project>

@@ -9,16 +9,16 @@ namespace Noggog.Utility.ArgsQuerying
     public class ArgsQueryConsoleManager : ArgsQueryManager
     {
         public ArgsQueryConsoleManager(string[] args) 
-            : base(Prompt, Read, args)
+            : base(PromptSnippet, Read, args)
         {
         }
 
         public ArgsQueryConsoleManager(IEnumerable<string> args) 
-            : base(Prompt, Read, args)
+            : base(PromptSnippet, Read, args)
         {
         }
 
-        private static void Prompt(string prompt)
+        private static void PromptSnippet(string prompt)
         {
             System.Console.WriteLine(prompt);
         }
