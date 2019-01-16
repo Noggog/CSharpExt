@@ -2,10 +2,10 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>DynamicData</Nickname>
-         <Sha>0dd142a535e76fee9884a530bdacbd7a02077828</Sha>
+         <Sha>40a22e5badeadcdeeb07d249334a8ca5b1f169f2</Sha>
          <Path>../DynamicData</Path>
-         <CommitDate>12-28-2018 00:52:40</CommitDate>
-         <Description>TryCreateValue</Description>
+         <CommitDate>01-15-2019 22:25:03</CommitDate>
+         <Description>CollectionCount convenience selector</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
    </ParentRepos>
