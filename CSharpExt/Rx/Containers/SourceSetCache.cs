@@ -126,7 +126,7 @@ namespace CSharpExt.Rx
         {
             this.Edit((l) =>
             {
-                l.Load(item);
+                l.AddOrUpdate(item);
             },
             hasBeenSet: hasBeenSet);
         }
