@@ -2,10 +2,10 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>DynamicData</Nickname>
-         <Sha>2dd77c48003f4d53e7da680b2346280b2f52483e</Sha>
+         <Sha>d5c2631f1106016c638f568e4503e94ab95ff2ff</Sha>
          <Path>../DynamicData</Path>
-         <CommitDate>11-25-2018 14:51:01</CommitDate>
-         <Description>IList and IReadOnlyDictionary implementation</Description>
+         <CommitDate>01-17-2019 20:23:22</CommitDate>
+         <Description>CollectionCount convenience selector</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
    </ParentRepos>

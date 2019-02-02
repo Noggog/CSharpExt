@@ -76,9 +76,9 @@ namespace System
             }
         }
 
-        public static TObject AddOrUpdateReturn<TObject, TKey>(this ISourceCache<TObject, TKey> source, TObject item)
+        public static TObject SetReturn<TObject, TKey>(this ISourceCache<TObject, TKey> source, TObject item)
         {
-            source.AddOrUpdate(item);
+            source.Set(item);
             return item;
         }
     }

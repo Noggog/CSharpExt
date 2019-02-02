@@ -65,5 +65,16 @@ namespace System
         {
             return source.Subscribe((i) => action());
         }
+
+        public static IObservable<(T Previous, T Current)> WithPrevious<T>(this IObservable<T> source)
+        {
+            T prevStorage = default;
+            return source.Select(i =>
+            {
+                var prev = prevStorage;
+                prevStorage = i;
+                return (prev, i);
+            });
+        }
     }
 }

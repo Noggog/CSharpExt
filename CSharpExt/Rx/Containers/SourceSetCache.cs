@@ -102,7 +102,7 @@ namespace CSharpExt.Rx
         public bool TryGetValue(K key, out V val)
         {
             var opt = _source.Lookup(key);
-            val = opt.Value;
+            val = opt.HasValue ? opt.Value : default;
             return opt.HasValue;
         }
 
@@ -126,7 +126,7 @@ namespace CSharpExt.Rx
         {
             this.Edit((l) =>
             {
-                l.Load(item);
+                l.AddOrUpdate(item);
             },
             hasBeenSet: hasBeenSet);
         }
