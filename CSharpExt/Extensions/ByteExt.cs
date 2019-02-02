@@ -65,6 +65,8 @@ namespace System
         
         public static unsafe bool EqualsFast(this byte[] b1, byte[] b2)
         {
+            if (b1 == null && b2 == null) return true;
+            if (b1 == null || b2 == null) return false;
             return b1.Length == b2.Length && memcmp(b1, b2, b1.Length) == 0;
         }
 
