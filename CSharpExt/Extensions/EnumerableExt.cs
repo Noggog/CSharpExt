@@ -254,6 +254,15 @@ namespace System
             }
         }
 
+        public static IEnumerable<(int Index, T Item)> WithIndex<T>(this IEnumerable<T> en)
+        {
+            int index = 0;
+            foreach (var item in en)
+            {
+                yield return (index++, item);
+            }
+        }
+
         public static IEnumerable<T> Distinct<T, R>(this IEnumerable<T> en, Func<T, R> distinctionSelector)
         {
             HashSet<R> existing = new HashSet<R>();
