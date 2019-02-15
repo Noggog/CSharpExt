@@ -80,5 +80,28 @@ namespace System
             }
             return false;
         }
+        
+        public static IEnumerable<KeyValuePair<K, R>> SelectAgainst<K, V, R>(
+            this IReadOnlyDictionary<K, V> lhs, 
+            IReadOnlyDictionary<K, V> rhs, 
+            Func<K, V, V, R> selector, 
+            out bool equal)
+        {
+            List<KeyValuePair<K, R>> ret = new List<KeyValuePair<K, R>>();
+            equal = lhs.Count == rhs.Count;
+            foreach (var item in lhs)
+            {
+                if (!rhs.TryGetValue(item.Key, out var rhsItem))
+                {
+                    equal = false;
+                    continue;
+                }
+                ret.Add(
+                    new KeyValuePair<K, R>(
+                        item.Key,
+                        selector(item.Key, item.Value, rhsItem)));
+            }
+            return ret;
+        }
     }
 }
