@@ -2,10 +2,10 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>DynamicData</Nickname>
-         <Sha>d5c2631f1106016c638f568e4503e94ab95ff2ff</Sha>
+         <Sha>f51df5a451e2499b5bdd952bf54b1802429d8a4a</Sha>
          <Path>../DynamicData</Path>
-         <CommitDate>01-17-2019 20:23:22</CommitDate>
-         <Description>CollectionCount convenience selector</Description>
+         <CommitDate>02-05-2019 14:30:31</CommitDate>
+         <Description>Removed uap target framework to avoid some errors</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
    </ParentRepos>
