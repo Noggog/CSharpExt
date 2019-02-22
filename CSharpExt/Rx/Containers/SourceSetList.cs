@@ -96,7 +96,7 @@ namespace CSharpExt.Rx
         public void Unset()
         {
             this.HasBeenSet = false;
-            this.Clear();
+            this.Edit(list => list.Clear(), hasBeenSet: false);
         }
 
         public IEnumerator<T> GetEnumerator()
