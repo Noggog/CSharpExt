@@ -39,7 +39,7 @@ namespace CSharpExt.Rx
             set => _hasBeenSet.OnNext(value);
         }
 
-        IObservable<IEnumerable<T>> IHasItemRxGetter<IEnumerable<T>>.ItemObservable => 
+        IObservable<IEnumerable<T>> IHasBeenSetItemRxGetter<IEnumerable<T>>.ItemObservable => 
             this._source
             .Connect()
             .QueryWhenChanged(q => q);

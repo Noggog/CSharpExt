@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace CSharpExt.Rx
 {
-    public interface IHasBeenSetItemRx<T> : IHasItemRxGetter<T>, IHasBeenSetItem<T>
+    public interface IHasBeenSetItemRx<T> : IHasBeenSetItemRxGetter<T>, IHasBeenSetItem<T>
     {
     }
 
-    public interface IHasItemRxGetter<T> : IHasBeenSetRx, IHasItemGetter<T>
+    public interface IHasBeenSetItemRxGetter<T> : IHasBeenSetRx, IHasBeenSetItemGetter<T>
     {
         IObservable<T> ItemObservable { get; }
     }
