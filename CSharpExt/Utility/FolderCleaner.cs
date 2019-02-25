@@ -40,7 +40,7 @@ namespace Noggog.Utility
 
         public void Dispose()
         {
-            foreach (var item in _dir.Info.EnumerateAllFiles())
+            foreach (var item in _dir.Info.EnumerateFilesRecursive())
             {
                 item.Refresh();
                 DateTime cleanTime;

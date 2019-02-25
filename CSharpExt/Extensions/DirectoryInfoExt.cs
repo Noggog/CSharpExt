@@ -74,19 +74,23 @@ namespace System
             }
         }
 
-        public static IEnumerable<FileInfo> EnumerateAllFiles(this DirectoryInfo dir)
+        public static IEnumerable<FileInfo> EnumerateFilesRecursive(this DirectoryInfo dir)
         {
             return dir.EnumerateFiles()
                 .Concat(dir.EnumerateDirectories()
-                    .SelectMany(d => d.EnumerateAllFiles()));
+                    .SelectMany(d => d.EnumerateFilesRecursive()));
         }
 
         // Ensures that the higher directories iterate first before lower directories
-        public static IEnumerable<DirectoryInfo> EnumerateAllDirectories(this DirectoryInfo dir, bool includeSelf)
+        public static IEnumerable<DirectoryInfo> EnumerateDirectories(this DirectoryInfo dir, bool includeSelf, bool recursive)
         {
-            var ret = dir.EnumerateDirectories()
-                .Concat(dir.EnumerateDirectories()
-                .SelectMany(d => d.EnumerateAllDirectories(includeSelf: false)));
+            var ret = dir.EnumerateDirectories();
+            if (recursive)
+            {
+                ret = ret
+                    .Concat(dir.EnumerateDirectories()
+                    .SelectMany(d => d.EnumerateDirectories(includeSelf: false, recursive: true)));
+            }
             if (includeSelf)
             {
                 ret = dir.Single().Concat(ret);
