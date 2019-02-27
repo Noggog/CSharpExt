@@ -94,28 +94,22 @@ namespace Noggog
                 this._fullPath + "\\");
         }
 
-        public IEnumerable<FileInfo> EnumerateFileInfos()
+        public IEnumerable<FileInfo> EnumerateFileInfos(bool recursive = false)
         {
-            this._dirInfo.Refresh();
-            return this._dirInfo.EnumerateFiles();
-        }
-
-        public IEnumerable<FilePath> EnumerateFiles()
-        {
-            foreach (var file in this._dirInfo.EnumerateFiles())
+            if (recursive)
             {
-                yield return new FilePath(file.FullName);
+                return this._dirInfo.EnumerateFilesRecursive();
+            }
+            else
+            {
+                this._dirInfo.Refresh();
+                return this._dirInfo.EnumerateFiles();
             }
         }
 
-        public IEnumerable<FileInfo> EnumerateAllFileInfos()
+        public IEnumerable<FilePath> EnumerateFiles(bool recursive = false)
         {
-            return this._dirInfo.EnumerateFilesRecursive();
-        }
-
-        public IEnumerable<FilePath> EnumerateAllFiles()
-        {
-            foreach (var file in this._dirInfo.EnumerateFilesRecursive())
+            foreach (var file in (recursive ? this._dirInfo.EnumerateFilesRecursive() : this._dirInfo.EnumerateFiles()))
             {
                 yield return new FilePath(file.FullName);
             }

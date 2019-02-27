@@ -65,7 +65,7 @@ namespace Noggog.Utility
             }
 
             foreach (var item in _dir
-                .EnumerateAllDirectories(includeSelf: true)
+                .EnumerateDirectories(recursive: true, includeSelf: true)
                 .Reverse())
             {
                 if (item.Empty)
