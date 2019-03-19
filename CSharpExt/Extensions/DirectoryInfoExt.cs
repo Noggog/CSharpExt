@@ -84,6 +84,7 @@ namespace System
         // Ensures that the higher directories iterate first before lower directories
         public static IEnumerable<DirectoryInfo> EnumerateDirectories(this DirectoryInfo dir, bool includeSelf, bool recursive)
         {
+            if (!dir.Exists) return EnumerableExt<DirectoryInfo>.Empty;
             var ret = dir.EnumerateDirectories();
             if (recursive)
             {
