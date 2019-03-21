@@ -29,5 +29,28 @@ namespace Noggog.Utility
                 }
             }
         }
+
+        private static readonly FileCompare comp = new FileCompare();
+        public static bool FoldersAreEqual(DirectoryPath first, DirectoryPath second)
+        {
+            return first.Info.GetFiles("*.*", System.IO.SearchOption.AllDirectories)
+                .SequenceEqual(
+                    second.Info.GetFiles("*.*", System.IO.SearchOption.AllDirectories),
+                    comp);
+        }
+
+        class FileCompare : System.Collections.Generic.IEqualityComparer<System.IO.FileInfo>
+        {
+            public bool Equals(System.IO.FileInfo f1, System.IO.FileInfo f2)
+            {
+                if (f1.Name != f2.Name) return false;
+                return FileComparison.FilesAreEqual(f1, f2);
+            }
+            
+            public int GetHashCode(System.IO.FileInfo fi)
+            {
+                throw new NotImplementedException();
+            }
+        }
     }
 }
