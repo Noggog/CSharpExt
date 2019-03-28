@@ -188,6 +188,22 @@ namespace System
             return typeof(TEnum).GetCustomAttributes<FlagsAttribute>().Any();
         }
 
+        public static TEnum SetFlag<TEnum>(this TEnum e, Enum flag, bool on)
+            where TEnum : Enum
+        {
+            var lhs = Convert.ToInt64(e);
+            var rhs = Convert.ToInt64(flag);
+            if (on)
+            {
+                lhs |= rhs;
+            }
+            else
+            {
+                lhs &= ~rhs;
+            }
+            return (TEnum)Enum.ToObject(typeof(TEnum), lhs);
+        }
+
         #region Type Dictionaries
         private static object _loadLock = new object();
         private static Dictionary<StringCaseAgnostic, Type> enums;
