@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Noggog
 {
-    public struct FilePath : IEquatable<FilePath>
+    public struct FilePath : IEquatable<FilePath>, IPath
     {
         private readonly StringCaseAgnostic _fullPath;
         private readonly FileInfo _fileInfo;
