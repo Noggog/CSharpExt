@@ -9,7 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DynamicData", "..\DynamicDa
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CSharpExt", "CSharpExt\CSharpExt.csproj", "{98276D52-73FD-4B37-BDBE-1C692F7D6C8D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSharpExt.Tests", "CSharpExt.Tests\CSharpExt.Tests.csproj", "{5C82B61E-A9C7-46A6-8412-67F1B224BF69}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CSharpExt.Tests", "CSharpExt.Tests\CSharpExt.Tests.csproj", "{5C82B61E-A9C7-46A6-8412-67F1B224BF69}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Noggog.WPF", "Noggog.WPF\Noggog.WPF.csproj", "{BCBEB6F3-9D2F-4491-8DDF-7E711B1F5252}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,6 +31,10 @@ Global
 		{5C82B61E-A9C7-46A6-8412-67F1B224BF69}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5C82B61E-A9C7-46A6-8412-67F1B224BF69}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5C82B61E-A9C7-46A6-8412-67F1B224BF69}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BCBEB6F3-9D2F-4491-8DDF-7E711B1F5252}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BCBEB6F3-9D2F-4491-8DDF-7E711B1F5252}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BCBEB6F3-9D2F-4491-8DDF-7E711B1F5252}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BCBEB6F3-9D2F-4491-8DDF-7E711B1F5252}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
