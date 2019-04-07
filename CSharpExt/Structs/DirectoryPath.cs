@@ -14,7 +14,7 @@ namespace Noggog
         private readonly FileInfo _fileInfo;
         private readonly DirectoryInfo _dirInfo;
         public DirectoryPath Directory => new DirectoryPath(_fileInfo.Directory.FullName);
-        public bool Exists => _dirInfo.Exists();
+        public bool Exists => _dirInfo?.Exists() ?? false;
         public string Path => _fullPath;
         public string Name => _dirInfo.Name;
         public bool Empty => !_dirInfo.EnumerateFiles().Any()

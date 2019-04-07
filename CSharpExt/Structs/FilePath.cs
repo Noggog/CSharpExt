@@ -17,15 +17,15 @@ namespace Noggog
         public DirectoryPath Directory => new DirectoryPath(_fileInfo.Directory.FullName);
         public string Path => _fullPath;
         public string RelativePath => _originalPath;
-        public string Name => _fileInfo.Name;
-        public string Extension => _fileInfo.Extension;
+        public string Name => _fileInfo?.Name;
+        public string Extension => _fileInfo?.Extension;
         public string NameWithoutExtension => _fileInfo.Name.Substring(0, _fileInfo.Name.LastIndexOf(_fileInfo.Extension));
         public bool Exists
         {
             get
             {
-                _fileInfo.Refresh();
-                return _fileInfo.Exists;
+                _fileInfo?.Refresh();
+                return _fileInfo?.Exists ?? false;
             }
         }
         public long Length
