@@ -76,5 +76,11 @@ namespace System
                 return (prev, i);
             });
         }
+
+        public static IObservable<R> Cast<T, R>(this IObservable<T> source)
+            where T : R
+        {
+            return source.Select<T, R>(x => x);
+        }
     }
 }
