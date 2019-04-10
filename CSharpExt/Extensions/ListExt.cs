@@ -198,5 +198,10 @@ namespace System
             index = -1;
             return false;
         }
+
+        public static T LastByIndex<T>(this IReadOnlyList<T> list)
+        {
+            return list[list.Count - 1];
+        }
     }
 }
