@@ -198,5 +198,13 @@ namespace System
             index = -1;
             return false;
         }
+
+        public static IEnumerable<T> For<T>(this IList<T> list, int start, int end)
+        {
+            for (int i = start; i < end; i++)
+            {
+                yield return list[i];
+            }
+        }
     }
 }
