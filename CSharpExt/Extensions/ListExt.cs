@@ -199,6 +199,11 @@ namespace System
             return false;
         }
 
+        public static T LastByIndex<T>(this IReadOnlyList<T> list)
+        {
+            return list[list.Count - 1];
+        }
+
         public static IEnumerable<T> For<T>(this IList<T> list, int start, int end)
         {
             for (int i = start; i < end; i++)

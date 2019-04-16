@@ -8,13 +8,13 @@ using System.Threading.Tasks;
 
 namespace Noggog
 {
-    public struct DirectoryPath : IEquatable<DirectoryPath>
+    public struct DirectoryPath : IEquatable<DirectoryPath>, IPath
     {
         private readonly StringCaseAgnostic _fullPath;
         private readonly FileInfo _fileInfo;
         private readonly DirectoryInfo _dirInfo;
         public DirectoryPath Directory => new DirectoryPath(_fileInfo.Directory.FullName);
-        public bool Exists => _dirInfo.Exists();
+        public bool Exists => _dirInfo?.Exists() ?? false;
         public string Path => _fullPath;
         public string Name => _dirInfo.Name;
         public bool Empty => !_dirInfo.EnumerateFiles().Any()
