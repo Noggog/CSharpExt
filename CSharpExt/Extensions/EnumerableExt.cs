@@ -274,6 +274,22 @@ namespace System
                 }
             }
         }
+
+        public static IEnumerable<int> For(int start, int end)
+        {
+            for (int i = start; i < end; i++)
+            {
+                yield return i;
+            }
+        }
+
+        public static IEnumerable<int> For(int start, int end, int iterateAmount)
+        {
+            for (int i = start; i < end; i += iterateAmount)
+            {
+                yield return i;
+            }
+        }
     }
 
     public static class EnumerableExt<T>
