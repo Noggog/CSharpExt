@@ -79,7 +79,7 @@ namespace System
 
             var genArgs = t.GetGenericArguments();
 
-            if (name.EqualsIgnoreCase("Nullable"))
+            if ("Nullable".Equals(name, StringComparison.CurrentCultureIgnoreCase))
             {
                 if (genArgs.Length > 1)
                 {

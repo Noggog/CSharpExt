@@ -19,16 +19,6 @@ namespace System
             }
         }
 
-        public static bool EqualsIgnoreCase(this string s, string rhs)
-        {
-            if (s == null)
-            {
-                return rhs == null;
-            }
-            if (rhs == null) return false;
-            return s.ToLower().Equals(rhs.ToLower());
-        }
-
         public static bool Extract(this string s, string target, out string result)
         {
             if (s == null)
