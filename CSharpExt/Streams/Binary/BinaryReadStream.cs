@@ -184,6 +184,12 @@ namespace Noggog
             return ret;
         }
 
+        public ReadOnlySpan<byte> ReadSpan(int amount)
+        {
+            var ret = ReadBytes(amount);
+            return ret.AsSpan();
+        }
+
         public bool ReadBool()
         {
             LoadPosition(1);

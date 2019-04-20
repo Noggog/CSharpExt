@@ -148,5 +148,11 @@ namespace Noggog
             _pos += amount;
             stream.Write(_data, _pos - amount, amount);
         }
+
+        public ReadOnlySpan<byte> ReadSpan(int amount)
+        {
+            _pos += amount;
+            return _data.AsSpan(_pos - amount, amount);
+        }
     }
 }

@@ -16,6 +16,7 @@ namespace Noggog
         int Read(byte[] buffer, int offset, int amount);
         int Read(byte[] buffer);
         byte[] ReadBytes(int amount);
+        ReadOnlySpan<byte> ReadSpan(int amount);
         bool ReadBool();
         byte ReadUInt8();
         ushort ReadUInt16();

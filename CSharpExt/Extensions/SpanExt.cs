@@ -173,7 +173,5 @@ namespace Noggog
         {
             return span[index] > 0;
         }
-        //public static byte[] ReadBytes(int amount);
-        //string ReadString(int amount);
     }
 }
