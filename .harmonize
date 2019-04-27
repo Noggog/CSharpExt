@@ -2,10 +2,10 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>DynamicData</Nickname>
-         <Sha>777d9f0ab67693df8f9746170de6b1df09e16e38</Sha>
+         <Sha>cf7da29e7a13829f638210d1ce6c58c30de4dd86</Sha>
          <Path>../DynamicData</Path>
-         <CommitDate>03-26-2019 21:04:17</CommitDate>
-         <Description>Merge remote-tracking branch 'source/master'</Description>
+         <CommitDate>04-20-2019 16:23:13</CommitDate>
+         <Description>Nuget updates</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
    </ParentRepos>
