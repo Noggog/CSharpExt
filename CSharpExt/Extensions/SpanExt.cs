@@ -88,6 +88,11 @@ namespace Noggog
             return MemoryMarshal.Cast<byte, int>(span.Slice(index, 4))[0];
         }
 
+        public static int GetInt32(this ReadOnlySpan<byte> span)
+        {
+            return MemoryMarshal.Cast<byte, int>(span)[0];
+        }
+
         /// <summary>
         /// Retrieves an Int64 from the given span starting at desired index.
         /// NOTE:  Index is relative to the byte span input

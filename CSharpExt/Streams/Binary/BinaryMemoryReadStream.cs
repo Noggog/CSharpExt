@@ -38,19 +38,14 @@ namespace Noggog
 
         public int Read(byte[] buffer, int offset, int amount)
         {
-            if (amount > Remaining)
-            {
-                amount = Remaining;
-            }
-            Array.Copy(_data, _pos, buffer, offset, amount);
+            var ret = Get(buffer, offset, amount);
             _pos += amount;
-            return amount;
+            return ret;
         }
 
         public byte[] ReadBytes(int amount)
         {
-            byte[] ret = new byte[amount];
-            Array.Copy(_data, _pos, ret, 0, amount);
+            var ret = GetBytes(amount);
             _pos += amount;
             return ret;
         }
@@ -153,6 +148,88 @@ namespace Noggog
         {
             _pos += amount;
             return _data.AsSpan(_pos - amount, amount);
+        }
+
+        public int Get(byte[] buffer, int offset, int amount)
+        {
+            if (amount > Remaining)
+            {
+                amount = Remaining;
+            }
+            Array.Copy(_data, _pos, buffer, offset, amount);
+            return amount;
+        }
+
+        public int Get(byte[] buffer, int offset)
+        {
+            return Get(buffer, offset: offset, amount: buffer.Length);
+        }
+
+        public byte[] GetBytes(int amount)
+        {
+            byte[] ret = new byte[amount];
+            Array.Copy(_data, _pos, ret, 0, amount);
+            return ret;
+        }
+
+        public bool GetBool(int offset)
+        {
+            return _data[_pos + offset] > 0;
+        }
+
+        public byte GetUInt8(int offset)
+        {
+            return _data[_pos + offset];
+        }
+
+        public ushort GetUInt16(int offset)
+        {
+            return BitConverter.ToUInt16(this._data, _pos + offset);
+        }
+
+        public uint GetUInt32(int offset)
+        {
+            return BitConverter.ToUInt32(this._data, _pos + offset);
+        }
+
+        public ulong GetUInt64(int offset)
+        {
+            return BitConverter.ToUInt64(this._data, _pos + offset);
+        }
+
+        public sbyte GetInt8(int offset)
+        {
+            return (sbyte)_data[_pos + offset];
+        }
+
+        public short GetInt16(int offset)
+        {
+            return BitConverter.ToInt16(this._data, _pos + offset);
+        }
+
+        public int GetInt32(int offset)
+        {
+            return BitConverter.ToInt32(this._data, _pos + offset);
+        }
+
+        public long GetInt64(int offset)
+        {
+            return BitConverter.ToInt64(this._data, _pos + offset);
+        }
+
+        public float GetFloat(int offset)
+        {
+            return BitConverter.ToSingle(this._data, _pos + offset);
+        }
+
+        public double GetDouble(int offset)
+        {
+            return BitConverter.ToDouble(this._data, _pos + offset);
+        }
+
+        public string GetString(int amount, int offset)
+        {
+            return BinaryUtility.BytesToString(_data, _pos + offset, amount);
         }
     }
 }

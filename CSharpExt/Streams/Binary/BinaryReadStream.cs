@@ -52,9 +52,14 @@ namespace Noggog
 
         private void SetPosition(long pos)
         {
+            if (this.Position == pos) return;
             if (pos < 0)
             {
                 throw new ArgumentException("Cannot move position to a negative value.");
+            }
+            if (pos >= this.Length)
+            {
+                throw new ArgumentException("Cannot move position past the length of the stream");
             }
             var startLoc = _streamPos - _internalBufferLength;
             if (pos > _streamPos
@@ -283,6 +288,98 @@ namespace Noggog
             _stream.Read(arr, numRead, amount);
             _streamPos += amount;
             return BinaryUtility.BytesToString(arr, 0, amount + numRead);
+        }
+
+        public int Get(byte[] buffer, int offset, int amount)
+        {
+            throw new NotImplementedException();
+        }
+
+        public int Get(byte[] buffer, int offset)
+        {
+            return Get(buffer, offset: offset, amount: buffer.Length);
+        }
+
+        public byte[] GetBytes(int amount)
+        {
+            var ret = new byte[amount];
+            if (amount != Get(ret, offset: 0, amount: amount))
+            {
+                throw new IndexOutOfRangeException();
+            }
+            return ret;
+        }
+
+        public bool GetBool(int offset)
+        {
+            LoadPosition(1 + offset);
+            return _internalMemoryStream.GetBool(offset);
+        }
+
+        public byte GetUInt8(int offset)
+        {
+            LoadPosition(1 + offset);
+            return _internalMemoryStream.GetUInt8(offset);
+        }
+
+        public ushort GetUInt16(int offset)
+        {
+            LoadPosition(2 + offset);
+            return _internalMemoryStream.GetUInt16(offset);
+        }
+
+        public uint GetUInt32(int offset)
+        {
+            LoadPosition(4 + offset);
+            return _internalMemoryStream.GetUInt32(offset);
+        }
+
+        public ulong GetUInt64(int offset)
+        {
+            LoadPosition(8 + offset);
+            return _internalMemoryStream.GetUInt64(offset);
+        }
+
+        public sbyte GetInt8(int offset)
+        {
+            LoadPosition(1 + offset);
+            return _internalMemoryStream.GetInt8(offset);
+        }
+
+        public short GetInt16(int offset)
+        {
+            LoadPosition(2 + offset);
+            return _internalMemoryStream.GetInt16(offset);
+        }
+
+        public int GetInt32(int offset)
+        {
+            LoadPosition(4 + offset);
+            return _internalMemoryStream.GetInt32(offset);
+        }
+
+        public long GetInt64(int offset)
+        {
+            LoadPosition(8 + offset);
+            return _internalMemoryStream.GetInt64(offset);
+        }
+
+        public float GetFloat(int offset)
+        {
+            LoadPosition(4 + offset);
+            return _internalMemoryStream.GetFloat(offset);
+        }
+
+        public double GetDouble(int offset)
+        {
+            LoadPosition(8 + offset);
+            return _internalMemoryStream.GetDouble(offset);
+        }
+
+        public string GetString(int amount, int offset)
+        {
+            LoadPosition(amount + offset);
+            return _internalMemoryStream.GetString(amount, offset);
         }
 
         protected override void Dispose(bool disposing)
