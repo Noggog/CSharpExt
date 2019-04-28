@@ -57,7 +57,7 @@ namespace Noggog
             {
                 throw new ArgumentException("Cannot move position to a negative value.");
             }
-            if (pos >= this.Length)
+            if (pos > this.Length)
             {
                 throw new ArgumentException("Cannot move position past the length of the stream");
             }
