@@ -109,11 +109,11 @@ namespace System
             return def;
         }
 
-        public static TryGet<R> Bubble<T, R>(this TryGet<T> tryGet, bool fireIfFailed = false)
+        public static TryGet<R> Bubble<T, R>(this TryGet<T> tryGet, bool setIfFailed = false)
             where T : R
         {
             R val;
-            if (tryGet.Succeeded || fireIfFailed)
+            if (tryGet.Succeeded || setIfFailed)
             {
                 val = tryGet.Value;
             }
