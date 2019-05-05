@@ -11,6 +11,7 @@ namespace Noggog
     {
         internal int _pos;
         internal byte[] _data;
+        protected byte[] Data => _data;
         public int Position
         {
             get => this._pos;
