@@ -49,6 +49,7 @@
     <Compile Include="Converters\IsNotNullVisibilityConverter.cs" />
     <Compile Include="Converters\VisibilityHiddenConverter.cs" />
     <Compile Include="Converters\VisibilityConverter.cs" />
+    <Compile Include="ObservableUtility.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
