@@ -82,5 +82,31 @@ namespace System
         {
             return source.Select<T, R>(x => x);
         }
+
+        public static IObservable<Unit> Select<T>(this IObservable<T> source, Func<Task> task)
+        {
+            return source
+                .SelectMany(async _ =>
+                {
+                    await task().ConfigureAwait(false);
+                    return Unit.Default;
+                });
+        }
+
+        public static IObservable<R> Select<T, R>(this IObservable<T> source, Func<Task<R>> task)
+        {
+            return source
+                .SelectMany(_ => task());
+        }
+
+        public static IObservable<T> FilterSwitch<T>(this IObservable<T> source, IObservable<bool> filterSwitch)
+        {
+            return source
+                .WithLatestFrom(
+                    filterSwitch,
+                    resultSelector: (item, on) => (item, on))
+                .Where(tup => tup.on)
+                .Select(tup => tup.item);
+        }
     }
 }
