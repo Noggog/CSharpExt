@@ -31,7 +31,7 @@ namespace Noggog.WPF
         public static IObservable<Unit> Keybind(
             this IObservable<KeyEventArgs> events,
             Key key,
-            ModifierKeys modifiers)
+            ModifierKeys modifiers = default)
         {
             return Keybind_Internal(
                 triggeringEvents: events
@@ -55,7 +55,7 @@ namespace Noggog.WPF
         public static IObservable<Unit> Keybind(
             this IObservable<KeyEventArgs> events,
             IEnumerable<Key> keys,
-            ModifierKeys? modifiers)
+            ModifierKeys? modifiers = null)
         {
             if (!keys.Any())
             {

@@ -89,7 +89,7 @@ namespace System
                 .SelectMany(async _ =>
                 {
                     await task().ConfigureAwait(false);
-                    return Unit.Default;
+                    return System.Reactive.Unit.Default;
                 });
         }
 
@@ -107,6 +107,17 @@ namespace System
                     resultSelector: (item, on) => (item, on))
                 .Where(tup => tup.on)
                 .Select(tup => tup.item);
+        }
+
+        public static IObservable<Unit> Unit<T>(this IObservable<T> source)
+        {
+            return source.Select(u => System.Reactive.Unit.Default);
+        }
+
+        public static IObservable<T> NotNull<T>(this IObservable<T> source)
+            where T : class
+        {
+            return source.Where(u => u != null);
         }
     }
 }
