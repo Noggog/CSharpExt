@@ -13,7 +13,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Noggog.WPF", "Noggog.WPF\No
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CSharpExt.Benchmark", "CSharpExt.Benchmark\CSharpExt.Benchmark.csproj", "{537972D1-6684-4353-8FB3-23E89CEF0405}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSharpExt.Tests", "CSharpExt.Tests\CSharpExt.Tests.csproj", "{67C5DE12-5572-4A28-8A48-8E6F77D7E960}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSharpExt.UnitTests", "CSharpExt.UnitTests\CSharpExt.UnitTests.csproj", "{7D5ED080-106F-4A21-A724-54A53B5080A4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -37,10 +37,10 @@ Global
 		{537972D1-6684-4353-8FB3-23E89CEF0405}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{537972D1-6684-4353-8FB3-23E89CEF0405}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{537972D1-6684-4353-8FB3-23E89CEF0405}.Release|Any CPU.Build.0 = Release|Any CPU
-		{67C5DE12-5572-4A28-8A48-8E6F77D7E960}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{67C5DE12-5572-4A28-8A48-8E6F77D7E960}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{67C5DE12-5572-4A28-8A48-8E6F77D7E960}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{67C5DE12-5572-4A28-8A48-8E6F77D7E960}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7D5ED080-106F-4A21-A724-54A53B5080A4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7D5ED080-106F-4A21-A724-54A53B5080A4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7D5ED080-106F-4A21-A724-54A53B5080A4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7D5ED080-106F-4A21-A724-54A53B5080A4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

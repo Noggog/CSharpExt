@@ -2,4 +2,4 @@
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
-[assembly: InternalsVisibleTo("CSharpExt.Tests")]
+[assembly: InternalsVisibleTo("CSharpExt.UnitTests")]

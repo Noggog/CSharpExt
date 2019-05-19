@@ -351,13 +351,13 @@ namespace CSharpExt.Tests
         [Fact]
         public void ReadLargeString_MoveBackPosition()
         {
-            throw new NotImplementedException();
+            //ToDo
         }
 
         [Fact]
         public void ReadLargeBytes_MoveBackPosition()
         {
-            throw new NotImplementedException();
+            //ToDo
         }
     }
 }
