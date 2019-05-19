@@ -23,7 +23,7 @@ namespace CSharpExt.Tests
             {
                 ret.LoadPosition();
             }
-            return ret;
+            return ret; 
         }
 
         public override IBinaryReadStream GetStream(int length) => GetBinaryReadStream(length);
