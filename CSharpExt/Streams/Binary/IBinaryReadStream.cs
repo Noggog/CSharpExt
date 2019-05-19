@@ -14,9 +14,9 @@ namespace Noggog
         long Remaining { get; }
         bool Complete { get; }
         int Read(byte[] buffer, int offset, int amount);
-        int Get(byte[] buffer, int offset, int amount);
+        int Get(byte[] buffer, int targetOffset, int amount);
         int Read(byte[] buffer);
-        int Get(byte[] buffer, int offset);
+        int Get(byte[] buffer, int targetOffset);
         byte[] ReadBytes(int amount);
         byte[] GetBytes(int amount);
         bool ReadBool();

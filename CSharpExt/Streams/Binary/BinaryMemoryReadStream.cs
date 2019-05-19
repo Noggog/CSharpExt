@@ -151,19 +151,19 @@ namespace Noggog
             return _data.AsSpan(_pos - amount, amount);
         }
 
-        public int Get(byte[] buffer, int offset, int amount)
+        public int Get(byte[] buffer, int targetOffset, int amount)
         {
             if (amount > Remaining)
             {
                 amount = Remaining;
             }
-            Array.Copy(_data, _pos, buffer, offset, amount);
+            Array.Copy(_data, _pos, buffer, targetOffset, amount);
             return amount;
         }
 
-        public int Get(byte[] buffer, int offset)
+        public int Get(byte[] buffer, int targetOffset)
         {
-            return Get(buffer, offset: offset, amount: buffer.Length);
+            return Get(buffer, targetOffset: targetOffset, amount: buffer.Length);
         }
 
         public byte[] GetBytes(int amount)
