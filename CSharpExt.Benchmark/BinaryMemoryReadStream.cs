@@ -1,4 +1,5 @@
 ﻿using BenchmarkDotNet.Attributes;
+using Noggog;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -310,6 +311,18 @@ namespace CSharpExt.Benchmark
         {
             readStream.Position = 0;
             return readStream.GetDouble();
+        }
+
+        [Benchmark]
+        public string BytesToString()
+        {
+            return BinaryUtility.BytesToString(data);
+        }
+
+        [Benchmark]
+        public string BytesToStringOffset()
+        {
+            return BinaryUtility.BytesToString(data, offset: offset, count: data.Length - offset);
         }
     }
 }
