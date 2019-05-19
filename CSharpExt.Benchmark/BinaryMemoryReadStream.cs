@@ -322,7 +322,7 @@ namespace CSharpExt.Benchmark
         [Benchmark]
         public string BytesToStringOffset()
         {
-            return BinaryUtility.BytesToString(data, offset: offset, count: data.Length - offset);
+            return BinaryUtility.BytesToString(data.AsSpan().Slice(start: offset, length: data.Length - offset));
         }
     }
 }

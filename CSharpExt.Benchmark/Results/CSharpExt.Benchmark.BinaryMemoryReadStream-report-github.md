@@ -56,8 +56,8 @@ Frequency=3984652 Hz, Resolution=250.9629 ns, Timer=TSC
 |        GetDouble |  2.882 ns | 0.0835 ns | 0.0820 ns |  2.853 ns |      - |     - |     - |         - |
 |  GetDoubleOffset |  2.864 ns | 0.0782 ns | 0.0694 ns |  2.844 ns |      - |     - |     - |         - |
 |       ReadDouble |  6.051 ns | 0.1486 ns | 0.1526 ns |  6.046 ns |      - |     - |     - |         - |
-|       BytesToString | 21.95 ns | 0.4854 ns | 0.8110 ns |           0.0247 |     - |     - |     104 B |
-| BytesToStringOffset | 21.85 ns | 0.4055 ns | 0.4339 ns |           0.0229 |     - |     - |      96 B |
+|       BytesToString | 21.42 ns | 0.4581 ns | 0.4499 ns |			 0.0248 |     - |     - |     104 B |
+| BytesToStringOffset | 20.08 ns | 0.4162 ns | 0.3689 ns |			 0.0229 |     - |     - |      96 B |
 
 Benchmarks with issues:
   BinaryMemoryReadStream.GetOffset: DefaultJob

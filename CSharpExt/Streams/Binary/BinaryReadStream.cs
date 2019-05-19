@@ -287,7 +287,7 @@ namespace Noggog
 
             _stream.Read(arr, numRead, amount);
             _streamPos += amount;
-            return BinaryUtility.BytesToString(arr, 0, amount + numRead);
+            return BinaryUtility.BytesToString(arr.AsSpan().Slice(0, amount + numRead));
         }
 
         public int Get(byte[] buffer, int offset, int amount)

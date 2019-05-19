@@ -11,6 +11,7 @@ namespace Noggog
     {
         internal int _pos;
         internal byte[] _data;
+        internal Memory<byte> _mem;
         protected byte[] Data => _data;
         public int Position
         {
@@ -30,6 +31,7 @@ namespace Noggog
         public BinaryMemoryReadStream(byte[] data)
         {
             this._data = data;
+            this._mem = data;
         }
 
         public int Read(byte[] buffer)
@@ -119,7 +121,7 @@ namespace Noggog
         public string ReadString(int amount)
         {
             _pos += amount;
-            return BinaryUtility.BytesToString(_data, _pos - amount, amount);
+            return BinaryUtility.BytesToString(this._mem.Span.Slice(_pos - amount, amount));
         }
 
         public float ReadFloat()
@@ -230,7 +232,7 @@ namespace Noggog
 
         public string GetString(int amount, int offset)
         {
-            return BinaryUtility.BytesToString(_data, _pos + offset, amount);
+            return BinaryUtility.BytesToString(this._mem.Span.Slice(_pos + offset, amount));
         }
 
         public bool GetBool()
@@ -290,7 +292,7 @@ namespace Noggog
 
         public string GetString(int amount)
         {
-            return BinaryUtility.BytesToString(_data, _pos, amount);
+            return BinaryUtility.BytesToString(this._mem.Span.Slice(_pos, amount));
         }
     }
 }
