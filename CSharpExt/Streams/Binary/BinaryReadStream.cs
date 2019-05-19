@@ -444,6 +444,78 @@ namespace Noggog
                 amount -= toRead;
             }
         }
+
+        public bool GetBool()
+        {
+            LoadPosition(1);
+            return _internalMemoryStream.GetBool();
+        }
+
+        public byte GetUInt8()
+        {
+            LoadPosition(1);
+            return _internalMemoryStream.GetUInt8();
+        }
+
+        public ushort GetUInt16()
+        {
+            LoadPosition(2);
+            return _internalMemoryStream.GetUInt16();
+        }
+
+        public uint GetUInt32()
+        {
+            LoadPosition(4);
+            return _internalMemoryStream.GetUInt32();
+        }
+
+        public ulong GetUInt64()
+        {
+            LoadPosition(8);
+            return _internalMemoryStream.GetUInt64();
+        }
+
+        public sbyte GetInt8()
+        {
+            LoadPosition(1);
+            return _internalMemoryStream.GetInt8();
+        }
+
+        public short GetInt16()
+        {
+            LoadPosition(2);
+            return _internalMemoryStream.GetInt16();
+        }
+
+        public int GetInt32()
+        {
+            LoadPosition(4);
+            return _internalMemoryStream.GetInt32();
+        }
+
+        public long GetInt64()
+        {
+            LoadPosition(8);
+            return _internalMemoryStream.GetInt64();
+        }
+
+        public float GetFloat()
+        {
+            LoadPosition(4);
+            return _internalMemoryStream.GetFloat();
+        }
+
+        public double GetDouble()
+        {
+            LoadPosition(8);
+            return _internalMemoryStream.GetDouble();
+        }
+
+        public string GetString(int amount)
+        {
+            LoadPosition(amount);
+            return _internalMemoryStream.GetString(amount);
+        }
         #endregion
     }
 }

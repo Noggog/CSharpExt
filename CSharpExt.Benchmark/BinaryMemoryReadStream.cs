@@ -87,7 +87,7 @@ namespace CSharpExt.Benchmark
         [Benchmark]
         public bool GetBool()
         {
-            return readStream.GetBool(0);
+            return readStream.GetBool();
         }
 
         [Benchmark]
@@ -106,7 +106,7 @@ namespace CSharpExt.Benchmark
         [Benchmark]
         public byte GetUInt8()
         {
-            return readStream.GetUInt8(0);
+            return readStream.GetUInt8();
         }
 
         [Benchmark]
@@ -125,7 +125,7 @@ namespace CSharpExt.Benchmark
         [Benchmark]
         public ushort GetUInt16()
         {
-            return readStream.GetUInt16(0);
+            return readStream.GetUInt16();
         }
 
         [Benchmark]
@@ -144,7 +144,7 @@ namespace CSharpExt.Benchmark
         [Benchmark]
         public uint GetUInt32()
         {
-            return readStream.GetUInt32(0);
+            return readStream.GetUInt32();
         }
 
         [Benchmark]
@@ -163,7 +163,7 @@ namespace CSharpExt.Benchmark
         [Benchmark]
         public ulong GetUInt64()
         {
-            return readStream.GetUInt64(0);
+            return readStream.GetUInt64();
         }
 
         [Benchmark]
@@ -182,7 +182,7 @@ namespace CSharpExt.Benchmark
         [Benchmark]
         public sbyte GetInt8()
         {
-            return readStream.GetInt8(0);
+            return readStream.GetInt8();
         }
 
         [Benchmark]
@@ -201,7 +201,7 @@ namespace CSharpExt.Benchmark
         [Benchmark]
         public short GetInt16()
         {
-            return readStream.GetInt16(0);
+            return readStream.GetInt16();
         }
 
         [Benchmark]
@@ -220,7 +220,7 @@ namespace CSharpExt.Benchmark
         [Benchmark]
         public int GetInt32()
         {
-            return readStream.GetInt32(0);
+            return readStream.GetInt32();
         }
 
         [Benchmark]
@@ -239,7 +239,7 @@ namespace CSharpExt.Benchmark
         [Benchmark]
         public long GetInt64()
         {
-            return readStream.GetInt64(0);
+            return readStream.GetInt64();
         }
 
         [Benchmark]

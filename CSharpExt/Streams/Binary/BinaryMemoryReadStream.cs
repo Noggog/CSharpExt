@@ -232,5 +232,65 @@ namespace Noggog
         {
             return BinaryUtility.BytesToString(_data, _pos + offset, amount);
         }
+
+        public bool GetBool()
+        {
+            return _data[_pos] > 0;
+        }
+
+        public byte GetUInt8()
+        {
+            return _data[_pos];
+        }
+
+        public ushort GetUInt16()
+        {
+            return BitConverter.ToUInt16(this._data, _pos);
+        }
+
+        public uint GetUInt32()
+        {
+            return BitConverter.ToUInt32(this._data, _pos);
+        }
+
+        public ulong GetUInt64()
+        {
+            return BitConverter.ToUInt64(this._data, _pos);
+        }
+
+        public sbyte GetInt8()
+        {
+            return (sbyte)_data[_pos];
+        }
+
+        public short GetInt16()
+        {
+            return BitConverter.ToInt16(this._data, _pos);
+        }
+
+        public int GetInt32()
+        {
+            return BitConverter.ToInt32(this._data, _pos);
+        }
+
+        public long GetInt64()
+        {
+            return BitConverter.ToInt64(this._data, _pos);
+        }
+
+        public float GetFloat()
+        {
+            return BitConverter.ToSingle(this._data, _pos);
+        }
+
+        public double GetDouble()
+        {
+            return BitConverter.ToDouble(this._data, _pos);
+        }
+
+        public string GetString(int amount)
+        {
+            return BinaryUtility.BytesToString(_data, _pos, amount);
+        }
     }
 }
