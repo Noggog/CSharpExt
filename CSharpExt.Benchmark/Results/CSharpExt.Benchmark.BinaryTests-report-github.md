@@ -11,10 +11,10 @@ Frequency=3984652 Hz, Resolution=250.9629 ns, Timer=TSC
 ```
 |                                      Method |     Mean |     Error |    StdDev |
 |-------------------------------------------- |---------:|----------:|----------:|
-|                          GetIntBitConverter | 1.888 ns | 0.0332 ns | 0.0295 ns |
-|           GetIntBinaryPrimitivesMemorySlice | 6.841 ns | 0.0872 ns | 0.0815 ns |
-|     GetIntBinaryPrimitivesMemorySliceToSize | 7.019 ns | 0.0759 ns | 0.0710 ns |
-|       GetIntBinaryPrimitivesMemorySpanSlice | 5.629 ns | 0.1029 ns | 0.0912 ns |
-| GetIntBinaryPrimitivesMemorySpanSliceToSize | 5.540 ns | 0.0419 ns | 0.0350 ns |
-|                 GetIntBinaryPrimitivesSlice | 1.156 ns | 0.0441 ns | 0.0412 ns |
-|           GetIntBinaryPrimitivesSliceToSize | 1.141 ns | 0.0533 ns | 0.0547 ns |
+|                          GetIntBitConverter | 1.874 ns | 0.0129 ns | 0.0121 ns |
+|           GetIntBinaryPrimitivesMemorySlice | 6.734 ns | 0.0778 ns | 0.0728 ns |
+|     GetIntBinaryPrimitivesMemorySliceToSize | 6.966 ns | 0.0722 ns | 0.0676 ns |
+|       GetIntBinaryPrimitivesMemorySpanSlice | 5.555 ns | 0.0937 ns | 0.0877 ns |
+| GetIntBinaryPrimitivesMemorySpanSliceToSize | 5.485 ns | 0.0573 ns | 0.0508 ns |
+|                 GetIntBinaryPrimitivesSlice | 1.132 ns | 0.0247 ns | 0.0219 ns |
+|           GetIntBinaryPrimitivesSliceToSize | 1.128 ns | 0.0258 ns | 0.0241 ns |

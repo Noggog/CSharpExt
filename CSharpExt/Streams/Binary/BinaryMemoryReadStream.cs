@@ -1,9 +1,12 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Buffers.Binary;
+using System.Buffers.Text;
+using System.Runtime.InteropServices;
 
 namespace Noggog
 {
@@ -11,7 +14,6 @@ namespace Noggog
     {
         internal int _pos;
         internal byte[] _data;
-        internal Memory<byte> _mem;
         protected byte[] Data => _data;
         public int Position
         {
@@ -31,7 +33,15 @@ namespace Noggog
         public BinaryMemoryReadStream(byte[] data)
         {
             this._data = data;
-            this._mem = data;
+        }
+
+        private void SetPosition(int value)
+        {
+            if (value < 0)
+            {
+                throw new ArgumentException("Cannot set to a negative position");
+            }
+            _pos = value;
         }
 
         public int Read(byte[] buffer)
@@ -53,15 +63,6 @@ namespace Noggog
             return ret;
         }
 
-        private void SetPosition(int value)
-        {
-            if (value < 0)
-            {
-                throw new ArgumentException("Cannot set to a negative position");
-            }
-            _pos = value;
-        }
-
         public bool ReadBool()
         {
             return _data[_pos++] > 0;
@@ -80,19 +81,19 @@ namespace Noggog
         public ushort ReadUInt16()
         {
             _pos += 2;
-            return BitConverter.ToUInt16(this._data, _pos - 2);
+            return BinaryPrimitives.ReadUInt16LittleEndian(this._data.AsSpan().Slice(_pos - 2));
         }
 
         public uint ReadUInt32()
         {
             _pos += 4;
-            return BitConverter.ToUInt32(this._data, _pos - 4);
+            return BinaryPrimitives.ReadUInt32LittleEndian(this._data.AsSpan().Slice(_pos - 4));
         }
 
         public ulong ReadUInt64()
         {
             _pos += 8;
-            return BitConverter.ToUInt64(this._data, _pos - 8);
+            return BinaryPrimitives.ReadUInt64LittleEndian(this._data.AsSpan().Slice(_pos - 8));
         }
 
         public sbyte ReadInt8()
@@ -103,37 +104,37 @@ namespace Noggog
         public short ReadInt16()
         {
             _pos += 2;
-            return BitConverter.ToInt16(this._data, _pos - 2);
+            return BinaryPrimitives.ReadInt16LittleEndian(this._data.AsSpan().Slice(_pos - 2));
         }
 
         public int ReadInt32()
         {
             _pos += 4;
-            return BitConverter.ToInt32(this._data, _pos - 4);
+            return BinaryPrimitives.ReadInt32LittleEndian(this._data.AsSpan().Slice(_pos - 4));
         }
 
         public long ReadInt64()
         {
             _pos += 8;
-            return BitConverter.ToInt64(this._data, _pos - 8);
+            return BinaryPrimitives.ReadInt64LittleEndian(this._data.AsSpan().Slice(_pos - 8));
         }
 
         public string ReadString(int amount)
         {
             _pos += amount;
-            return BinaryUtility.BytesToString(this._mem.Span.Slice(_pos - amount, amount));
+            return BinaryUtility.BytesToString(this._data.AsSpan().Slice(_pos - amount, amount));
         }
 
         public float ReadFloat()
         {
             _pos += 4;
-            return BitConverter.ToSingle(this._data, _pos - 4);
+            return GetFloat(offset: -4);
         }
 
         public double ReadDouble()
         {
             _pos += 8;
-            return BitConverter.ToDouble(this._data, _pos - 8);
+            return GetDouble(offset: -8);
         }
 
         public void Dispose()
@@ -145,12 +146,6 @@ namespace Noggog
         {
             _pos += amount;
             stream.Write(_data, _pos - amount, amount);
-        }
-
-        public ReadOnlySpan<byte> ReadSpan(int amount)
-        {
-            _pos += amount;
-            return _data.AsSpan(_pos - amount, amount);
         }
 
         public int Get(byte[] buffer, int targetOffset, int amount)
@@ -187,17 +182,17 @@ namespace Noggog
 
         public ushort GetUInt16(int offset)
         {
-            return BitConverter.ToUInt16(this._data, _pos + offset);
+            return BinaryPrimitives.ReadUInt16LittleEndian(this._data.AsSpan().Slice(_pos + offset));
         }
 
         public uint GetUInt32(int offset)
         {
-            return BitConverter.ToUInt32(this._data, _pos + offset);
+            return BinaryPrimitives.ReadUInt32LittleEndian(this._data.AsSpan().Slice(_pos + offset));
         }
 
         public ulong GetUInt64(int offset)
         {
-            return BitConverter.ToUInt64(this._data, _pos + offset);
+            return BinaryPrimitives.ReadUInt64LittleEndian(this._data.AsSpan().Slice(_pos + offset));
         }
 
         public sbyte GetInt8(int offset)
@@ -207,32 +202,44 @@ namespace Noggog
 
         public short GetInt16(int offset)
         {
-            return BitConverter.ToInt16(this._data, _pos + offset);
+            return BinaryPrimitives.ReadInt16LittleEndian(this._data.AsSpan().Slice(_pos + offset));
         }
 
         public int GetInt32(int offset)
         {
-            return BitConverter.ToInt32(this._data, _pos + offset);
+            return BinaryPrimitives.ReadInt32LittleEndian(this._data.AsSpan().Slice(_pos + offset));
         }
 
         public long GetInt64(int offset)
         {
-            return BitConverter.ToInt64(this._data, _pos + offset);
+            return BinaryPrimitives.ReadInt64LittleEndian(this._data.AsSpan().Slice(_pos + offset));
         }
 
-        public float GetFloat(int offset)
+        public unsafe float GetFloat(int offset)
         {
-            return BitConverter.ToSingle(this._data, _pos + offset);
+            // ToDo
+            // Swap for BinaryPrimitives when implemented
+            // https://github.com/dotnet/corefx/issues/35791
+            fixed (byte* ptr = &MemoryMarshal.GetReference(this._data.AsSpan()))
+            {
+                return *(float*)(ptr + _pos + offset);
+            }
         }
 
-        public double GetDouble(int offset)
+        public unsafe double GetDouble(int offset)
         {
-            return BitConverter.ToDouble(this._data, _pos + offset);
+            // ToDo
+            // Swap for BinaryPrimitives when implemented
+            // https://github.com/dotnet/corefx/issues/35791
+            fixed (byte* ptr = &MemoryMarshal.GetReference(this._data.AsSpan()))
+            {
+                return *(double*)(ptr + _pos + offset);
+            }
         }
 
         public string GetString(int amount, int offset)
         {
-            return BinaryUtility.BytesToString(this._mem.Span.Slice(_pos + offset, amount));
+            return BinaryUtility.BytesToString(this._data.AsSpan().Slice(_pos + offset, amount));
         }
 
         public bool GetBool()
@@ -247,17 +254,17 @@ namespace Noggog
 
         public ushort GetUInt16()
         {
-            return BitConverter.ToUInt16(this._data, _pos);
+            return BinaryPrimitives.ReadUInt16LittleEndian(this._data.AsSpan().Slice(_pos));
         }
 
         public uint GetUInt32()
         {
-            return BitConverter.ToUInt32(this._data, _pos);
+            return BinaryPrimitives.ReadUInt32LittleEndian(this._data.AsSpan().Slice(_pos));
         }
 
         public ulong GetUInt64()
         {
-            return BitConverter.ToUInt64(this._data, _pos);
+            return BinaryPrimitives.ReadUInt64LittleEndian(this._data.AsSpan().Slice(_pos));
         }
 
         public sbyte GetInt8()
@@ -267,32 +274,44 @@ namespace Noggog
 
         public short GetInt16()
         {
-            return BitConverter.ToInt16(this._data, _pos);
+            return BinaryPrimitives.ReadInt16LittleEndian(this._data.AsSpan().Slice(_pos));
         }
 
         public int GetInt32()
         {
-            return BitConverter.ToInt32(this._data, _pos);
+            return BinaryPrimitives.ReadInt32LittleEndian(this._data.AsSpan().Slice(_pos));
         }
 
         public long GetInt64()
         {
-            return BitConverter.ToInt64(this._data, _pos);
+            return BinaryPrimitives.ReadInt64LittleEndian(this._data.AsSpan().Slice(_pos));
         }
 
-        public float GetFloat()
+        public unsafe float GetFloat()
         {
-            return BitConverter.ToSingle(this._data, _pos);
+            // ToDo
+            // Swap for BinaryPrimitives when implemented
+            // https://github.com/dotnet/corefx/issues/35791
+            fixed (byte* ptr = &MemoryMarshal.GetReference(this._data.AsSpan()))
+            {
+                return *(float*)(ptr + _pos);
+            }
         }
 
-        public double GetDouble()
+        public unsafe double GetDouble()
         {
-            return BitConverter.ToDouble(this._data, _pos);
+            // ToDo
+            // Swap for BinaryPrimitives when implemented
+            // https://github.com/dotnet/corefx/issues/35791
+            fixed (byte* ptr = &MemoryMarshal.GetReference(this._data.AsSpan()))
+            {
+                return *(double*)(ptr + _pos);
+            }
         }
 
         public string GetString(int amount)
         {
-            return BinaryUtility.BytesToString(this._mem.Span.Slice(_pos, amount));
+            return BinaryUtility.BytesToString(this._data.AsSpan().Slice(_pos, amount));
         }
     }
 }

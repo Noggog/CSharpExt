@@ -1,4 +1,4 @@
-﻿using BenchmarkDotNet.Attributes;
+using BenchmarkDotNet.Attributes;
 using Noggog;
 using System;
 using System.Collections.Generic;
@@ -15,8 +15,8 @@ namespace CSharpExt.Benchmark
         byte[] dataTarget = new byte[data.Length];
         byte[] offsetDataTarget = new byte[data.Length + offset];
         byte[] largeTarget = new byte[largeData.Length];
-        Noggog.IBinaryReadStream readStream = new Noggog.BinaryMemoryReadStream(data);
-        Noggog.IBinaryReadStream largeReadStream = new Noggog.BinaryMemoryReadStream(largeData);
+        Noggog.BinaryMemoryReadStream readStream = new Noggog.BinaryMemoryReadStream(data);
+        Noggog.BinaryMemoryReadStream largeReadStream = new Noggog.BinaryMemoryReadStream(largeData);
 
         static BinaryMemoryReadStream()
         {
