@@ -9,12 +9,20 @@ Frequency=3984652 Hz, Resolution=250.9629 ns, Timer=TSC
 
 
 ```
-|                                      Method |     Mean |     Error |    StdDev |
-|-------------------------------------------- |---------:|----------:|----------:|
-|                          GetIntBitConverter | 1.874 ns | 0.0129 ns | 0.0121 ns |
-|           GetIntBinaryPrimitivesMemorySlice | 6.734 ns | 0.0778 ns | 0.0728 ns |
-|     GetIntBinaryPrimitivesMemorySliceToSize | 6.966 ns | 0.0722 ns | 0.0676 ns |
-|       GetIntBinaryPrimitivesMemorySpanSlice | 5.555 ns | 0.0937 ns | 0.0877 ns |
-| GetIntBinaryPrimitivesMemorySpanSliceToSize | 5.485 ns | 0.0573 ns | 0.0508 ns |
-|                 GetIntBinaryPrimitivesSlice | 1.132 ns | 0.0247 ns | 0.0219 ns |
-|           GetIntBinaryPrimitivesSliceToSize | 1.128 ns | 0.0258 ns | 0.0241 ns |
+|                                      Method |        Mean |     Error |    StdDev |  Gen 0 | Gen 1 | Gen 2 | Allocated |
+|-------------------------------------------- |------------:|----------:|----------:|-------:|------:|------:|----------:|
+|                          GetIntBitConverter |   1.2264 ns | 0.0145 ns | 0.0129 ns |      - |     - |     - |         - |
+|           GetIntBinaryPrimitivesMemorySlice |   5.9264 ns | 0.0477 ns | 0.0446 ns |      - |     - |     - |         - |
+|     GetIntBinaryPrimitivesMemorySliceToSize |   5.8270 ns | 0.0588 ns | 0.0521 ns |      - |     - |     - |         - |
+|       GetIntBinaryPrimitivesMemorySpanSlice |   4.8524 ns | 0.0612 ns | 0.0572 ns |      - |     - |     - |         - |
+| GetIntBinaryPrimitivesMemorySpanSliceToSize |   4.8338 ns | 0.0622 ns | 0.0519 ns |      - |     - |     - |         - |
+|                 GetIntBinaryPrimitivesSlice |   0.6632 ns | 0.0129 ns | 0.0114 ns |      - |     - |     - |         - |
+|           GetIntBinaryPrimitivesSliceToSize |   0.6975 ns | 0.0144 ns | 0.0127 ns |      - |     - |     - |         - |
+|                                    GetBytes |  13.1507 ns | 0.2255 ns | 0.1883 ns | 0.0076 |     - |     - |      32 B |
+|                             GetBytesViaSpan |   6.2235 ns | 0.0584 ns | 0.0517 ns | 0.0076 |     - |     - |      32 B |
+|                                GetSomeBytes |  13.1524 ns | 0.2742 ns | 0.2431 ns | 0.0076 |     - |     - |      32 B |
+|                         GetSomeBytesViaSpan |   6.3723 ns | 0.1831 ns | 0.1798 ns | 0.0076 |     - |     - |      32 B |
+|                               GetLargeBytes | 299.6497 ns | 1.8380 ns | 1.7192 ns | 0.9813 |     - |     - |    4120 B |
+|                        GetLargeBytesViaSpan | 318.4417 ns | 6.0907 ns | 5.3993 ns | 0.9813 |     - |     - |    4120 B |
+|                           GetSomeLargeBytes | 322.4487 ns | 6.3703 ns | 8.2832 ns | 0.9794 |     - |     - |    4112 B |
+|                    GetSomeLargeBytesViaSpan | 321.6054 ns | 6.0996 ns | 5.9906 ns | 0.9794 |     - |     - |    4112 B |
