@@ -8,6 +8,7 @@ namespace CSharpExt.Benchmark
         static void Main(string[] args)
         {
             BenchmarkRunner.Run<BinaryMemoryReadStream>();
+            BenchmarkRunner.Run<BinaryTests>();
         }
     }
 }
