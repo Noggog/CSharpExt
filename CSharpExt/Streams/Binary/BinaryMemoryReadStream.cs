@@ -58,9 +58,7 @@ namespace Noggog
 
         public byte[] GetBytes(int amount)
         {
-            byte[] ret = new byte[amount];
-            Array.Copy(_data, _pos, ret, 0, amount);
-            return ret;
+            return _data.AsSpan().Slice(_pos, amount).ToArray();
         }
 
         public byte[] ReadBytes(int amount)

@@ -18,8 +18,8 @@ Frequency=3984652 Hz, Resolution=250.9629 ns, Timer=TSC
 |                Read | 12.1069 ns | 0.0919 ns | 0.0768 ns | 12.0882 ns |      - |     - |     - |         - |
 |           ReadLarge | 12.3051 ns | 0.1352 ns | 0.1264 ns | 12.2934 ns |      - |     - |     - |         - |
 |    ReadOffsetAmount | 11.4575 ns | 0.1819 ns | 0.1519 ns | 11.4522 ns |      - |     - |     - |         - |
-|            GetBytes | 13.3088 ns | 0.1980 ns | 0.1852 ns | 13.3273 ns | 0.0095 |     - |     - |      40 B |
-|           ReadBytes | 14.4765 ns | 0.2043 ns | 0.1911 ns | 14.4279 ns | 0.0095 |     - |     - |      40 B |
+|  			 GetBytes |   8.337 ns | 0.2173 ns | 0.2901 ns |   8.230 ns | 0.0095 |     - |     - |      40 B |
+| 			ReadBytes |  10.088 ns | 0.3403 ns | 0.9598 ns |   9.587 ns | 0.0095 |     - |     - |      40 B |
 |             GetSpan |  1.6085 ns | 0.0261 ns | 0.0244 ns |  1.6006 ns |      - |     - |     - |         - |
 |            ReadSpan |  4.0305 ns | 0.0545 ns | 0.0509 ns |  4.0219 ns |      - |     - |     - |         - |
 |        GetSpanBytes |  9.0465 ns | 0.1619 ns | 0.1436 ns |  9.0198 ns | 0.0095 |     - |     - |      40 B |
