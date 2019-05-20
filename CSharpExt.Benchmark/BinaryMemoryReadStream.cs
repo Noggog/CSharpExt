@@ -82,7 +82,33 @@ namespace CSharpExt.Benchmark
         public byte[] ReadBytes()
         {
             readStream.Position = 0;
-            return readStream.GetBytes(data.Length);
+            return readStream.ReadBytes(data.Length);
+        }
+
+        [Benchmark]
+        public ReadOnlySpan<byte> GetSpan()
+        {
+            return readStream.GetSpan(data.Length);
+        }
+
+        [Benchmark]
+        public ReadOnlySpan<byte> ReadSpan()
+        {
+            readStream.Position = 0;
+            return readStream.ReadSpan(data.Length);
+        }
+
+        [Benchmark]
+        public byte[] GetSpanBytes()
+        {
+            return readStream.GetSpan(data.Length).ToArray();
+        }
+
+        [Benchmark]
+        public byte[] ReadSpanBytes()
+        {
+            readStream.Position = 0;
+            return readStream.ReadSpan(data.Length).ToArray();
         }
 
         [Benchmark]

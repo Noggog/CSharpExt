@@ -188,11 +188,30 @@ namespace Noggog
             }
             return ret;
         }
-
+        
         public ReadOnlySpan<byte> ReadSpan(int amount)
         {
-            var ret = ReadBytes(amount);
-            return ret.AsSpan();
+            var ret = new byte[amount];
+            if (amount != Read(ret, offset: 0, amount: amount))
+            {
+                throw new IndexOutOfRangeException();
+            }
+            return ret;
+        }
+
+        public ReadOnlySpan<byte> ReadSpan(int amount, int offset)
+        {
+            throw new NotImplementedException();
+        }
+
+        public ReadOnlySpan<byte> GetSpan(int amount)
+        {
+            throw new NotImplementedException();
+        }
+
+        public ReadOnlySpan<byte> GetSpan(int amount, int offset)
+        {
+            throw new NotImplementedException();
         }
 
         public bool ReadBool()

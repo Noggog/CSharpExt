@@ -19,6 +19,10 @@ namespace Noggog
         int Get(byte[] buffer, int targetOffset);
         byte[] ReadBytes(int amount);
         byte[] GetBytes(int amount);
+        ReadOnlySpan<byte> ReadSpan(int amount);
+        ReadOnlySpan<byte> ReadSpan(int amount, int offset);
+        ReadOnlySpan<byte> GetSpan(int amount);
+        ReadOnlySpan<byte> GetSpan(int amount, int offset);
         bool ReadBool();
         bool GetBool();
         bool GetBool(int offset);

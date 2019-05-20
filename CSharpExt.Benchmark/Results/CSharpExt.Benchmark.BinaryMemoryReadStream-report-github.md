@@ -9,52 +9,56 @@ Frequency=3984652 Hz, Resolution=250.9629 ns, Timer=TSC
 
 
 ```
-|              Method |       Mean |     Error |    StdDev |  Gen 0 | Gen 1 | Gen 2 | Allocated |
-|-------------------- |-----------:|----------:|----------:|-------:|------:|------:|----------:|
-|                 Get | 10.2799 ns | 0.0777 ns | 0.0649 ns |      - |     - |     - |         - |
-|            GetLarge | 10.4966 ns | 0.1248 ns | 0.1167 ns |      - |     - |     - |         - |
-|     GetOffsetAmount |  9.6880 ns | 0.0827 ns | 0.0774 ns |      - |     - |     - |         - |
-|           GetOffset | 10.6215 ns | 0.0605 ns | 0.0536 ns |      - |     - |     - |         - |
-|                Read | 13.1330 ns | 0.1270 ns | 0.1188 ns |      - |     - |     - |         - |
-|           ReadLarge | 12.2405 ns | 0.1564 ns | 0.1386 ns |      - |     - |     - |         - |
-|    ReadOffsetAmount | 11.2544 ns | 0.2440 ns | 0.2905 ns |      - |     - |     - |         - |
-|            GetBytes | 12.9031 ns | 0.1912 ns | 0.1788 ns | 0.0095 |     - |     - |      40 B |
-|           ReadBytes | 14.6538 ns | 0.1946 ns | 0.1820 ns | 0.0095 |     - |     - |      40 B |
-|             GetBool |  0.5500 ns | 0.0234 ns | 0.0208 ns |      - |     - |     - |         - |
-|       GetBoolOffset |  0.6275 ns | 0.0488 ns | 0.0522 ns |      - |     - |     - |         - |
-|            ReadBool |  2.2941 ns | 0.0547 ns | 0.0511 ns |      - |     - |     - |         - |
-|            GetUInt8 |  0.2182 ns | 0.0136 ns | 0.0127 ns |      - |     - |     - |         - |
-|      GetUInt8Offset |  0.3630 ns | 0.0203 ns | 0.0190 ns |      - |     - |     - |         - |
-|           ReadUInt8 |  1.7288 ns | 0.0242 ns | 0.0226 ns |      - |     - |     - |         - |
-|           GetUInt16 |  1.1204 ns | 0.0229 ns | 0.0214 ns |      - |     - |     - |         - |
-|     GetUInt16Offset |  1.1270 ns | 0.0214 ns | 0.0200 ns |      - |     - |     - |         - |
-|          ReadUInt16 |  2.7320 ns | 0.0372 ns | 0.0330 ns |      - |     - |     - |         - |
-|           GetUInt32 |  1.1333 ns | 0.0248 ns | 0.0232 ns |      - |     - |     - |         - |
-|     GetUInt32Offset |  1.1208 ns | 0.0232 ns | 0.0181 ns |      - |     - |     - |         - |
-|          ReadUInt32 |  2.6927 ns | 0.0611 ns | 0.0572 ns |      - |     - |     - |         - |
-|           GetUInt64 |  1.1776 ns | 0.0197 ns | 0.0175 ns |      - |     - |     - |         - |
-|     GetUInt64Offset |  1.1437 ns | 0.0147 ns | 0.0137 ns |      - |     - |     - |         - |
-|          ReadUInt64 |  2.7986 ns | 0.0305 ns | 0.0271 ns |      - |     - |     - |         - |
-|             GetInt8 |  0.3401 ns | 0.0115 ns | 0.0108 ns |      - |     - |     - |         - |
-|       GetInt8Offset |  0.3610 ns | 0.0078 ns | 0.0065 ns |      - |     - |     - |         - |
-|            ReadInt8 |  1.9656 ns | 0.0204 ns | 0.0191 ns |      - |     - |     - |         - |
-|            GetInt16 |  1.1436 ns | 0.0210 ns | 0.0197 ns |      - |     - |     - |         - |
-|      GetInt16Offset |  1.2147 ns | 0.0205 ns | 0.0182 ns |      - |     - |     - |         - |
-|           ReadInt16 |  2.9884 ns | 0.0391 ns | 0.0365 ns |      - |     - |     - |         - |
-|            GetInt32 |  1.1376 ns | 0.0311 ns | 0.0276 ns |      - |     - |     - |         - |
-|      GetInt32Offset |  1.2944 ns | 0.0325 ns | 0.0288 ns |      - |     - |     - |         - |
-|           ReadInt32 |  2.6670 ns | 0.0385 ns | 0.0341 ns |      - |     - |     - |         - |
-|            GetInt64 |  1.1160 ns | 0.0202 ns | 0.0189 ns |      - |     - |     - |         - |
-|      GetInt64Offset |  1.2280 ns | 0.0216 ns | 0.0202 ns |      - |     - |     - |         - |
-|           ReadInt64 |  2.8171 ns | 0.0328 ns | 0.0307 ns |      - |     - |     - |         - |
-|           GetString | 18.5279 ns | 0.1752 ns | 0.1639 ns | 0.0210 |     - |     - |      88 B |
-|     GetStringOffset | 18.9589 ns | 0.2250 ns | 0.2104 ns | 0.0210 |     - |     - |      88 B |
-|          ReadString | 20.2691 ns | 0.1661 ns | 0.1473 ns | 0.0210 |     - |     - |      88 B |
-|            GetFloat |  1.3306 ns | 0.0145 ns | 0.0129 ns |      - |     - |     - |         - |
-|      GetFloatOffset |  1.3033 ns | 0.0137 ns | 0.0114 ns |      - |     - |     - |         - |
-|           ReadFloat |  2.8518 ns | 0.0163 ns | 0.0144 ns |      - |     - |     - |         - |
-|           GetDouble |  1.3581 ns | 0.0268 ns | 0.0251 ns |      - |     - |     - |         - |
-|     GetDoubleOffset |  1.3486 ns | 0.0161 ns | 0.0151 ns |      - |     - |     - |         - |
-|          ReadDouble |  2.7205 ns | 0.0330 ns | 0.0308 ns |      - |     - |     - |         - |
-|       BytesToString | 20.8909 ns | 0.1759 ns | 0.1559 ns | 0.0248 |     - |     - |     104 B |
-| BytesToStringOffset | 18.8388 ns | 0.1033 ns | 0.0966 ns | 0.0229 |     - |     - |      96 B |
+|              Method |       Mean |     Error |    StdDev |     Median |  Gen 0 | Gen 1 | Gen 2 | Allocated |
+|-------------------- |-----------:|----------:|----------:|-----------:|-------:|------:|------:|----------:|
+|                 Get | 12.1983 ns | 0.1412 ns | 0.1252 ns | 12.1614 ns |      - |     - |     - |         - |
+|            GetLarge | 10.7699 ns | 0.0575 ns | 0.0480 ns | 10.7908 ns |      - |     - |     - |         - |
+|     GetOffsetAmount |  9.7991 ns | 0.1240 ns | 0.1160 ns |  9.8033 ns |      - |     - |     - |         - |
+|           GetOffset | 10.7991 ns | 0.1505 ns | 0.1334 ns | 10.8065 ns |      - |     - |     - |         - |
+|                Read | 12.1069 ns | 0.0919 ns | 0.0768 ns | 12.0882 ns |      - |     - |     - |         - |
+|           ReadLarge | 12.3051 ns | 0.1352 ns | 0.1264 ns | 12.2934 ns |      - |     - |     - |         - |
+|    ReadOffsetAmount | 11.4575 ns | 0.1819 ns | 0.1519 ns | 11.4522 ns |      - |     - |     - |         - |
+|            GetBytes | 13.3088 ns | 0.1980 ns | 0.1852 ns | 13.3273 ns | 0.0095 |     - |     - |      40 B |
+|           ReadBytes | 14.4765 ns | 0.2043 ns | 0.1911 ns | 14.4279 ns | 0.0095 |     - |     - |      40 B |
+|             GetSpan |  1.6085 ns | 0.0261 ns | 0.0244 ns |  1.6006 ns |      - |     - |     - |         - |
+|            ReadSpan |  4.0305 ns | 0.0545 ns | 0.0509 ns |  4.0219 ns |      - |     - |     - |         - |
+|        GetSpanBytes |  9.0465 ns | 0.1619 ns | 0.1436 ns |  9.0198 ns | 0.0095 |     - |     - |      40 B |
+|       ReadSpanBytes | 11.2601 ns | 0.3040 ns | 0.4733 ns | 11.0680 ns | 0.0095 |     - |     - |      40 B |
+|             GetBool |  0.4864 ns | 0.0114 ns | 0.0101 ns |  0.4848 ns |      - |     - |     - |         - |
+|       GetBoolOffset |  0.5917 ns | 0.0110 ns | 0.0098 ns |  0.5955 ns |      - |     - |     - |         - |
+|            ReadBool |  2.1883 ns | 0.0176 ns | 0.0156 ns |  2.1868 ns |      - |     - |     - |         - |
+|            GetUInt8 |  0.2418 ns | 0.0097 ns | 0.0081 ns |  0.2387 ns |      - |     - |     - |         - |
+|      GetUInt8Offset |  0.2762 ns | 0.0464 ns | 0.0388 ns |  0.2634 ns |      - |     - |     - |         - |
+|           ReadUInt8 |  1.8023 ns | 0.0628 ns | 0.1688 ns |  1.7136 ns |      - |     - |     - |         - |
+|           GetUInt16 |  1.3297 ns | 0.0297 ns | 0.0278 ns |  1.3232 ns |      - |     - |     - |         - |
+|     GetUInt16Offset |  1.3193 ns | 0.0170 ns | 0.0159 ns |  1.3198 ns |      - |     - |     - |         - |
+|          ReadUInt16 |  2.7145 ns | 0.0484 ns | 0.0429 ns |  2.7057 ns |      - |     - |     - |         - |
+|           GetUInt32 |  1.3447 ns | 0.0379 ns | 0.0336 ns |  1.3354 ns |      - |     - |     - |         - |
+|     GetUInt32Offset |  1.3304 ns | 0.0290 ns | 0.0271 ns |  1.3213 ns |      - |     - |     - |         - |
+|          ReadUInt32 |  2.7874 ns | 0.0440 ns | 0.0412 ns |  2.7916 ns |      - |     - |     - |         - |
+|           GetUInt64 |  1.3247 ns | 0.0176 ns | 0.0164 ns |  1.3259 ns |      - |     - |     - |         - |
+|     GetUInt64Offset |  1.2484 ns | 0.0175 ns | 0.0146 ns |  1.2497 ns |      - |     - |     - |         - |
+|          ReadUInt64 |  2.6743 ns | 0.0506 ns | 0.0422 ns |  2.6769 ns |      - |     - |     - |         - |
+|             GetInt8 |  0.2648 ns | 0.0112 ns | 0.0099 ns |  0.2621 ns |      - |     - |     - |         - |
+|       GetInt8Offset |  0.3921 ns | 0.0088 ns | 0.0073 ns |  0.3912 ns |      - |     - |     - |         - |
+|            ReadInt8 |  1.9014 ns | 0.0226 ns | 0.0211 ns |  1.8905 ns |      - |     - |     - |         - |
+|            GetInt16 |  1.3457 ns | 0.0164 ns | 0.0137 ns |  1.3443 ns |      - |     - |     - |         - |
+|      GetInt16Offset |  1.3426 ns | 0.0190 ns | 0.0169 ns |  1.3369 ns |      - |     - |     - |         - |
+|           ReadInt16 |  2.7276 ns | 0.0425 ns | 0.0397 ns |  2.7347 ns |      - |     - |     - |         - |
+|            GetInt32 |  1.3339 ns | 0.0182 ns | 0.0162 ns |  1.3317 ns |      - |     - |     - |         - |
+|      GetInt32Offset |  1.3104 ns | 0.0184 ns | 0.0172 ns |  1.3025 ns |      - |     - |     - |         - |
+|           ReadInt32 |  2.7555 ns | 0.0245 ns | 0.0217 ns |  2.7491 ns |      - |     - |     - |         - |
+|            GetInt64 |  1.3472 ns | 0.0191 ns | 0.0179 ns |  1.3457 ns |      - |     - |     - |         - |
+|      GetInt64Offset |  1.3138 ns | 0.0396 ns | 0.0351 ns |  1.3091 ns |      - |     - |     - |         - |
+|           ReadInt64 |  2.6272 ns | 0.0083 ns | 0.0074 ns |  2.6273 ns |      - |     - |     - |         - |
+|           GetString | 19.8379 ns | 0.5455 ns | 1.5738 ns | 18.9905 ns | 0.0210 |     - |     - |      88 B |
+|     GetStringOffset | 18.6857 ns | 0.2556 ns | 0.2135 ns | 18.6758 ns | 0.0210 |     - |     - |      88 B |
+|          ReadString | 21.1856 ns | 0.2146 ns | 0.2007 ns | 21.1570 ns | 0.0210 |     - |     - |      88 B |
+|            GetFloat |  1.3525 ns | 0.0250 ns | 0.0234 ns |  1.3513 ns |      - |     - |     - |         - |
+|      GetFloatOffset |  1.3884 ns | 0.0280 ns | 0.0248 ns |  1.3864 ns |      - |     - |     - |         - |
+|           ReadFloat |  2.5825 ns | 0.0330 ns | 0.0309 ns |  2.5726 ns |      - |     - |     - |         - |
+|           GetDouble |  1.3345 ns | 0.0317 ns | 0.0281 ns |  1.3321 ns |      - |     - |     - |         - |
+|     GetDoubleOffset |  1.3730 ns | 0.0365 ns | 0.0304 ns |  1.3731 ns |      - |     - |     - |         - |
+|          ReadDouble |  2.4733 ns | 0.0350 ns | 0.0292 ns |  2.4625 ns |      - |     - |     - |         - |
+|       BytesToString | 20.2712 ns | 0.1450 ns | 0.1286 ns | 20.2694 ns | 0.0248 |     - |     - |     104 B |
+| BytesToStringOffset | 19.8935 ns | 0.2777 ns | 0.2598 ns | 19.8310 ns | 0.0229 |     - |     - |      96 B |

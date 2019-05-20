@@ -56,11 +56,40 @@ namespace Noggog
             return ret;
         }
 
+        public byte[] GetBytes(int amount)
+        {
+            byte[] ret = new byte[amount];
+            Array.Copy(_data, _pos, ret, 0, amount);
+            return ret;
+        }
+
         public byte[] ReadBytes(int amount)
         {
             var ret = GetBytes(amount);
             _pos += amount;
             return ret;
+        }
+
+        public ReadOnlySpan<byte> ReadSpan(int amount, int offset)
+        {
+            _pos += amount + offset;
+            return GetSpan(amount, offset: -amount);
+        }
+
+        public ReadOnlySpan<byte> ReadSpan(int amount)
+        {
+            _pos += amount;
+            return GetSpan(amount, offset: -amount);
+        }
+
+        public ReadOnlySpan<byte> GetSpan(int amount)
+        {
+            return _data.AsSpan().Slice(_pos, amount);
+        }
+
+        public ReadOnlySpan<byte> GetSpan(int amount, int offset)
+        {
+            return _data.AsSpan().Slice(_pos + offset, amount);
         }
 
         public bool ReadBool()
@@ -161,13 +190,6 @@ namespace Noggog
         public int Get(byte[] buffer, int targetOffset)
         {
             return Get(buffer, targetOffset: targetOffset, amount: buffer.Length);
-        }
-
-        public byte[] GetBytes(int amount)
-        {
-            byte[] ret = new byte[amount];
-            Array.Copy(_data, _pos, ret, 0, amount);
-            return ret;
         }
 
         public bool GetBool(int offset)
