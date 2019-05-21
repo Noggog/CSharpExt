@@ -235,26 +235,14 @@ namespace Noggog
             return BinaryPrimitives.ReadInt64LittleEndian(this._data.AsSpan().Slice(_pos + offset));
         }
 
-        public unsafe float GetFloat(int offset)
+        public float GetFloat(int offset)
         {
-            // ToDo
-            // Swap for BinaryPrimitives when implemented
-            // https://github.com/dotnet/corefx/issues/35791
-            fixed (byte* ptr = &MemoryMarshal.GetReference(this._data.AsSpan()))
-            {
-                return *(float*)(ptr + _pos + offset);
-            }
+            return SpanExt.GetFloat(this._data.AsSpan(_pos + offset));
         }
 
-        public unsafe double GetDouble(int offset)
+        public double GetDouble(int offset)
         {
-            // ToDo
-            // Swap for BinaryPrimitives when implemented
-            // https://github.com/dotnet/corefx/issues/35791
-            fixed (byte* ptr = &MemoryMarshal.GetReference(this._data.AsSpan()))
-            {
-                return *(double*)(ptr + _pos + offset);
-            }
+            return SpanExt.GetDouble(this._data.AsSpan(_pos + offset));
         }
 
         public string GetString(int amount, int offset)
@@ -307,26 +295,14 @@ namespace Noggog
             return BinaryPrimitives.ReadInt64LittleEndian(this._data.AsSpan().Slice(_pos));
         }
 
-        public unsafe float GetFloat()
+        public float GetFloat()
         {
-            // ToDo
-            // Swap for BinaryPrimitives when implemented
-            // https://github.com/dotnet/corefx/issues/35791
-            fixed (byte* ptr = &MemoryMarshal.GetReference(this._data.AsSpan()))
-            {
-                return *(float*)(ptr + _pos);
-            }
+            return SpanExt.GetFloat(this._data.AsSpan(_pos));
         }
 
-        public unsafe double GetDouble()
+        public double GetDouble()
         {
-            // ToDo
-            // Swap for BinaryPrimitives when implemented
-            // https://github.com/dotnet/corefx/issues/35791
-            fixed (byte* ptr = &MemoryMarshal.GetReference(this._data.AsSpan()))
-            {
-                return *(double*)(ptr + _pos);
-            }
+            return SpanExt.GetDouble(this._data.AsSpan(_pos));
         }
 
         public string GetString(int amount)
