@@ -13,6 +13,7 @@ namespace Noggog
         long Length { get; }
         long Remaining { get; }
         bool Complete { get; }
+        ReadOnlySpan<byte> RemainingSpan { get; }
         int Read(byte[] buffer, int offset, int amount);
         int Get(byte[] buffer, int targetOffset, int amount);
         int Read(byte[] buffer);

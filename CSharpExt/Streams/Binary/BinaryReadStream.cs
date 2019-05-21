@@ -27,6 +27,7 @@ namespace Noggog
         public long Remaining => _length - this.Position;
         public bool Complete => _length <= this.Position;
         public override long Position { get => _streamPos - InternalStreamRemaining; set => SetPosition(value); }
+        public ReadOnlySpan<byte> RemainingSpan => throw new NotImplementedException();
 
         public bool CheckUnderlyingStreamPosition = false;
 
