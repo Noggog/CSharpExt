@@ -323,7 +323,7 @@ namespace CSharpExt.Tests
         {
             var stream = GetStream(TYPICAL_TEST_LENGTH);
             stream.Position = 3;
-            var result = stream.ReadString(5);
+            var result = stream.ReadStringUTF8(5);
             Assert.Equal(5, result.Length);
             Assert.Equal(TYPICAL_TEST_LENGTH, stream.Length);
             Assert.Equal(8, stream.Position);
@@ -337,7 +337,7 @@ namespace CSharpExt.Tests
         {
             var stream = GetStream(EdgeLocation * 2);
             stream.Position = 3;
-            var result = stream.ReadString(EdgeLocation);
+            var result = stream.ReadStringUTF8(EdgeLocation);
             Assert.Equal(EdgeLocation, result.Length);
             Assert.Equal(EdgeLocation * 2, stream.Length);
             Assert.Equal(EdgeLocation + 3, stream.Position);

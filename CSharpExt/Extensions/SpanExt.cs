@@ -73,5 +73,13 @@ namespace Noggog
                 return *(double*)ptr;
             }
         }
+
+        public static unsafe string GetStringUTF8(this ReadOnlySpan<byte> span)
+        {
+            fixed (byte* buffer = &MemoryMarshal.GetReference(span))
+            {
+                return Encoding.UTF8.GetString(buffer, span.Length);
+            }
+        }
     }
 }

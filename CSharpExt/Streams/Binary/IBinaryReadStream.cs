@@ -56,9 +56,9 @@ namespace Noggog
         double ReadDouble();
         double GetDouble();
         double GetDouble(int offset);
-        string ReadString(int amount);
-        string GetString(int amount);
-        string GetString(int amount, int offset);
+        string ReadStringUTF8(int amount);
+        string GetStringUTF8(int amount);
+        string GetStringUTF8(int amount, int offset);
         void WriteTo(Stream stream, int amount);
     }
 }

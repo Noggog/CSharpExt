@@ -146,10 +146,10 @@ namespace Noggog
             return BinaryPrimitives.ReadInt64LittleEndian(this._data.AsSpan().Slice(_pos - 8));
         }
 
-        public string ReadString(int amount)
+        public string ReadStringUTF8(int amount)
         {
             _pos += amount;
-            return BinaryUtility.BytesToString(this._data.AsSpan().Slice(_pos - amount, amount));
+            return SpanExt.GetStringUTF8(this._data.AsSpan().Slice(_pos - amount, amount));
         }
 
         public float ReadFloat()
@@ -245,9 +245,9 @@ namespace Noggog
             return SpanExt.GetDouble(this._data.AsSpan(_pos + offset));
         }
 
-        public string GetString(int amount, int offset)
+        public string GetStringUTF8(int amount, int offset)
         {
-            return BinaryUtility.BytesToString(this._data.AsSpan().Slice(_pos + offset, amount));
+            return SpanExt.GetStringUTF8(this._data.AsSpan().Slice(_pos + offset, amount));
         }
 
         public bool GetBool()
@@ -305,9 +305,9 @@ namespace Noggog
             return SpanExt.GetDouble(this._data.AsSpan(_pos));
         }
 
-        public string GetString(int amount)
+        public string GetStringUTF8(int amount)
         {
-            return BinaryUtility.BytesToString(this._data.AsSpan().Slice(_pos, amount));
+            return SpanExt.GetStringUTF8(this._data.AsSpan().Slice(_pos, amount));
         }
     }
 }

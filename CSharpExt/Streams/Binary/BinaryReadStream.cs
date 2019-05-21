@@ -286,16 +286,16 @@ namespace Noggog
             return _internalMemoryStream.ReadDouble();
         }
 
-        public string ReadString(int amount)
+        public string ReadStringUTF8(int amount)
         {
             if (amount <= InternalStreamRemaining)
             {
-                return _internalMemoryStream.ReadString(amount);
+                return _internalMemoryStream.ReadStringUTF8(amount);
             }
             if (amount < _data.Length)
             {
                 LoadPosition();
-                return _internalMemoryStream.ReadString(amount);
+                return _internalMemoryStream.ReadStringUTF8(amount);
             }
 
             forceReload = true;
@@ -306,7 +306,7 @@ namespace Noggog
 
             _stream.Read(arr, numRead, amount);
             _streamPos += amount;
-            return BinaryUtility.BytesToString(arr.AsSpan().Slice(0, amount + numRead));
+            return SpanExt.GetStringUTF8(arr.AsSpan().Slice(0, amount + numRead));
         }
 
         public int Get(byte[] buffer, int offset, int amount)
@@ -395,10 +395,10 @@ namespace Noggog
             return _internalMemoryStream.GetDouble(offset);
         }
 
-        public string GetString(int amount, int offset)
+        public string GetStringUTF8(int amount, int offset)
         {
             LoadPosition(amount + offset);
-            return _internalMemoryStream.GetString(amount, offset);
+            return _internalMemoryStream.GetStringUTF8(amount, offset);
         }
 
         protected override void Dispose(bool disposing)
@@ -530,10 +530,10 @@ namespace Noggog
             return _internalMemoryStream.GetDouble();
         }
 
-        public string GetString(int amount)
+        public string GetStringUTF8(int amount)
         {
             LoadPosition(amount);
-            return _internalMemoryStream.GetString(amount);
+            return _internalMemoryStream.GetStringUTF8(amount);
         }
         #endregion
     }

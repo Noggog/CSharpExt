@@ -283,22 +283,22 @@ namespace CSharpExt.Benchmark
         }
 
         [Benchmark]
-        public string GetString()
+        public string GetStringUTF8()
         {
-            return readStream.GetString(amount: 8);
+            return readStream.GetStringUTF8(amount: 8);
         }
 
         [Benchmark]
-        public string GetStringOffset()
+        public string GetStringUTF8Offset()
         {
-            return readStream.GetString(amount: 8, offset: offset);
+            return readStream.GetStringUTF8(amount: 8, offset: offset);
         }
 
         [Benchmark]
-        public string ReadString()
+        public string ReadStringUTF8()
         {
             readStream.Position = 0;
-            return readStream.ReadString(amount: 8);
+            return readStream.ReadStringUTF8(amount: 8);
         }
 
         [Benchmark]
@@ -337,18 +337,6 @@ namespace CSharpExt.Benchmark
         {
             readStream.Position = 0;
             return readStream.GetDouble();
-        }
-
-        [Benchmark]
-        public string BytesToString()
-        {
-            return BinaryUtility.BytesToString(data);
-        }
-
-        [Benchmark]
-        public string BytesToStringOffset()
-        {
-            return BinaryUtility.BytesToString(data.AsSpan().Slice(start: offset, length: data.Length - offset));
         }
     }
 }
