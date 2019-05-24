@@ -3,14 +3,16 @@ using System.Buffers.Binary;
 using System.Collections.Generic;
 using System.Text;
 using BenchmarkDotNet.Attributes;
+using Noggog;
 
 namespace CSharpExt.Benchmark
 {
     [MemoryDiagnoser]
     public class BinaryTests
     {
-        static byte[] arr = new byte[] { 0, 1, 2, 3, 4 };
-        static Memory<byte> mem = arr.AsMemory();
+        static readonly byte[] arr = new byte[] { 0, 1, 2, 3, 4 };
+        static readonly Memory<byte> mem = arr.AsMemory();
+        static readonly MemorySlice<byte> memTest = new MemorySlice<byte>(arr);
         static byte[] largeArray;
 
         [GlobalSetup]
@@ -24,43 +26,67 @@ namespace CSharpExt.Benchmark
         }
 
         [Benchmark]
-        public int GetIntBitConverter()
+        public int StraightArrayBitConverter()
         {
             return BitConverter.ToInt32(arr, 1);
         }
 
         [Benchmark]
-        public int GetIntBinaryPrimitivesMemorySlice()
+        public int MemorySlice()
         {
             return BinaryPrimitives.ReadInt32LittleEndian(mem.Slice(1).Span);
         }
 
         [Benchmark]
-        public int GetIntBinaryPrimitivesMemorySliceToSize()
+        public int MemorySliceToSize()
         {
             return BinaryPrimitives.ReadInt32LittleEndian(mem.Slice(1, 4).Span);
         }
 
         [Benchmark]
-        public int GetIntBinaryPrimitivesMemorySpanSlice()
+        public int MemorySpanSlice()
         {
             return BinaryPrimitives.ReadInt32LittleEndian(mem.Span.Slice(1));
         }
 
         [Benchmark]
-        public int GetIntBinaryPrimitivesMemorySpanSliceToSize()
+        public int MemorySpanSliceToSize()
         {
             return BinaryPrimitives.ReadInt32LittleEndian(mem.Span.Slice(1, 4));
         }
 
         [Benchmark]
-        public int GetIntBinaryPrimitivesSlice()
+        public int HomegrownMemorySlice()
+        {
+            return BinaryPrimitives.ReadInt32LittleEndian(memTest.Slice(1).Span);
+        }
+
+        [Benchmark]
+        public int HomegrownMemorySliceToSize()
+        {
+            return BinaryPrimitives.ReadInt32LittleEndian(memTest.Slice(1, 4).Span);
+        }
+
+        [Benchmark]
+        public int HomegrownMemorySpanSlice()
+        {
+            return BinaryPrimitives.ReadInt32LittleEndian(memTest.Span.Slice(1));
+        }
+
+        [Benchmark]
+        public int HomegrownMemorySpanSliceToSize()
+        {
+            return BinaryPrimitives.ReadInt32LittleEndian(memTest.Span.Slice(1, 4));
+        }
+
+        [Benchmark]
+        public int SpanSlice()
         {
             return BinaryPrimitives.ReadInt32LittleEndian(arr.AsSpan().Slice(1));
         }
 
         [Benchmark]
-        public int GetIntBinaryPrimitivesSliceToSize()
+        public int SpanSliceToSize()
         {
             return BinaryPrimitives.ReadInt32LittleEndian(arr.AsSpan().Slice(1, 4));
         }
