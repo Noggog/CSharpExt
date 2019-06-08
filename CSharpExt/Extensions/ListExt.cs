@@ -161,6 +161,12 @@ namespace System
             list.RemoveToCount(i);
         }
 
+        public static void SetTo<T>(this ISetList<T> list, IEnumerable<T> items)
+        {
+            ListExt.SetTo((IList<T>)list, items);
+            list.HasBeenSet = true;
+        }
+
         public static void SetTo<T>(this IList<T> list, T item)
         {
             list.Clear();

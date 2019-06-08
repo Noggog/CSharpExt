@@ -1,11 +1,11 @@
-﻿using Noggog.Notifying;
+﻿using Noggog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Noggog.Notifying
+namespace Noggog
 {
     public interface IHasItem<T> : IHasItemGetter<T>
     {

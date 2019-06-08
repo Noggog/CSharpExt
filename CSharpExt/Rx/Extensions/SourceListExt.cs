@@ -1,6 +1,6 @@
 ﻿using CSharpExt.Rx;
 using DynamicData;
-using Noggog.Notifying;
+using Noggog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,18 +19,26 @@ namespace System
             });
         }
 
+        public static void SetTo<T>(this ISourceSetList<T> list, IEnumerable<T> items)
+        {
+            list.Edit((l) =>
+            {
+                l.SetTo(items);
+            });
+        }
+
         public static void SetToWithDefault<T>(
-            this ISourceSetList<T> not,
-            IObservableSetList<T> rhs,
-            IObservableSetList<T> def)
+            this ISetList<T> not,
+            IReadOnlySetList<T> rhs,
+            IReadOnlySetList<T> def)
         {
             if (rhs.HasBeenSet)
             {
-                not.SetTo(rhs.Item);
+                not.SetTo(rhs);
             }
             else if (def?.HasBeenSet ?? false)
             {
-                not.SetTo(def.Item);
+                not.SetTo(def);
             }
             else
             {
@@ -38,10 +46,18 @@ namespace System
             }
         }
 
+        public static void SetToWithDefault<T>(
+            this IList<T> not,
+            IReadOnlyList<T> rhs,
+            IReadOnlyList<T> def)
+        {
+            not.SetTo(rhs);
+        }
+
         public static void SetToWithDefault<V>(
-            this ISourceSetList<V> not,
-            IObservableSetList<V> rhs,
-            IObservableSetList<V> def,
+            this ISetList<V> not,
+            IReadOnlySetList<V> rhs,
+            IReadOnlySetList<V> def,
             Func<V, V, V> converter)
         {
             if (rhs.HasBeenSet)
@@ -49,15 +65,15 @@ namespace System
                 if (def == null)
                 {
                     not.SetTo(
-                        rhs.Item.Select((t) => converter(t, default(V))));
+                        rhs.Select((t) => converter(t, default)));
                 }
                 else
                 {
                     int i = 0;
                     not.SetTo(
-                        rhs.Item.Select((t) =>
+                        rhs.Select((t) =>
                         {
-                            V defVal = default(V);
+                            V defVal = default;
                             if (def.Count > i)
                             {
                                 defVal = def[i];
@@ -69,11 +85,38 @@ namespace System
             else if (def?.HasBeenSet ?? false)
             {
                 not.SetTo(
-                    def.Item.Select((t) => converter(t, default(V))));
+                    def.Select((t) => converter(t, default)));
             }
             else
             {
                 not.Unset();
+            }
+        }
+
+        public static void SetToWithDefault<V>(
+            this IList<V> not,
+            IReadOnlyList<V> rhs,
+            IReadOnlyList<V> def,
+            Func<V, V, V> converter)
+        {
+            if (def == null)
+            {
+                not.SetTo(
+                    rhs.Select((t) => converter(t, default)));
+            }
+            else
+            {
+                int i = 0;
+                not.SetTo(
+                    rhs.Select((t) =>
+                    {
+                        V defVal = default;
+                        if (def.Count > i)
+                        {
+                            defVal = def[i];
+                        }
+                        return converter(t, defVal);
+                    }));
             }
         }
     }

@@ -1,6 +1,6 @@
 ﻿using DynamicData;
 using DynamicData.Kernel;
-using Noggog.Notifying;
+using Noggog;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -63,8 +63,7 @@ namespace CSharpExt.Rx
         {
             _source.Dispose();
         }
-
-
+        
         public void Edit(Action<ISourceUpdater<V, K>> updateAction)
         {
             Edit(updateAction, hasBeenSet: true);

@@ -1,5 +1,5 @@
 ﻿using DynamicData;
-using Noggog.Notifying;
+using Noggog;
 using System;
 using System.Collections.Generic;
 using System.Linq;

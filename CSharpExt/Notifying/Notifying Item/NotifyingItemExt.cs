@@ -1,4 +1,5 @@
-﻿using Noggog.Notifying;
+﻿using Noggog;
+using Noggog.Notifying;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;

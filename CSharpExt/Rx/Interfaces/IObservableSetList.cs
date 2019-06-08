@@ -1,5 +1,5 @@
 ﻿using DynamicData;
-using Noggog.Notifying;
+using Noggog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,8 +8,7 @@ using System.Threading.Tasks;
 
 namespace CSharpExt.Rx
 {
-    public interface IObservableSetList<T> : IObservableList<T>, IHasBeenSetItemRxGetter<IEnumerable<T>>, IReadOnlyList<T>
-
+    public interface IObservableSetList<T> : IObservableList<T>, IHasBeenSetItemRxGetter<IEnumerable<T>>, IReadOnlySetList<T>
     {
         new int Count { get; }
     }

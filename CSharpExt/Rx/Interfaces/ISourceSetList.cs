@@ -1,5 +1,5 @@
 ﻿using DynamicData;
-using Noggog.Notifying;
+using Noggog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace CSharpExt.Rx
 {
-    public interface ISourceSetList<T> : ISourceList<T>, IHasBeenSet, IObservableSetList<T>
+    public interface ISourceSetList<T> : ISourceList<T>, IHasBeenSet, IObservableSetList<T>, ISetList<T>
     {
         new T this[int index] { get; set; }
         void Edit(Action<IExtendedList<T>> updateAction, bool hasBeenSet);

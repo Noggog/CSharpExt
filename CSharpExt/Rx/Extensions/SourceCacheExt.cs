@@ -1,6 +1,6 @@
 ﻿using CSharpExt.Rx;
 using DynamicData;
-using Noggog.Notifying;
+using Noggog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -49,17 +49,16 @@ namespace System
                 if (def == null)
                 {
                     not.SetTo(
-                        rhs.Item.Select((t) => converter(t, default(V))));
+                        rhs.Item.Select((t) => converter(t, default)));
                 }
                 else
                 {
-                    int i = 0;
                     not.SetTo(
                         rhs.KeyValues.Select((t) =>
                         {
                             if (!def.TryGetValue(t.Key, out var defVal))
                             {
-                                defVal = default(V);
+                                defVal = default;
                             }
                             return converter(t.Value, defVal);
                         }));
@@ -68,11 +67,36 @@ namespace System
             else if (def?.HasBeenSet ?? false)
             {
                 not.SetTo(
-                    def.Item.Select((t) => converter(t, default(V))));
+                    def.Item.Select((t) => converter(t, default)));
             }
             else
             {
                 not.Unset();
+            }
+        }
+
+        public static void SetToWithDefault<V, K>(
+            this ISourceCache<V, K> not,
+            IReadOnlyDictionary<K, V> rhs,
+            IReadOnlyDictionary<K, V> def,
+            Func<V, V, V> converter)
+        {
+            if (def == null)
+            {
+                not.SetTo(
+                    rhs.Values.Select((t) => converter(t, default)));
+            }
+            else
+            {
+                not.SetTo(
+                    rhs.Select((t) =>
+                    {
+                        if (!def.TryGetValue(t.Key, out var defVal))
+                        {
+                            defVal = default;
+                        }
+                        return converter(t.Value, defVal);
+                    }));
             }
         }
 

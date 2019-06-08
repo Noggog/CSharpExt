@@ -1,5 +1,5 @@
 ﻿using DynamicData;
-using Noggog.Notifying;
+using Noggog;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -14,7 +14,7 @@ namespace CSharpExt.Rx
     {
         private readonly BehaviorSubject<bool> _hasBeenSet = new BehaviorSubject<bool>(false);
         private readonly SourceList<T> _source;
-
+        
         public SourceSetList(IObservable<IChangeSet<T>> source = null)
         {
             this._source = new SourceList<T>(source);
