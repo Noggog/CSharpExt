@@ -13,8 +13,8 @@ namespace Noggog
     public class BinaryMemoryReadStream : IBinaryReadStream
     {
         internal int _pos;
-        internal byte[] _data;
-        protected byte[] Data => _data;
+        internal MemorySlice<byte> _data;
+        protected MemorySlice<byte> Data => _data;
         public int Position
         {
             get => this._pos;
@@ -23,7 +23,7 @@ namespace Noggog
         public int Length => this._data.Length;
         public int Remaining => this._data.Length - this._pos;
         public bool Complete => this._data.Length <= this._pos;
-        public ReadOnlySpan<byte> RemainingSpan => _data.AsSpan(_pos);
+        public ReadOnlySpan<byte> RemainingSpan => _data.Span.Slice(_pos);
 
         #region IBinaryReadStream
         long IBinaryReadStream.Position { get => _pos; set => SetPosition(checked((int)value)); }
@@ -31,9 +31,14 @@ namespace Noggog
         long IBinaryReadStream.Remaining => this._data.Length - this._pos;
         #endregion
 
-        public BinaryMemoryReadStream(byte[] data)
+        public BinaryMemoryReadStream(MemorySlice<byte> data)
         {
             this._data = data;
+        }
+
+        public BinaryMemoryReadStream(byte[] data)
+        {
+            this._data = new MemorySlice<byte>(data);
         }
 
         private void SetPosition(int value)
@@ -59,7 +64,7 @@ namespace Noggog
 
         public byte[] GetBytes(int amount)
         {
-            return _data.AsSpan().Slice(_pos, amount).ToArray();
+            return _data.Span.Slice(_pos, amount).ToArray();
         }
 
         public byte[] ReadBytes(int amount)
@@ -83,74 +88,74 @@ namespace Noggog
 
         public ReadOnlySpan<byte> GetSpan(int amount)
         {
-            return _data.AsSpan().Slice(_pos, amount);
+            return _data.Span.Slice(_pos, amount);
         }
 
         public ReadOnlySpan<byte> GetSpan(int amount, int offset)
         {
-            return _data.AsSpan().Slice(_pos + offset, amount);
+            return _data.Span.Slice(_pos + offset, amount);
         }
 
         public bool ReadBool()
         {
-            return _data[_pos++] > 0;
+            return _data.Span[_pos++] > 0;
         }
 
         public byte ReadUInt8()
         {
-            return _data[_pos++];
+            return _data.Span[_pos++];
         }
 
         public byte ReadByte()
         {
-            return _data[_pos++];
+            return _data.Span[_pos++];
         }
 
         public ushort ReadUInt16()
         {
             _pos += 2;
-            return BinaryPrimitives.ReadUInt16LittleEndian(this._data.AsSpan().Slice(_pos - 2));
+            return BinaryPrimitives.ReadUInt16LittleEndian(this._data.Span.Slice(_pos - 2));
         }
 
         public uint ReadUInt32()
         {
             _pos += 4;
-            return BinaryPrimitives.ReadUInt32LittleEndian(this._data.AsSpan().Slice(_pos - 4));
+            return BinaryPrimitives.ReadUInt32LittleEndian(this._data.Span.Slice(_pos - 4));
         }
 
         public ulong ReadUInt64()
         {
             _pos += 8;
-            return BinaryPrimitives.ReadUInt64LittleEndian(this._data.AsSpan().Slice(_pos - 8));
+            return BinaryPrimitives.ReadUInt64LittleEndian(this._data.Span.Slice(_pos - 8));
         }
 
         public sbyte ReadInt8()
         {
-            return (sbyte)_data[_pos++];
+            return (sbyte)_data.Span[_pos++];
         }
 
         public short ReadInt16()
         {
             _pos += 2;
-            return BinaryPrimitives.ReadInt16LittleEndian(this._data.AsSpan().Slice(_pos - 2));
+            return BinaryPrimitives.ReadInt16LittleEndian(this._data.Span.Slice(_pos - 2));
         }
 
         public int ReadInt32()
         {
             _pos += 4;
-            return BinaryPrimitives.ReadInt32LittleEndian(this._data.AsSpan().Slice(_pos - 4));
+            return BinaryPrimitives.ReadInt32LittleEndian(this._data.Span.Slice(_pos - 4));
         }
 
         public long ReadInt64()
         {
             _pos += 8;
-            return BinaryPrimitives.ReadInt64LittleEndian(this._data.AsSpan().Slice(_pos - 8));
+            return BinaryPrimitives.ReadInt64LittleEndian(this._data.Span.Slice(_pos - 8));
         }
 
         public string ReadStringUTF8(int amount)
         {
             _pos += amount;
-            return SpanExt.GetStringUTF8(this._data.AsSpan().Slice(_pos - amount, amount));
+            return SpanExt.GetStringUTF8(this._data.Span.Slice(_pos - amount, amount));
         }
 
         public float ReadFloat()
@@ -167,13 +172,16 @@ namespace Noggog
 
         public void Dispose()
         {
-            this._data = null;
+            this._data = default;
         }
 
         public void WriteTo(Stream stream, int amount)
         {
+            // ToDo
+            // Swap to direct span usage when .NET Standard 2.1 comes out
+            var arr = _data.Span.Slice(_pos, amount).ToArray();
+            stream.Write(arr, 0, arr.Length);
             _pos += amount;
-            stream.Write(_data, _pos - amount, amount);
         }
 
         public int Get(byte[] buffer, int targetOffset, int amount)
@@ -182,7 +190,7 @@ namespace Noggog
             {
                 amount = Remaining;
             }
-            Array.Copy(_data, _pos, buffer, targetOffset, amount);
+            _data.Span.Slice(_pos, amount).CopyTo(buffer.AsSpan(targetOffset));
             return amount;
         }
 
@@ -193,122 +201,122 @@ namespace Noggog
 
         public bool GetBool(int offset)
         {
-            return _data[_pos + offset] > 0;
+            return _data.Span[_pos + offset] > 0;
         }
 
         public byte GetUInt8(int offset)
         {
-            return _data[_pos + offset];
+            return _data.Span[_pos + offset];
         }
 
         public ushort GetUInt16(int offset)
         {
-            return BinaryPrimitives.ReadUInt16LittleEndian(this._data.AsSpan().Slice(_pos + offset));
+            return BinaryPrimitives.ReadUInt16LittleEndian(this._data.Span.Slice(_pos + offset));
         }
 
         public uint GetUInt32(int offset)
         {
-            return BinaryPrimitives.ReadUInt32LittleEndian(this._data.AsSpan().Slice(_pos + offset));
+            return BinaryPrimitives.ReadUInt32LittleEndian(this._data.Span.Slice(_pos + offset));
         }
 
         public ulong GetUInt64(int offset)
         {
-            return BinaryPrimitives.ReadUInt64LittleEndian(this._data.AsSpan().Slice(_pos + offset));
+            return BinaryPrimitives.ReadUInt64LittleEndian(this._data.Span.Slice(_pos + offset));
         }
 
         public sbyte GetInt8(int offset)
         {
-            return (sbyte)_data[_pos + offset];
+            return (sbyte)_data.Span[_pos + offset];
         }
 
         public short GetInt16(int offset)
         {
-            return BinaryPrimitives.ReadInt16LittleEndian(this._data.AsSpan().Slice(_pos + offset));
+            return BinaryPrimitives.ReadInt16LittleEndian(this._data.Span.Slice(_pos + offset));
         }
 
         public int GetInt32(int offset)
         {
-            return BinaryPrimitives.ReadInt32LittleEndian(this._data.AsSpan().Slice(_pos + offset));
+            return BinaryPrimitives.ReadInt32LittleEndian(this._data.Span.Slice(_pos + offset));
         }
 
         public long GetInt64(int offset)
         {
-            return BinaryPrimitives.ReadInt64LittleEndian(this._data.AsSpan().Slice(_pos + offset));
+            return BinaryPrimitives.ReadInt64LittleEndian(this._data.Span.Slice(_pos + offset));
         }
 
         public float GetFloat(int offset)
         {
-            return SpanExt.GetFloat(this._data.AsSpan(_pos + offset));
+            return SpanExt.GetFloat(this._data.Span.Slice(_pos + offset));
         }
 
         public double GetDouble(int offset)
         {
-            return SpanExt.GetDouble(this._data.AsSpan(_pos + offset));
+            return SpanExt.GetDouble(this._data.Span.Slice(_pos + offset));
         }
 
         public string GetStringUTF8(int amount, int offset)
         {
-            return SpanExt.GetStringUTF8(this._data.AsSpan().Slice(_pos + offset, amount));
+            return SpanExt.GetStringUTF8(this._data.Span.Slice(_pos + offset, amount));
         }
 
         public bool GetBool()
         {
-            return _data[_pos] > 0;
+            return _data.Span[_pos] > 0;
         }
 
         public byte GetUInt8()
         {
-            return _data[_pos];
+            return _data.Span[_pos];
         }
 
         public ushort GetUInt16()
         {
-            return BinaryPrimitives.ReadUInt16LittleEndian(this._data.AsSpan().Slice(_pos));
+            return BinaryPrimitives.ReadUInt16LittleEndian(this._data.Span.Slice(_pos));
         }
 
         public uint GetUInt32()
         {
-            return BinaryPrimitives.ReadUInt32LittleEndian(this._data.AsSpan().Slice(_pos));
+            return BinaryPrimitives.ReadUInt32LittleEndian(this._data.Span.Slice(_pos));
         }
 
         public ulong GetUInt64()
         {
-            return BinaryPrimitives.ReadUInt64LittleEndian(this._data.AsSpan().Slice(_pos));
+            return BinaryPrimitives.ReadUInt64LittleEndian(this._data.Span.Slice(_pos));
         }
 
         public sbyte GetInt8()
         {
-            return (sbyte)_data[_pos];
+            return (sbyte)_data.Span[_pos];
         }
 
         public short GetInt16()
         {
-            return BinaryPrimitives.ReadInt16LittleEndian(this._data.AsSpan().Slice(_pos));
+            return BinaryPrimitives.ReadInt16LittleEndian(this._data.Span.Slice(_pos));
         }
 
         public int GetInt32()
         {
-            return BinaryPrimitives.ReadInt32LittleEndian(this._data.AsSpan().Slice(_pos));
+            return BinaryPrimitives.ReadInt32LittleEndian(this._data.Span.Slice(_pos));
         }
 
         public long GetInt64()
         {
-            return BinaryPrimitives.ReadInt64LittleEndian(this._data.AsSpan().Slice(_pos));
+            return BinaryPrimitives.ReadInt64LittleEndian(this._data.Span.Slice(_pos));
         }
 
         public float GetFloat()
         {
-            return SpanExt.GetFloat(this._data.AsSpan(_pos));
+            return SpanExt.GetFloat(this._data.Span.Slice(_pos));
         }
 
         public double GetDouble()
         {
-            return SpanExt.GetDouble(this._data.AsSpan(_pos));
+            return SpanExt.GetDouble(this._data.Span.Slice(_pos));
         }
 
         public string GetStringUTF8(int amount)
         {
-            return SpanExt.GetStringUTF8(this._data.AsSpan().Slice(_pos, amount));
+            return SpanExt.GetStringUTF8(this._data.Span.Slice(_pos, amount));
         }
     }
 }

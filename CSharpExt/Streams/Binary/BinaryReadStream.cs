@@ -41,7 +41,7 @@ namespace Noggog
             this._stream = stream;
             this._length = this._stream.Length;
             this._data = new byte[bufferSize];
-            this._internalMemoryStream = new BinaryMemoryReadStream(this._data);
+            this._internalMemoryStream = new BinaryMemoryReadStream(new MemorySlice<byte>(this._data));
             this._internalMemoryStream.Position = _data.Length;
             this._internalBufferLength = _data.Length;
         }
