@@ -9,7 +9,7 @@ namespace Noggog
     {
     }
 
-    public interface IReadOnlySetList<T> : IReadOnlyList<T>, IHasBeenSetGetter
+    public interface IReadOnlySetList<out T> : IReadOnlyList<T>, IHasBeenSetGetter
     {
     }
 }
