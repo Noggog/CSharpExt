@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 
 namespace Noggog
@@ -11,15 +12,17 @@ namespace Noggog
         private int _length;
         public int Length => _length;
 
+        [DebuggerStepThrough]
         public MemorySlice(T[] arr)
         {
             this._arr = arr;
             this._startPos = 0;
             this._length = arr.Length;
         }
-
+        
         public Span<T> Span => _arr.AsSpan(start: _startPos, length: _length);
 
+        [DebuggerStepThrough]
         public MemorySlice<T> Slice(int start)
         {
             return new MemorySlice<T>()
@@ -30,6 +33,7 @@ namespace Noggog
             };
         }
 
+        [DebuggerStepThrough]
         public MemorySlice<T> Slice(int start, int length)
         {
             return new MemorySlice<T>()
