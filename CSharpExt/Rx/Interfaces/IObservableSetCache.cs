@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace CSharpExt.Rx
 {
-    public interface IObservableSetCache<V, K> : IObservableCache<V, K>, IHasBeenSetItemRxGetter<IEnumerable<V>>
+    public interface IObservableSetCache<TObject, TKey> : IObservableCache<TObject, TKey>, IReadOnlySetCache<TObject, TKey>
     {
     }
 }

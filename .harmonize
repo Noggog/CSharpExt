@@ -2,10 +2,10 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>DynamicData</Nickname>
-         <Sha>cf7da29e7a13829f638210d1ce6c58c30de4dd86</Sha>
+         <Sha>88349576612d32f9bb24293a0c14936d4a5e1638</Sha>
          <Path>../DynamicData</Path>
-         <CommitDate>04-20-2019 16:23:13</CommitDate>
-         <Description>Nuget updates</Description>
+         <CommitDate>06-23-2019 18:15:12</CommitDate>
+         <Description>IReadOnlyCache</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
    </ParentRepos>

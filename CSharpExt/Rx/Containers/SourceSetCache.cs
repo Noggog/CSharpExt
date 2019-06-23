@@ -11,31 +11,31 @@ using System.Threading.Tasks;
 
 namespace CSharpExt.Rx
 {
-    public class SourceSetCache<V, K> : ISourceSetCache<V, K>
+    public class SourceSetCache<TObject, TKey> : ISourceSetCache<TObject, TKey>, IEnumerable<KeyValuePair<TKey, TObject>>
     {
         private readonly BehaviorSubject<bool> _hasBeenSet = new BehaviorSubject<bool>(false);
-        private readonly SourceCache<V, K> _source;
+        private readonly SourceCache<TObject, TKey> _source;
 
-        public SourceSetCache(Func<V, K> keySelector)
+        public SourceSetCache(Func<TObject, TKey> keySelector)
         {
-            this._source = new SourceCache<V, K>(keySelector);
+            this._source = new SourceCache<TObject, TKey>(keySelector);
         }
 
-        public IEnumerable<K> Keys => _source.Keys;
+        public IEnumerable<TKey> Keys => _source.Keys;
 
-        public IEnumerable<V> Items => _source.Items;
+        public IEnumerable<TObject> Items => _source.Items;
 
-        public IEnumerable<KeyValuePair<K, V>> KeyValues => _source.KeyValues;
+        public IEnumerable<KeyValuePair<TKey, TObject>> KeyValues => _source.KeyValues;
 
         public int Count => _source.Count;
 
         public IObservable<int> CountChanged => _source.CountChanged;
 
-        public IEnumerable<V> DefaultValue => Enumerable.Empty<V>();
+        public IEnumerable<TObject> DefaultValue => Enumerable.Empty<TObject>();
         
-        IEnumerable<V> IHasBeenSetItem<IEnumerable<V>>.Item { get => _source.Items; set => _source.SetTo(value); }
-        IEnumerable<V> IHasItem<IEnumerable<V>>.Item { get => _source.Items; set => _source.SetTo(value); }
-        IEnumerable<V> IHasItemGetter<IEnumerable<V>>.Item => _source.Items;
+        IEnumerable<TObject> IHasBeenSetItem<IEnumerable<TObject>>.Item { get => _source.Items; set => _source.SetTo(value); }
+        IEnumerable<TObject> IHasItem<IEnumerable<TObject>>.Item { get => _source.Items; set => _source.SetTo(value); }
+        IEnumerable<TObject> IHasItemGetter<IEnumerable<TObject>>.Item => _source.Items;
 
         public bool HasBeenSet
         {
@@ -43,18 +43,18 @@ namespace CSharpExt.Rx
             set => _hasBeenSet.OnNext(value);
         }
 
-        public IObservable<IEnumerable<V>> ItemObservable =>
+        public IObservable<IEnumerable<TObject>> ItemObservable =>
             this._source
             .Connect()
             .QueryWhenChanged(q => q.Items);
 
         public IObservable<bool> HasBeenSetObservable => this._hasBeenSet;
 
-        IEnumerable<V> IReadOnlyDictionary<K, V>.Values => this.Items;
+        IEnumerable<TObject> IReadOnlyCache<TObject, TKey>.Values => this.Items;
 
-        public V this[K key] => this._source[key];
+        public TObject this[TKey key] => this._source[key];
 
-        public IObservable<IChangeSet<V, K>> Connect(Func<V, bool> predicate = null)
+        public IObservable<IChangeSet<TObject, TKey>> Connect(Func<TObject, bool> predicate = null)
         {
             return _source.Connect(predicate);
         }
@@ -64,12 +64,12 @@ namespace CSharpExt.Rx
             _source.Dispose();
         }
         
-        public void Edit(Action<ISourceUpdater<V, K>> updateAction)
+        public void Edit(Action<ISourceUpdater<TObject, TKey>> updateAction)
         {
             Edit(updateAction, hasBeenSet: true);
         }
 
-        public void Edit(Action<ISourceUpdater<V, K>> updateAction, bool hasBeenSet)
+        public void Edit(Action<ISourceUpdater<TObject, TKey>> updateAction, bool hasBeenSet)
         {
             if (hasBeenSet)
             {
@@ -83,7 +83,7 @@ namespace CSharpExt.Rx
             }
         }
 
-        public Optional<V> Lookup(K key)
+        public Optional<TObject> Lookup(TKey key)
         {
             return _source.Lookup(key);
         }
@@ -98,7 +98,7 @@ namespace CSharpExt.Rx
             _source.OnError(exception);
         }
 
-        public bool TryGetValue(K key, out V val)
+        public bool TryGetValue(TKey key, out TObject val)
         {
             var opt = _source.Lookup(key);
             val = opt.HasValue ? opt.Value : default;
@@ -111,7 +111,7 @@ namespace CSharpExt.Rx
             this.Clear();
         }
 
-        public IObservable<Change<V, K>> Watch(K key)
+        public IObservable<Change<TObject, TKey>> Watch(TKey key)
         {
             return _source.Watch(key);
         }
@@ -121,7 +121,7 @@ namespace CSharpExt.Rx
             return this.GetEnumerator();
         }
 
-        void IHasBeenSetItem<IEnumerable<V>>.Set(IEnumerable<V> item, bool hasBeenSet)
+        void IHasBeenSetItem<IEnumerable<TObject>>.Set(IEnumerable<TObject> item, bool hasBeenSet)
         {
             this.Edit((l) =>
             {
@@ -130,14 +130,19 @@ namespace CSharpExt.Rx
             hasBeenSet: hasBeenSet);
         }
 
-        public bool ContainsKey(K key)
+        public bool ContainsKey(TKey key)
         {
             return this._source.ContainsKey(key);
         }
 
-        public IEnumerator<KeyValuePair<K, V>> GetEnumerator()
+        public IEnumerator<KeyValuePair<TKey, TObject>> GetEnumerator()
         {
             return this._source.GetEnumerator();
+        }
+
+        IEnumerator<IKeyValue<TObject, TKey>> IEnumerable<IKeyValue<TObject, TKey>>.GetEnumerator()
+        {
+            return this.KeyValues.Select<KeyValuePair<TKey, TObject>, IKeyValue<TObject, TKey>>(kv => new KeyValue<TObject, TKey>(kv.Key, kv.Value)).GetEnumerator();
         }
     }
 }

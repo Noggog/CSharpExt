@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Noggog
 {
-    public interface ISetList<T> : IList<T>, IHasBeenSet
+    public interface ISetList<T> : IList<T>, IHasBeenSet, IReadOnlySetList<T>
     {
     }
 
