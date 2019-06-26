@@ -83,24 +83,24 @@ namespace System
                 }
                 try
                 {
-                    return (P)Convert.ChangeType(strVal, t);
-                }
-                catch (Exception ex)
-                {
-                    try
+                    if (t.IsEnum)
                     {
                         return (P)Enum.Parse(t, strVal);
                     }
-                    catch (Exception)
+                    else
                     {
-                        if (throwException)
-                        {
-                            throw ex;
-                        }
-                        else
-                        {
-                            return default(P);
-                        }
+                        return (P)Convert.ChangeType(strVal, t);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    if (throwException)
+                    {
+                        throw ex;
+                    }
+                    else
+                    {
+                        return default(P);
                     }
                 }
             });
