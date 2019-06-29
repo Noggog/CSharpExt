@@ -193,11 +193,8 @@ namespace Noggog
         public ReadOnlySpan<byte> ReadSpan(int amount)
         {
             var ret = new byte[amount];
-            if (amount != Read(ret, offset: 0, amount: amount))
-            {
-                throw new IndexOutOfRangeException();
-            }
-            return ret;
+            var read = Read(ret, offset: 0, amount: amount);
+            return ret.AsSpan().Slice(0, read);
         }
 
         public ReadOnlySpan<byte> ReadSpan(int amount, int offset)
@@ -207,7 +204,9 @@ namespace Noggog
 
         public ReadOnlySpan<byte> GetSpan(int amount)
         {
-            throw new NotImplementedException();
+            var ret = ReadSpan(amount);
+            this.Position -= ret.Length;
+            return ret;
         }
 
         public ReadOnlySpan<byte> GetSpan(int amount, int offset)
