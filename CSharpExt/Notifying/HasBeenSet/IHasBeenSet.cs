@@ -14,7 +14,7 @@ namespace Noggog
         void Unset();
     }
 
-    public interface IHasItemGetter<T>
+    public interface IHasItemGetter<out T>
     {
         T Item { get; }
     }
@@ -30,7 +30,7 @@ namespace Noggog
         bool HasBeenSet { get; }
     }
 
-    public interface IHasBeenSetItemGetter<T> : IHasBeenSetGetter, IHasItemGetter<T>
+    public interface IHasBeenSetItemGetter<out T> : IHasBeenSetGetter, IHasItemGetter<T>
     {
     }
 

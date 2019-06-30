@@ -11,7 +11,7 @@ namespace CSharpExt.Rx
     {
     }
 
-    public interface IHasBeenSetItemRxGetter<T> : IHasBeenSetRx, IHasBeenSetItemGetter<T>
+    public interface IHasBeenSetItemRxGetter<out T> : IHasBeenSetRx, IHasBeenSetItemGetter<T>
     {
         IObservable<T> ItemObservable { get; }
     }
