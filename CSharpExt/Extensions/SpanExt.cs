@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Text;
 
-namespace Noggog
+namespace System
 {
     public static class SpanExt
     {
@@ -80,6 +80,21 @@ namespace Noggog
             {
                 return Encoding.UTF8.GetString(buffer, span.Length);
             }
+        }
+
+        public static unsafe string ToHexString(this ReadOnlySpan<byte> span)
+        {
+            var lookupP = ByteExt.Lookup32UnsafeP;
+            var result = new char[span.Length * 2];
+            fixed (char* resultP = result)
+            {
+                uint* resultP2 = (uint*)resultP;
+                for (int i = 0; i < span.Length; i++)
+                {
+                    resultP2[i] = lookupP[span[i]];
+                }
+            }
+            return new string(result);
         }
     }
 }

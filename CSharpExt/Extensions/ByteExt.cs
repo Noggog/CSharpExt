@@ -31,7 +31,7 @@ namespace System
         }
 
         private unsafe static readonly uint[] _lookup32Unsafe = CreateLookup32Unsafe();
-        private unsafe static readonly uint* _lookup32UnsafeP = (uint*)GCHandle.Alloc(_lookup32Unsafe, GCHandleType.Pinned).AddrOfPinnedObject();
+        public unsafe static readonly uint* Lookup32UnsafeP = (uint*)GCHandle.Alloc(_lookup32Unsafe, GCHandleType.Pinned).AddrOfPinnedObject();
 
         private static uint[] CreateLookup32Unsafe()
         {
@@ -49,7 +49,7 @@ namespace System
 
         public unsafe static string ToHexString(this byte[] bytes)
         {
-            var lookupP = _lookup32UnsafeP;
+            var lookupP = Lookup32UnsafeP;
             var result = new char[bytes.Length * 2];
             fixed (byte* bytesP = bytes)
             fixed (char* resultP = result)
