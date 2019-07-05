@@ -52,6 +52,20 @@ namespace System
             }
         }
 
+        public static int GetHashCode<T>(ReadOnlySpan<T> span)
+        {
+            unchecked
+            {
+                int hash = 0;
+                if (span == null) return hash;
+                for (int i = 0; i < span.Length; i++)
+                {
+                    hash = 31 * hash + GetHashCode(span[i]);
+                }
+                return hash;
+            }
+        }
+
         public static int GetHashCode<T>(T t)
         {
             unchecked
