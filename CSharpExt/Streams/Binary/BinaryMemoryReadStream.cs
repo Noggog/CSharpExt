@@ -13,8 +13,8 @@ namespace Noggog
     public class BinaryMemoryReadStream : IBinaryReadStream
     {
         internal int _pos;
-        internal MemorySlice<byte> _data;
-        protected MemorySlice<byte> Data => _data;
+        internal ReadOnlyMemorySlice<byte> _data;
+        public ReadOnlyMemorySlice<byte> Data => _data;
         public int Position
         {
             get => this._pos;
@@ -24,6 +24,7 @@ namespace Noggog
         public int Remaining => this._data.Length - this._pos;
         public bool Complete => this._data.Length <= this._pos;
         public ReadOnlySpan<byte> RemainingSpan => _data.Span.Slice(_pos);
+        public ReadOnlyMemorySlice<byte> RemainingMemory => _data.Slice(_pos);
 
         #region IBinaryReadStream
         long IBinaryReadStream.Position { get => _pos; set => SetPosition(checked((int)value)); }
@@ -31,7 +32,7 @@ namespace Noggog
         long IBinaryReadStream.Remaining => this._data.Length - this._pos;
         #endregion
 
-        public BinaryMemoryReadStream(MemorySlice<byte> data)
+        public BinaryMemoryReadStream(ReadOnlyMemorySlice<byte> data)
         {
             this._data = data;
         }
