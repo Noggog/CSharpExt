@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Buffers.Binary;
 using System.Buffers.Text;
 using System.Runtime.InteropServices;
+using System.Diagnostics;
 
 namespace Noggog
 {
@@ -31,7 +32,8 @@ namespace Noggog
         long IBinaryReadStream.Length => this._data.Length;
         long IBinaryReadStream.Remaining => this._data.Length - this._pos;
         #endregion
-
+        
+        [DebuggerStepThrough]
         public BinaryMemoryReadStream(ReadOnlyMemorySlice<byte> data)
         {
             this._data = data;
