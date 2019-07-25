@@ -211,7 +211,10 @@ namespace Noggog
 
         public ReadOnlySpan<byte> GetSpan(int amount, int offset)
         {
-            throw new NotImplementedException();
+            this.Position += offset;
+            var ret = ReadSpan(amount);
+            this.Position -= ret.Length + offset;
+            return ret;
         }
 
         public bool ReadBool()
