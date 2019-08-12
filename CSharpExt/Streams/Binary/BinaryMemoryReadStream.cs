@@ -99,6 +99,28 @@ namespace Noggog
             return _data.Span.Slice(_pos + offset, amount);
         }
 
+        public ReadOnlyMemorySlice<byte> ReadMemory(int amount, int offset)
+        {
+            _pos += amount + offset;
+            return GetMemory(amount, offset: -amount);
+        }
+
+        public ReadOnlyMemorySlice<byte> ReadMemory(int amount)
+        {
+            _pos += amount;
+            return GetMemory(amount, offset: -amount);
+        }
+
+        public ReadOnlyMemorySlice<byte> GetMemory(int amount)
+        {
+            return _data.Slice(_pos, amount);
+        }
+
+        public ReadOnlyMemorySlice<byte> GetMemory(int amount, int offset)
+        {
+            return _data.Slice(_pos + offset, amount);
+        }
+
         public bool ReadBool()
         {
             return _data.Span[_pos++] > 0;
