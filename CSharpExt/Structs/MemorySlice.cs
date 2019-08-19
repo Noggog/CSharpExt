@@ -11,6 +11,7 @@ namespace Noggog
         private int _startPos;
         private int _length;
         public int Length => _length;
+        public int StartPosition => _startPos;
 
         [DebuggerStepThrough]
         public MemorySlice(T[] arr)
@@ -77,6 +78,7 @@ namespace Noggog
         private int _startPos;
         private int _length;
         public int Length => _length;
+        public int StartPosition => _startPos;
 
         [DebuggerStepThrough]
         public ReadOnlyMemorySlice(T[] arr)

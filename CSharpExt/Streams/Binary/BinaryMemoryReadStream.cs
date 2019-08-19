@@ -26,6 +26,7 @@ namespace Noggog
         public bool Complete => this._data.Length <= this._pos;
         public ReadOnlySpan<byte> RemainingSpan => _data.Span.Slice(_pos);
         public ReadOnlyMemorySlice<byte> RemainingMemory => _data.Slice(_pos);
+        public int UnderlyingPosition => _data.StartPosition + this.Position;
 
         #region IBinaryReadStream
         long IBinaryReadStream.Position { get => _pos; set => SetPosition(checked((int)value)); }
