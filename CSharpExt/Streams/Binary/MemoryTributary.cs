@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
@@ -31,7 +31,7 @@ namespace Noggog
         {
             SetLength(length);
             Position = length;
-            byte[] d = block;   //access block to prompt the allocation of memory
+            byte[] d = Block;   //access block to prompt the allocation of memory
             Position = 0;
         }
 
@@ -39,29 +39,17 @@ namespace Noggog
 
         #region Status Properties
 
-        public override bool CanRead
-        {
-            get { return true; }
-        }
+        public override bool CanRead => true;
 
-        public override bool CanSeek
-        {
-            get { return true; }
-        }
+        public override bool CanSeek => true;
 
-        public override bool CanWrite
-        {
-            get { return true; }
-        }
+        public override bool CanWrite => true;
 
         #endregion
 
         #region Public Properties
 
-        public override long Length
-        {
-            get { return length; }
-        }
+        public override long Length => length;
 
         public override long Position { get; set; }
 
@@ -84,29 +72,25 @@ namespace Noggog
         /// <summary>
         /// The block of memory currently addressed by Position
         /// </summary>
-        protected byte[] block
+        protected byte[] Block
         {
             get
             {
-                while (blocks.Count <= blockId)
+                while (blocks.Count <= BlockId)
+                {
                     blocks.Add(new byte[blockSize]);
-                return blocks[(int)blockId];
+                }
+                return blocks[(int)BlockId];
             }
         }
         /// <summary>
         /// The id of the block currently addressed by Position
         /// </summary>
-        protected long blockId
-        {
-            get { return Position / blockSize; }
-        }
+        protected long BlockId => Position / blockSize;
         /// <summary>
         /// The offset of the byte currently addressed by Position, into the block that contains it
         /// </summary>
-        protected long blockOffset
-        {
-            get { return Position % blockSize; }
-        }
+        protected long BlockOffset => Position % blockSize; 
 
         #endregion
 
@@ -127,7 +111,9 @@ namespace Noggog
 
             long remaining = (length - Position);
             if (lcount > remaining)
+            {
                 lcount = remaining;
+            }
 
             if (buffer == null)
             {
@@ -142,8 +128,8 @@ namespace Noggog
             long copysize = 0;
             do
             {
-                copysize = Math.Min(lcount, (blockSize - blockOffset));
-                Buffer.BlockCopy(block, (int)blockOffset, buffer, offset, (int)copysize);
+                copysize = Math.Min(lcount, blockSize - BlockOffset);
+                Buffer.BlockCopy(Block, (int)BlockOffset, buffer, offset, (int)copysize);
                 lcount -= copysize;
                 offset += (int)copysize;
 
@@ -181,16 +167,15 @@ namespace Noggog
         public override void Write(byte[] buffer, int offset, int count)
         {
             long initialPosition = Position;
-            int copysize;
             try
             {
                 do
                 {
-                    copysize = Math.Min(count, (int)(blockSize - blockOffset));
+                    var copysize = Math.Min(count, (int)(blockSize - BlockOffset));
 
                     EnsureCapacity(Position + copysize);
 
-                    Buffer.BlockCopy(buffer, (int)offset, block, (int)blockOffset, copysize);
+                    Buffer.BlockCopy(buffer, (int)offset, Block, (int)BlockOffset, copysize);
                     count -= copysize;
                     offset += copysize;
 
@@ -207,10 +192,9 @@ namespace Noggog
 
         public override int ReadByte()
         {
-            if (Position >= length)
-                return -1;
+            if (Position >= length) return -1;
 
-            byte b = block[blockOffset];
+            byte b = Block[BlockOffset];
             Position++;
 
             return b;
@@ -219,25 +203,16 @@ namespace Noggog
         public override void WriteByte(byte value)
         {
             EnsureCapacity(Position + 1);
-            block[blockOffset] = value;
+            Block[BlockOffset] = value;
             Position++;
         }
 
         protected void EnsureCapacity(long intended_length)
         {
             if (intended_length > length)
-                length = (intended_length);
-        }
-
-        #endregion
-
-        #region IDispose
-
-        /* http://msdn.microsoft.com/en-us/library/fs2xkftw.aspx */
-        protected override void Dispose(bool disposing)
-        {
-            /* We do not currently use unmanaged resources */
-            base.Dispose(disposing);
+            {
+                length = intended_length;
+            }
         }
 
         #endregion
