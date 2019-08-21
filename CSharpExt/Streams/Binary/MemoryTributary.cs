@@ -59,7 +59,7 @@ namespace Noggog
 
         protected long length = 0;
 
-        protected long blockSize = 65536;
+        protected const int blockSize = 65536;
 
         protected List<byte[]> blocks = new List<byte[]>();
 
@@ -76,21 +76,25 @@ namespace Noggog
         {
             get
             {
-                while (blocks.Count <= BlockId)
+                var blockID = (int)(Position / blockSize);
+                if (blockID > blocks.Count)
                 {
-                    blocks.Add(new byte[blockSize]);
+                    return blocks[blockID];
                 }
-                return blocks[(int)BlockId];
+                else
+                {
+                    while (blocks.Count <= blockID)
+                    {
+                        blocks.Add(new byte[blockSize]);
+                    }
+                    return blocks[blockID];
+                }
             }
         }
         /// <summary>
-        /// The id of the block currently addressed by Position
-        /// </summary>
-        protected long BlockId => Position / blockSize;
-        /// <summary>
         /// The offset of the byte currently addressed by Position, into the block that contains it
         /// </summary>
-        protected long BlockOffset => Position % blockSize; 
+        protected int BlockOffset => (int)(Position % blockSize);
 
         #endregion
 
@@ -102,17 +106,15 @@ namespace Noggog
 
         public override int Read(byte[] buffer, int offset, int count)
         {
-            long lcount = (long)count;
-
-            if (lcount < 0)
+            if (count < 0)
             {
-                throw new ArgumentOutOfRangeException("count", lcount, "Number of bytes to copy cannot be negative.");
+                throw new ArgumentOutOfRangeException("count", count, "Number of bytes to copy cannot be negative.");
             }
 
-            long remaining = (length - Position);
-            if (lcount > remaining)
+            long remaining = length - Position;
+            if (count > remaining)
             {
-                lcount = remaining;
+                count = (int)remaining;
             }
 
             if (buffer == null)
@@ -125,18 +127,18 @@ namespace Noggog
             }
 
             int read = 0;
-            long copysize = 0;
+            int copysize = 0;
             do
             {
-                copysize = Math.Min(lcount, blockSize - BlockOffset);
-                Buffer.BlockCopy(Block, (int)BlockOffset, buffer, offset, (int)copysize);
-                lcount -= copysize;
-                offset += (int)copysize;
+                copysize = Math.Min(count, blockSize - BlockOffset);
+                Block.AsSpan().Slice(BlockOffset, copysize).CopyTo(buffer.AsSpan().Slice(offset));
+                count -= copysize;
+                offset += copysize;
 
-                read += (int)copysize;
+                read += copysize;
                 Position += copysize;
 
-            } while (lcount > 0);
+            } while (count > 0);
 
             return read;
 
@@ -166,28 +168,18 @@ namespace Noggog
 
         public override void Write(byte[] buffer, int offset, int count)
         {
-            long initialPosition = Position;
-            try
+            EnsureCapacity(Position + count);
+            var bufferSpan = buffer.AsSpan();
+            do
             {
-                do
-                {
-                    var copysize = Math.Min(count, (int)(blockSize - BlockOffset));
+                var blockOffset = this.BlockOffset;
+                var copysize = Math.Min(count, blockSize - blockOffset);
+                bufferSpan.Slice(offset, copysize).CopyTo(Block.AsSpan().Slice(blockOffset));
+                count -= copysize;
+                offset += copysize;
+                Position += copysize;
 
-                    EnsureCapacity(Position + copysize);
-
-                    Buffer.BlockCopy(buffer, (int)offset, Block, (int)BlockOffset, copysize);
-                    count -= copysize;
-                    offset += copysize;
-
-                    Position += copysize;
-
-                } while (count > 0);
-            }
-            catch (Exception e)
-            {
-                Position = initialPosition;
-                throw e;
-            }
+            } while (count > 0);
         }
 
         public override int ReadByte()
