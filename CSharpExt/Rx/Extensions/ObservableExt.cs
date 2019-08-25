@@ -66,6 +66,17 @@ namespace System
             return source.Subscribe((i) => action());
         }
 
+        public static IDisposable Subscribe<T>(this IObservable<T> source, Func<Task> action)
+        {
+            return source
+                .SelectMany(async i =>
+                {
+                    await action();
+                    return System.Reactive.Unit.Default;
+                })
+                .Subscribe();
+        }
+
         public static IObservable<(T Previous, T Current)> WithPrevious<T>(this IObservable<T> source)
         {
             T prevStorage = default;
@@ -101,12 +112,19 @@ namespace System
 
         public static IObservable<T> FilterSwitch<T>(this IObservable<T> source, IObservable<bool> filterSwitch)
         {
-            return source
-                .WithLatestFrom(
-                    filterSwitch,
-                    resultSelector: (item, on) => (item, on))
-                .Where(tup => tup.on)
-                .Select(tup => tup.item);
+            return filterSwitch
+                .Select(on =>
+                {
+                    if (on)
+                    {
+                        return source;
+                    }
+                    else
+                    {
+                        return Observable.Empty<T>();
+                    }
+                })
+                .Switch();
         }
 
         public static IObservable<Unit> Unit<T>(this IObservable<T> source)
