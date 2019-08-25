@@ -127,7 +127,7 @@ namespace System
             return ret;
         }
 
-        public static IEnumerable<(T item, bool Last)> IterateMarkLast<T>(this T[] arr)
+        public static IEnumerable<(T Item, bool Last)> IterateMarkLast<T>(this T[] arr)
         {
             for (int i = 0; i < arr.Length; i++)
             {

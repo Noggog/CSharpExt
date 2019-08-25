@@ -208,7 +208,6 @@ namespace System
             */
             encodingFieldInfo.SetValue(innerWriter, Encoding.UTF8);
         }
-
         /*
          * Attempt to make saving masses of XML faster by checking the disk if they changed before writing
          */
