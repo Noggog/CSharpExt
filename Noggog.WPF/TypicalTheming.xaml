@@ -187,4 +187,14 @@
             </Setter.Value>
         </Setter>
     </Style>
+
+    <!--  Defaults  -->
+    <Style BasedOn="{StaticResource MainButtonStyle}" TargetType="{x:Type Button}" />
+    <Style BasedOn="{StaticResource MainListBoxItemStyle}" TargetType="ListBoxItem" />
+    <Style
+        x:Key="MainListBoxItemStyle"
+        BasedOn="{StaticResource MetroListBoxItem}"
+        TargetType="ListBoxItem">
+        <Setter Property="Padding" Value="0" />
+    </Style>
 </ResourceDictionary>
