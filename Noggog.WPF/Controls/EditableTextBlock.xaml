@@ -1,0 +1,44 @@
+﻿<UserControl x:Class="Noggog.WPF.EditableTextBlock"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:Noggog.WPF" 
+             MouseDoubleClick="mainControl_MouseDoubleClick"
+             MinWidth="25"
+             x:Name="mainControl">
+    <Grid>
+        <Grid.Resources>
+            <local:VisibilityConverter x:Key="conv" />
+        </Grid.Resources>
+        <TextBox VerticalAlignment="Center"
+                 x:Name="EditableControl"
+                 VerticalContentAlignment="Top"
+                 KeyDown="TextBox_KeyDown"
+                 LostKeyboardFocus="TextBox_LostFocus"
+                 IsVisibleChanged="EditableControl_IsVisibleChanged"
+                 Padding="-1"
+                 Margin="0"
+                 Text="{Binding Text, ElementName=mainControl, Mode=TwoWay}"
+                 Visibility="{Binding IsInEditMode, ElementName=mainControl, Converter={StaticResource conv}}"
+                 BorderThickness="1" />
+        <TextBlock 
+            x:Name="UneditableControl"
+            VerticalAlignment="Center" 
+            TextTrimming="CharacterEllipsis"
+            Visibility="{Binding IsInEditMode, ElementName=mainControl, Converter={StaticResource conv}, ConverterParameter=False}"
+            Margin="5,3,5,3" >
+            <TextBlock.Style>
+                <Style TargetType="TextBlock">
+                    <Setter Property="Text" Value="{Binding Text, ElementName=mainControl, UpdateSourceTrigger=PropertyChanged}" />
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding IsDefaulted, ElementName=mainControl}" Value="True">
+                            <Setter Property="Text" Value="{Binding DefaultTextContent, ElementName=mainControl, UpdateSourceTrigger=PropertyChanged}" />
+                            <Setter Property="FontStyle" Value="Italic" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </TextBlock.Style>
+        </TextBlock>
+    </Grid>
+</UserControl>
