@@ -149,5 +149,18 @@ namespace System
         {
             return source.Publish().RefCount();
         }
+
+        public static IObservable<TSource> DisposeWith<TSource>(this IObservable<TSource> source, CompositeDisposable composite)
+            where TSource : IDisposable
+        {
+            SerialDisposable serialDisposable = new SerialDisposable();
+            composite.Add(serialDisposable);
+            return source.Do(
+                (item) =>
+                {
+                    serialDisposable.Disposable = item;
+                });
+
+        }
     }
 }
