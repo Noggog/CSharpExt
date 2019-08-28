@@ -9,4 +9,5 @@
     <local:VisibilityConverter x:Key="VisibilityConverter" />
     <local:VisibilityHiddenConverter x:Key="VisibilityHiddenConverter" />
     <local:IsNotNullVisibilityConverter x:Key="IsNotNullVisibilityConverter" />
+    <local:IsNotEmptyVisibilityConverter x:Key="IsNotEmptyVisibilityConverter" />
 </ResourceDictionary>
