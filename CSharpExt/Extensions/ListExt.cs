@@ -142,7 +142,7 @@ namespace System
             }
         }
 
-        public static void SetTo<T>(this IList<T> list, IEnumerable<T> items)
+        public static void SetTo<T>(this IList<T> list, IEnumerable<T> items, bool checkEquality = false)
         {
             int i = 0;
             foreach (var item in items)
@@ -150,6 +150,13 @@ namespace System
                 if (i >= list.Count)
                 {
                     list.Add(item);
+                }
+                else if (checkEquality)
+                {
+                    if (!list[i].Equals(item))
+                    {
+                        list[i] = item;
+                    }
                 }
                 else
                 {
