@@ -4,18 +4,27 @@ namespace Noggog
 {
     public struct Percent : IComparable, IEquatable<Percent>
     {
-        public readonly double Value;
+        public static readonly Percent One = new Percent(1);
+        public static readonly Percent Zero = new Percent(0);
 
-        public Percent(double d)
+        public readonly double Value;
+        public Percent Inverse => new Percent(1 - this.Value, check: false);
+
+        private Percent(double d, bool check)
         {
-            if (InRange(d))
+            if (!check || InRange(d))
             {
-                Value = d;
+                this.Value = d;
             }
             else
             {
                 throw new ArgumentException("Element out of range: " + d);
             }
+        }
+
+        public Percent(double d)
+            : this(d, check: true)
+        {
         }
 
         public Percent(int i)
