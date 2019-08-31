@@ -98,7 +98,17 @@ namespace System
             return source.Select<T, R>(x => x);
         }
 
-        public static IObservable<Unit> Select<T>(this IObservable<T> source, Func<Task> task)
+        public static IObservable<Unit> SelectTask<T>(this IObservable<T> source, Func<T, Task> task)
+        {
+            return source
+                .SelectMany(async i =>
+                {
+                    await task(i).ConfigureAwait(false);
+                    return System.Reactive.Unit.Default;
+                });
+        }
+
+        public static IObservable<Unit> SelectTask<T>(this IObservable<T> source, Func<Task> task)
         {
             return source
                 .SelectMany(async _ =>
@@ -108,7 +118,7 @@ namespace System
                 });
         }
 
-        public static IObservable<R> Select<T, R>(this IObservable<T> source, Func<Task<R>> task)
+        public static IObservable<R> SelectTask<T, R>(this IObservable<T> source, Func<Task<R>> task)
         {
             return source
                 .SelectMany(_ => task());
