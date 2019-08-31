@@ -1,4 +1,5 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,6 +12,7 @@ using CSharpExt.Rx;
 using System.Reactive.Linq;
 using ReactiveUI;
 using System.Windows.Input;
+using Noggog;
 
 namespace System
 {
@@ -160,7 +162,37 @@ namespace System
                 {
                     serialDisposable.Disposable = item;
                 });
+        }
 
+        public static IObservable<TRet> SelectLatestFrom<TSource, TRet>(this IObservable<TSource> source, IObservable<TRet> from)
+        {
+            return source.WithLatestFrom(
+                from,
+                resultSelector: (s, f) => f);
+        }
+
+        public static IObservable<TRet> SelectLatest<TSource, TRet>(this IObservable<TSource> source, IObservable<TRet> from)
+        {
+            return source.CombineLatest(
+                from,
+                resultSelector: (s, f) => f);
+        }
+
+        /// ToDo:
+        /// Can probably improve to fire final percent early, if last period is smaller than pulseSpan
+        public static IObservable<Percent> ProgressInterval(DateTime startTime, DateTime endTime, TimeSpan pulseSpan)
+        {
+            if (startTime >= endTime) return Observable.Return(Percent.One);
+            var startingDiffMS = (endTime - startTime).TotalMilliseconds * 1.0;
+            Percent CalculatePercent(DateTime now, DateTime end)
+            {
+                var diff = end - now;
+                if (diff.TotalMilliseconds < 0) return Percent.One;
+                return new Percent((startingDiffMS - diff.TotalMilliseconds) / startingDiffMS);
+            }
+            return Observable.Interval(pulseSpan)
+                .Select(_ => CalculatePercent(DateTime.Now, endTime))
+                .StartWith(CalculatePercent(DateTime.Now, endTime));
         }
     }
 }
