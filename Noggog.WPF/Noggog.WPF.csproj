@@ -52,6 +52,7 @@
     <Compile Include="Converters\DirectoryPathConverter.cs" />
     <Compile Include="Converters\FilePathConverter.cs" />
     <Compile Include="Converters\IsNotNullVisibilityConverter.cs" />
+    <Compile Include="Converters\IsNotEmptyVisibilityConverter.cs" />
     <Compile Include="Converters\VisibilityHiddenConverter.cs" />
     <Compile Include="Converters\VisibilityConverter.cs" />
     <Compile Include="ObservableUtility.cs" />
