@@ -10,20 +10,8 @@ namespace Noggog
         P2Int16 Point { get; }
     }
 
-    public class P2Int16Obj
-    {
-        public P2Int Point;
-    }
-
     public struct P2Int16 : IP2Int16Get, IEquatable<P2Int16>
     {
-        private static readonly P2Int16[] _directions = new[] { new P2Int16(1, 0), new P2Int16(-1, 0), new P2Int16(0, 1), new P2Int16(0, -1) };
-        public static IEnumerable<P2Int16> Directions => _directions;
-        public static P2Int16 Down => _directions[3];
-        public static P2Int16 Up => _directions[2];
-        public static P2Int16 Left => _directions[0];
-        public static P2Int16 Right => _directions[1];
-
         public readonly static P2Int16 Origin = new P2Int16(0, 0);
         public readonly static P2Int16 One = new P2Int16(1, 1);
         public bool IsZero => X == 0 && Y == 0;
