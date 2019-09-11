@@ -12,13 +12,13 @@ namespace System
         public static async Task<T> AwaitOrDefault<T>(Task<T> t)
         {
             if (t == null) return default(T);
-            return await t;
+            return await t.ConfigureAwait(false);
         }
 
         public static async Task<T> AwaitOrDefaultValue<T>(Task<TryGet<T>> t)
         {
             if (t == null) return default(T);
-            return (await t).Value;
+            return (await t.ConfigureAwait(false)).Value;
         }
 
         public static Task<bool> Timeout(this Task task, int? timeoutMS, bool throwIfTimeout = false)
@@ -36,7 +36,7 @@ namespace System
             var retTask = await Task.WhenAny(task, Task.Delay(timeoutMS.Value)).ConfigureAwait(false);
             if (retTask == task)
             {
-                await task;
+                await task.ConfigureAwait(false);
                 return false;
             }
             if (throwIfTimeout) throw new TimeoutException($"{taskMessage} took longer than {timeoutMS.Value}ms.");
@@ -92,11 +92,11 @@ namespace System
             var retTask = await Task.WhenAny(task, Task.Delay(timeoutMS.Value)).ConfigureAwait(false);
             if (retTask == task)
             {
-                await task;
+                await task.ConfigureAwait(false);
                 return false;
             }
             timeout();
-            await task;
+            await task.ConfigureAwait(false);
             return true;
         }
 
@@ -112,14 +112,14 @@ namespace System
                 return await task.ConfigureAwait(false);
             }
             timeout();
-            return await task;
+            return await task.ConfigureAwait(false);
         }
 
         public static async Task DoThenComplete(TaskCompletionSource tcs, Func<Task> action)
         {
             try
             {
-                await action();
+                await action().ConfigureAwait(false);
                 tcs?.Complete();
             }
             catch (Exception ex)

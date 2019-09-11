@@ -75,7 +75,7 @@ namespace System
             return source
                 .SelectMany(async i =>
                 {
-                    await action();
+                    await action().ConfigureAwait(false);
                     return System.Reactive.Unit.Default;
                 })
                 .Subscribe();
