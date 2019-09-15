@@ -290,6 +290,12 @@ namespace System
                 yield return i;
             }
         }
+
+        public static IEnumerable<T> NotNull<T>(this IEnumerable<T> e)
+            where T : class
+        {
+            return e.Where(i => i != null);
+        }
     }
 
     public static class EnumerableExt<T>
