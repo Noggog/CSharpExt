@@ -409,17 +409,18 @@
         </Style.Triggers>
     </Style>
 
-    <!--  Defaults  -->
-    <Style BasedOn="{StaticResource MainButtonStyle}" TargetType="{x:Type Button}" />
-    <Style BasedOn="{StaticResource MainToggleButtonStyle}" TargetType="{x:Type ToggleButton}" />
-    <Style BasedOn="{StaticResource MainListBoxItemStyle}" TargetType="ListBoxItem" />
-    <Style BasedOn="{StaticResource MainTextBoxStyle}" TargetType="TextBox" />
     <Style
         x:Key="MainListBoxItemStyle"
         BasedOn="{StaticResource MetroListBoxItem}"
         TargetType="ListBoxItem">
         <Setter Property="Padding" Value="0" />
     </Style>
+
+    <!--  Defaults  -->
+    <Style BasedOn="{StaticResource MainButtonStyle}" TargetType="{x:Type Button}" />
+    <Style BasedOn="{StaticResource MainToggleButtonStyle}" TargetType="{x:Type ToggleButton}" />
+    <Style BasedOn="{StaticResource MainListBoxItemStyle}" TargetType="ListBoxItem" />
+    <Style BasedOn="{StaticResource MainTextBoxStyle}" TargetType="TextBox" />
 
     <!--  Colors  -->
     <Color x:Key="Yellow">#ffd6d020</Color>
