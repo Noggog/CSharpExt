@@ -6,7 +6,7 @@ using System.Reflection;
 using System.Text;
 using System.Xml.Linq;
 
-namespace System
+namespace Noggog
 {
     public static class XmlExt
     {

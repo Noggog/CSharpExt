@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Text;
 
-namespace System
+namespace Noggog
 {
     public static class SpanExt
     {

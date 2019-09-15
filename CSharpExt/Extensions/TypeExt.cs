@@ -5,7 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 
-namespace System
+namespace Noggog
 {
     public static class TypeExt
     {

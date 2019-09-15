@@ -42,7 +42,7 @@ namespace Noggog
     }
 }
 
-namespace System
+namespace Noggog
 {
     public static class IHasItemExt
     {

@@ -14,7 +14,7 @@ using ReactiveUI;
 using System.Windows.Input;
 using Noggog;
 
-namespace System
+namespace Noggog
 {
     public static class ObservableExt
     {

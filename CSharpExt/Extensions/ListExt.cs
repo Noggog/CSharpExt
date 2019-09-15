@@ -2,7 +2,7 @@ using Noggog;
 using System;
 using System.Collections.Generic;
 
-namespace System
+namespace Noggog
 {
     public static class ListExt
     {

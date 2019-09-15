@@ -4,7 +4,7 @@ using System.Collections.Generic;
 /*
  * Taken from: http://stackoverflow.com/questions/263400/what-is-the-best-algorithm-for-an-overridden-system-object-gethashcode
  */
-namespace System
+namespace Noggog
 {
     public static class HashHelper
     {

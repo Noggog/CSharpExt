@@ -116,7 +116,7 @@ namespace Noggog.Notifying
     }
 }
 
-namespace System
+namespace Noggog
 {
     public static class INotifyingCollectionExt
     {

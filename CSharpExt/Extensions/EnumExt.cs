@@ -7,7 +7,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 
-namespace System
+namespace Noggog
 {
     public static class EnumExt
     {

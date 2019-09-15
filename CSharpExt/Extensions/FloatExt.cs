@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace System
+namespace Noggog
 {
     public static class FloatExt
     {

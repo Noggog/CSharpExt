@@ -2,7 +2,7 @@
 using System.Runtime.ConstrainedExecution;
 using System.Runtime.InteropServices;
 
-namespace System
+namespace Noggog
 {
     public static class ByteExt
     {

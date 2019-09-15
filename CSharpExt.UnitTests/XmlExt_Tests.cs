@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using Xunit;
+using Noggog;
 
 namespace CSharpExt.Tests
 {
