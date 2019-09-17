@@ -423,12 +423,17 @@
     <Style BasedOn="{StaticResource MainTextBoxStyle}" TargetType="TextBox" />
 
     <!--  Colors  -->
-    <Color x:Key="Yellow">#ffd6d020</Color>
+    <Color x:Key="Yellow">#ffc400</Color>
+    <Color x:Key="Red">#e83a40</Color>
+    <Color x:Key="Green">#52b545</Color>
 
     <!--  Brushes  -->
     <SolidColorBrush x:Key="BackgroundAlt" Color="#363636" />
     <SolidColorBrush x:Key="YellowBrush" Color="{StaticResource Yellow}" />
-    <SolidColorBrush x:Key="GreenBrush" Color="Green" />
+    <SolidColorBrush x:Key="GreenBrush" Color="{StaticResource Green}" />
+    <SolidColorBrush x:Key="RedBrush" Color="{StaticResource Red}" />
+    <SolidColorBrush x:Key="WarningBrush" Color="{StaticResource Yellow}" />
+    <SolidColorBrush x:Key="ErrorBrush" Color="{StaticResource Red}" />
     <SolidColorBrush x:Key="BorderBrush" options:Freeze="True" Color="{StaticResource Gray3}" />
     <SolidColorBrush x:Key="SubtleBorderBrush" options:Freeze="True" Color="#404040" />
     <SolidColorBrush x:Key="ControlsDisabledBrush" options:Freeze="True" Color="#35FFFFFF" />
