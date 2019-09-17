@@ -2,11 +2,12 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>DynamicData</Nickname>
-         <Sha>a357e131f6e5eb90f6b82ee71f87f525fb58a14e</Sha>
+         <Sha>a5866ca375b49ede7bd91346657e8adedad09286</Sha>
          <Path>../DynamicData</Path>
-         <CommitDate>08-31-2019 15:59:16</CommitDate>
-         <Description>Nuget Update</Description>
+         <CommitDate>09-16-2019 21:38:33</CommitDate>
+         <Description>ObservableListEx.CollectionCount starts with 0</Description>
          <Author>Justin Swanson</Author>
+         <OriginHint>https://github.com/Noggog/DynamicData.git</OriginHint>
       </RepoListing>
    </ParentRepos>
 </HarmonizeConfig>

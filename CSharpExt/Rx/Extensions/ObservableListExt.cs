@@ -15,7 +15,7 @@ namespace Noggog
             return DynamicData.ObservableListEx.DistinctValues(source, i => i);
         }
 
-        public static IObservable<IChangeSet<TDestination>> TransformMany<TDestination, TSource>([NotNull] this IObservable<IChangeSet<TSource>> source,
+        public static IObservable<IChangeSet<TDestination>> TransformToLatest<TDestination, TSource>([NotNull] this IObservable<IChangeSet<TSource>> source,
             [NotNull] Func<TSource, IObservable<TDestination>> manyselector,
             IEqualityComparer<TDestination> equalityComparer = null)
         {
@@ -23,7 +23,7 @@ namespace Noggog
                 .TransformMany(i =>
                 {
                     return manyselector(i)
-                        .ToObservableChangeSet()
+                        .ToObservableChangeSet(limitSizeTo: 1)
                         .AsObservableList();
                 },
                 equalityComparer: equalityComparer);
