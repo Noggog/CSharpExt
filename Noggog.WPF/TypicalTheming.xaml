@@ -428,7 +428,9 @@
     <Color x:Key="Green">#52b545</Color>
 
     <!--  Brushes  -->
-    <SolidColorBrush x:Key="BackgroundAlt" Color="#363636" />
+    <SolidColorBrush x:Key="BackgroundBrush" Color="{StaticResource WhiteColor}" />
+    <SolidColorBrush x:Key="BackgroundLightBrush" Color="#363636" />
+    <SolidColorBrush x:Key="BackgroundDarkBrush" Color="#141414" />
     <SolidColorBrush x:Key="YellowBrush" Color="{StaticResource Yellow}" />
     <SolidColorBrush x:Key="GreenBrush" Color="{StaticResource Green}" />
     <SolidColorBrush x:Key="RedBrush" Color="{StaticResource Red}" />
