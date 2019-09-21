@@ -88,14 +88,9 @@ namespace CSharpExt.Rx
             return _source.Lookup(key);
         }
 
-        public void OnCompleted()
+        public IObservable<IChangeSet<TObject, TKey>> Preview(Func<TObject, bool> predicate = null)
         {
-            _source.OnCompleted();
-        }
-
-        public void OnError(Exception exception)
-        {
-            _source.OnError(exception);
+            return _source.Preview(predicate);
         }
 
         public bool TryGetValue(TKey key, out TObject val)

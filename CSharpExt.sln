@@ -5,7 +5,7 @@ VisualStudioVersion = 15.0.28307.645
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Dependencies", "Dependencies", "{8F625730-B249-4928-B2A4-710D585973C8}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DynamicData", "..\DynamicData\DynamicData\DynamicData.csproj", "{D793B1BE-0C88-4A1F-8C6E-9D916CA1008E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DynamicData", "..\DynamicData\src\DynamicData\DynamicData.csproj", "{D793B1BE-0C88-4A1F-8C6E-9D916CA1008E}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CSharpExt", "CSharpExt\CSharpExt.csproj", "{98276D52-73FD-4B37-BDBE-1C692F7D6C8D}"
 EndProject

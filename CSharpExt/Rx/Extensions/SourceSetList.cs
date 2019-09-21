@@ -83,14 +83,9 @@ namespace CSharpExt.Rx
             }
         }
 
-        public void OnCompleted()
+        public IObservable<IChangeSet<T>> Preview(Func<T, bool> predicate = null)
         {
-            _source.OnCompleted();
-        }
-
-        public void OnError(Exception exception)
-        {
-            _source.OnError(exception);
+            return _source.Preview(predicate);
         }
 
         public void Unset()

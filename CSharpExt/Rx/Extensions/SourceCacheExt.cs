@@ -102,6 +102,7 @@ namespace Noggog
 
         public static TObject SetReturn<TObject, TKey>(this ISourceCache<TObject, TKey> source, TObject item)
         {
+            ObservableCacheEx.Set(source, item);
             source.Set(item);
             return item;
         }

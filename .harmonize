@@ -2,10 +2,10 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>DynamicData</Nickname>
-         <Sha>a5866ca375b49ede7bd91346657e8adedad09286</Sha>
+         <Sha>e07de13ef2bc5ae6d0352b26c5129796c165ddbd</Sha>
          <Path>../DynamicData</Path>
-         <CommitDate>09-16-2019 21:38:33</CommitDate>
-         <Description>ObservableListEx.CollectionCount starts with 0</Description>
+         <CommitDate>09-21-2019 17:08:07</CommitDate>
+         <Description>Merge branch 'BufferIf-clearing-fix'</Description>
          <Author>Justin Swanson</Author>
          <OriginHint>https://github.com/Noggog/DynamicData.git</OriginHint>
       </RepoListing>

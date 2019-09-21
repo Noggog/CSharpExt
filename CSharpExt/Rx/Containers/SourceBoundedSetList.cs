@@ -103,16 +103,6 @@ namespace CSharpExt.Rx
             _source.Dispose();
         }
 
-        public void OnCompleted()
-        {
-            _source.OnCompleted();
-        }
-
-        public void OnError(Exception exception)
-        {
-            _source.OnError(exception);
-        }
-
         public int IndexOf(T item)
         {
             return _source.IndexOf(item);
@@ -161,6 +151,11 @@ namespace CSharpExt.Rx
         IEnumerator IEnumerable.GetEnumerator()
         {
             return _source.GetEnumerator();
+        }
+
+        public IObservable<IChangeSet<T>> Preview(Func<T, bool> predicate = null)
+        {
+            return _source.Preview(predicate);
         }
     }
 }
