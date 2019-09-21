@@ -60,6 +60,7 @@
     <Compile Include="Converters\IsNotEmptyVisibilityConverter.cs" />
     <Compile Include="Converters\VisibilityHiddenConverter.cs" />
     <Compile Include="Converters\VisibilityConverter.cs" />
+    <Compile Include="Extensions\WindowExt.cs" />
     <Compile Include="ObservableUtility.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UserControlRx.cs" />
