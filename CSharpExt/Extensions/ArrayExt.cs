@@ -134,5 +134,10 @@ namespace Noggog
                 yield return (arr[i], i == arr.Length - 1);
             }
         }
+
+        public static bool InRange<T>(this T[] arr, int index)
+        {
+            return index >= 0 && index < arr.Length;
+        }
     }
 }
