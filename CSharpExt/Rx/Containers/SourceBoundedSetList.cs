@@ -28,6 +28,9 @@ namespace CSharpExt.Rx
         public override void Edit(Action<IExtendedList<T>> updateAction, bool hasBeenSet)
         {
             base.Edit(updateAction, hasBeenSet);
+            // ToDo
+            // Move this check to before actions occur,
+            // or roll back
             if (this.Count > this.MaxValue)
             {
                 throw new ArgumentException($"Executed an edit on a list that would make it bigger than the allowed value {this.Count} > {_MaxValue}");
