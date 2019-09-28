@@ -1,11 +1,12 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
 
 namespace Noggog
 {
-    public struct MemorySlice<T>
+    public struct MemorySlice<T> : IEnumerable<T>
     {
         private T[] _arr;
         private int _startPos;
@@ -53,6 +54,16 @@ namespace Noggog
             };
         }
 
+        public IEnumerator<T> GetEnumerator()
+        {
+            for (int i = 0; i < _length; i++)
+            {
+                yield return this._arr[i + _startPos];
+            }
+        }
+
+        IEnumerator IEnumerable.GetEnumerator() => this.GetEnumerator();
+
         public static implicit operator ReadOnlyMemorySlice<T>(MemorySlice<T> mem)
         {
             return new ReadOnlyMemorySlice<T>(
@@ -70,9 +81,14 @@ namespace Noggog
         {
             return mem.Span;
         }
+
+        public static implicit operator MemorySlice<T>(T[] mem)
+        {
+            return new MemorySlice<T>(mem);
+        }
     }
 
-    public struct ReadOnlyMemorySlice<T>
+    public struct ReadOnlyMemorySlice<T> : IEnumerable<T>
     {
         private T[] _arr;
         private int _startPos;
@@ -120,9 +136,24 @@ namespace Noggog
             };
         }
 
+        public IEnumerator<T> GetEnumerator()
+        {
+            for (int i = 0; i < _length; i++)
+            {
+                yield return this._arr[i + _startPos];
+            }
+        }
+
+        IEnumerator IEnumerable.GetEnumerator() => this.GetEnumerator();
+
         public static implicit operator ReadOnlySpan<T>(ReadOnlyMemorySlice<T> mem)
         {
             return mem.Span;
+        }
+
+        public static implicit operator ReadOnlyMemorySlice<T>(T[] mem)
+        {
+            return new ReadOnlyMemorySlice<T>(mem);
         }
     }
 }
