@@ -139,5 +139,13 @@ namespace Noggog
         {
             return index >= 0 && index < arr.Length;
         }
+
+        public static void Clear<T>(this T[] arr)
+        {
+            for (int i = 0; i < arr.Length; i++)
+            {
+                arr[i] = default;
+            }
+        }
     }
 }
