@@ -103,5 +103,13 @@ namespace Noggog
             }
             return ret;
         }
+
+        public static void Remove<K, V>(this IDictionary<K, V> dict, IEnumerable<K> keys)
+        {
+            foreach (var key in keys)
+            {
+                dict.Remove(key);
+            }
+        }
     }
 }

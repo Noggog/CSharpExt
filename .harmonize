@@ -2,10 +2,10 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>DynamicData</Nickname>
-         <Sha>3b512df4ac8d2ae999ab2ee37c09e9e3d5287277</Sha>
+         <Sha>22b0745592a640f0dc332c86581d708ce1bd4228</Sha>
          <Path>../DynamicData</Path>
-         <CommitDate>09-28-2019 11:27:42</CommitDate>
-         <Description>IExtendedList implements IReadOnlyList</Description>
+         <CommitDate>09-28-2019 22:02:29</CommitDate>
+         <Description>Cache implementation</Description>
          <Author>Justin Swanson</Author>
          <OriginHint>https://github.com/Noggog/DynamicData.git</OriginHint>
       </RepoListing>

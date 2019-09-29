@@ -50,8 +50,6 @@ namespace CSharpExt.Rx
 
         public IObservable<bool> HasBeenSetObservable => this._hasBeenSet;
 
-        IEnumerable<TObject> IReadOnlyCache<TObject, TKey>.Values => this.Items;
-
         public TObject this[TKey key] => this._source[key];
 
         public IObservable<IChangeSet<TObject, TKey>> Connect(Func<TObject, bool> predicate = null)
