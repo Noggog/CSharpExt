@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace CSharpExt.Rx
 {
-    public class SourceSetCache<TObject, TKey> : ISourceSetCache<TObject, TKey>, IEnumerable<KeyValuePair<TKey, TObject>>
+    public class SourceSetCache<TObject, TKey> : ISourceSetCache<TObject, TKey>
     {
         private readonly BehaviorSubject<bool> _hasBeenSet = new BehaviorSubject<bool>(false);
         private readonly SourceCache<TObject, TKey> _source;
@@ -49,6 +49,8 @@ namespace CSharpExt.Rx
             .QueryWhenChanged(q => q.Items);
 
         public IObservable<bool> HasBeenSetObservable => this._hasBeenSet;
+
+        IEnumerable<TObject> IReadOnlyDictionary<TKey, TObject>.Values => _source.Items;
 
         public TObject this[TKey key] => this._source[key];
 
@@ -128,14 +130,67 @@ namespace CSharpExt.Rx
             return this._source.ContainsKey(key);
         }
 
-        public IEnumerator<KeyValuePair<TKey, TObject>> GetEnumerator()
+        IEnumerator<IKeyValue<TObject, TKey>> IEnumerable<IKeyValue<TObject, TKey>>.GetEnumerator()
+        {
+            return this.KeyValues.Select<KeyValuePair<TKey, TObject>, IKeyValue<TObject, TKey>>(kv => new KeyValue<TObject, TKey>(kv.Key, kv.Value)).GetEnumerator();
+        }
+
+        public void Set(TObject item)
+        {
+            this.HasBeenSet = true;
+            this._source.Set(item);
+        }
+
+        public void Set(IEnumerable<TObject> items)
+        {
+            this.HasBeenSet = true;
+            this._source.Set(items);
+        }
+
+        public bool Remove(TKey key)
+        {
+            this.HasBeenSet = true;
+            return this._source.Remove(key);
+        }
+
+        public bool Remove(TObject obj)
+        {
+            this.HasBeenSet = true;
+            return this._source.Remove(obj);
+        }
+
+        public void Remove(IEnumerable<TObject> objects)
+        {
+            this.HasBeenSet = true;
+            this._source.Remove(objects);
+        }
+
+        public void Remove(IEnumerable<TKey> keys)
+        {
+            this.HasBeenSet = true;
+            this._source.Remove(keys);
+        }
+
+        public void Clear()
+        {
+            this.HasBeenSet = true;
+            this._source.Clear();
+        }
+
+        public TObject TryCreateValue(TKey key, Func<TKey, TObject> createFunc)
+        {
+            this.HasBeenSet = true;
+            return this._source.TryCreateValue(key, createFunc);
+        }
+
+        public IEnumerator<IKeyValue<TObject, TKey>> GetEnumerator()
         {
             return this._source.GetEnumerator();
         }
 
-        IEnumerator<IKeyValue<TObject, TKey>> IEnumerable<IKeyValue<TObject, TKey>>.GetEnumerator()
+        IEnumerator<KeyValuePair<TKey, TObject>> IEnumerable<KeyValuePair<TKey, TObject>>.GetEnumerator()
         {
-            return this.KeyValues.Select<KeyValuePair<TKey, TObject>, IKeyValue<TObject, TKey>>(kv => new KeyValue<TObject, TKey>(kv.Key, kv.Value)).GetEnumerator();
+            return ((IEnumerable<KeyValuePair<TKey, TObject>>)this._source).GetEnumerator();
         }
     }
 }
