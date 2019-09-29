@@ -1,6 +1,7 @@
 ﻿using DynamicData;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Noggog
@@ -28,6 +29,43 @@ namespace Noggog
                         selector(item.Key, item.Value, rhs[item.Key])));
             }
             return ret;
+        }
+
+        public static void SetTo<V, K>(this ICache<V, K> cache, IEnumerable<V> items)
+        {
+            cache.Clear();
+            cache.Set(items);
+        }
+
+        public static TObject SetReturn<TObject, TKey>(this ICache<TObject, TKey> source, TObject item)
+        {
+            source.Set(item);
+            return item;
+        }
+
+        public static void SetToWithDefault<V, K>(
+            this ICache<V, K> not,
+            IReadOnlyDictionary<K, V> rhs,
+            IReadOnlyDictionary<K, V> def,
+            Func<V, V, V> converter)
+        {
+            if (def == null)
+            {
+                not.SetTo(
+                    rhs.Values.Select((t) => converter(t, default)));
+            }
+            else
+            {
+                not.SetTo(
+                    rhs.Select((t) =>
+                    {
+                        if (!def.TryGetValue(t.Key, out var defVal))
+                        {
+                            defVal = default;
+                        }
+                        return converter(t.Value, defVal);
+                    }));
+            }
         }
     }
 }

@@ -75,34 +75,8 @@ namespace Noggog
             }
         }
 
-        public static void SetToWithDefault<V, K>(
-            this ISourceCache<V, K> not,
-            IReadOnlyDictionary<K, V> rhs,
-            IReadOnlyDictionary<K, V> def,
-            Func<V, V, V> converter)
-        {
-            if (def == null)
-            {
-                not.SetTo(
-                    rhs.Values.Select((t) => converter(t, default)));
-            }
-            else
-            {
-                not.SetTo(
-                    rhs.Select((t) =>
-                    {
-                        if (!def.TryGetValue(t.Key, out var defVal))
-                        {
-                            defVal = default;
-                        }
-                        return converter(t.Value, defVal);
-                    }));
-            }
-        }
-
         public static TObject SetReturn<TObject, TKey>(this ISourceCache<TObject, TKey> source, TObject item)
         {
-            ObservableCacheEx.Set(source, item);
             source.Set(item);
             return item;
         }
