@@ -14,6 +14,7 @@ namespace Noggog
         long Remaining { get; }
         bool Complete { get; }
         ReadOnlySpan<byte> RemainingSpan { get; }
+        ReadOnlyMemorySlice<byte> RemainingMemory { get; }
         int Read(byte[] buffer, int offset, int amount);
         int Get(byte[] buffer, int targetOffset, int amount);
         int Read(byte[] buffer);
@@ -24,6 +25,10 @@ namespace Noggog
         ReadOnlySpan<byte> ReadSpan(int amount, int offset);
         ReadOnlySpan<byte> GetSpan(int amount);
         ReadOnlySpan<byte> GetSpan(int amount, int offset);
+        ReadOnlyMemorySlice<byte> ReadMemory(int amount);
+        ReadOnlyMemorySlice<byte> ReadMemory(int amount, int offset);
+        ReadOnlyMemorySlice<byte> GetMemory(int amount);
+        ReadOnlyMemorySlice<byte> GetMemory(int amount, int offset);
         bool ReadBool();
         bool GetBool();
         bool GetBool(int offset);

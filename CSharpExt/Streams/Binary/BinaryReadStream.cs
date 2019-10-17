@@ -28,6 +28,7 @@ namespace Noggog
         public bool Complete => _length <= this.Position;
         public override long Position { get => _streamPos - InternalStreamRemaining; set => SetPosition(value); }
         public ReadOnlySpan<byte> RemainingSpan => throw new NotImplementedException();
+        public ReadOnlyMemorySlice<byte> RemainingMemory => throw new NotImplementedException();
 
         public bool CheckUnderlyingStreamPosition = false;
 
@@ -189,7 +190,7 @@ namespace Noggog
             }
             return ret;
         }
-        
+
         public ReadOnlySpan<byte> ReadSpan(int amount)
         {
             var ret = new byte[amount];
@@ -213,6 +214,33 @@ namespace Noggog
         {
             this.Position += offset;
             var ret = ReadSpan(amount);
+            this.Position -= ret.Length + offset;
+            return ret;
+        }
+
+        public ReadOnlyMemorySlice<byte> ReadMemory(int amount)
+        {
+            var ret = new byte[amount];
+            var read = Read(ret, offset: 0, amount: amount);
+            return new MemorySlice<byte>(ret);
+        }
+
+        public ReadOnlyMemorySlice<byte> ReadMemory(int amount, int offset)
+        {
+            throw new NotImplementedException();
+        }
+
+        public ReadOnlyMemorySlice<byte> GetMemory(int amount)
+        {
+            var ret = ReadMemory(amount);
+            this.Position -= ret.Length;
+            return ret;
+        }
+
+        public ReadOnlyMemorySlice<byte> GetMemory(int amount, int offset)
+        {
+            this.Position += offset;
+            var ret = ReadMemory(amount);
             this.Position -= ret.Length + offset;
             return ret;
         }
