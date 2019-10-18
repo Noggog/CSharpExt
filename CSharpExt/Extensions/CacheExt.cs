@@ -67,5 +67,30 @@ namespace Noggog
                     }));
             }
         }
+
+        public static void SetToWithDefault<V, K>(
+            this ICache<V, K> not,
+            IReadOnlyCache<V, K> rhs,
+            IReadOnlyCache<V, K> def,
+            Func<V, V, V> converter)
+        {
+            if (def == null)
+            {
+                not.SetTo(
+                    rhs.Items.Select((t) => converter(t, default)));
+            }
+            else
+            {
+                not.SetTo(
+                    rhs.Select((t) =>
+                    {
+                        if (!def.TryGetValue(t.Key, out var defVal))
+                        {
+                            defVal = default;
+                        }
+                        return converter(t.Value, defVal);
+                    }));
+            }
+        }
     }
 }
