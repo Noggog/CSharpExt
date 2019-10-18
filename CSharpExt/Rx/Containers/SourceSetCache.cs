@@ -50,8 +50,6 @@ namespace CSharpExt.Rx
 
         public IObservable<bool> HasBeenSetObservable => this._hasBeenSet;
 
-        IEnumerable<TObject> IReadOnlyDictionary<TKey, TObject>.Values => _source.Items;
-
         public TObject this[TKey key] => this._source[key];
 
         public IObservable<IChangeSet<TObject, TKey>> Connect(Func<TObject, bool> predicate = null)
@@ -186,11 +184,6 @@ namespace CSharpExt.Rx
         public IEnumerator<IKeyValue<TObject, TKey>> GetEnumerator()
         {
             return this._source.GetEnumerator();
-        }
-
-        IEnumerator<KeyValuePair<TKey, TObject>> IEnumerable<KeyValuePair<TKey, TObject>>.GetEnumerator()
-        {
-            return ((IEnumerable<KeyValuePair<TKey, TObject>>)this._source).GetEnumerator();
         }
     }
 }
