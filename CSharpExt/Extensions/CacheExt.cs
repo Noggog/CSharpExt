@@ -43,11 +43,11 @@ namespace Noggog
             return item;
         }
 
-        public static void SetToWithDefault<V, K>(
-            this ICache<V, K> not,
-            IReadOnlyDictionary<K, V> rhs,
-            IReadOnlyDictionary<K, V> def,
-            Func<V, V, V> converter)
+        public static void SetToWithDefault<TItem, TRhs, TKey>(
+            this ICache<TItem, TKey> not,
+            IReadOnlyDictionary<TKey, TRhs> rhs,
+            IReadOnlyDictionary<TKey, TRhs> def,
+            Func<TRhs, TRhs, TItem> converter)
         {
             if (def == null)
             {
@@ -68,11 +68,11 @@ namespace Noggog
             }
         }
 
-        public static void SetToWithDefault<V, K>(
-            this ICache<V, K> not,
-            IReadOnlyCache<V, K> rhs,
-            IReadOnlyCache<V, K> def,
-            Func<V, V, V> converter)
+        public static void SetToWithDefault<TItem, TRhs, TKey>(
+            this ICache<TItem, TKey> not,
+            IReadOnlyCache<TRhs, TKey> rhs,
+            IReadOnlyCache<TRhs, TKey> def,
+            Func<TRhs, TRhs, TItem> converter)
         {
             if (def == null)
             {
