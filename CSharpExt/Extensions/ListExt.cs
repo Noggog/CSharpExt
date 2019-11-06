@@ -168,6 +168,25 @@ namespace Noggog
             list.RemoveToCount(i);
         }
 
+        public static void SetTo<T, R>(this IList<T> list, IEnumerable<R> items, Func<R, T> converter)
+        {
+            int i = 0;
+            foreach (var item in items)
+            {
+                if (i >= list.Count)
+                {
+                    list.Add(converter(item));
+                }
+                else
+                {
+                    list[i] = converter(item);
+                }
+                i++;
+            }
+
+            list.RemoveToCount(i);
+        }
+
         public static void SetTo<T>(this ISetList<T> list, IEnumerable<T> items)
         {
             ListExt.SetTo((IList<T>)list, items);
