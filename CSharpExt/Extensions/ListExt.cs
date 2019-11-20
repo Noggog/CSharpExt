@@ -193,6 +193,12 @@ namespace Noggog
             list.HasBeenSet = true;
         }
 
+        public static void SetTo<T, R>(this ISetList<T> list, IEnumerable<R> items, Func<R, T> converter)
+        {
+            ListExt.SetTo((IList<T>)list, items, converter);
+            list.HasBeenSet = true;
+        }
+
         public static void SetTo<T>(this IList<T> list, T item)
         {
             list.Clear();
