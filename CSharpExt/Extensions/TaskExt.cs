@@ -128,5 +128,18 @@ namespace Noggog
                 throw;
             }
         }
+
+        public static async void FireAndForget(this Task task, Action<Exception> onException = null)
+        {
+            try
+            {
+                await task.ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            when (onException != null)
+            {
+                onException(ex);
+            }
+        }
     }
 }
