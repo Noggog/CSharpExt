@@ -4,13 +4,23 @@ using System.Diagnostics;
 
 namespace Noggog
 {
-    public struct TryGet<T> : IEquatable<TryGet<T>>
+    public interface ITryGetter<out T>
+    {
+        T Value { get; }
+        bool Succeeded { get; }
+        bool Failed { get; }
+    }
+
+    public struct TryGet<T> : IEquatable<TryGet<T>>, ITryGetter<T>
     {
         public readonly static TryGet<T> Failure = new TryGet<T>();
         
         public readonly T Value;
         public readonly bool Succeeded;
         public bool Failed => !Succeeded;
+
+        T ITryGetter<T>.Value => this.Value;
+        bool ITryGetter<T>.Succeeded => this.Succeeded;
 
         private TryGet(
             bool succeeded,
