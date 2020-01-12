@@ -77,6 +77,12 @@ namespace Noggog
             return new ErrorResponse(successful, reason);
         }
         #endregion
+
+        public static ErrorResponse Convert(IErrorResponse err, bool nullIsSuccess = true)
+        {
+            if (err == null) return Create(nullIsSuccess);
+            return new ErrorResponse(err.Succeeded, err.Reason, err.Exception);
+        }
     }
 
     public interface IErrorResponse

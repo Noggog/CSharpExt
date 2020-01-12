@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Noggog.Notifying
+namespace Noggog
 {
     public class HasBeenSetItemConverterOnSet<T> : IHasBeenSetItem<T>
     {

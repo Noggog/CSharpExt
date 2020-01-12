@@ -27,8 +27,8 @@ namespace Noggog
                 {
                     if (item != null)
                     {
-                        var ret = new ChangeSet<T>(
-                            new Change<T>(
+                        var ret = new DynamicData.ChangeSet<T>(
+                            new DynamicData.Change<T>(
                                 reason: ListChangeReason.Add,
                                 current: item,
                                 previous: Optional<T>.None)
@@ -38,8 +38,8 @@ namespace Noggog
                     }
                     else
                     {
-                        var ret = new ChangeSet<T>(
-                            new Change<T>(
+                        var ret = new DynamicData.ChangeSet<T>(
+                            new DynamicData.Change<T>(
                                 reason: ListChangeReason.Remove,
                                 current: null,
                                 previous: prev)

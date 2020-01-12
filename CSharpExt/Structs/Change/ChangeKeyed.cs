@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Noggog.Notifying
+namespace Noggog
 {
     public class ChangeKeyed<K, V> : IEquatable<ChangeKeyed<K, V>>
     {

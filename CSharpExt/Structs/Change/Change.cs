@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Noggog.Notifying
+namespace Noggog
 {
     public class Change<T> : IEquatable<Change<T>>
     {

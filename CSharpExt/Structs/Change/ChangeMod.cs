@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Noggog.Notifying
+namespace Noggog
 {
     public class ChangeMod<T> : IEquatable<ChangeMod<T>>
     {

@@ -1,7 +1,6 @@
-﻿using Noggog.Notifying;
-using System;
+﻿using System;
 
-namespace Noggog.Notifying
+namespace Noggog
 {
     public static class HasBeenSetItem
     {
