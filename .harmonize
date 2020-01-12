@@ -2,10 +2,10 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>DynamicData</Nickname>
-         <Sha>c78c6e40223e62ff65f1cbf5e3524eb639a1ba4d</Sha>
+         <Sha>9cec67a68201b949df6b6b76f1caa054ef066700</Sha>
          <Path>../DynamicData</Path>
-         <CommitDate>10-18-2019 18:19:05</CommitDate>
-         <Description>IReadOnlyDictionary removed from ICache</Description>
+         <CommitDate>01-11-2020 23:52:54</CommitDate>
+         <Description>Nuget updates</Description>
          <Author>Justin Swanson</Author>
          <OriginHint>https://github.com/Noggog/DynamicData.git</OriginHint>
       </RepoListing>
