@@ -61,6 +61,61 @@
         </Setter>
     </Style>
 
+    <Style x:Key="NakedIconButtonStyle" TargetType="{x:Type Button}">
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderBrush" Value="{DynamicResource TextBoxBorderBrush}" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Controls:ControlsHelper.ContentCharacterCasing" Value="Upper" />
+        <Setter Property="FontFamily" Value="{DynamicResource DefaultFont}" />
+        <Setter Property="FontSize" Value="{DynamicResource UpperCaseContentFontSize}" />
+        <Setter Property="FontWeight" Value="Bold" />
+        <Setter Property="Foreground" Value="{DynamicResource ButtonNakedIconForegroundBrush}" />
+        <Setter Property="MinHeight" Value="25" />
+        <Setter Property="Padding" Value="5,6" />
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ButtonBase}">
+                    <Grid>
+                        <Border
+                            x:Name="Border"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=(Controls:ControlsHelper.CornerRadius), Mode=OneWay}"
+                            SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+                        <Controls:ContentControlEx
+                            x:Name="PART_ContentPresenter"
+                            Margin="{TemplateBinding BorderThickness}"
+                            Padding="{TemplateBinding Padding}"
+                            HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                            VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                            Content="{TemplateBinding Content}"
+                            ContentCharacterCasing="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=(Controls:ControlsHelper.ContentCharacterCasing)}"
+                            ContentStringFormat="{TemplateBinding ContentStringFormat}"
+                            ContentTemplate="{TemplateBinding ContentTemplate}"
+                            ContentTemplateSelector="{TemplateBinding ContentTemplateSelector}"
+                            RecognizesAccessKey="True"
+                            SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Foreground" Value="{DynamicResource ButtonNakedIconOverForegroundBrush}" />
+                            <Setter Property="BorderBrush" Value="{DynamicResource ButtonMouseOverBorderBrush}" />
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter Property="Foreground" Value="{DynamicResource ButtonNakedIconPressedForegroundBrush}" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter TargetName="PART_ContentPresenter" Property="Opacity" Value="0.3" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
     <Style x:Key="MainTextBoxStyle" TargetType="{x:Type TextBox}">
         <Setter Property="Background" Value="{DynamicResource ControlBackgroundBrush}" />
         <Setter Property="BorderBrush" Value="{DynamicResource TextBoxBorderBrush}" />
@@ -72,6 +127,7 @@
         <Setter Property="Controls:TextBoxHelper.ButtonFontSize" Value="{DynamicResource ClearTextButtonFontSize}" />
         <Setter Property="Controls:TextBoxHelper.ButtonWidth" Value="22" />
         <Setter Property="Controls:TextBoxHelper.IsMonitoring" Value="True" />
+        <Setter Property="Controls:ControlsHelper.CornerRadius" Value="3" />
         <Setter Property="Controls:TextBoxHelper.IsSpellCheckContextMenuEnabled" Value="{Binding RelativeSource={RelativeSource Self}, Path=(SpellCheck.IsEnabled)}" />
         <Setter Property="Controls:TextBoxHelper.WatermarkWrapping" Value="{Binding RelativeSource={RelativeSource Self}, Path=TextWrapping, Mode=OneWay}" />
         <Setter Property="FontFamily" Value="{DynamicResource ContentFontFamily}" />
@@ -130,6 +186,7 @@
                             Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=(Controls:ControlsHelper.CornerRadius), Mode=OneWay}"
                             SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
                         <Grid x:Name="PART_InnerGrid" Margin="2">
                             <Grid.ColumnDefinitions>
@@ -286,6 +343,7 @@
                             <Setter TargetName="Base" Property="BorderBrush" Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=(Controls:ControlsHelper.FocusBorderBrush)}" />
                             <Setter TargetName="PART_FloatingMessage" Property="Foreground" Value="{DynamicResource AccentColorBrush}" />
                             <Setter TargetName="PART_FloatingMessage" Property="Opacity" Value="1" />
+                            <Setter TargetName="Base" Property="Background" Value="{DynamicResource TextBoxFocusBackgroundBrush}" />
                         </Trigger>
                         <Trigger SourceName="PART_ClearText" Property="IsMouseOver" Value="True">
                             <Setter TargetName="PART_ClearText" Property="Background" Value="{DynamicResource GrayBrush8}" />
@@ -505,21 +563,52 @@
     <Color x:Key="Yellow">#ffc400</Color>
     <Color x:Key="Red">#e83a40</Color>
     <Color x:Key="Green">#52b545</Color>
+    <Color x:Key="FocusedBackground">#FF080808</Color>
 
     <!--  Brushes  -->
     <SolidColorBrush x:Key="ForegroundDarkBrush" Color="{StaticResource Gray3}" />
     <SolidColorBrush x:Key="BackgroundBrush" Color="{StaticResource WhiteColor}" />
-    <SolidColorBrush x:Key="BackgroundLightBrush" Color="#363636" />
-    <SolidColorBrush x:Key="BackgroundDarkBrush" Color="#141414" />
+    <SolidColorBrush x:Key="BackgroundLightBrush" Color="#323232" />
+    <SolidColorBrush x:Key="BackgroundDarkBrush" Color="#202020" />
     <SolidColorBrush x:Key="YellowBrush" Color="{StaticResource Yellow}" />
     <SolidColorBrush x:Key="GreenBrush" Color="{StaticResource Green}" />
     <SolidColorBrush x:Key="RedBrush" Color="{StaticResource Red}" />
     <SolidColorBrush x:Key="WarningBrush" Color="{StaticResource Yellow}" />
     <SolidColorBrush x:Key="ErrorBrush" Color="{StaticResource Red}" />
+    <SolidColorBrush x:Key="ControlFocusBrush" Color="{StaticResource FocusedBackground}" />
+    <SolidColorBrush x:Key="ButtonNakedIconOverForegroundBrush" Color="{StaticResource BlackColor}" />
+    <SolidColorBrush x:Key="ButtonNakedIconForegroundBrush" Color="{StaticResource Gray6}" />
+    <SolidColorBrush x:Key="ButtonNakedIconPressedForegroundBrush" Color="{StaticResource AccentBaseColor}" />
+    <SolidColorBrush
+        x:Key="ControlBackgroundBrush"
+        options:Freeze="True"
+        Color="#FF101010" />
+    <SolidColorBrush
+        x:Key="TextBoxBorderBrush"
+        options:Freeze="True"
+        Color="Transparent" />
+    <!--  Gray2  -->
+    <SolidColorBrush
+        x:Key="TextBoxFocusBorderBrush"
+        options:Freeze="True"
+        Color="Transparent" />
+    <!--  Gray8  -->
     <SolidColorBrush
         x:Key="BorderBrush"
         options:Freeze="True"
-        Color="{StaticResource Gray3}" />
+        Color="Transparent" />
+    <SolidColorBrush
+        x:Key="FocusBackgroundBrush"
+        options:Freeze="True"
+        Color="{StaticResource FocusedBackground}" />
+    <SolidColorBrush
+        x:Key="TextBoxFocusBackgroundBrush"
+        options:Freeze="True"
+        Color="{StaticResource FocusedBackground}" />
+    <SolidColorBrush
+        x:Key="TextBoxMouseOverBorderBrush"
+        options:Freeze="True"
+        Color="Transparent" />
     <SolidColorBrush
         x:Key="SubtleBorderBrush"
         options:Freeze="True"
