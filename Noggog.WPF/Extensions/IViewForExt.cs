@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reactive.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -70,6 +71,17 @@ namespace Noggog.WPF
                 viewProperty: viewProperty,
                 vmToViewConverter: vmToViewConverter,
                 viewToVmConverter: viewToVmConverter);
+        }
+
+        public static IDisposable BindToStrict<TValue, TTarget>(
+            this IObservable<TValue> @this,
+            TTarget target,
+            Expression<Func<TTarget, TValue>> property)
+            where TTarget : class
+        {
+            return @this
+                .ObserveOn(RxApp.MainThreadScheduler)
+                .BindTo<TValue, TTarget, TValue>(target, property);
         }
     }
 }
