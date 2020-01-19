@@ -390,7 +390,7 @@
         <Setter Property="FontFamily" Value="{DynamicResource DefaultFont}" />
         <Setter Property="FontSize" Value="{DynamicResource UpperCaseContentFontSize}" />
         <Setter Property="FontWeight" Value="Bold" />
-        <Setter Property="Foreground" Value="{DynamicResource BlackBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Black}" />
         <Setter Property="MinHeight" Value="25" />
         <Setter Property="Padding" Value="5,6" />
         <Setter Property="SnapsToDevicePixels" Value="True" />
@@ -429,15 +429,15 @@
         </Setter>
         <Style.Triggers>
             <Trigger Property="IsChecked" Value="True">
-                <Setter Property="Background" Value="{DynamicResource HighlightBrush}" />
-                <Setter Property="BorderBrush" Value="{DynamicResource GrayBrush5}" />
+                <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Highlight}" />
+                <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.Gray6}" />
             </Trigger>
             <MultiTrigger>
                 <MultiTrigger.Conditions>
                     <Condition Property="IsMouseOver" Value="True" />
                     <Condition Property="IsChecked" Value="False" />
                 </MultiTrigger.Conditions>
-                <Setter Property="Background" Value="{DynamicResource GrayBrush8}" />
+                <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Gray8}" />
                 <Setter Property="BorderBrush" Value="{DynamicResource ButtonMouseOverBorderBrush}" />
             </MultiTrigger>
             <MultiTrigger>
@@ -445,18 +445,18 @@
                     <Condition Property="IsMouseOver" Value="True" />
                     <Condition Property="IsChecked" Value="True" />
                 </MultiTrigger.Conditions>
-                <Setter Property="Background" Value="{DynamicResource AccentColorBrush2}" />
+                <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Accent2}" />
                 <Setter Property="BorderBrush" Value="{DynamicResource ButtonMouseOverBorderBrush}" />
             </MultiTrigger>
             <Trigger Property="IsPressed" Value="True">
-                <Setter Property="Background" Value="{DynamicResource GrayBrush7}" />
+                <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Gray7}" />
             </Trigger>
         </Style.Triggers>
     </Style>
 
     <Style
         x:Key="MainListBoxItemStyle"
-        BasedOn="{StaticResource MetroListBoxItem}"
+        BasedOn="{StaticResource MahApps.Styles.ListBoxItem}"
         TargetType="ListBoxItem">
         <Setter Property="Padding" Value="0" />
     </Style>
@@ -553,8 +553,8 @@
     <Color x:Key="FocusedBackground">#FF080808</Color>
 
     <!--  Brushes  -->
-    <SolidColorBrush x:Key="ForegroundDarkBrush" Color="{StaticResource Gray3}" />
-    <SolidColorBrush x:Key="BackgroundBrush" Color="{StaticResource WhiteColor}" />
+    <SolidColorBrush x:Key="ForegroundDarkBrush" Color="{StaticResource MahApps.Colors.Gray3}" />
+    <SolidColorBrush x:Key="BackgroundBrush" Color="{StaticResource MahApps.Colors.White}" />
     <SolidColorBrush x:Key="BackgroundLightBrush" Color="#323232" />
     <SolidColorBrush x:Key="BackgroundDarkBrush" Color="#202020" />
     <SolidColorBrush x:Key="YellowBrush" Color="{StaticResource Yellow}" />
@@ -563,25 +563,25 @@
     <SolidColorBrush x:Key="WarningBrush" Color="{StaticResource Yellow}" />
     <SolidColorBrush x:Key="ErrorBrush" Color="{StaticResource Red}" />
     <SolidColorBrush x:Key="ControlFocusBrush" Color="{StaticResource FocusedBackground}" />
-    <SolidColorBrush x:Key="ButtonNakedIconOverForegroundBrush" Color="{StaticResource BlackColor}" />
-    <SolidColorBrush x:Key="ButtonNakedIconForegroundBrush" Color="{StaticResource Gray6}" />
-    <SolidColorBrush x:Key="ButtonNakedIconPressedForegroundBrush" Color="{StaticResource AccentBaseColor}" />
+    <SolidColorBrush x:Key="ButtonNakedIconOverForegroundBrush" Color="{StaticResource MahApps.Colors.Black}" />
+    <SolidColorBrush x:Key="ButtonNakedIconForegroundBrush" Color="{StaticResource MahApps.Colors.Gray6}" />
+    <SolidColorBrush x:Key="ButtonNakedIconPressedForegroundBrush" Color="{StaticResource MahApps.Colors.AccentBase}" />
     <SolidColorBrush
-        x:Key="ControlBackgroundBrush"
+        x:Key="MahApps.Brushes.Control.Background"
         options:Freeze="True"
         Color="#FF101010" />
     <SolidColorBrush
-        x:Key="TextBoxBorderBrush"
+        x:Key="MahApps.Brushes.TextBox.Border"
         options:Freeze="True"
         Color="Transparent" />
     <!--  Gray2  -->
     <SolidColorBrush
-        x:Key="TextBoxFocusBorderBrush"
+        x:Key="MahApps.Brushes.TextBox.FocusBorder"
         options:Freeze="True"
         Color="Transparent" />
     <!--  Gray8  -->
     <SolidColorBrush
-        x:Key="BorderBrush"
+        x:Key=" MahApps.Brushes.Border.NonActive"
         options:Freeze="True"
         Color="Transparent" />
     <SolidColorBrush
@@ -593,7 +593,7 @@
         options:Freeze="True"
         Color="{StaticResource FocusedBackground}" />
     <SolidColorBrush
-        x:Key="TextBoxMouseOverBorderBrush"
+        x:Key="MahApps.Brushes.TextBox.MouseOverBorder"
         options:Freeze="True"
         Color="Transparent" />
     <SolidColorBrush

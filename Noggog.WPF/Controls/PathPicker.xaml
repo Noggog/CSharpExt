@@ -8,11 +8,11 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     d:DesignHeight="35"
     d:DesignWidth="400"
-    BorderBrush="{StaticResource BorderBrush}"
+    BorderBrush="{StaticResource MahApps.Brushes.Border.NonActive}"
     mc:Ignorable="d">
     <UserControl.Resources>
         <Style x:Key="MatchColorBorderStyle" TargetType="Border">
-            <Setter Property="Background" Value="{StaticResource ControlBackgroundBrush}" />
+            <Setter Property="Background" Value="{StaticResource MahApps.Brushes.Control.Background}" />
             <Style.Triggers>
                 <DataTrigger Binding="{Binding IsFocused, ElementName=PathTextBox}" Value="True">
                     <Setter Property="Background" Value="{StaticResource TextBoxFocusBackgroundBrush}" />
