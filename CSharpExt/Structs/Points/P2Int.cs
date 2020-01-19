@@ -34,38 +34,6 @@ namespace Noggog
         public readonly int Y;
         int IP2IntGet.Y => this.Y;
 
-        #region Directions
-        public P2Int this[GridLoc val]
-        {
-            get
-            {
-                switch (val)
-                {
-                    case GridLoc.CENTER:
-                        return this;
-                    case GridLoc.TOP:
-                        return new P2Int(X, Y + 1);
-                    case GridLoc.BOTTOM:
-                        return new P2Int(X, Y - 1);
-                    case GridLoc.LEFT:
-                        return new P2Int(X - 1, Y);
-                    case GridLoc.RIGHT:
-                        return new P2Int(X + 1, Y);
-                    case GridLoc.TOPRIGHT:
-                        return new P2Int(X + 1, Y + 1);
-                    case GridLoc.BOTTOMRIGHT:
-                        return new P2Int(X + 1, Y - 1);
-                    case GridLoc.TOPLEFT:
-                        return new P2Int(X - 1, Y + 1);
-                    case GridLoc.BOTTOMLEFT:
-                        return new P2Int(X - 1, Y - 1);
-                    default:
-                        throw new NotImplementedException("");
-                }
-            }
-        }
-        #endregion
-
         #region Ctors
         public P2Int(int x, int y)
         {
@@ -146,46 +114,6 @@ namespace Noggog
         public override string ToString()
         {
             return $"({X},{Y})";
-        }
-
-        public static void Rotate(P2Int p, out P2Int outP, ClockRotation rotation)
-        {
-            switch (rotation)
-            {
-                case ClockRotation.ClockWise:
-                    outP = new P2Int(p.Y, -p.X);
-                    break;
-                case ClockRotation.CounterClockWise:
-                    outP = new P2Int(-p.Y, p.X);
-                    break;
-                case ClockRotation.OneEighty:
-                    outP = new P2Int(
-                        p.X * -1,
-                        p.Y * -1);
-                    break;
-                case ClockRotation.None:
-                    outP = p;
-                    break;
-                default:
-                    throw new NotImplementedException();
-            }
-        }
-
-        public P2Int Rotate(ClockRotation rotation)
-        {
-            switch (rotation)
-            {
-                case ClockRotation.ClockWise:
-                    return new P2Int(Y, -X);
-                case ClockRotation.CounterClockWise:
-                    return new P2Int(-Y, X);
-                case ClockRotation.OneEighty:
-                    return new P2Int(-Y, -X);
-                case ClockRotation.None:
-                    return this;
-                default:
-                    throw new NotImplementedException();
-            }
         }
 
         public override bool Equals(object obj)

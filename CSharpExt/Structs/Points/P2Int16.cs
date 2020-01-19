@@ -41,48 +41,11 @@ namespace Noggog
             return new P2Int16((short)(this.X + x), (short)(this.Y + y));
         }
 
-        public P2Int16 Shift(double x, double y)
-        {
-            return Shift((short)x, (short)y);
-        }
-
-        public P2Int16 Shift(P2Double vect)
-        {
-            return Shift(vect.X, vect.Y);
-        }
-
         public P2Int16 Shift(P2Int16 p)
         {
             return Shift(p.X, p.Y);
         }
-
-        public P2Int16 ShiftToPositive()
-        {
-            return Shift(
-                this.X < 0 ? -this.X : 0,
-                this.Y < 0 ? -this.Y : 0);
-        }
         #endregion Shifts
-
-        public P2Int16 UnitDir()
-        {
-            short max = (short)Math.Max(Math.Abs(X), Math.Abs(Y));
-            if (max != 0)
-            {
-                return new P2Int16(
-                    (short)Math.Round(((decimal)X) / max),
-                    (short)Math.Round(((decimal)Y) / max));
-            }
-            else
-            {
-                return new P2Int16();
-            }
-        }
-
-        public short MidPoint()
-        {
-            return (short)((Y - X) / 2);
-        }
 
         public double Distance(P2Int16 rhs)
         {
@@ -102,46 +65,6 @@ namespace Noggog
         public override string ToString()
         {
             return $"({X},{Y})";
-        }
-
-        public static void Rotate(P2Int16 p, out P2Int16 outP, ClockRotation rotation)
-        {
-            switch (rotation)
-            {
-                case ClockRotation.ClockWise:
-                    outP = new P2Int16(p.Y, (short)-p.X);
-                    break;
-                case ClockRotation.CounterClockWise:
-                    outP = new P2Int16((short)-p.Y, p.X);
-                    break;
-                case ClockRotation.OneEighty:
-                    outP = new P2Int16(
-                        (short)-p.X,
-                        (short)-p.Y);
-                    break;
-                case ClockRotation.None:
-                    outP = p;
-                    break;
-                default:
-                    throw new NotImplementedException();
-            }
-        }
-
-        public P2Int16 Rotate(ClockRotation rotation)
-        {
-            switch (rotation)
-            {
-                case ClockRotation.ClockWise:
-                    return new P2Int16(Y, (short)-X);
-                case ClockRotation.CounterClockWise:
-                    return new P2Int16((short)-Y, X);
-                case ClockRotation.OneEighty:
-                    return new P2Int16((short)-Y, (short)-X);
-                case ClockRotation.None:
-                    return this;
-                default:
-                    throw new NotImplementedException();
-            }
         }
 
         public override bool Equals(object obj)
@@ -185,19 +108,6 @@ namespace Noggog
         public override int GetHashCode()
         {
             return HashHelper.GetHashCode(X, Y);
-        }
-
-        public bool NextTo(P2Int16 p)
-        {
-            if (p.X == this.X)
-            {
-                return p.Y == this.Y + 1 || p.Y == this.Y - 1;
-            }
-            if (p.Y == this.Y)
-            {
-                return p.X == this.X + 1 || p.X == this.X - 1;
-            }
-            return false;
         }
 
         public static bool operator ==(P2Int16 obj1, P2Int16 obj2)
