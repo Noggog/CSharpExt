@@ -13,7 +13,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Noggog.WPF", "Noggog.WPF\No
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CSharpExt.UnitTests", "CSharpExt.UnitTests\CSharpExt.UnitTests.csproj", "{A71490D1-4694-44E9-BEA6-93802FAB4975}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSharpExt.Benchmark", "CSharpExt.Benchmark\CSharpExt.Benchmark.csproj", "{4AF8BA72-661C-4B9F-A1DF-C849D78B0225}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CSharpExt.Benchmark", "CSharpExt.Benchmark\CSharpExt.Benchmark.csproj", "{4AF8BA72-661C-4B9F-A1DF-C849D78B0225}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{9B06BF94-CE70-4811-9A9B-3BAB1581FDF5}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

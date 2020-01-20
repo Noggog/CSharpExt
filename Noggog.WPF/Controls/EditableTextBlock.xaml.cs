@@ -22,7 +22,7 @@ namespace Noggog.WPF
      */
     public partial class EditableTextBlock : UserControl, INotifyPropertyChanged
     {
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
 
         protected void RaisePropertyChanged([CallerMemberName] string caller = "")
         {
@@ -75,8 +75,7 @@ namespace Noggog.WPF
                 FrameworkPropertyMetadataOptions.BindsTwoWayByDefault,
                 (o, e) =>
                 {
-                    EditableTextBlock tb = o as EditableTextBlock;
-                    if (tb == null) return;
+                    if (!(o is EditableTextBlock tb)) return;
                     tb.IsDefaulted = tb.ShouldDefault(tb.Text, tb.DefaultTextContent);
                 }));
 
@@ -154,7 +153,7 @@ namespace Noggog.WPF
 
         private void EditableControl_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-            TextBox txt = sender as TextBox;
+            if (!(sender is TextBox txt)) return;
             if (txt.Visibility == System.Windows.Visibility.Visible)
             {
                 txt.Focus();

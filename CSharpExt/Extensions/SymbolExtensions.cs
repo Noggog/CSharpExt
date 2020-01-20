@@ -46,9 +46,7 @@ namespace Noggog
         /// <returns></returns>
         public static MethodInfo GetMethodInfo(LambdaExpression expression)
         {
-            MethodCallExpression outermostExpression = expression.Body as MethodCallExpression;
-
-            if (outermostExpression == null)
+            if (!(expression.Body is MethodCallExpression outermostExpression))
             {
                 throw new ArgumentException("Invalid Expression. Expression should consist of a Method call only.");
             }

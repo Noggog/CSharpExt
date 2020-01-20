@@ -17,8 +17,8 @@ namespace Noggog
         public DirectoryPath Directory => new DirectoryPath(_fileInfo.Directory.FullName);
         public string Path => _fullPath;
         public string RelativePath => _originalPath;
-        public string Name => _fileInfo?.Name;
-        public string Extension => _fileInfo?.Extension;
+        public string Name => _fileInfo.Name;
+        public string Extension => _fileInfo.Extension;
         public string NameWithoutExtension => _fileInfo.Name.Substring(0, _fileInfo.Name.LastIndexOf(_fileInfo.Extension));
         public bool Exists
         {
@@ -87,7 +87,7 @@ namespace Noggog
 
         public override string ToString()
         {
-            return this._fileInfo?.FullName;
+            return this._fileInfo.FullName;
         }
 
         public FileStream OpenRead()

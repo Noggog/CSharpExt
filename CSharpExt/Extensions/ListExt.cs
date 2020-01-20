@@ -1,6 +1,7 @@
 using Noggog;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Noggog
 {
@@ -92,7 +93,7 @@ namespace Noggog
         {
             if (!InRange(list, index))
             {
-                item = default(T);
+                item = default;
                 return false;
             }
             item = list[index];
@@ -153,7 +154,7 @@ namespace Noggog
                 }
                 else if (checkEquality)
                 {
-                    if (!list[i].Equals(item))
+                    if (!EqualityComparer<T>.Default.Equals(list[i], item))
                     {
                         list[i] = item;
                     }

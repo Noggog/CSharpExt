@@ -15,7 +15,7 @@ namespace CSharpExt.Rx
         private readonly BehaviorSubject<bool> _hasBeenSet = new BehaviorSubject<bool>(false);
         private readonly SourceList<T> _source;
         
-        public SourceSetList(IObservable<IChangeSet<T>> source = null)
+        public SourceSetList(IObservable<IChangeSet<T>>? source = null)
         {
             this._source = new SourceList<T>(source);
         }
@@ -54,7 +54,7 @@ namespace CSharpExt.Rx
             set => _source.Edit(l => l[index] = value);
         }
 
-        public IObservable<IChangeSet<T>> Connect(Func<T, bool> predicate = null)
+        public IObservable<IChangeSet<T>> Connect(Func<T, bool>? predicate = null)
         {
             return _source.Connect(predicate);
         }
@@ -83,7 +83,7 @@ namespace CSharpExt.Rx
             }
         }
 
-        public IObservable<IChangeSet<T>> Preview(Func<T, bool> predicate = null)
+        public IObservable<IChangeSet<T>> Preview(Func<T, bool>? predicate = null)
         {
             return _source.Preview(predicate);
         }

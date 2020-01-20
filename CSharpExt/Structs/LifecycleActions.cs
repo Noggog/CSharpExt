@@ -4,16 +4,16 @@ namespace Noggog
 {
     public struct LifecycleActions<T>
     {
-        public readonly Action<T> OnCreate;
-        public readonly Action<T> OnGet;
-        public readonly Action<T> OnReturn;
-        public readonly Action<T> OnDestroy;
+        public readonly Action<T>? OnCreate;
+        public readonly Action<T>? OnGet;
+        public readonly Action<T>? OnReturn;
+        public readonly Action<T>? OnDestroy;
 
         public LifecycleActions(
-            Action<T> onCreate = null,
-            Action<T> onGet = null,
-            Action<T> onReturn = null,
-            Action<T> onDestroy = null)
+            Action<T>? onCreate = null,
+            Action<T>? onGet = null,
+            Action<T>? onReturn = null,
+            Action<T>? onDestroy = null)
         {
             this.OnCreate = onCreate;
             this.OnGet = onGet;

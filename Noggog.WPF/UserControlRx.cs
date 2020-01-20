@@ -14,8 +14,8 @@ namespace Noggog.WPF
 {
     public class UserControlRx : UserControl, IDisposable, IReactiveObject
     {
-        public event PropertyChangedEventHandler PropertyChanged;
-        public event PropertyChangingEventHandler PropertyChanging;
+        public event PropertyChangedEventHandler? PropertyChanged;
+        public event PropertyChangingEventHandler? PropertyChanging;
 
         public void RaisePropertyChanging(PropertyChangingEventArgs args)
         {

@@ -129,7 +129,7 @@ namespace Noggog
             }
         }
 
-        public static async void FireAndForget(this Task task, Action<Exception> onException = null)
+        public static async void FireAndForget(this Task task, Action<Exception>? onException = null)
         {
             try
             {

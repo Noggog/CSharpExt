@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -142,7 +143,7 @@ namespace Noggog
                 .Where(p => baseType.IsAssignableFrom(p) && p.IsClass && !p.IsAbstract && !p.IsInterface);
         }
 
-        public static List<string> FailedAssemblyLoads;
+        public static List<string>? FailedAssemblyLoads;
 
         public static IEnumerable<Type> GetInheritingFromInterface<I>(bool loadAssemblies = true)
         {
@@ -280,7 +281,7 @@ namespace Noggog
         /*
          * Not cheap
          */
-        public static Type FindType(string qualifiedTypeName)
+        public static Type? FindType(string qualifiedTypeName)
         {
             Type t = Type.GetType(qualifiedTypeName);
 
@@ -300,7 +301,7 @@ namespace Noggog
             }
         }
 
-        public static bool TryGetEnumerableType(this Type t, out Type enumerType)
+        public static bool TryGetEnumerableType(this Type t, [MaybeNullWhen(false)] out Type enumerType)
         {
             foreach (Type interfType in t.GetInterfaces())
             {
@@ -311,7 +312,7 @@ namespace Noggog
                     return true;
                 }
             }
-            enumerType = null;
+            enumerType = null!;
             return false;
         }
 

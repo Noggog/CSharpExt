@@ -52,7 +52,7 @@ namespace CSharpExt.Rx
 
         public TObject this[TKey key] => this._source[key];
 
-        public IObservable<IChangeSet<TObject, TKey>> Connect(Func<TObject, bool> predicate = null)
+        public IObservable<IChangeSet<TObject, TKey>> Connect(Func<TObject, bool>? predicate = null)
         {
             return _source.Connect(predicate);
         }
@@ -86,7 +86,7 @@ namespace CSharpExt.Rx
             return _source.Lookup(key);
         }
 
-        public IObservable<IChangeSet<TObject, TKey>> Preview(Func<TObject, bool> predicate = null)
+        public IObservable<IChangeSet<TObject, TKey>> Preview(Func<TObject, bool>? predicate = null)
         {
             return _source.Preview(predicate);
         }

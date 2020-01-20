@@ -17,7 +17,7 @@ namespace Noggog
 
         public static IObservable<IChangeSet<TDestination>> TransformToLatest<TDestination, TSource>([NotNull] this IObservable<IChangeSet<TSource>> source,
             [NotNull] Func<TSource, IObservable<TDestination>> manyselector,
-            IEqualityComparer<TDestination> equalityComparer = null)
+            IEqualityComparer<TDestination>? equalityComparer = null)
         {
             return source
                 .TransformMany(i =>

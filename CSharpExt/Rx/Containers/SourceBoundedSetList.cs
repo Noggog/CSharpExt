@@ -19,7 +19,7 @@ namespace CSharpExt.Rx
             set => SetMaxValue(value);
         }
 
-        public SourceBoundedSetList(int max = int.MaxValue, IObservable<IChangeSet<T>> source = null)
+        public SourceBoundedSetList(int max = int.MaxValue, IObservable<IChangeSet<T>>? source = null)
             : base(source)
         {
             this.MaxValue = max;
@@ -72,7 +72,7 @@ namespace CSharpExt.Rx
 
         public T this[int index] => ((IList<T>)_source)[index];
 
-        public SourceBoundedList(int max = int.MaxValue, IObservable<IChangeSet<T>> source = null)
+        public SourceBoundedList(int max = int.MaxValue, IObservable<IChangeSet<T>>? source = null)
         {
             _source = new SourceList<T>(source);
             this.MaxValue = max;
@@ -96,7 +96,7 @@ namespace CSharpExt.Rx
             }
         }
 
-        public IObservable<IChangeSet<T>> Connect(Func<T, bool> predicate = null)
+        public IObservable<IChangeSet<T>> Connect(Func<T, bool>? predicate = null)
         {
             return _source.Connect(predicate);
         }
@@ -156,7 +156,7 @@ namespace CSharpExt.Rx
             return _source.GetEnumerator();
         }
 
-        public IObservable<IChangeSet<T>> Preview(Func<T, bool> predicate = null)
+        public IObservable<IChangeSet<T>> Preview(Func<T, bool>? predicate = null)
         {
             return _source.Preview(predicate);
         }

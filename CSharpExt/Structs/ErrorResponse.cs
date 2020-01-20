@@ -12,7 +12,7 @@ namespace Noggog
         public readonly static ErrorResponse Failure = new ErrorResponse();
 
         public readonly bool Succeeded;
-        public readonly Exception Exception;
+        public readonly Exception? Exception;
         private readonly string _reason;
 
         public bool Failed => !Succeeded;
@@ -29,12 +29,12 @@ namespace Noggog
         }
 
         bool IErrorResponse.Succeeded => this.Succeeded;
-        Exception IErrorResponse.Exception => this.Exception;
+        Exception? IErrorResponse.Exception => this.Exception;
 
         private ErrorResponse(
             bool succeeded,
-            string reason = null,
-            Exception ex = null)
+            string reason = "",
+            Exception? ex = null)
         {
             this.Succeeded = succeeded;
             this._reason = reason;
@@ -72,7 +72,7 @@ namespace Noggog
             return new ErrorResponse(false);
         }
 
-        public static ErrorResponse Create(bool successful, string reason = null)
+        public static ErrorResponse Create(bool successful, string reason = "")
         {
             return new ErrorResponse(successful, reason);
         }
@@ -88,7 +88,7 @@ namespace Noggog
     public interface IErrorResponse
     {
         bool Succeeded { get; }
-        Exception Exception { get; }
+        Exception? Exception { get; }
         string Reason { get; }
     }
 }

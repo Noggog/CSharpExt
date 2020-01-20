@@ -271,7 +271,7 @@ namespace CSharpExt.Tests
             Assert.True(typeof(SubClass).InheritsFrom(methodType.ReturnType, couldInherit: true));
         }
 
-        private T TestGenericSource<T>()
+        private T? TestGenericSource<T>()
             where T : AClass
         {
             return default(T);

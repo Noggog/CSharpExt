@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -32,7 +33,7 @@ namespace Noggog
         bool TryGetEncapsulatedValues(
             T lowerKey,
             T higherKey,
-            out IEnumerable<KeyValuePair<int, T>> result);
+            [MaybeNullWhen(false)] out IEnumerable<KeyValuePair<int, T>> result);
     }
 
     public interface ISortedList<T> : ISortedListGetter<T>, IList<T>, ICollection

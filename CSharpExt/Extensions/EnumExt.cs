@@ -206,28 +206,28 @@ namespace Noggog
 
         #region Type Dictionaries
         private static object _loadLock = new object();
-        private static Dictionary<string, Type> enums;
+        private static Dictionary<string, Type>? enums;
 
         public static bool TryGetEnumType(string fullTypeName, out Type t)
         {
-            LoadEnumTypes();
-            return enums.TryGetValue(fullTypeName, out t);
+            return LoadEnumTypes().TryGetValue(fullTypeName, out t);
         }
 
-        private static void LoadEnumTypes()
+        private static Dictionary<string, Type> LoadEnumTypes()
         {
             lock (_loadLock)
             {
-                if (enums != null) return;
+                if (enums != null) return enums;
             }
             enums = new Dictionary<string, Type>(StringComparer.OrdinalIgnoreCase);
             foreach (Assembly assemb in AppDomain.CurrentDomain.GetAssemblies())
             {
-                LoadEnumsFromAssembly(assemb);
+                LoadEnumsFromAssembly(assemb, enums);
             }
+            return enums;
         }
 
-        private static void LoadEnumsFromAssembly(Assembly assembly)
+        private static void LoadEnumsFromAssembly(Assembly assembly, Dictionary<string, Type> dict)
         {
             try
             {
@@ -235,7 +235,7 @@ namespace Noggog
                 {
                     if (t.IsEnum)
                     {
-                        enums[t.FullName] = t;
+                        dict[t.FullName] = t;
                     }
                 }
             }
@@ -352,10 +352,10 @@ namespace Noggog
     // https://stackoverflow.com/questions/53636974/c-sharp-method-to-combine-a-generic-list-of-enum-values-to-a-single-value
     class GenericBitwise<TFlagEnum> where TFlagEnum : Enum
     {
-        private readonly Func<TFlagEnum, TFlagEnum, TFlagEnum> _and = null;
-        private readonly Func<TFlagEnum, TFlagEnum> _not = null;
-        private readonly Func<TFlagEnum, TFlagEnum, TFlagEnum> _or = null;
-        private readonly Func<TFlagEnum, TFlagEnum, TFlagEnum> _xor = null;
+        private readonly Func<TFlagEnum, TFlagEnum, TFlagEnum> _and;
+        private readonly Func<TFlagEnum, TFlagEnum> _not;
+        private readonly Func<TFlagEnum, TFlagEnum, TFlagEnum> _or;
+        private readonly Func<TFlagEnum, TFlagEnum, TFlagEnum> _xor;
 
         public GenericBitwise()
         {

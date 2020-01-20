@@ -18,8 +18,9 @@ namespace Noggog
 
         public void Move(int original, int destination)
         {
-            this[destination] = this[original];
-            this[original] = default;
+            var item = this[original];
+            this.RemoveAt(original);
+            this.Insert(destination, item);
         }
     }
 }

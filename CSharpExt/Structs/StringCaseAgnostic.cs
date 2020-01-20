@@ -10,7 +10,7 @@ namespace Noggog
         public StringCaseAgnostic(string str)
         {
             this.Value = str;
-            this.Upper = str?.ToUpper();
+            this.Upper = str.ToUpper();
         }
 
         public StringCaseAgnostic(StringCaseAgnostic rhs)
