@@ -206,7 +206,7 @@ namespace Noggog
 
         #region Type Dictionaries
         private static object _loadLock = new object();
-        private static Dictionary<StringCaseAgnostic, Type> enums;
+        private static Dictionary<string, Type> enums;
 
         public static bool TryGetEnumType(string fullTypeName, out Type t)
         {
@@ -220,7 +220,7 @@ namespace Noggog
             {
                 if (enums != null) return;
             }
-            enums = new Dictionary<StringCaseAgnostic, Type>();
+            enums = new Dictionary<string, Type>(StringComparer.OrdinalIgnoreCase);
             foreach (Assembly assemb in AppDomain.CurrentDomain.GetAssemblies())
             {
                 LoadEnumsFromAssembly(assemb);

@@ -10,7 +10,7 @@ namespace Noggog
 {
     public struct FilePath : IEquatable<FilePath>, IPath
     {
-        private readonly StringCaseAgnostic _fullPath;
+        private readonly string _fullPath;
         private readonly FileInfo _fileInfo;
         private readonly string _originalPath;
 
@@ -42,17 +42,12 @@ namespace Noggog
         {
             this._originalPath = path;
             this._fileInfo = new FileInfo(path);
-            this._fullPath = StandardizePath(path);
-        }
-
-        public static StringCaseAgnostic StandardizePath(string path)
-        {
-            return System.IO.Path.GetFullPath(path);
+            this._fullPath = System.IO.Path.GetFullPath(path);
         }
 
         public bool Equals(FilePath other)
         {
-            if (!this._fullPath.Equals(other._fullPath)) return false;
+            if (!this._fullPath.Equals(other._fullPath, StringComparison.OrdinalIgnoreCase)) return false;
             return true;
         }
 
@@ -87,7 +82,7 @@ namespace Noggog
 
         public override int GetHashCode()
         {
-            return this._fullPath.GetHashCode();
+            return this._fullPath.GetHashCode(StringComparison.OrdinalIgnoreCase);
         }
 
         public override string ToString()
