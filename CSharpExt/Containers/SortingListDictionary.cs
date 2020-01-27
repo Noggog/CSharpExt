@@ -41,6 +41,15 @@ namespace Noggog
             _internalSortedValues = SortingList<TValue>.Factory_Wrap_AssumeSorted(_internalValues);
         }
 
+        public SortingListDictionary(IEnumerable<KeyValuePair<TKey, TValue>> e)
+            : this()
+        {
+            foreach (var item in e)
+            {
+                this.Add(item);
+            }
+        }
+
         public static SortingListDictionary<TKey, TValue> Factory_Wrap_AssumeSorted(
             IList<TKey> keys,
             IList<TValue> values)
