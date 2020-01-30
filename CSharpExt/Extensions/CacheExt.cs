@@ -1,5 +1,4 @@
-﻿using DynamicData;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -134,6 +133,17 @@ namespace Noggog
                         return converter(t.Value, defVal);
                     }));
             }
+        }
+
+        public static bool TryGetValue<TObject, TKey>(this IReadOnlyCache<TObject, TKey> cache, TKey key, out TObject value)
+        {
+            if (cache.ContainsKey(key))
+            {
+                value = cache[key];
+                return true;
+            }
+            value = default;
+            return false;
         }
     }
 }
