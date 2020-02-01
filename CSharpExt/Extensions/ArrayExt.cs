@@ -117,4 +117,9 @@ namespace Noggog
             }
         }
     }
+
+    public static class ArrayExt<T>
+    {
+        public static readonly T[] Empty = new T[0];
+    }
 }
