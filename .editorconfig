@@ -50,3 +50,6 @@ dotnet_diagnostic.CS8614.severity = error
 
 # CS8617: Nullability of reference types in type of parameter doesn't match implemented member.
 dotnet_diagnostic.CS8617.severity = error
+
+# CS8611: Nullability of reference types in type of parameter doesn't match partial method declaration.
+dotnet_diagnostic.CS8611.severity = error
