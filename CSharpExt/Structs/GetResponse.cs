@@ -8,7 +8,7 @@ namespace Noggog
 
         public readonly T Value;
         public readonly bool Succeeded;
-        public readonly Exception Exception;
+        public readonly Exception? Exception;
         private readonly string _reason;
 
         public bool Failed => !Succeeded;
@@ -25,13 +25,13 @@ namespace Noggog
         }
 
         bool IErrorResponse.Succeeded => this.Succeeded;
-        Exception IErrorResponse.Exception => this.Exception;
+        Exception? IErrorResponse.Exception => this.Exception;
 
         private GetResponse(
             bool succeeded,
-            T val = default(T),
-            string reason = null,
-            Exception ex = null)
+            T val = default,
+            string reason = "",
+            Exception? ex = null)
         {
             this.Value = val;
             this.Succeeded = succeeded;
@@ -124,7 +124,7 @@ namespace Noggog
             return new GetResponse<T>(false, val);
         }
 
-        public static GetResponse<T> Create(bool successful, T val = default(T), string reason = null)
+        public static GetResponse<T> Create(bool successful, T val = default, string reason = "")
         {
             return new GetResponse<T>(successful, val, reason);
         }

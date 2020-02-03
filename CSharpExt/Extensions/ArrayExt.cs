@@ -7,23 +7,6 @@ namespace Noggog
 {
     public static class ArrayExt
     {
-        public static Dictionary<Type, Func<object, char>> Converters;
-        static ArrayExt()
-        {
-            Converters = new Dictionary<Type, Func<object, char>>();
-            Converters.Add(typeof(bool), (b) =>
-            {
-                if ((bool)b) return ' ';
-                else return (char)219;
-            });
-            Converters.Add(typeof(char), (c) =>
-            {
-                char ch = (char)c;
-                if (ch == ((char)0)) return ' ';
-                return (char)c;
-            });
-        }
-
         static public bool Contains<T>(this T[] arr, T val)
         {
             foreach (T t in arr)
@@ -35,30 +18,6 @@ namespace Noggog
                 }
             }
             return false;
-        }
-
-        static public Func<T, char> GetConverter<T>()
-        {
-            Func<T, char> converter;
-            Type type = typeof(T);
-            if (!Converters.TryGetValue(type, out Func<object, char> conv))
-            {
-                converter = new Func<T, char>((t) =>
-                {
-                    if (t == null)
-                        return ' ';
-                    string str = t.ToString();
-                    return str.Length > 0 ? str[0] : ' ';
-                });
-            }
-            else
-            {
-                converter = new Func<T, char>((t) =>
-                {
-                    return conv(t);
-                });
-            }
-            return converter;
         }
 
         public static P2Int Center<T>(this T[,] array)
@@ -140,12 +99,27 @@ namespace Noggog
             return index >= 0 && index < arr.Length;
         }
 
-        public static void Clear<T>(this T[] arr)
+        public static void Reset<T>(this T[] arr)
+            where T : struct
         {
             for (int i = 0; i < arr.Length; i++)
             {
                 arr[i] = default;
             }
         }
+
+        public static void ResetToNull<T>(this T?[] arr)
+            where T : class
+        {
+            for (int i = 0; i < arr.Length; i++)
+            {
+                arr[i] = default;
+            }
+        }
+    }
+
+    public static class ArrayExt<T>
+    {
+        public static readonly T[] Empty = new T[0];
     }
 }

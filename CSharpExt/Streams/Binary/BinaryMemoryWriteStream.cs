@@ -130,7 +130,7 @@ namespace Noggog
 
         public void Dispose()
         {
-            _data = null;
+            _data = new byte[0];
         }
 
         #region Private struct used for Single/Int32 conversions

@@ -15,7 +15,7 @@ namespace CSharpExt.Rx
         private readonly IScheduler _scheduler;
         private readonly Subject<T> _liveEvents;
         private bool _observationsStarted;
-        private Queue<T> _buffer;
+        private Queue<T>? _buffer;
         private readonly object _gate;
 
         public BufferUntilSubscribedObservable(IObservable<T> source, IScheduler scheduler)
@@ -61,7 +61,7 @@ namespace CSharpExt.Rx
         /// Acquires a lock and checks the buffer.  If it is empty, then replaces it with null and returns null.  Else replaces it with an empty buffer and returns the old buffer.
         /// </summary>
         /// <returns></returns>
-        private Queue<T> GetAndReplaceBuffer()
+        private Queue<T>? GetAndReplaceBuffer()
         {
             lock (_gate)
             {
@@ -88,7 +88,7 @@ namespace CSharpExt.Rx
         /// <returns></returns>
         private IEnumerable<IObservable<T>> GetBuffers()
         {
-            Queue<T> buffer;
+            Queue<T>? buffer;
             while ((buffer = GetAndReplaceBuffer()) != null)
             {
                 yield return buffer.ToObservable(_scheduler);

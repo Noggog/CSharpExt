@@ -26,7 +26,7 @@ namespace Noggog.WPF
         protected void RaiseAndSetIfChanged<T>(
             ref T item,
             T newItem,
-            [CallerMemberName] string propertyName = null)
+            [CallerMemberName] string? propertyName = null)
         {
             if (EqualityComparer<T>.Default.Equals(item, newItem)) return;
             item = newItem;

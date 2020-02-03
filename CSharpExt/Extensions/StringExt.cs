@@ -19,23 +19,6 @@ namespace Noggog
             }
         }
 
-        public static bool Extract(this string s, string target, out string result)
-        {
-            if (s == null)
-            {
-                result = s;
-                return false;
-            }
-            int index = s.IndexOf(target);
-            if (index == -1)
-            {
-                result = s;
-                return false;
-            }
-            result = s.Remove(index, target.Length);
-            return true;
-        }
-
         public static IEnumerable<string> Split(this string line, string delim, char escapeChar)
         {
             int index = -1;

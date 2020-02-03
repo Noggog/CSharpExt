@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -170,10 +171,19 @@ namespace Noggog
         bool IDictionary.IsReadOnly => false;
         bool ICollection<KeyValuePair<TKey, TValue>>.IsReadOnly => false;
 
-        object IDictionary.this[object key]
+        object? IDictionary.this[object? key]
         {
-            get => this.Get((TKey)key);
-            set => this.Add((TKey)key, (TValue)value);
+            get
+            {
+                if (key == null) throw new NullReferenceException();
+                return this.Get((TKey)key);
+            }
+            set
+            {
+                if (key == null) throw new NullReferenceException();
+                if (!(value is TValue v)) throw new ArgumentException();
+                this.Add((TKey)key, v);
+            }
         }
 
         bool IDictionary.Contains(object key)
@@ -247,7 +257,7 @@ namespace Noggog
                 result = _internalSortedValues[index];
                 return true;
             }
-            result = default(TValue);
+            result = default;
             return false;
         }
 
@@ -263,7 +273,7 @@ namespace Noggog
                     _internalSortedValues[index]);
                 return true;
             }
-            result = default(KeyValuePair<int, TValue>);
+            result = default;
             return false;
         }
 
@@ -275,14 +285,14 @@ namespace Noggog
                 out result);
         }
 
-        public bool TryGetEncapsulatedValues(TKey lowerKey, TKey higherKey, out IEnumerable<KeyValuePair<int, TValue>> result)
+        public bool TryGetEncapsulatedValues(TKey lowerKey, TKey higherKey, [MaybeNullWhen(false)] out IEnumerable<KeyValuePair<int, TValue>> result)
         {
             if (!_internalSortedKeys.TryGetEncapsulatedIndices(
                 lowerKey,
                 higherKey,
                 out var indices))
             {
-                result = default(IEnumerable<KeyValuePair<int, TValue>>);
+                result = default!;
                 return false;
             }
             result = indices.Select((i) => new KeyValuePair<int, TValue>(i, _internalSortedValues[i]));

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -35,7 +36,7 @@ namespace Noggog
             return sReader.ReadToEnd();
         }
 
-        public static bool TryGetAttribute(this XElement node, string str, out XAttribute val)
+        public static bool TryGetAttribute(this XElement node, string str, [MaybeNullWhen(false)] out XAttribute val)
         {
             if (node != null)
             {
@@ -46,24 +47,29 @@ namespace Noggog
                     return true;
                 }
             }
-            val = null;
+            val = null!;
             return false;
         }
 
         public static bool TryGetAttributeString(this XElement node, string str, out string val)
         {
-            if (TryGetAttribute(node, str, out XAttribute attr))
+            if (TryGetAttribute(node, str, out var attr))
             {
                 val = attr.Value;
                 return true;
             }
-            val = null;
+            val = string.Empty;
             return false;
         }
 
         public static bool TryGetAttribute<P>(this XElement node, string str, out P val, Func<string, P> converter)
         {
             bool ret = TryGetAttributeString(node, str, out string strVal);
+            if (!ret)
+            {
+                val = default;
+                return ret;
+            }
             val = converter(strVal);
             return ret;
         }
@@ -112,7 +118,7 @@ namespace Noggog
             return val;
         }
 
-        public static P GetAttribute<P>(this XElement node, string str, P defaultVal = default(P), bool throwException = false)
+        public static P GetAttribute<P>(this XElement node, string str, P defaultVal = default, bool throwException = false)
         {
             if (!TryGetAttribute(node, str, out P val, throwException))
             {
@@ -129,11 +135,11 @@ namespace Noggog
             }
         }
 
-        public static string GetAttribute(this XElement node, string str, string defaultVal = null, bool throwException = false)
+        public static string? GetAttribute(this XElement node, string str, string? defaultVal = null, bool throwException = false)
         {
             if (!TryGetAttribute(node, str, out string val, throwException))
             {
-                val = defaultVal;
+                return defaultVal;
             }
             return val;
         }

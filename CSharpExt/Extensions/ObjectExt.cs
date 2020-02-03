@@ -7,16 +7,6 @@ namespace Noggog
 {
     public static class ObjectExt
     {
-        public static Type GetEnumeratedType<T>(this IComparable<T> _)
-        {
-            return typeof(T);
-        }
-
-        public static bool InheritsFrom<T>(this object obj)
-        {
-            return obj is T;
-        }
-
         public static List<T> FindAllDerivedObjects<T>(this Object obj, bool recursive = true)
         {
             List<T> ret = new List<T>();
@@ -98,33 +88,14 @@ namespace Noggog
             return ret;
         }
 
-        public static string ToStringSafe(this object o, bool throwException = false)
-        {
-            if (o == null) return string.Empty;
-            try
-            {
-                return o.ToString();
-            }
-            catch (Exception)
-            {
-                if (throwException)
-                {
-                    throw;
-                }
-                return "[ExceptionThrown]";
-            }
-        }
-
         public static R CastWithException<R>(this object o)
-            where R : class
+            where R : notnull
         {
-            if (o == null) return null;
-            R ret = o as R;
-            if (ret == null)
+            if (o is R ret)
             {
-                throw new ArgumentException("Failed to cast from type " + o.GetType() + " to " + typeof(R));
+                return ret;
             }
-            return ret;
+            throw new ArgumentException($"Failed to cast from type {o.GetType()} to {typeof(R)}");
         }
     }
 }

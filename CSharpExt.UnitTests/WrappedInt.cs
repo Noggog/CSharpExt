@@ -20,13 +20,13 @@ namespace CSharpExt.Tests
             return Int.CompareTo(other.Int);
         }
 
-        public int CompareTo(object obj)
+        public int CompareTo(object? obj)
         {
             if (!(obj is WrappedInt rhs)) return 0;
             return CompareTo(rhs);
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (!(obj is WrappedInt rhs)) return false;
             return Equals(rhs);

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using BenchmarkDotNet.Attributes;
 using Noggog;
+#nullable disable
 
 namespace CSharpExt.Benchmark
 {
@@ -13,7 +14,7 @@ namespace CSharpExt.Benchmark
         static readonly byte[] arr = new byte[] { 0, 1, 2, 3, 4 };
         static readonly Memory<byte> mem = arr.AsMemory();
         static readonly MemorySlice<byte> memTest = new MemorySlice<byte>(arr);
-        static byte[] largeArray;
+        static byte[]? largeArray;
 
         [GlobalSetup]
         public void Setup()

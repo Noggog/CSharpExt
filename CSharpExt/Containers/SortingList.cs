@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -185,13 +186,13 @@ namespace Noggog
                 out result);
         }
 
-        public bool TryGetEncapsulatedValues(T lowerKey, T higherKey, out IEnumerable<KeyValuePair<int, T>> result)
+        public bool TryGetEncapsulatedValues(T lowerKey, T higherKey, [MaybeNullWhen(false)] out IEnumerable<KeyValuePair<int, T>> result)
         {
             return PreSortedListExt.TryGetEncapsulatedValues<T>(
                 this,
                 lowerKey,
                 higherKey,
-                out result);
+                out result!);
         }
         #endregion
     }

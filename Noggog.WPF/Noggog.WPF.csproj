@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
@@ -6,19 +6,19 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="DynamicData" Version="6.14.3" />
     <PackageReference Include="MahApps.Metro" Version="2.0.0-alpha0660" />
-    <PackageReference Include="MahApps.Metro.IconPacks" Version="3.1.0" />
+    <PackageReference Include="MahApps.Metro.IconPacks" Version="3.2.0" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
-    <PackageReference Include="ReactiveUI" Version="11.1.12" />
-    <PackageReference Include="ReactiveUI.Events.WPF" Version="11.1.12" />
-    <PackageReference Include="ReactiveUI.Fody" Version="11.1.12" />
-    <PackageReference Include="ReactiveUI.WPF" Version="11.1.12" />
+    <PackageReference Include="ReactiveUI" Version="11.1.23" />
+    <PackageReference Include="ReactiveUI.Events.WPF" Version="11.1.23" />
+    <PackageReference Include="ReactiveUI.Fody" Version="11.1.23" />
+    <PackageReference Include="ReactiveUI.WPF" Version="11.1.23" />
     <PackageReference Include="System.Reactive" Version="4.3.2" />
     <PackageReference Include="WindowsAPICodePack-Shell" Version="1.1.1" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\DynamicData\src\DynamicData\DynamicData.csproj" />
     <ProjectReference Include="..\CSharpExt\CSharpExt.csproj" />
   </ItemGroup>
 

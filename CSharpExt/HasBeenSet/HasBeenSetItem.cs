@@ -7,9 +7,9 @@ namespace Noggog
         public static IHasBeenSetItem<T> Factory<T>(
             T defaultVal = default(T),
             bool markAsSet = false,
-            Func<T> noNullFallback = null,
-            Action<T> onSet = null,
-            Func<T, T> converter = null)
+            Func<T>? noNullFallback = null,
+            Action<T>? onSet = null,
+            Func<T, T>? converter = null)
         {
             if (noNullFallback == null)
             {
@@ -92,10 +92,10 @@ namespace Noggog
         }
 
         public static IHasBeenSetItem<T> FactoryNoNull<T>(
-            T defaultVal = default(T),
+            T defaultVal = default,
             bool markAsSet = false,
-            Action<T> onSet = null,
-            Func<T, T> converter = null)
+            Action<T>? onSet = null,
+            Func<T, T>? converter = null)
             where T : new()
         {
             if (onSet == null)

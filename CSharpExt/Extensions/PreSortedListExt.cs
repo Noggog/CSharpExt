@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -161,7 +162,7 @@ namespace Noggog
             IReadOnlyList<T> sortedList,
             T lowerKey,
             T higherKey,
-            out IEnumerable<KeyValuePair<int, T>> result)
+            [MaybeNullWhen(false)] out IEnumerable<KeyValuePair<int, T>> result)
         {
             if (!TryGetEncapsulatedIndices(
                 sortedList: sortedList,
@@ -169,7 +170,7 @@ namespace Noggog
                 higherKey: higherKey,
                 result: out var range))
             {
-                result = null;
+                result = default!;
                 return false;
             }
             result = range.Select((i) => new KeyValuePair<int, T>(i, sortedList[i]));

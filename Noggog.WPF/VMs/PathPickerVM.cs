@@ -32,16 +32,16 @@ namespace Noggog.WPF
             On
         }
 
-        public object Parent { get; }
+        public object? Parent { get; }
 
         [Reactive]
         public ICommand SetTargetPathCommand { get; set; }
 
         [Reactive]
-        public string TargetPath { get; set; }
+        public string TargetPath { get; set; } = string.Empty;
 
         [Reactive]
-        public string PromptTitle { get; set; }
+        public string PromptTitle { get; set; } = string.Empty;
 
         [Reactive]
         public PathTypeOptions PathType { get; set; }
@@ -53,7 +53,7 @@ namespace Noggog.WPF
         public CheckOptions FilterCheckOption { get; set; } = CheckOptions.IfPathNotEmpty;
 
         [Reactive]
-        public IObservable<IErrorResponse> AdditionalError { get; set; }
+        public IObservable<IErrorResponse>? AdditionalError { get; set; }
 
         private readonly ObservableAsPropertyHelper<bool> _exists;
         public bool Exists => _exists.Value;
@@ -72,7 +72,7 @@ namespace Noggog.WPF
         public const string PathDoesNotExistText = "Path does not exist";
         public const string DoesNotPassFiltersText = "Path does not pass designated filters";
 
-        public PathPickerVM(object parentVM = null)
+        public PathPickerVM(object? parentVM = null)
         {
             Parent = parentVM;
             SetTargetPathCommand = ConstructTypicalPickerCommand();
@@ -210,7 +210,7 @@ namespace Noggog.WPF
                             this.WhenAny(x => x.Exists),
                             doExistsCheck,
                             resultSelector: (exists, doExists) => !doExists || exists)
-                        .Select(exists => ErrorResponse.Create(successful: exists, exists ? default(string) : PathDoesNotExistText)),
+                        .Select(exists => ErrorResponse.Create(successful: exists, exists ? string.Empty : PathDoesNotExistText)),
                     passesFilters,
                     this.WhenAny(x => x.AdditionalError)
                         .Select(x => x ?? Observable.Return<IErrorResponse>(ErrorResponse.Success))
@@ -235,7 +235,7 @@ namespace Noggog.WPF
                             this.WhenAny(x => x.Exists),
                             doExistsCheck,
                             resultSelector: (exists, doExists) => !doExists || exists)
-                        .Select(exists => exists ? default(string) : PathDoesNotExistText),
+                        .Select(exists => exists ? string.Empty : PathDoesNotExistText),
                     passesFilters
                         .Select(x => x.Reason),
                     this.WhenAny(x => x.AdditionalError)
@@ -245,10 +245,10 @@ namespace Noggog.WPF
                     {
                         if (!string.IsNullOrWhiteSpace(exists)) return exists;
                         if (!string.IsNullOrWhiteSpace(filters)) return filters;
-                        return err?.Reason;
+                        return err.Reason;
                     })
                 .ObserveOn(RxApp.MainThreadScheduler)
-                .ToProperty(this, nameof(ErrorTooltip));
+                .ToProperty<PathPickerVM, string>(this, nameof(ErrorTooltip));
         }
 
         public ICommand ConstructTypicalPickerCommand()
@@ -259,7 +259,7 @@ namespace Noggog.WPF
                     string dirPath;
                     if (File.Exists(TargetPath))
                     {
-                        dirPath = Path.GetDirectoryName(TargetPath);
+                        dirPath = Path.GetDirectoryName(TargetPath) ?? string.Empty;
                     }
                     else
                     {
@@ -291,20 +291,20 @@ namespace Noggog.WPF
 
         public class PathPickerJsonConverter : JsonConverter
         {
-            public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+            public override void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer)
             {
-                PathPickerVM vm = (PathPickerVM)value;
-
+                if (!(value is PathPickerVM vm)) throw new ArgumentException();
                 writer.WriteValue(vm.TargetPath);
             }
 
-            public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+            public override object ReadJson(JsonReader reader, Type objectType, object? existingValue, JsonSerializer serializer)
             {
                 if (!(existingValue is PathPickerVM vm))
                 {
                     vm = new PathPickerVM();
                 }
-                vm.TargetPath = (string)reader.Value;
+                if (!(reader.Value is string str)) throw new ArgumentException();
+                vm.TargetPath = str;
                 return vm;
             }
 

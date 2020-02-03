@@ -17,6 +17,21 @@ namespace Noggog
             return false;
         }
 
+        public static bool EqualsWithin(this float? a, float? b, float within = 0.000000001f)
+        {
+            if (a.HasValue && b.HasValue)
+            {
+                if (Math.Abs(a.Value - b.Value) < within) return true;
+                if (float.IsInfinity(a.Value) && float.IsInfinity(b.Value)) return true;
+                if (float.IsNaN(a.Value) && float.IsNaN(b.Value)) return true;
+                return false;
+            }
+            else
+            {
+                return !a.HasValue && !b.HasValue;
+            }
+        }
+
         public static int Round(this float a)
         {
             return (int)Math.Round(a);

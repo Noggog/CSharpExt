@@ -1,5 +1,4 @@
-﻿using DynamicData;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -44,22 +43,28 @@ namespace Noggog
         }
 
         public static void SetToWithDefault<TItem, TRhs, TKey>(
-            this ICache<TItem, TKey> not,
+            this ICache<TItem, TKey> cache,
             IReadOnlyDictionary<TKey, TRhs> rhs,
-            IReadOnlyDictionary<TKey, TRhs> def,
-            Func<TRhs, TRhs, TItem> converter)
+            IReadOnlyDictionary<TKey, TRhs>? def,
+            Func<TRhs, TRhs?, TItem> converter)
+            where TRhs : class
         {
             if (def == null)
             {
-                not.SetTo(
+                cache.SetTo(
                     rhs.Values.Select((t) => converter(t, default)));
             }
             else
             {
-                not.SetTo(
+                cache.SetTo(
                     rhs.Select((t) =>
                     {
-                        if (!def.TryGetValue(t.Key, out var defVal))
+                        TRhs? defVal;
+                        if (def.TryGetValue(t.Key, out var get))
+                        {
+                            defVal = get;
+                        }
+                        else
                         {
                             defVal = default;
                         }
@@ -71,8 +76,9 @@ namespace Noggog
         public static void SetToWithDefault<TItem, TRhs, TKey>(
             this ICache<TItem, TKey> not,
             IReadOnlyCache<TRhs, TKey> rhs,
-            IReadOnlyCache<TRhs, TKey> def,
-            Func<TRhs, TRhs, TItem> converter)
+            IReadOnlyCache<TRhs, TKey>? def,
+            Func<TRhs, TRhs?, TItem> converter)
+            where TRhs : class
         {
             if (def == null)
             {
@@ -84,7 +90,12 @@ namespace Noggog
                 not.SetTo(
                     rhs.Select((t) =>
                     {
-                        if (!def.TryGetValue(t.Key, out var defVal))
+                        TRhs? defVal;
+                        if (def.TryGetValue(t.Key, out var get))
+                        {
+                            defVal = get;
+                        }
+                        else
                         {
                             defVal = default;
                         }
@@ -93,11 +104,12 @@ namespace Noggog
             }
         }
 
-        public static void SetToWithDefault<V, K>(
-            this ICache<V, K> not,
-            ICache<V, K> rhs,
-            ICache<V, K> def,
-            Func<V, V, V> converter)
+        public static void SetToWithDefault<TItem, TKey>(
+            this ICache<TItem, TKey> not,
+            ICache<TItem, TKey> rhs,
+            ICache<TItem, TKey>? def,
+            Func<TItem, TItem?, TItem> converter)
+            where TItem : class
         {
             if (def == null)
             {
@@ -109,13 +121,29 @@ namespace Noggog
                 not.SetTo(
                     rhs.Select((t) =>
                     {
-                        if (!def.TryGetValue(t.Key, out var defVal))
+                        TItem? defVal;
+                        if (def.TryGetValue(t.Key, out var get))
+                        {
+                            defVal = get;
+                        }
+                        else
                         {
                             defVal = default;
                         }
                         return converter(t.Value, defVal);
                     }));
             }
+        }
+
+        public static bool TryGetValue<TObject, TKey>(this IReadOnlyCache<TObject, TKey> cache, TKey key, out TObject value)
+        {
+            if (cache.ContainsKey(key))
+            {
+                value = cache[key];
+                return true;
+            }
+            value = default;
+            return false;
         }
     }
 }

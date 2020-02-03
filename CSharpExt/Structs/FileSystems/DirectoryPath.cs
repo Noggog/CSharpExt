@@ -12,20 +12,19 @@ namespace Noggog
     {
         private readonly string _fullPath;
         private readonly FileInfo _fileInfo;
-        private readonly DirectoryInfo _dirInfo;
+        public DirectoryInfo Info { get; }
         public DirectoryPath Directory => new DirectoryPath(_fileInfo.Directory.FullName);
-        public bool Exists => _dirInfo?.Exists() ?? false;
+        public bool Exists => Info?.Exists() ?? false;
         public string Path => _fullPath;
-        public string Name => _dirInfo.Name;
-        public bool Empty => !_dirInfo.EnumerateFiles().Any()
-            && !_dirInfo.EnumerateDirectories().Any();
-        public DirectoryInfo Info => _dirInfo;
+        public string Name => Info.Name;
+        public bool Empty => !Info.EnumerateFiles().Any()
+            && !Info.EnumerateDirectories().Any();
 
         public DirectoryPath(string path)
         {
             this._fileInfo = new FileInfo(path);
             this._fullPath = System.IO.Path.GetFullPath(path);
-            this._dirInfo = new DirectoryInfo(this._fullPath);
+            this.Info = new DirectoryInfo(this._fullPath);
         }
 
         public DirectoryPath(string path, string referencePath)
@@ -36,7 +35,7 @@ namespace Noggog
             }
             this._fileInfo = new FileInfo(path);
             this._fullPath = System.IO.Path.GetFullPath(path);
-            this._dirInfo = new DirectoryInfo(this._fullPath);
+            this.Info = new DirectoryInfo(this._fullPath);
         }
 
         public bool Equals(DirectoryPath other)
@@ -58,7 +57,7 @@ namespace Noggog
 
         public override string ToString()
         {
-            return this._dirInfo?.FullName;
+            return this.Info.FullName;
         }
 
         public FilePath GetFile(string filePath)
@@ -68,23 +67,23 @@ namespace Noggog
 
         public bool IsSubfolderOf(DirectoryPath rhs)
         {
-            return this._dirInfo.IsSubfolderOf(rhs._dirInfo);
+            return this.Info.IsSubfolderOf(rhs.Info);
         }
 
         public bool DeleteEntireFolder(bool disableReadOnly = true, bool deleteFolderItself = true)
         {
-            return this._dirInfo.DeleteEntireFolder(disableReadOnly, deleteFolderItself: deleteFolderItself);
+            return this.Info.DeleteEntireFolder(disableReadOnly, deleteFolderItself: deleteFolderItself);
         }
 
         public void DeleteContainedFiles(bool recursive)
         {
-            this._dirInfo.DeleteContainedFiles(recursive);
+            this.Info.DeleteContainedFiles(recursive);
         }
 
         public void Create()
         {
             if (this.Exists) return;
-            this._dirInfo.Create();
+            this.Info.Create();
         }
 
         public string GetRelativePathTo(DirectoryPath relativeTo)
@@ -98,18 +97,18 @@ namespace Noggog
         {
             if (recursive)
             {
-                return this._dirInfo.EnumerateFilesRecursive();
+                return this.Info.EnumerateFilesRecursive();
             }
             else
             {
-                this._dirInfo.Refresh();
-                return this._dirInfo.EnumerateFiles();
+                this.Info.Refresh();
+                return this.Info.EnumerateFiles();
             }
         }
 
         public IEnumerable<FilePath> EnumerateFiles(bool recursive = false)
         {
-            foreach (var file in (recursive ? this._dirInfo.EnumerateFilesRecursive() : this._dirInfo.EnumerateFiles()))
+            foreach (var file in (recursive ? this.Info.EnumerateFilesRecursive() : this.Info.EnumerateFiles()))
             {
                 yield return new FilePath(file.FullName);
             }
@@ -117,14 +116,14 @@ namespace Noggog
 
         public IEnumerable<DirectoryInfo> EnumerateDirectoryInfos(bool includeSelf, bool recursive)
         {
-            return this._dirInfo.EnumerateDirectories(
+            return this.Info.EnumerateDirectories(
                 includeSelf: includeSelf,
                 recursive: recursive);
         }
 
         public IEnumerable<DirectoryPath> EnumerateDirectories(bool includeSelf, bool recursive)
         {
-            foreach (var file in this._dirInfo.EnumerateDirectories(
+            foreach (var file in this.Info.EnumerateDirectories(
                 includeSelf: includeSelf, 
                 recursive: recursive))
             {
