@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Text;
 
 namespace Noggog
 {
@@ -73,9 +75,31 @@ namespace Noggog
             return c1.Value;
         }
 
-        public static implicit operator Percent(double c1)
+        public static Percent FactoryPutInRange(double d)
         {
-            return new Percent(c1);
+            if (double.IsNaN(d) || double.IsInfinity(d))
+            {
+                throw new ArgumentException();
+            }
+            if (d < 0)
+            {
+                return Percent.Zero;
+            }
+            else if (d > 1)
+            {
+                return Percent.One;
+            }
+            return new Percent(d, check: false);
+        }
+
+        public static Percent FactoryPutInRange(int cur, int max)
+        {
+            return FactoryPutInRange(1.0d * cur / max);
+        }
+
+        public static Percent FactoryPutInRange(long cur, long max)
+        {
+            return FactoryPutInRange(1.0d * cur / max);
         }
 
         public static Percent AverageFromPercents(params Percent[] ps)
@@ -85,7 +109,7 @@ namespace Noggog
             {
                 percent += p.Value;
             }
-            return percent / ps.Length;
+            return new Percent(percent / ps.Length, check: false);
         }
 
         public static Percent MultFromPercents(params Percent[] ps)
@@ -95,7 +119,7 @@ namespace Noggog
             {
                 percent *= p.Value;
             }
-            return percent;
+            return new Percent(percent, check: false);
         }
 
         public override bool Equals(object obj)
@@ -116,7 +140,35 @@ namespace Noggog
 
         public override string ToString()
         {
-            return Value.ToString("n3");
+            return ToString(0);
+        }
+
+        public string ToString(string format)
+        {
+            return $"{(Value * 100).ToString(format)}%";
+        }
+
+        public string ToString(byte numDigits)
+        {
+            switch (numDigits)
+            {
+                case 0:
+                    return ToString("n0");
+                case 1:
+                    return ToString("n1");
+                case 2:
+                    return ToString("n2");
+                case 3:
+                    return ToString("n3");
+                case 4:
+                    return ToString("n4");
+                case 5:
+                    return ToString("n5");
+                case 6:
+                    return ToString("n6");
+                default:
+                    throw new NotImplementedException();
+            }
         }
 
         public int CompareTo(object obj)
