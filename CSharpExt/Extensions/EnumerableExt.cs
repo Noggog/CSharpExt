@@ -291,10 +291,11 @@ namespace Noggog
             }
         }
 
-        public static IEnumerable<T> NotNull<T>(this IEnumerable<T> e)
+        public static IEnumerable<T> NotNull<T>(this IEnumerable<T?> e)
             where T : class
         {
-            return e.Where(i => i != null);
+            return e.Where(i => i != null)
+                .Select(i => i!);
         }
     }
 
