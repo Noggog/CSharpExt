@@ -345,5 +345,12 @@ namespace Noggog
                     }));
             }
         }
+
+        public static IReadOnlyList<T> Empty<T>() => ListEmptyExt<T>.Empty;
+
+        private static class ListEmptyExt<T>
+        {
+            public static List<T> Empty = new List<T>();
+        }
     }
 }
