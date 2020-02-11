@@ -200,6 +200,10 @@ namespace Noggog
 
         public ReadOnlySpan<byte> ReadSpan(int amount, int offset)
         {
+            if (offset == 0)
+            {
+                return ReadSpan(amount);
+            }
             throw new NotImplementedException();
         }
 
