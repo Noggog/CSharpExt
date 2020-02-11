@@ -34,8 +34,8 @@ namespace Noggog
 
         public T this[int index]
         {
-            get => _arr[index];
-            set => _arr[index] = value;
+            get => _arr[index + _startPos];
+            set => _arr[index + _startPos] = value;
         }
 
         [DebuggerStepThrough]
@@ -120,7 +120,7 @@ namespace Noggog
 
         public ReadOnlySpan<T> Span => _arr.AsSpan(start: _startPos, length: _length);
 
-        public T this[int index] => _arr[index];
+        public T this[int index] => _arr[index + _startPos];
 
         [DebuggerStepThrough]
         public ReadOnlyMemorySlice<T> Slice(int start)
