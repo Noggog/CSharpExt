@@ -97,5 +97,12 @@ namespace Noggog
             }
             throw new ArgumentException($"Failed to cast from type {o.GetType()} to {typeof(R)}");
         }
+
+        public static bool NullSame<T>(T? a, T? b)
+            where T : class
+        {
+            if (a == null && b == null) return true;
+            return a != null && b != null;
+        }
     }
 }
