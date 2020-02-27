@@ -164,4 +164,15 @@ namespace Noggog
             return new ReadOnlyMemorySlice<T>(mem);
         }
     }
+
+    public static class MemorySliceExt
+    {
+        public static bool Equal<T>(ReadOnlyMemorySlice<T>? lhs, ReadOnlyMemorySlice<T>? rhs)
+            where T : IEquatable<T>
+        {
+            if (lhs == null && rhs == null) return true;
+            if (lhs == null || rhs == null) return false;
+            return MemoryExtensions.SequenceEqual(lhs.Value.Span, rhs.Value.Span);
+        }
+    }
 }
