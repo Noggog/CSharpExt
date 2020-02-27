@@ -159,6 +159,12 @@ namespace Noggog
             return mem.Span;
         }
 
+        public static implicit operator ReadOnlyMemorySlice<T>?(T[]? mem)
+        {
+            if (mem == null) return null;
+            return new ReadOnlyMemorySlice<T>(mem);
+        }
+
         public static implicit operator ReadOnlyMemorySlice<T>(T[] mem)
         {
             return new ReadOnlyMemorySlice<T>(mem);
