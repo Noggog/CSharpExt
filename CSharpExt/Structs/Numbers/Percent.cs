@@ -6,11 +6,11 @@ namespace Noggog
 {
     public struct Percent : IComparable, IEquatable<Percent>
     {
-        public static readonly Percent One = new Percent(1);
-        public static readonly Percent Zero = new Percent(0);
+        public static readonly Percent One = new Percent(1d);
+        public static readonly Percent Zero = new Percent(0d);
 
         public readonly double Value;
-        public Percent Inverse => new Percent(1 - this.Value, check: false);
+        public Percent Inverse => new Percent(1d - this.Value, check: false);
 
         private Percent(double d, bool check)
         {
@@ -27,22 +27,6 @@ namespace Noggog
         public Percent(double d)
             : this(d, check: true)
         {
-        }
-
-        public Percent(int i)
-        {
-            if (i < 0)
-            {
-                Value = 0;
-            }
-            else if (i > 100)
-            {
-                Value = 1;
-            }
-            else
-            {
-                Value = i / 100d;
-            }
         }
 
         public static bool InRange(double d)
