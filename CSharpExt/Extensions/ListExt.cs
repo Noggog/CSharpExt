@@ -189,18 +189,6 @@ namespace Noggog
             list.RemoveToCount(i);
         }
 
-        public static void SetTo<T>(this ISetList<T> list, IEnumerable<T> items)
-        {
-            ListExt.SetTo((IList<T>)list, items);
-            list.HasBeenSet = true;
-        }
-
-        public static void SetTo<T, R>(this ISetList<T> list, IEnumerable<R> items, Func<R, T> converter)
-        {
-            ListExt.SetTo((IList<T>)list, items, converter);
-            list.HasBeenSet = true;
-        }
-
         public static void SetTo<T>(this IList<T> list, T item)
         {
             list.Clear();
@@ -253,70 +241,12 @@ namespace Noggog
         }
 
         public static void SetToWithDefault<T>(
-            this ISetList<T> not,
-            IReadOnlySetList<T> rhs,
-            IReadOnlySetList<T> def)
-        {
-            if (rhs.HasBeenSet)
-            {
-                not.SetTo(rhs);
-            }
-            else if (def?.HasBeenSet ?? false)
-            {
-                not.SetTo(def);
-            }
-            else
-            {
-                not.Unset();
-            }
-        }
-
-        public static void SetToWithDefault<T>(
             this IList<T> not,
             IReadOnlyList<T> rhs,
             IReadOnlyList<T> def)
         {
             if (def != null) throw new NotImplementedException();
             not.SetTo(rhs);
-        }
-
-        public static void SetToWithDefault<V>(
-            this ISetList<V> not,
-            IReadOnlySetList<V> rhs,
-            IReadOnlySetList<V> def,
-            Func<V, V, V> converter)
-        {
-            if (rhs.HasBeenSet)
-            {
-                if (def == null)
-                {
-                    not.SetTo(
-                        rhs.Select((t) => converter(t, default)));
-                }
-                else
-                {
-                    int i = 0;
-                    not.SetTo(
-                        rhs.Select((t) =>
-                        {
-                            V defVal = default;
-                            if (def.Count > i)
-                            {
-                                defVal = def[i];
-                            }
-                            return converter(t, defVal);
-                        }));
-                }
-            }
-            else if (def?.HasBeenSet ?? false)
-            {
-                not.SetTo(
-                    def.Select((t) => converter(t, default)));
-            }
-            else
-            {
-                not.Unset();
-            }
         }
 
         public static void SetToWithDefault<V>(

@@ -7,6 +7,16 @@ namespace Noggog
 {
     public class ExtendedList<T> : List<T>, IExtendedList<T>
     {
+        public ExtendedList()
+            : base()
+        {
+        }
+
+        public ExtendedList(IEnumerable<T> collection)
+            : base(collection)
+        {
+        }
+
         public void InsertRange(IEnumerable<T> collection, int index)
         {
             foreach (var item in collection.Reverse())
