@@ -36,7 +36,7 @@ steps:
   displayName: 'Pack CSharpExt'
   inputs:
     command: pack
-    packagesToPack: CSharpExt/CSharpExt.csproj
+    packagesToPack: Noggog.CSharpExt/Noggog.CSharpExt.csproj
     includeReferencedProjects: true
 #    includeSymbols: true
 
