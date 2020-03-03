@@ -5,6 +5,7 @@
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <AssemblyName>Noggog.CSharpExt</AssemblyName>
     <RootNamespace>Noggog.CSharpExt</RootNamespace>
+    <Version>1.0.1</Version>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
