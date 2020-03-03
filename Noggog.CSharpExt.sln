@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29613.14
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CSharpExt", "CSharpExt\CSharpExt.csproj", "{98276D52-73FD-4B37-BDBE-1C692F7D6C8D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Noggog.CSharpExt", "Noggog.CSharpExt\Noggog.CSharpExt.csproj", "{98276D52-73FD-4B37-BDBE-1C692F7D6C8D}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Noggog.WPF", "Noggog.WPF\Noggog.WPF.csproj", "{82BC375D-29E2-46D6-9A04-452BAB77C864}"
 EndProject

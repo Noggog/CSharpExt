@@ -13,7 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\CSharpExt\CSharpExt.csproj" />
+    <ProjectReference Include="..\Noggog.CSharpExt\Noggog.CSharpExt.csproj" />
   </ItemGroup>
 
 </Project>
