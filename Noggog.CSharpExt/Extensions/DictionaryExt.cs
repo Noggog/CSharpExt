@@ -111,5 +111,11 @@ namespace Noggog
                 dict.Remove(key);
             }
         }
+
+        public static void SetTo<K, V>(this IDictionary<K, V> dict, IEnumerable<KeyValuePair<K, V>> items)
+        {
+            dict.Clear();
+            dict.Set(items);
+        }
     }
 }
