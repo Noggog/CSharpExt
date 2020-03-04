@@ -297,6 +297,17 @@ namespace Noggog
             return e.Where(i => i != null)
                 .Select(i => i!);
         }
+
+        public static ExtendedList<T> ToExtendedList<T>(this IEnumerable<T> e)
+        {
+            return new ExtendedList<T>(e);
+        }
+
+        public static IEnumerable<T> TryIterate<T>(this IEnumerable<T>? e)
+        {
+            if (e == null) return Enumerable.Empty<T>();
+            return e;
+        }
     }
 
     public static class EnumerableExt<T>
