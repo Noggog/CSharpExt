@@ -35,17 +35,10 @@ steps:
     command: 'test'
     projects: '**/*UnitTests.csproj'
 
-- task: NuGetCommand@2
-  displayName: 'Pack CSharpExt'
+- task: DotNetCoreCLI@2
+  displayName: "Pack"
   inputs:
-    command: pack
-    packagesToPack: Noggog.CSharpExt/Noggog.CSharpExt.csproj
-
-- task: NuGetCommand@2
-  displayName: 'Pack WPF'
-  inputs:
-    command: pack
-    packagesToPack: Noggog.WPF/Noggog.WPF.csproj
+      command: pack
 
 - task: PublishBuildArtifacts@1
   displayName: 'Publish Artifacts'
