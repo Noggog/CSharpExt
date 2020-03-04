@@ -29,10 +29,11 @@ steps:
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
 
-- task: VSTest@2
+- task: DotNetCoreCLI@2
+  displayName: "Test Release"
   inputs:
-    platform: '$(buildPlatform)'
-    configuration: '$(buildConfiguration)'
+    command: 'test'
+    projects: '**/*UnitTests.csproj'
 
 - task: NuGetCommand@2
   displayName: 'Pack CSharpExt'
