@@ -5,7 +5,10 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <AssemblyName>Noggog.CSharpExt</AssemblyName>
     <RootNamespace>Noggog.CSharpExt</RootNamespace>
-    <Version>1.0.3.1</Version>
+    <Authors>Noggog</Authors>
+    <Company>Noggog</Company>
+    <Version>1.0.3.2</Version>
+    <Description>Generic reusable classes and extension methods that apply to no specific project and flavored to taste</Description>
     <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
   </PropertyGroup>
 
