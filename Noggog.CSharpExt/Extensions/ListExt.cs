@@ -90,7 +90,7 @@ namespace Noggog
             return index >= 0 && index < list.Count;
         }
 
-        public static bool TryGet<T>(this IReadOnlyList<T> list, int index, out T item)
+        public static bool TryGet<T>(this IReadOnlyList<T> list, int index, [MaybeNullWhen(false)] out T item)
         {
             if (!InRange(list, index))
             {
@@ -101,11 +101,11 @@ namespace Noggog
             return true;
         }
 
-        public static T TryGet<T>(this IReadOnlyList<T> list, int index)
+        public static T TryGet<T>(this IReadOnlyList<T> list, int index, T defaultVal)
         {
             if (!InRange(list, index))
             {
-                return default(T);
+                return defaultVal;
             }
             return list[index];
         }
@@ -252,8 +252,9 @@ namespace Noggog
         public static void SetToWithDefault<V>(
             this IList<V> not,
             IReadOnlyList<V> rhs,
-            IReadOnlyList<V> def,
-            Func<V, V, V> converter)
+            IReadOnlyList<V>? def,
+            Func<V, V?, V> converter)
+            where V : class
         {
             if (def == null)
             {
@@ -266,7 +267,7 @@ namespace Noggog
                 not.SetTo(
                     rhs.Select((t) =>
                     {
-                        V defVal = default;
+                        V? defVal = default;
                         if (def.Count > i)
                         {
                             defVal = def[i];

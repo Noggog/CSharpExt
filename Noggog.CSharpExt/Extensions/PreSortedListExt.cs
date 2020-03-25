@@ -83,7 +83,7 @@ namespace Noggog
             IReadOnlyList<T> sortedList,
             T item,
             bool higher,
-            out T result)
+            [MaybeNullWhen(false)] out T result)
         {
             if (!TryGetIndexInDirection(
                 sortedList,
@@ -91,7 +91,7 @@ namespace Noggog
                 higher: higher,
                 result: out int index))
             {
-                result = default(T);
+                result = default;
                 return false;
             }
             result = sortedList[index];
@@ -170,7 +170,7 @@ namespace Noggog
                 higherKey: higherKey,
                 result: out var range))
             {
-                result = default!;
+                result = default;
                 return false;
             }
             result = range.Select((i) => new KeyValuePair<int, T>(i, sortedList[i]));

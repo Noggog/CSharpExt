@@ -47,7 +47,7 @@ namespace Noggog
                     return true;
                 }
             }
-            val = null!;
+            val = null;
             return false;
         }
 
@@ -62,7 +62,7 @@ namespace Noggog
             return false;
         }
 
-        public static bool TryGetAttribute<P>(this XElement node, string str, out P val, Func<string, P> converter)
+        public static bool TryGetAttribute<P>(this XElement node, string str, [MaybeNullWhen(false)] out P val, Func<string, P> converter)
         {
             bool ret = TryGetAttributeString(node, str, out string strVal);
             if (!ret)
@@ -74,13 +74,13 @@ namespace Noggog
             return ret;
         }
 
-        public static bool TryGetAttribute<P>(this XElement node, string str, out P val, bool throwException = false)
+        public static bool TryGetAttribute<P>(this XElement node, string str, [MaybeNullWhen(false)] out P val, bool throwException = false)
         {
-            return TryGetAttribute<P>(node, str, out val, (strVal) =>
+            var ret = TryGetAttribute<P>(node, str, out val, (strVal) =>
             {
                 if (strVal == null)
                 {
-                    return default(P);
+                    return default!;
                 }
                 var t = typeof(P);
                 if (TypeExt.IsNullable<P>(out var underlyingType))
@@ -106,10 +106,12 @@ namespace Noggog
                     }
                     else
                     {
-                        return default(P);
+                        return default!;
                     }
                 }
             });
+            if (!ret) return false;
+            return val != null;
         }
 
         public static P GetAttributeCustom<P>(this XElement node, string str, Func<string, P> converter)
@@ -137,7 +139,7 @@ namespace Noggog
 
         public static string? GetAttribute(this XElement node, string str, string? defaultVal = null, bool throwException = false)
         {
-            if (!TryGetAttribute(node, str, out string val, throwException))
+            if (!TryGetAttribute(node, str, out string? val, throwException))
             {
                 return defaultVal;
             }

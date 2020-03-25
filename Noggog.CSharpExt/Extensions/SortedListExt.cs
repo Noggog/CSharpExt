@@ -118,7 +118,7 @@ namespace Noggog
                 higherKey: higherKey,
                 result: out var range))
             {
-                result = null!;
+                result = null;
                 return false;
             }
             result = range.Select((i) => new KeyValuePair<int, V>(i, sortedList.Values[i]));

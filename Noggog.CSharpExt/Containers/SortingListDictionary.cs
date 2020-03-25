@@ -124,12 +124,12 @@ namespace Noggog
             _internalValues.RemoveAt(index);
         }
 
-        public bool TryGetValue(TKey key, out TValue value)
+        public bool TryGetValue(TKey key, [MaybeNullWhen(false)] out TValue value)
         {
             var search = _internalKeys.BinarySearch(key);
             if (search < 0)
             {
-                value = default(TValue);
+                value = default;
                 return false;
             }
             value = _internalValues[search];
@@ -247,7 +247,7 @@ namespace Noggog
                 result: out result);
         }
 
-        public bool TryGetValueInDirection(TKey key, bool higher, out TValue result)
+        public bool TryGetValueInDirection(TKey key, bool higher, [MaybeNullWhen(false)] out TValue result)
         {
             if (_internalSortedKeys.TryGetIndexInDirection(
                 item: key,
@@ -292,7 +292,7 @@ namespace Noggog
                 higherKey,
                 out var indices))
             {
-                result = default!;
+                result = default;
                 return false;
             }
             result = indices.Select((i) => new KeyValuePair<int, TValue>(i, _internalSortedValues[i]));

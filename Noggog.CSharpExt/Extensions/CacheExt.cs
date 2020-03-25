@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 
@@ -135,7 +136,7 @@ namespace Noggog
             }
         }
 
-        public static bool TryGetValue<TObject, TKey>(this IReadOnlyCache<TObject, TKey> cache, TKey key, out TObject value)
+        public static bool TryGetValue<TObject, TKey>(this IReadOnlyCache<TObject, TKey> cache, TKey key, [MaybeNullWhen(false)] out TObject value)
         {
             if (cache.ContainsKey(key))
             {

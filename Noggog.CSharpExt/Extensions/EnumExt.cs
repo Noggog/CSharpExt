@@ -23,6 +23,7 @@ namespace Noggog
         }
 
         public static bool TryParse<T>(int number, out T val)
+            where T : struct, Enum
         {
             if (Enum.IsDefined(typeof(T), number))
             {
@@ -30,7 +31,7 @@ namespace Noggog
                 return true;
             }
 
-            val = default(T);
+            val = default;
             return false;
         }
 

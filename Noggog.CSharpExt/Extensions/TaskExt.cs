@@ -9,15 +9,17 @@ namespace Noggog
 {
     public static class TaskExt
     {
-        public static async Task<T> AwaitOrDefault<T>(Task<T> t)
+        public static async Task<T?> AwaitOrDefault<T>(Task<T> t)
+            where T : class
         {
-            if (t == null) return default(T);
+            if (t == null) return default;
             return await t.ConfigureAwait(false);
         }
 
-        public static async Task<T> AwaitOrDefaultValue<T>(Task<TryGet<T>> t)
+        public static async Task<T?> AwaitOrDefaultValue<T>(Task<TryGet<T>> t)
+            where T : class
         {
-            if (t == null) return default(T);
+            if (t == null) return default;
             return (await t.ConfigureAwait(false)).Value;
         }
 

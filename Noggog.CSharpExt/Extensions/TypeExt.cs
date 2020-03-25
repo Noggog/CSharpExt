@@ -312,7 +312,7 @@ namespace Noggog
                     return true;
                 }
             }
-            enumerType = null!;
+            enumerType = null;
             return false;
         }
 

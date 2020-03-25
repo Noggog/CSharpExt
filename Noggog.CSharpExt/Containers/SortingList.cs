@@ -192,7 +192,7 @@ namespace Noggog
                 this,
                 lowerKey,
                 higherKey,
-                out result!);
+                out result);
         }
         #endregion
     }
