@@ -8,6 +8,7 @@
     <Authors>Noggog</Authors>
     <Company>Noggog</Company>
     <Version>1.0.4</Version>
+    <LangVersion>preview</LangVersion>
     <Description>Generic reusable classes and extension methods that apply to no specific project and flavored to taste</Description>
     <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
   </PropertyGroup>
