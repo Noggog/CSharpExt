@@ -80,12 +80,7 @@ namespace Noggog
                 && this.Y.EqualsWithin(rhs.Y);
         }
 
-        public override int GetHashCode()
-        {
-            return HashHelper.GetHashCode(
-                this.X,
-                this.Y);
-        }
+        public override int GetHashCode() => HashCode.Combine(X, Y);
 
         public static P2Float Max(P2Float p, P2Float c)
         {

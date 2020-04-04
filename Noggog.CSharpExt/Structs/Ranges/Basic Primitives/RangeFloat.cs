@@ -84,10 +84,7 @@ namespace Noggog
             }
         }
 
-        public override int GetHashCode()
-        {
-            return HashHelper.GetHashCode(Min, Max);
-        }
+        public override int GetHashCode() => HashCode.Combine(Min, Max);
 
         public override bool Equals(object obj)
         {

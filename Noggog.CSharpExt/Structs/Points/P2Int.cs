@@ -154,10 +154,7 @@ namespace Noggog
             return true;
         }
 
-        public override int GetHashCode()
-        {
-            return HashHelper.GetHashCode(X, Y);
-        }
+        public override int GetHashCode() => HashCode.Combine(X, Y);
 
         public bool NextTo(P2Int p)
         {

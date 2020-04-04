@@ -265,10 +265,7 @@ namespace Noggog
                 && this.Z.EqualsWithin(rhs.Z);
         }
 
-        public override int GetHashCode()
-        {
-            return HashHelper.GetHashCode(X, Y, Z);
-        }
+        public override int GetHashCode() => HashCode.Combine(X, Y, Z);
 
         public override string ToString()
         {

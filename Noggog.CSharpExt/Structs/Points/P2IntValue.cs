@@ -67,7 +67,11 @@ namespace Noggog
 
         public override int GetHashCode()
         {
-            return HashHelper.GetHashCode(this.X, this.Y).CombineHashCode(Value);
+            var hash = new HashCode();
+            hash.Add(X);
+            hash.Add(Y);
+            hash.Add(Value);
+            return hash.ToHashCode();
         }
 
         public static bool operator ==(P2IntValue<T> left, P2IntValue<T> right)

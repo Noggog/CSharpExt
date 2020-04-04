@@ -105,10 +105,7 @@ namespace Noggog
             return true;
         }
 
-        public override int GetHashCode()
-        {
-            return HashHelper.GetHashCode(X, Y);
-        }
+        public override int GetHashCode() => HashCode.Combine(X, Y);
 
         public static bool operator ==(P2Int16 obj1, P2Int16 obj2)
         {

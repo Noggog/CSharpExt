@@ -40,10 +40,7 @@ namespace Noggog
             return object.Equals(this.Upper, other.Upper);
         }
 
-        public override int GetHashCode()
-        {
-            return HashHelper.GetHashCode(this.Upper);
-        }
+        public override int GetHashCode() => HashCode.Combine(this.Upper);
 
         public static implicit operator string(StringCaseAgnostic ag)
         {

@@ -90,13 +90,7 @@ namespace Noggog
                 && this.Z.EqualsWithin(rhs.Z);
         }
 
-        public override int GetHashCode()
-        {
-            return HashHelper.GetHashCode(
-                this.X,
-                this.Y,
-                this.Z);
-        }
+        public override int GetHashCode() => HashCode.Combine(X, Y, Z);
 
         public static P3Float Max(P3Float p, P3Float c)
         {

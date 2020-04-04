@@ -44,8 +44,10 @@ namespace Noggog
 
         public override int GetHashCode()
         {
-            return HashHelper.GetHashCode(Value)
-                .CombineHashCode(Succeeded.GetHashCode());
+            var hash = new HashCode();
+            hash.Add(Value);
+            hash.Add(Succeeded);
+            return hash.ToHashCode();
         }
 
         public override string ToString()
