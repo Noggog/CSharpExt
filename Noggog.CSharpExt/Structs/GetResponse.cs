@@ -90,6 +90,11 @@ namespace Noggog
             throw new ArgumentException(this.Reason);
         }
 
+        public static implicit operator GetResponse<T>(T item)
+        {
+            return GetResponse<T>.Succeed(item);
+        }
+
         #region Factories
         public static GetResponse<T> Succeed(T value)
         {
