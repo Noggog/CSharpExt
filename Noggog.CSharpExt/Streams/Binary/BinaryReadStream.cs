@@ -191,14 +191,16 @@ namespace Noggog
             return ret;
         }
 
-        public ReadOnlySpan<byte> ReadSpan(int amount)
+        public ReadOnlySpan<byte> ReadSpan(int amount, bool readSafe = true)
         {
+            // ToDo
+            // Modify to not allocate if readsafe is off?
             var ret = new byte[amount];
             var read = Read(ret, offset: 0, amount: amount);
             return ret.AsSpan().Slice(0, read);
         }
 
-        public ReadOnlySpan<byte> ReadSpan(int amount, int offset)
+        public ReadOnlySpan<byte> ReadSpan(int amount, int offset, bool readSafe = true)
         {
             if (offset == 0)
             {
@@ -207,14 +209,14 @@ namespace Noggog
             throw new NotImplementedException();
         }
 
-        public ReadOnlySpan<byte> GetSpan(int amount)
+        public ReadOnlySpan<byte> GetSpan(int amount, bool readSafe = true)
         {
             var ret = ReadSpan(amount);
             this.Position -= ret.Length;
             return ret;
         }
 
-        public ReadOnlySpan<byte> GetSpan(int amount, int offset)
+        public ReadOnlySpan<byte> GetSpan(int amount, int offset, bool readSafe = true)
         {
             this.Position += offset;
             var ret = ReadSpan(amount);
@@ -222,26 +224,26 @@ namespace Noggog
             return ret;
         }
 
-        public ReadOnlyMemorySlice<byte> ReadMemory(int amount)
+        public ReadOnlyMemorySlice<byte> ReadMemory(int amount, bool readSafe = true)
         {
             var ret = new byte[amount];
             var read = Read(ret, offset: 0, amount: amount);
             return new MemorySlice<byte>(ret);
         }
 
-        public ReadOnlyMemorySlice<byte> ReadMemory(int amount, int offset)
+        public ReadOnlyMemorySlice<byte> ReadMemory(int amount, int offset, bool readSafe = true)
         {
             throw new NotImplementedException();
         }
 
-        public ReadOnlyMemorySlice<byte> GetMemory(int amount)
+        public ReadOnlyMemorySlice<byte> GetMemory(int amount, bool readSafe = true)
         {
             var ret = ReadMemory(amount);
             this.Position -= ret.Length;
             return ret;
         }
 
-        public ReadOnlyMemorySlice<byte> GetMemory(int amount, int offset)
+        public ReadOnlyMemorySlice<byte> GetMemory(int amount, int offset, bool readSafe = true)
         {
             this.Position += offset;
             var ret = ReadMemory(amount);

@@ -78,46 +78,46 @@ namespace Noggog
             return ret;
         }
 
-        public ReadOnlySpan<byte> ReadSpan(int amount, int offset)
+        public ReadOnlySpan<byte> ReadSpan(int amount, int offset, bool readSafe = true)
         {
             _pos += amount + offset;
             return GetSpan(amount, offset: -amount);
         }
 
-        public ReadOnlySpan<byte> ReadSpan(int amount)
+        public ReadOnlySpan<byte> ReadSpan(int amount, bool readSafe = true)
         {
             _pos += amount;
             return GetSpan(amount, offset: -amount);
         }
 
-        public ReadOnlySpan<byte> GetSpan(int amount)
+        public ReadOnlySpan<byte> GetSpan(int amount, bool readSafe = true)
         {
             return _data.Span.Slice(_pos, amount);
         }
 
-        public ReadOnlySpan<byte> GetSpan(int amount, int offset)
+        public ReadOnlySpan<byte> GetSpan(int amount, int offset, bool readSafe = true)
         {
             return _data.Span.Slice(_pos + offset, amount);
         }
 
-        public ReadOnlyMemorySlice<byte> ReadMemory(int amount, int offset)
+        public ReadOnlyMemorySlice<byte> ReadMemory(int amount, int offset, bool readSafe = true)
         {
             _pos += amount + offset;
             return GetMemory(amount, offset: -amount);
         }
 
-        public ReadOnlyMemorySlice<byte> ReadMemory(int amount)
+        public ReadOnlyMemorySlice<byte> ReadMemory(int amount, bool readSafe = true)
         {
             _pos += amount;
             return GetMemory(amount, offset: -amount);
         }
 
-        public ReadOnlyMemorySlice<byte> GetMemory(int amount)
+        public ReadOnlyMemorySlice<byte> GetMemory(int amount, bool readSafe = true)
         {
             return _data.Slice(_pos, amount);
         }
 
-        public ReadOnlyMemorySlice<byte> GetMemory(int amount, int offset)
+        public ReadOnlyMemorySlice<byte> GetMemory(int amount, int offset, bool readSafe = true)
         {
             return _data.Slice(_pos + offset, amount);
         }

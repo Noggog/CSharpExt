@@ -21,14 +21,80 @@ namespace Noggog
         int Get(byte[] buffer, int targetOffset);
         byte[] ReadBytes(int amount);
         byte[] GetBytes(int amount);
-        ReadOnlySpan<byte> ReadSpan(int amount);
-        ReadOnlySpan<byte> ReadSpan(int amount, int offset);
-        ReadOnlySpan<byte> GetSpan(int amount);
-        ReadOnlySpan<byte> GetSpan(int amount, int offset);
-        ReadOnlyMemorySlice<byte> ReadMemory(int amount);
-        ReadOnlyMemorySlice<byte> ReadMemory(int amount, int offset);
-        ReadOnlyMemorySlice<byte> GetMemory(int amount);
-        ReadOnlyMemorySlice<byte> GetMemory(int amount, int offset);
+
+        /// <summary>
+        /// Reads and returns a span of size amount.
+        /// Position will be advanced by amount.
+        /// </summary>
+        /// <param name="amount">Amount to read</param>
+        /// <param name="readSafe">Whether to ensure the span returned will not be modified by subsequent reads</param>
+        /// <returns>Read span of size amount</returns>
+        ReadOnlySpan<byte> ReadSpan(int amount, bool readSafe = true);
+
+        /// <summary>
+        /// Reads and returns a span of size amount.
+        /// Position will be advanced by amount.
+        /// </summary>
+        /// <param name="amount">Amount to read</param>
+        /// <param name="offset">Offset to read from relative to current position</param>
+        /// <param name="readSafe">Whether to ensure the span returned will not be modified by subsequent reads</param>
+        /// <returns>Read span of size amount</returns>
+        ReadOnlySpan<byte> ReadSpan(int amount, int offset, bool readSafe = true);
+
+        /// <summary>
+        /// Returns a span of size amount
+        /// </summary>
+        /// <param name="amount">Amount to get</param>
+        /// <param name="offset">Offset to read from relative to current position</param>
+        /// <param name="readSafe">Whether to ensure the span returned will not be modified by subsequent reads</param>
+        /// <returns>Span of size amount</returns>
+        ReadOnlySpan<byte> GetSpan(int amount, bool readSafe = true);
+
+        /// <summary>
+        /// Returns a span of size amount
+        /// </summary>
+        /// <param name="amount">Amount to get</param>
+        /// <param name="offset">Offset to read from relative to current position</param>
+        /// <param name="readSafe">Whether to ensure the span returned will not be modified by subsequent reads</param>
+        /// <returns>Span of size amount</returns>
+        ReadOnlySpan<byte> GetSpan(int amount, int offset, bool readSafe = true);
+
+        /// <summary>
+        /// Reads and returns a span of size amount.
+        /// Position will be advanced by amount.
+        /// </summary>
+        /// <param name="amount">Amount to read</param>
+        /// <param name="readSafe">Whether to ensure the span returned will not be modified by subsequent reads</param>
+        /// <returns>Read span of size amount</returns>
+        ReadOnlyMemorySlice<byte> ReadMemory(int amount, bool readSafe = true);
+
+        /// <summary>
+        /// Reads and returns a span of size amount.
+        /// Position will be advanced by amount.
+        /// </summary>
+        /// <param name="amount">Amount to read</param>
+        /// <param name="offset">Offset to read from relative to current position</param>
+        /// <param name="readSafe">Whether to ensure the span returned will not be modified by subsequent reads</param>
+        /// <returns>Read span of size amount</returns>
+        ReadOnlyMemorySlice<byte> ReadMemory(int amount, int offset, bool readSafe = true);
+
+        /// <summary>
+        /// Returns a span of size amount
+        /// </summary>
+        /// <param name="amount">Amount to get</param>
+        /// <param name="offset">Offset to read from relative to current position</param>
+        /// <param name="readSafe">Whether to ensure the span returned will not be modified by subsequent reads</param>
+        /// <returns>Span of size amount</returns>
+        ReadOnlyMemorySlice<byte> GetMemory(int amount, bool readSafe = true);
+
+        /// <summary>
+        /// Returns a span of size amount
+        /// </summary>
+        /// <param name="amount">Amount to get</param>
+        /// <param name="offset">Offset to read from relative to current position</param>
+        /// <param name="readSafe">Whether to ensure the span returned will not be modified by subsequent reads</param>
+        /// <returns>Span of size amount</returns>
+        ReadOnlyMemorySlice<byte> GetMemory(int amount, int offset, bool readSafe = true);
         bool ReadBool();
         bool GetBool();
         bool GetBool(int offset);
