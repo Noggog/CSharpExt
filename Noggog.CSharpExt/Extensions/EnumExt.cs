@@ -282,6 +282,23 @@ namespace Noggog
             return list.Aggregate(Xor);
         }
         #endregion
+
+        public static bool HasFlag(int value, int flagToCheck)
+        {
+            return (value & flagToCheck) > 0;
+        }
+
+        public static int SetFlag(int origValue, int flagToSet, bool on)
+        {
+            if (on)
+            {
+                return origValue | flagToSet;
+            }
+            else
+            {
+                return origValue & ~flagToSet;
+            }
+        }
     }
 
     public static class EnumExt<T>
