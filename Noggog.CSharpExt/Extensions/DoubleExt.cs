@@ -14,6 +14,13 @@ namespace Noggog
             return Math.Abs(a - b) < within;
         }
 
+        public static bool EqualsWithin(this double? a, double? b, double within = 0.000000001d)
+        {
+            if (a == null) return b == null;
+            if (b == null) return false;
+            return Math.Abs(a.Value - b.Value) < within;
+        }
+
         public static T Clamp<T>(this T val, T min, T max)
             where T : IComparable<T>
         {
