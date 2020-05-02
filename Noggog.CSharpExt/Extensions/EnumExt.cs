@@ -87,9 +87,9 @@ namespace Noggog
         public static T GetNth<T>(int n, T defaultPick)
             where T : struct, Enum
         {
-            string[] s = Enum.GetNames(typeof(T));
+            Array s = Enum.GetValues(typeof(T));
             if (s.Length <= n) return defaultPick;
-            return (T)Enum.Parse(typeof(T), s[n]);
+            return (T)s.GetValue(n);
         }
 
         public static Dictionary<Type, Dictionary<int, string>> NameDictionary = new Dictionary<Type, Dictionary<int, string>>();
@@ -288,7 +288,24 @@ namespace Noggog
             return (value & flagToCheck) > 0;
         }
 
+        public static bool HasFlag(uint value, uint flagToCheck)
+        {
+            return (value & flagToCheck) > 0;
+        }
+
         public static int SetFlag(int origValue, int flagToSet, bool on)
+        {
+            if (on)
+            {
+                return origValue | flagToSet;
+            }
+            else
+            {
+                return origValue & ~flagToSet;
+            }
+        }
+
+        public static uint SetFlag(uint origValue, uint flagToSet, bool on)
         {
             if (on)
             {
