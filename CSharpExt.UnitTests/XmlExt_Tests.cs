@@ -32,5 +32,16 @@ namespace CSharpExt.Tests
             elem.TryGetAttribute<TestEnum>("value", out var val);
             Assert.Equal(TestEnum.Value2, val);
         }
+
+        [Fact]
+        public void GetAttribute_Nullable()
+        {
+            XElement elem = new XElement("Test");
+            var ret = elem.GetAttribute<int?>("value", default(int?));
+            Assert.Null(ret);
+            elem = new XElement("Test", new XAttribute("value", "123"));
+            ret = elem.GetAttribute<int?>("value", default(int?));
+            Assert.Equal(123, ret);
+        }
     }
 }
