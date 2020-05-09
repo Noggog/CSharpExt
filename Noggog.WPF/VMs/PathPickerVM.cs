@@ -1,4 +1,4 @@
-﻿using DynamicData;
+using DynamicData;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using Newtonsoft.Json;
 using ReactiveUI;

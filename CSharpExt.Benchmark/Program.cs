@@ -1,4 +1,4 @@
-﻿using BenchmarkDotNet.Running;
+using BenchmarkDotNet.Running;
 using System;
 
 namespace CSharpExt.Benchmark

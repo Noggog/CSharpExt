@@ -1,4 +1,4 @@
-﻿using Noggog;
+using Noggog;
 using Noggog.Streams.Binary;
 using System;
 using System.Collections.Generic;
