@@ -56,6 +56,24 @@ namespace Noggog
             }
         }
 
+        public static void Fill<T>(this T[] array, Func<T> to)
+        {
+            for (int x = 0; x < array.Length; x++)
+            {
+                array[x] = to();
+            }
+        }
+
+        public static T[] Create<T>(int size, Func<int, T> factory)
+        {
+            T[] ret = new T[size];
+            for (int x = 0; x < ret.Length; x++)
+            {
+                ret[x] = factory(x);
+            }
+            return ret;
+        }
+
         public static T[,] Copy<T>(this T[,] array)
         {
             T[,] ret = new T[array.GetLength(0), array.GetLength(1)];
