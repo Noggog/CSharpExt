@@ -64,14 +64,13 @@ namespace Noggog
 
         public static bool TryGetAttribute<P>(this XElement node, string str, [MaybeNullWhen(false)] out P val, Func<string, P> converter)
         {
-            bool ret = TryGetAttributeString(node, str, out string strVal);
-            if (!ret)
+            if (!TryGetAttributeString(node, str, out string strVal))
             {
                 val = default;
-                return ret;
+                return false;
             }
             val = converter(strVal);
-            return ret;
+            return true;
         }
 
         public static bool TryGetAttribute<P>(this XElement node, string str, [MaybeNullWhen(false)] out P val, bool throwException = false)
@@ -112,12 +111,6 @@ namespace Noggog
             });
             if (!ret) return false;
             return val != null;
-        }
-
-        public static P GetAttributeCustom<P>(this XElement node, string str, Func<string, P> converter)
-        {
-            TryGetAttribute(node, str, out P val, converter);
-            return val;
         }
 
         public static P GetAttribute<P>(this XElement node, string str, P defaultVal = default, bool throwException = false)

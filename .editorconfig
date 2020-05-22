@@ -65,3 +65,6 @@ dotnet_diagnostic.CS8714.severity = error
 
 # CS8605: Unboxing a possibly null value.
 dotnet_diagnostic.CS8605.severity = error
+
+# CS8762: Parameter must have a non-null value when exiting in some condition.
+dotnet_diagnostic.CS8762.severity = error

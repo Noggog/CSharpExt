@@ -159,7 +159,7 @@ namespace Noggog
                 out result);
         }
 
-        public bool TryGetValueInDirection(T item, bool higher, out T result)
+        public bool TryGetValueInDirection(T item, bool higher, [MaybeNullWhen(false)] out T result)
         {
             return PreSortedListExt.TryGetValueInDirection<T>(
                 this,
