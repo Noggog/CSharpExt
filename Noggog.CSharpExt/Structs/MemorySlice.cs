@@ -41,10 +41,15 @@ namespace Noggog
         [DebuggerStepThrough]
         public MemorySlice<T> Slice(int start)
         {
+            var startPos = _startPos + start;
+            if (startPos < 0)
+            {
+                throw new ArgumentOutOfRangeException();
+            }
             return new MemorySlice<T>()
             {
                 _arr = _arr,
-                _startPos = _startPos + start,
+                _startPos = startPos,
                 _length = _length - start
             };
         }
@@ -52,10 +57,19 @@ namespace Noggog
         [DebuggerStepThrough]
         public MemorySlice<T> Slice(int start, int length)
         {
+            var startPos = _startPos + start;
+            if (startPos < 0)
+            {
+                throw new ArgumentOutOfRangeException();
+            }
+            if (startPos + length > _arr.Length)
+            {
+                throw new ArgumentOutOfRangeException();
+            }
             return new MemorySlice<T>()
             {
                 _arr = _arr,
-                _startPos = _startPos + start,
+                _startPos = startPos,
                 _length = length
             };
         }
@@ -125,6 +139,11 @@ namespace Noggog
         [DebuggerStepThrough]
         public ReadOnlyMemorySlice<T> Slice(int start)
         {
+            var startPos = _startPos + start;
+            if (startPos < 0)
+            {
+                throw new ArgumentOutOfRangeException();
+            }
             return new ReadOnlyMemorySlice<T>()
             {
                 _arr = _arr,
@@ -136,6 +155,15 @@ namespace Noggog
         [DebuggerStepThrough]
         public ReadOnlyMemorySlice<T> Slice(int start, int length)
         {
+            var startPos = _startPos + start;
+            if (startPos < 0)
+            {
+                throw new ArgumentOutOfRangeException();
+            }
+            if (startPos + length > _arr.Length)
+            {
+                throw new ArgumentOutOfRangeException();
+            }
             return new ReadOnlyMemorySlice<T>()
             {
                 _arr = _arr,
