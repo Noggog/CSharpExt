@@ -140,6 +140,18 @@ namespace Noggog
             }
         }
 
+        public delegate bool SelectWhereSelector<T, R>(T item, out R returnItem);
+        public static IEnumerable<R> SelectWhere<T, R>(this IEnumerable<T> enumer, SelectWhereSelector<T, R> conv)
+        {
+            foreach (var item in enumer)
+            {
+                if (conv(item, out var ret))
+                {
+                    yield return ret;
+                }
+            }
+        }
+
         public static IEnumerable<T> Randomize<T>(this IEnumerable<T> e, RandomSource rand)
         {
             return e.OrderBy<T, int>((item) => rand.Next());
