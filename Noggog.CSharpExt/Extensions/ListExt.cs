@@ -136,6 +136,32 @@ namespace Noggog
             return false;
         }
 
+        public static int IndexOf<T, R>(this IReadOnlyList<T> list, R item, Func<T, R, bool> matcher)
+        {
+            for (int i = 0; i < list.Count; i++)
+            {
+                var existing = list[i];
+                if (matcher(existing, item))
+                {
+                    return i;
+                }
+            }
+            return -1;
+        }
+
+        public static int FindIndex<T, R>(this IReadOnlyList<T> list, Func<T, bool> matcher)
+        {
+            for (int i = 0; i < list.Count; i++)
+            {
+                var existing = list[i];
+                if (matcher(existing))
+                {
+                    return i;
+                }
+            }
+            return -1;
+        }
+
         public static void AddRange<T>(this IList<T> list, IEnumerable<T> items)
         {
             foreach (var item in items)
