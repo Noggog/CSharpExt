@@ -293,6 +293,11 @@ namespace Noggog
             return (value & flagToCheck) > 0;
         }
 
+        public static bool HasFlag(byte value, byte flagToCheck)
+        {
+            return (value & flagToCheck) > 0;
+        }
+
         public static int SetFlag(int origValue, int flagToSet, bool on)
         {
             if (on)
@@ -314,6 +319,18 @@ namespace Noggog
             else
             {
                 return origValue & ~flagToSet;
+            }
+        }
+
+        public static byte SetFlag(byte origValue, byte flagToSet, bool on)
+        {
+            if (on)
+            {
+                return (byte)(origValue | flagToSet);
+            }
+            else
+            {
+                return (byte)(origValue & ~flagToSet);
             }
         }
     }
