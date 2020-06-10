@@ -120,6 +120,12 @@ namespace Noggog
 
         public static IReadOnlyDictionary<K, V> Empty<K, V>() => DictEmptyExt<K, V>.Empty;
 
+        public static IReadOnlyDictionary<TKey, TTargetValue> Covariant<TKey, TSourceValue, TTargetValue>(this IReadOnlyDictionary<TKey, TSourceValue> dict)
+            where TSourceValue : TTargetValue
+        {
+            return new DictionaryCovariantWrapper<TKey, TSourceValue, TTargetValue>(dict);
+        }
+
         private static class DictEmptyExt<K, V>
         {
             public static Dictionary<K, V> Empty = new Dictionary<K, V>();
