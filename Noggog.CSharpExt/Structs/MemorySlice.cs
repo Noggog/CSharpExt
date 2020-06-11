@@ -106,6 +106,12 @@ namespace Noggog
         {
             return new MemorySlice<T>(mem);
         }
+
+        public static implicit operator MemorySlice<T>?(T[]? mem)
+        {
+            if (mem == null) return null;
+            return new MemorySlice<T>(mem);
+        }
     }
 
     public struct ReadOnlyMemorySlice<T> : IEnumerable<T>
