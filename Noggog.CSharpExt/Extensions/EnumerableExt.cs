@@ -310,6 +310,13 @@ namespace Noggog
                 .Select(i => i!);
         }
 
+        public static IEnumerable<T> NotNull<T>(this IEnumerable<T?> e)
+            where T : struct
+        {
+            return e.Where(i => i.HasValue)
+                .Select(i => i!.Value);
+        }
+
         public static ExtendedList<T> ToExtendedList<T>(this IEnumerable<T> e)
         {
             return new ExtendedList<T>(e);

@@ -72,5 +72,10 @@ namespace Noggog
                 first = false;
             }
         }
+
+        public static ICollectionGetter<T> ToGetter<T>(this ICollection<T> coll)
+        {
+            return new CollectionGetterWrapper<T>(coll);
+        }
     }
 }
