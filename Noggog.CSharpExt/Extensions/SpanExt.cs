@@ -96,5 +96,20 @@ namespace Noggog
             }
             return new string(result);
         }
+
+        public static unsafe string ToHexString(this ReadOnlyMemorySlice<byte> span)
+        {
+            return ToHexString(span.Span);
+        }
+
+        public static unsafe string ToHexString(this MemorySlice<byte> span)
+        {
+            return ToHexString(span.Span);
+        }
+
+        public static unsafe string ToHexString(this Span<byte> span)
+        {
+            return ToHexString((ReadOnlySpan<byte>)span);
+        }
     }
 }
