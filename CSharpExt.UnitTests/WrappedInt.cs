@@ -15,9 +15,9 @@ namespace CSharpExt.Tests
             this.Int = i;
         }
 
-        public int CompareTo(WrappedInt other)
+        public int CompareTo(WrappedInt? other)
         {
-            return Int.CompareTo(other.Int);
+            return Int.CompareTo(other!.Int);
         }
 
         public int CompareTo(object? obj)
@@ -34,11 +34,12 @@ namespace CSharpExt.Tests
 
         public override int GetHashCode()
         {
-            return Int.GetHashCode();
+            return HashCode.Combine(Int);
         }
 
-        public bool Equals(WrappedInt other)
+        public bool Equals(WrappedInt? other)
         {
+            if (other == null) return false;
             return Int == other.Int;
         }
 
