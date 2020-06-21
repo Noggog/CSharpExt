@@ -27,13 +27,14 @@ namespace Noggog
         public ReadOnlySpan<byte> RemainingSpan => _data.Span.Slice(_pos);
         public ReadOnlyMemorySlice<byte> RemainingMemory => _data.Slice(_pos);
         public int UnderlyingPosition => _data.StartPosition + this.Position;
+        public bool IsPersistantBacking => true;
 
         #region IBinaryReadStream
         long IBinaryReadStream.Position { get => _pos; set => SetPosition(checked((int)value)); }
         long IBinaryReadStream.Length => this._data.Length;
         long IBinaryReadStream.Remaining => this._data.Length - this._pos;
         #endregion
-        
+
         [DebuggerStepThrough]
         public BinaryMemoryReadStream(ReadOnlyMemorySlice<byte> data)
         {

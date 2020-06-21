@@ -31,6 +31,7 @@ namespace Noggog
         public ReadOnlyMemorySlice<byte> RemainingMemory => throw new NotImplementedException();
 
         public bool CheckUnderlyingStreamPosition = false;
+        public bool IsPersistantBacking => false;
 
         public BinaryReadStream(Stream stream, int bufferSize = 4096, bool dispose = true)
         {

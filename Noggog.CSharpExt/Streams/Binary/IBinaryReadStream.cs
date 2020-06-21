@@ -13,6 +13,11 @@ namespace Noggog
         long Length { get; }
         long Remaining { get; }
         bool Complete { get; }
+
+        /// <summary>
+        /// True if the backing data is reliable between reading events
+        /// </summary>
+        bool IsPersistantBacking { get; }
         ReadOnlySpan<byte> RemainingSpan { get; }
         ReadOnlyMemorySlice<byte> RemainingMemory { get; }
         int Read(byte[] buffer, int offset, int amount);
