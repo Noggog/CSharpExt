@@ -1,6 +1,7 @@
 using Noggog;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Noggog
 {
@@ -112,10 +113,39 @@ namespace Noggog
             }
         }
 
-        public static void SetTo<K, V>(this IDictionary<K, V> dict, IEnumerable<KeyValuePair<K, V>> items)
+        public static void SetTo<K, V>(this IDictionary<K, V> dict, IEnumerable<KeyValuePair<K, V>> items, SetTo setTo = Noggog.SetTo.Whitewash)
         {
-            dict.Clear();
-            dict.Set(items);
+            if (setTo == Noggog.SetTo.Whitewash)
+            {
+                dict.Clear();
+                dict.Set(items);
+                return;
+            }
+            var toRemove = new HashSet<K>(dict.Keys);
+            switch (setTo)
+            {
+                case Noggog.SetTo.SkipExisting:
+                    foreach (var item in items)
+                    {
+                        toRemove.Remove(item.Key);
+                        if (!dict.ContainsKey(item.Key))
+                        {
+                            dict.Add(item);
+                        }
+                    }
+                    dict.Remove(toRemove);
+                    break;
+                case Noggog.SetTo.SetExisting:
+                    foreach (var item in items)
+                    {
+                        toRemove.Remove(item.Key);
+                        dict.Add(item);
+                    }
+                    dict.Remove(toRemove);
+                    break;
+                default:
+                    throw new NotImplementedException();
+            }
         }
 
         public static IReadOnlyDictionary<K, V> Empty<K, V>() => DictEmptyExt<K, V>.Empty;

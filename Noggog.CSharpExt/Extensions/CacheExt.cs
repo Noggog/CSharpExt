@@ -37,6 +37,36 @@ namespace Noggog
             cache.Set(items);
         }
 
+        public static void SetTo<V, K>(this ICache<V, K> cache, Func<V, K> keySelector, IEnumerable<V> items, SetTo setTo = Noggog.SetTo.Whitewash)
+        {
+            if (setTo == Noggog.SetTo.Whitewash)
+            {
+                SetTo(cache, items);
+                return;
+            }
+            var toRemove = new HashSet<K>(cache.Keys);
+            var keyPairs = items.Select(i => new KeyValuePair<K, V>(keySelector(i), i)).ToArray();
+            toRemove.Remove(keyPairs.Select(kv => kv.Key));
+            cache.Remove(toRemove);
+            switch (setTo)
+            {
+                case Noggog.SetTo.SkipExisting:
+                    foreach (var item in keyPairs)
+                    {
+                        if (!cache.ContainsKey(item.Key))
+                        {
+                            cache.Set(item.Value);
+                        }
+                    }
+                    break;
+                case Noggog.SetTo.SetExisting:
+                    cache.Set(items);
+                    break;
+                default:
+                    throw new NotImplementedException();
+            }
+        }
+
         public static TObject SetReturn<TObject, TKey>(this ICache<TObject, TKey> source, TObject item)
         {
             source.Set(item);
@@ -138,6 +168,8 @@ namespace Noggog
 
         public static bool TryGetValue<TObject, TKey>(this IReadOnlyCache<TObject, TKey> cache, TKey key, [MaybeNullWhen(false)] out TObject value)
         {
+            // ToDo
+            // Improve to not double query
             if (cache.ContainsKey(key))
             {
                 value = cache[key];

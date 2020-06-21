@@ -20,5 +20,13 @@ namespace Noggog
                 set.Add(e);
             }
         }
+
+        public static void Remove<T>(this HashSet<T> set, IEnumerable<T> vals)
+        {
+            foreach (var item in vals)
+            {
+                set.Remove(item);
+            }
+        }
     }
 }
