@@ -9,12 +9,22 @@ namespace Noggog.Utility
 {
     public class TempFile : IDisposable
     {
-        public FilePath File { get; private set; }
+        public FilePath File { get; set; }
         public bool DeleteAfter = true;
 
-        public TempFile(bool deleteAfter = true, bool createFolder = true)
-            : this(new FilePath(Path.Combine(Path.GetTempPath(), Path.GetRandomFileName())))
+        public TempFile(string? extraDirectoryPaths = null, bool deleteAfter = true, bool createFolder = true, string? suffix = null)
         {
+            var path = $"{Path.GetRandomFileName()}{suffix}";
+            if (extraDirectoryPaths != null)
+            {
+                path = Path.Combine(extraDirectoryPaths, path);
+            }
+            File = new FilePath(Path.Combine(Path.GetTempPath(), path));
+            if (createFolder && !File.Directory.Exists)
+            {
+                File.Directory.Create();
+            }
+            this.DeleteAfter = deleteAfter;
         }
 
         public TempFile(FilePath file, bool deleteAfter = true, bool createFolder = true)
