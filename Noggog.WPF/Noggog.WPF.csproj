@@ -14,7 +14,7 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>C:\Users\Levia\Documents\Repos\CSharpExt\Noggog.WPF\Noggog.WPF.xml</DocumentationFile>
+    <DocumentationFile>Noggog.WPF.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
