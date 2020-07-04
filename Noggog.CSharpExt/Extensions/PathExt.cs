@@ -29,5 +29,11 @@ namespace Noggog.Extensions
 
             return relativePath;
         }
+
+        public static string AddSuffix(string filePath, string suffix)
+        {
+            if (string.IsNullOrWhiteSpace(suffix)) return filePath;
+            return Path.Combine(Path.GetDirectoryName(filePath), $"{Path.GetFileNameWithoutExtension(filePath)}{suffix}{Path.GetExtension(filePath)}");
+        }
     }
 }
