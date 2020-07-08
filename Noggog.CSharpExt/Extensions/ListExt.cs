@@ -1,5 +1,6 @@
 using Noggog;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
@@ -142,6 +143,19 @@ namespace Noggog
             {
                 var existing = list[i];
                 if (matcher(existing, item))
+                {
+                    return i;
+                }
+            }
+            return -1;
+        }
+
+        public static int IndexOf<T>(this IReadOnlyList<T> list, T item)
+        {
+            for (int i = 0; i < list.Count; i++)
+            {
+                var existing = list[i];
+                if (EqualityComparer<T>.Default.Equals(existing, item))
                 {
                     return i;
                 }

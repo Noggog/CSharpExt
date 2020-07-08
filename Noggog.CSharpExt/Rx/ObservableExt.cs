@@ -6,11 +6,8 @@ using System.Text;
 using System.Reactive;
 using System.Threading.Tasks;
 using System.Reactive.Disposables;
-using System.Reactive.Subjects;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
-using ReactiveUI;
-using System.Windows.Input;
 using Noggog;
 
 namespace Noggog
@@ -102,11 +99,6 @@ namespace Noggog
             where T : class
         {
             return source.Where(u => u != null);
-        }
-
-        public static IDisposable InvokeCommand<T>(this IObservable<T> item, IReactiveCommand command)
-        {
-            return ReactiveUI.ReactiveCommandMixins.InvokeCommand(item, (ICommand)command);
         }
 
         public static IObservable<TSource> PublishRefCount<TSource>(this IObservable<TSource> source)

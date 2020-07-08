@@ -5,7 +5,7 @@
     <UseWPF>true</UseWPF>
     <AssemblyName>Noggog.WPF</AssemblyName>
     <RootNamespace>Noggog.WPF</RootNamespace>
-    <Version>1.0.5</Version>
+    <Version>1.0.6</Version>
     <Authors>Noggog</Authors>
     <Company>Noggog</Company>
     <Description>Generic reusable WPF classes and extension methods that apply to no specific project and flavored to taste</Description>

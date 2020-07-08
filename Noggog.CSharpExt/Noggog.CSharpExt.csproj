@@ -7,7 +7,7 @@
     <RootNamespace>Noggog.CSharpExt</RootNamespace>
     <Authors>Noggog</Authors>
     <Company>Noggog</Company>
-    <Version>1.0.25</Version>
+    <Version>1.0.26</Version>
     <LangVersion>preview</LangVersion>
     <Description>Generic reusable classes and extension methods that apply to no specific project and flavored to taste</Description>
     <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
@@ -27,7 +27,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="ReactiveUI" Version="11.3.1" />
     <PackageReference Include="System.Memory" Version="4.5.4" />
     <PackageReference Include="System.Reactive" Version="4.4.1" />
   </ItemGroup>
