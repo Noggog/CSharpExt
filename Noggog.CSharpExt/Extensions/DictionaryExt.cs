@@ -160,5 +160,10 @@ namespace Noggog
         {
             public static Dictionary<K, V> Empty = new Dictionary<K, V>();
         }
+
+        public static Dictionary<TKey, TValue> ToDictionary<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> keyValuePairs)
+        {
+            return keyValuePairs.ToDictionary(kv => kv.Key, kv => kv.Value);
+        }
     }
 }
