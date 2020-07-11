@@ -143,5 +143,29 @@ namespace Noggog
                 onException(ex);
             }
         }
+
+        public static async Task Run(bool doThreading, Func<Task> toDo)
+        {
+            if (doThreading)
+            {
+                await Task.Run(toDo);
+            }
+            else
+            {
+                await toDo();
+            }
+        }
+
+        public static async Task Run(bool doThreading, Action toDo)
+        {
+            if (doThreading)
+            {
+                await Task.Run(toDo);
+            }
+            else
+            {
+                toDo();
+            }
+        }
     }
 }
