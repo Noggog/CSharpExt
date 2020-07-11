@@ -127,7 +127,7 @@ namespace Noggog
             }
 
             int read = 0;
-            int copysize = 0;
+            int copysize;
             do
             {
                 copysize = Math.Min(count, blockSize - BlockOffset);

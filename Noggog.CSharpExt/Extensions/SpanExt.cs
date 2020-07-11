@@ -1,4 +1,5 @@
 using System;
+using System.Buffers.Binary;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -52,7 +53,7 @@ namespace Noggog
             return MemoryMarshal.Cast<byte, double>(span);
         }
 
-        public static unsafe float GetFloat(this ReadOnlySpan<byte> span)
+        public static unsafe float Float(this ReadOnlySpan<byte> span)
         {
             // ToDo
             // Swap for BinaryPrimitives when implemented
@@ -63,7 +64,7 @@ namespace Noggog
             }
         }
 
-        public static unsafe double GetDouble(this ReadOnlySpan<byte> span)
+        public static unsafe double Double(this ReadOnlySpan<byte> span)
         {
             // ToDo
             // Swap for BinaryPrimitives when implemented
@@ -74,12 +75,98 @@ namespace Noggog
             }
         }
 
-        public static unsafe string GetStringUTF8(this ReadOnlySpan<byte> span)
+        public static unsafe string StringUTF8(this ReadOnlySpan<byte> span)
         {
             fixed (byte* buffer = &MemoryMarshal.GetReference(span))
             {
                 return Encoding.UTF8.GetString(buffer, span.Length);
             }
+        }
+
+        public static byte UInt8(this ReadOnlySpan<byte> span)
+        {
+            return span[0];
+        }
+
+        public static sbyte Int8(this ReadOnlySpan<byte> span)
+        {
+            return (sbyte)span[0];
+        }
+
+        public static ushort UInt16(this ReadOnlySpan<byte> span)
+        {
+            return BinaryPrimitives.ReadUInt16LittleEndian(span);
+        }
+
+        public static short Int16(this ReadOnlySpan<byte> span)
+        {
+            return BinaryPrimitives.ReadInt16LittleEndian(span);
+        }
+
+        public static uint UInt32(this ReadOnlySpan<byte> span)
+        {
+            return BinaryPrimitives.ReadUInt32LittleEndian(span);
+        }
+
+        public static int Int32(this ReadOnlySpan<byte> span)
+        {
+            return BinaryPrimitives.ReadInt32LittleEndian(span);
+        }
+
+        public static ulong UInt64(this ReadOnlySpan<byte> span)
+        {
+            return BinaryPrimitives.ReadUInt64LittleEndian(span);
+        }
+
+        public static long Int64(this ReadOnlySpan<byte> span)
+        {
+            return BinaryPrimitives.ReadInt64LittleEndian(span);
+        }
+
+        public static float Float(this ReadOnlyMemorySlice<byte> span) => span.Span.Float();
+
+        public static double Double(this ReadOnlyMemorySlice<byte> span) => span.Span.Double();
+
+        public static string StringUTF8(this ReadOnlyMemorySlice<byte> span) => span.Span.StringUTF8();
+
+        public static byte UInt8(this ReadOnlyMemorySlice<byte> span)
+        {
+            return span[0];
+        }
+
+        public static sbyte Int8(this ReadOnlyMemorySlice<byte> span)
+        {
+            return (sbyte)span[0];
+        }
+
+        public static ushort UInt16(this ReadOnlyMemorySlice<byte> span)
+        {
+            return BinaryPrimitives.ReadUInt16LittleEndian(span);
+        }
+
+        public static short Int16(this ReadOnlyMemorySlice<byte> span)
+        {
+            return BinaryPrimitives.ReadInt16LittleEndian(span);
+        }
+
+        public static uint UInt32(this ReadOnlyMemorySlice<byte> span)
+        {
+            return BinaryPrimitives.ReadUInt32LittleEndian(span);
+        }
+
+        public static int Int32(this ReadOnlyMemorySlice<byte> span)
+        {
+            return BinaryPrimitives.ReadInt32LittleEndian(span);
+        }
+
+        public static ulong UInt64(this ReadOnlyMemorySlice<byte> span)
+        {
+            return BinaryPrimitives.ReadUInt64LittleEndian(span);
+        }
+
+        public static long Int64(this ReadOnlyMemorySlice<byte> span)
+        {
+            return BinaryPrimitives.ReadInt64LittleEndian(span);
         }
 
         public static unsafe string ToHexString(this ReadOnlySpan<byte> span)

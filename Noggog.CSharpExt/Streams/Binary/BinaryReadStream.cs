@@ -344,7 +344,7 @@ namespace Noggog
 
             _stream.Read(arr, numRead, amount);
             _streamPos += amount;
-            return SpanExt.GetStringUTF8(arr.AsSpan().Slice(0, amount + numRead));
+            return SpanExt.StringUTF8(arr.AsSpan().Slice(0, amount + numRead));
         }
 
         public int Get(byte[] buffer, int offset, int amount)

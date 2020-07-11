@@ -182,7 +182,7 @@ namespace Noggog
         public string ReadStringUTF8(int amount)
         {
             _pos += amount;
-            return SpanExt.GetStringUTF8(this._data.Span.Slice(_pos - amount, amount));
+            return SpanExt.StringUTF8(this._data.Span.Slice(_pos - amount, amount));
         }
 
         public float ReadFloat()
@@ -273,17 +273,17 @@ namespace Noggog
 
         public float GetFloat(int offset)
         {
-            return SpanExt.GetFloat(this._data.Span.Slice(_pos + offset));
+            return SpanExt.Float(this._data.Span.Slice(_pos + offset));
         }
 
         public double GetDouble(int offset)
         {
-            return SpanExt.GetDouble(this._data.Span.Slice(_pos + offset));
+            return SpanExt.Double(this._data.Span.Slice(_pos + offset));
         }
 
         public string GetStringUTF8(int amount, int offset)
         {
-            return SpanExt.GetStringUTF8(this._data.Span.Slice(_pos + offset, amount));
+            return SpanExt.StringUTF8(this._data.Span.Slice(_pos + offset, amount));
         }
 
         public bool GetBool()
@@ -333,17 +333,17 @@ namespace Noggog
 
         public float GetFloat()
         {
-            return SpanExt.GetFloat(this._data.Span.Slice(_pos));
+            return SpanExt.Float(this._data.Span.Slice(_pos));
         }
 
         public double GetDouble()
         {
-            return SpanExt.GetDouble(this._data.Span.Slice(_pos));
+            return SpanExt.Double(this._data.Span.Slice(_pos));
         }
 
         public string GetStringUTF8(int amount)
         {
-            return SpanExt.GetStringUTF8(this._data.Span.Slice(_pos, amount));
+            return SpanExt.StringUTF8(this._data.Span.Slice(_pos, amount));
         }
     }
 }
