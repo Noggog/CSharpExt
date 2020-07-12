@@ -227,13 +227,21 @@ namespace Noggog
 
         public ReadOnlyMemorySlice<byte> ReadMemory(int amount, bool readSafe = true)
         {
+            if (!readSafe && amount < InternalStreamRemaining)
+            {
+                return _internalMemoryStream.ReadMemory(amount, readSafe: false);
+            }
             var ret = new byte[amount];
-            var read = Read(ret, offset: 0, amount: amount);
+            if (Read(ret, offset: 0, amount: amount) != amount)
+            {
+                throw new ArgumentException("Coult not read desired amount");
+            }
             return new MemorySlice<byte>(ret);
         }
 
         public ReadOnlyMemorySlice<byte> ReadMemory(int amount, int offset, bool readSafe = true)
         {
+            if (offset == 0) return ReadMemory(amount, readSafe: readSafe);
             throw new NotImplementedException();
         }
 
