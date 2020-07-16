@@ -30,7 +30,7 @@ namespace Noggog
                 .Subscribe();
         }
 
-        public static IObservable<(T Previous, T Current)> WithPrevious<T>(this IObservable<T> source)
+        public static IObservable<(T Previous, T Current)> Pairwise<T>(this IObservable<T> source)
         {
             T prevStorage = default;
             return source.Select(i =>
