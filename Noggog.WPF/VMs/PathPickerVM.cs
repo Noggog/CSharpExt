@@ -32,8 +32,6 @@ namespace Noggog.WPF
             On
         }
 
-        public object? Parent { get; }
-
         [Reactive]
         public ICommand SetTargetPathCommand { get; set; }
 
@@ -72,9 +70,8 @@ namespace Noggog.WPF
         public const string PathDoesNotExistText = "Path does not exist";
         public const string DoesNotPassFiltersText = "Path does not pass designated filters";
 
-        public PathPickerVM(object? parentVM = null)
+        public PathPickerVM()
         {
-            Parent = parentVM;
             SetTargetPathCommand = ConstructTypicalPickerCommand();
 
             var existsCheckTuple = Observable.CombineLatest(
