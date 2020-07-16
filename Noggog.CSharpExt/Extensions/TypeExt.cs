@@ -235,7 +235,7 @@ namespace Noggog
 
         public static void LoadAssemblies()
         {
-            LoadAssemblies(out List<string> failed);
+            LoadAssemblies(out List<string> _);
         }
 
         public static void LoadAssemblies(out List<string> failed)
@@ -271,6 +271,10 @@ namespace Noggog
                     loadedAssemblies.Add(assembly);
                 }
                 catch (BadImageFormatException)
+                {
+                    FailedAssemblyLoads.Add(path);
+                }
+                catch (FileNotFoundException)
                 {
                     FailedAssemblyLoads.Add(path);
                 }
