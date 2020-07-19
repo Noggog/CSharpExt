@@ -3,6 +3,10 @@ using System.Collections.Generic;
 using System.Text;
 using System.Reactive.Disposables;
 using ReactiveUI;
+using System.Reactive.Linq;
+using DynamicData;
+using DynamicData.Binding;
+#nullable enable
 
 namespace Noggog.WPF
 {
@@ -36,6 +40,23 @@ namespace Noggog.WPF
         {
             source.ToProperty(vm, property, out result, initialValue, deferSubscription, RxApp.MainThreadScheduler)
                 .DisposeWith(vm.CompositeDisposable);
+        }
+
+        public static IObservable<T> ObserveOnGui<T>(this IObservable<T> obs)
+        {
+            return obs.ObserveOn(RxApp.MainThreadScheduler);
+        }
+
+        public static IDisposable Subscribe<T>(this IObservable<T> obs, Action onCompleted)
+        {
+            return obs.Subscribe(onNext: (t) => { }, onCompleted: onCompleted);
+        }
+
+        public static IObservable<IChangeSet<T>> Bind<T>(this IObservable<IChangeSet<T>> source, out IObservableCollection<T> readOnlyObservableCollection, int resetThreshold = 25)
+        {
+            var obsCol = new ObservableCollectionExtended<T>();
+            readOnlyObservableCollection = obsCol;
+            return source.Bind(obsCol, resetThreshold);
         }
     }
 }

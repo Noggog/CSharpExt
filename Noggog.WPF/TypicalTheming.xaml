@@ -449,6 +449,10 @@
         <Setter Property="Padding" Value="0" />
     </Style>
 
+    <Style x:Key="MainItemsControlStyle" TargetType="ItemsControl">
+        <Setter Property="Focusable" Value="False" />
+    </Style>
+
     <Style x:Key="TerminalListBoxStyle" TargetType="{x:Type ListBox}">
         <Setter Property="Background" Value="#292929" />
         <Setter Property="BorderBrush" Value="#292929" />
@@ -533,13 +537,16 @@
     <Style BasedOn="{StaticResource MainToggleButtonStyle}" TargetType="{x:Type ToggleButton}" />
     <Style BasedOn="{StaticResource MainListBoxItemStyle}" TargetType="ListBoxItem" />
     <Style BasedOn="{StaticResource MainTextBoxStyle}" TargetType="TextBox" />
+    <Style BasedOn="{StaticResource MainItemsControlStyle}" TargetType="ItemsControl" />
 
     <!--  Colors  -->
     <Color x:Key="Yellow">#ffc400</Color>
     <Color x:Key="Red">#e83a40</Color>
+    <Color x:Key="RedBackground">#912327</Color>
     <Color x:Key="PinkRedForeground">#f2c2bd</Color>
     <Color x:Key="Green">#52b545</Color>
     <Color x:Key="FocusedBackground">#FF080808</Color>
+    <Color x:Key="GreenBackground">#295c23</Color>
 
     <!--  Brushes  -->
     <SolidColorBrush x:Key="ForegroundDarkBrush" Color="{StaticResource MahApps.Colors.Gray3}" />
@@ -548,10 +555,13 @@
     <SolidColorBrush x:Key="BackgroundDarkBrush" Color="#202020" />
     <SolidColorBrush x:Key="YellowBrush" Color="{StaticResource Yellow}" />
     <SolidColorBrush x:Key="GreenBrush" Color="{StaticResource Green}" />
+    <SolidColorBrush x:Key="GreenBackgroundBrush" Color="{StaticResource GreenBackground}" />
     <SolidColorBrush x:Key="RedBrush" Color="{StaticResource Red}" />
+    <SolidColorBrush x:Key="RedBackgroundBrush" Color="{StaticResource RedBackground}" />
     <SolidColorBrush x:Key="WarningBrush" Color="{StaticResource Yellow}" />
     <SolidColorBrush x:Key="ErrorBrush" Color="{StaticResource Red}" />
     <SolidColorBrush x:Key="ErrorLightBrush" Color="{StaticResource PinkRedForeground}" />
+    <SolidColorBrush x:Key="ErrorBackgroundBrush" Color="{StaticResource RedBackground}" />
     <SolidColorBrush x:Key="ControlFocusBrush" Color="{StaticResource FocusedBackground}" />
     <SolidColorBrush x:Key="ButtonNakedIconOverForegroundBrush" Color="{StaticResource MahApps.Colors.ThemeForeground}" />
     <SolidColorBrush x:Key="ButtonNakedIconForegroundBrush" Color="{StaticResource MahApps.Colors.Gray6}" />

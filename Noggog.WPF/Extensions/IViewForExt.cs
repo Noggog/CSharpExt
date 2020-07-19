@@ -4,8 +4,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reactive.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace Noggog.WPF
 {
@@ -82,6 +84,12 @@ namespace Noggog.WPF
             return @this
                 .ObserveOn(RxApp.MainThreadScheduler)
                 .BindTo<TValue, TTarget, TValue>(target, property);
+        }
+
+        public static IDisposable InvokeCommandStrict<T, TTarget, TRet>(this IObservable<T> item, TTarget target, Expression<Func<TTarget, ReactiveCommandBase<T, TRet>>> commandProperty)
+            where TTarget : class
+        {
+            return ReactiveUI.ReactiveCommandMixins.InvokeCommand(item, target, commandProperty);
         }
     }
 }
