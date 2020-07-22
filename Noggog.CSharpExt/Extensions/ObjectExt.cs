@@ -7,7 +7,7 @@ namespace Noggog
 {
     public static class ObjectExt
     {
-        public static List<T> FindAllDerivedObjects<T>(this Object obj, bool recursive = true)
+        public static List<T> FindAllDerivedObjects<T>(Object obj, bool recursive = true)
         {
             List<T> ret = new List<T>();
             if (obj != null)
@@ -88,7 +88,7 @@ namespace Noggog
             return ret;
         }
 
-        public static R CastWithException<R>(this object o)
+        public static R CastWithException<R>(object o)
             where R : notnull
         {
             if (o is R ret)

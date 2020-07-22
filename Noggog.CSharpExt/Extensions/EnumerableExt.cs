@@ -24,7 +24,7 @@ namespace Noggog
             }
         }
 
-        public static IEnumerable<T> Single<T>(this T item)
+        public static IEnumerable<T> AsEnumerable<T>(this T item)
         {
             yield return item;
         }
@@ -62,22 +62,6 @@ namespace Noggog
             }
         }
 
-        public static IEnumerable<T> And<T>(this T item, IEnumerable<T> enumer2)
-        {
-            yield return item;
-            if (enumer2 == null) yield break;
-            foreach (var e in enumer2)
-            {
-                yield return e;
-            }
-        }
-
-        public static IEnumerable<T> AndSingle<T>(this T item1, T item2)
-        {
-            yield return item1;
-            yield return item2;
-        }
-
         public static IEnumerable<T> And<T>(this IEnumerable<T> enumer2, T item)
         {
             foreach (var e in enumer2)
@@ -98,24 +82,6 @@ namespace Noggog
             {
                 yield return e;
             }
-        }
-
-        public static IEnumerable<T> AndWhen<T>(this T item, IEnumerable<T> enumer2, Func<bool> when)
-        {
-            yield return item;
-            if (enumer2 == null) yield break;
-            if (!when()) yield break;
-            foreach (var e in enumer2)
-            {
-                yield return e;
-            }
-        }
-
-        public static IEnumerable<T> AndWhenSingle<T>(this T item, T item2, Func<bool> when)
-        {
-            yield return item;
-            if (!when()) yield break;
-            yield return item2;
         }
 
         public static IEnumerable<T> AndWhen<T>(this IEnumerable<T> enumer2, T item, Func<bool> when)

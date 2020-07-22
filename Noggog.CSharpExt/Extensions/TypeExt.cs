@@ -320,7 +320,7 @@ namespace Noggog
             return false;
         }
 
-        private static bool IsNullable_Internal<T>(Type type, out Type underlying)
+        private static bool IsNullable_Internal(Type type, out Type underlying)
         {
             if (!type.IsValueType)
             {
@@ -334,22 +334,22 @@ namespace Noggog
 
         public static bool IsNullable<T>()
         {
-            return IsNullable_Internal<T>(typeof(T), out var underlying);
+            return IsNullable_Internal(typeof(T), out var _);
         }
 
-        public static bool IsNullable<T>(this T obj)
+        public static bool IsNullable(Type t)
         {
-            return IsNullable<T>();
+            return IsNullable_Internal(t, out var _);
         }
 
         public static bool IsNullable<T>(out Type underlying)
         {
-            return IsNullable_Internal<T>(typeof(T), out underlying);
+            return IsNullable_Internal(typeof(T), out underlying);
         }
 
-        public static bool IsNullable<T>(this T obj, out Type underlying)
+        public static bool IsNullable<T>(Type t, out Type underlying)
         {
-            return IsNullable<T>(out underlying);
+            return IsNullable_Internal(t, out underlying);
         }
     }
 }

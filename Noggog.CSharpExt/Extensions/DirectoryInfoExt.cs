@@ -94,7 +94,7 @@ namespace Noggog
             }
             if (includeSelf)
             {
-                ret = dir.Single().Concat(ret);
+                ret = dir.AsEnumerable().Concat(ret);
             }
             return ret;
         }

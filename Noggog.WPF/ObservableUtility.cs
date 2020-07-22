@@ -36,7 +36,7 @@ namespace Noggog.WPF
             return Keybind_Internal(
                 triggeringEvents: events
                     .Where(e => e.Key == key),
-                keys: key.Single(),
+                keys: key.AsEnumerable(),
                 modifiers: modifiers);
         }
 
