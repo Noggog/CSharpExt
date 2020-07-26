@@ -58,5 +58,15 @@ namespace Noggog.WPF
             readOnlyObservableCollection = obsCol;
             return source.Bind(obsCol, resetThreshold);
         }
+
+        public static IObservableCollection<TObj> ToObservableCollection<TObj>(this IObservable<IChangeSet<TObj>> changeSet, CompositeDisposable dispoosable)
+        {
+            changeSet
+                .ObserveOnGui()
+                .Bind(out IObservableCollection<TObj> display)
+                .Subscribe()
+                .DisposeWith(dispoosable);
+            return display;
+        }
     }
 }
