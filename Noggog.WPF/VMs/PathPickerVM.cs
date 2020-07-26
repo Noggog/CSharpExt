@@ -75,9 +75,9 @@ namespace Noggog.WPF
             SetTargetPathCommand = ConstructTypicalPickerCommand();
 
             var existsCheckTuple = Observable.CombineLatest(
-                    this.WhenAny(x => x.ExistCheckOption),
-                    this.WhenAny(x => x.PathType),
-                    this.WhenAny(x => x.TargetPath)
+                    this.WhenAnyValue(x => x.ExistCheckOption),
+                    this.WhenAnyValue(x => x.PathType),
+                    this.WhenAnyValue(x => x.TargetPath)
                         // Dont want to debounce the initial value, because we know it's null
                         .Skip(1)
                         .Debounce(TimeSpan.FromMilliseconds(200), RxApp.TaskpoolScheduler)
@@ -112,9 +112,9 @@ namespace Noggog.WPF
                 .FilterSwitch(doExistsCheck)
                 .Unit()
                 // Also check though, when fields change
-                .Merge(this.WhenAny(x => x.PathType).Unit())
-                .Merge(this.WhenAny(x => x.ExistCheckOption).Unit())
-                .Merge(this.WhenAny(x => x.TargetPath).Unit())
+                .Merge(this.WhenAnyValue(x => x.PathType).Unit())
+                .Merge(this.WhenAnyValue(x => x.ExistCheckOption).Unit())
+                .Merge(this.WhenAnyValue(x => x.TargetPath).Unit())
                 // Signaled to check, get latest params for actual use
                 .CombineLatest(existsCheckTuple,
                     resultSelector: (_, tuple) => tuple)
@@ -152,9 +152,9 @@ namespace Noggog.WPF
                 .ToProperty(this, nameof(Exists));
 
             var passesFilters = Observable.CombineLatest(
-                    this.WhenAny(x => x.TargetPath),
-                    this.WhenAny(x => x.PathType),
-                    this.WhenAny(x => x.FilterCheckOption),
+                    this.WhenAnyValue(x => x.TargetPath),
+                    this.WhenAnyValue(x => x.PathType),
+                    this.WhenAnyValue(x => x.FilterCheckOption),
                     Filters.Connect().QueryWhenChanged(),
                 resultSelector: (target, type, checkOption, query) =>
                 {
@@ -204,12 +204,12 @@ namespace Noggog.WPF
 
             _errorState = Observable.CombineLatest(
                     Observable.CombineLatest(
-                            this.WhenAny(x => x.Exists),
+                            this.WhenAnyValue(x => x.Exists),
                             doExistsCheck,
                             resultSelector: (exists, doExists) => !doExists || exists)
                         .Select(exists => ErrorResponse.Create(successful: exists, exists ? string.Empty : PathDoesNotExistText)),
                     passesFilters,
-                    this.WhenAny(x => x.AdditionalError)
+                    this.WhenAnyValue(x => x.AdditionalError)
                         .Select(x => x ?? Observable.Return<IErrorResponse>(ErrorResponse.Success))
                         .Switch(),
                     resultSelector: (existCheck, filter, err) =>
@@ -221,7 +221,7 @@ namespace Noggog.WPF
                 .ObserveOn(RxApp.MainThreadScheduler)
                 .ToProperty(this, nameof(ErrorState));
 
-            _inError = this.WhenAny(x => x.ErrorState)
+            _inError = this.WhenAnyValue(x => x.ErrorState)
                 .Select(x => !x.Succeeded)
                 .ToProperty(this, nameof(InError));
 
@@ -229,13 +229,13 @@ namespace Noggog.WPF
             // which is slightly different logic
             _errorTooltip = Observable.CombineLatest(
                     Observable.CombineLatest(
-                            this.WhenAny(x => x.Exists),
+                            this.WhenAnyValue(x => x.Exists),
                             doExistsCheck,
                             resultSelector: (exists, doExists) => !doExists || exists)
                         .Select(exists => exists ? string.Empty : PathDoesNotExistText),
                     passesFilters
                         .Select(x => x.Reason),
-                    this.WhenAny(x => x.AdditionalError)
+                    this.WhenAnyValue(x => x.AdditionalError)
                         .Select(x => x ?? Observable.Return<IErrorResponse>(ErrorResponse.Success))
                         .Switch(),
                     resultSelector: (exists, filters, err) =>

@@ -89,5 +89,7 @@ namespace Noggog.WPF
             hasBeenSet[index] = newHasBeenSet;
             this.RaisePropertyChanged(name);
         }
+
+        public static implicit operator CompositeDisposable(ViewModel vm) => vm.CompositeDisposable;
     }
 }
