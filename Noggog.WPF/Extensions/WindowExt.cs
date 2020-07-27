@@ -48,13 +48,14 @@ namespace Noggog.WPF
 
         public static T WireMainVM<T>(
             this Window window,
-            string settingsPath)
+            string settingsPath,
+            JsonSerializerSettings? settings = null)
             where T : IDisposable, new()
         {
             return window.WireMainVM(
                 settingsPath: settingsPath,
-                load: (s) => JsonConvert.DeserializeObject<T>(File.ReadAllText(s)),
-                save: (s, vm) => File.WriteAllText(s, JsonConvert.SerializeObject(vm, Formatting.Indented)));
+                load: (s) => (T)JsonConvert.DeserializeObject<T>(File.ReadAllText(s), settings)!,
+                save: (s, vm) => File.WriteAllText(s, JsonConvert.SerializeObject(vm, Formatting.Indented, settings)));
         }
 
         public static T WireMainVM<T>(
