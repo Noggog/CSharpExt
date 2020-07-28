@@ -73,6 +73,15 @@ namespace Noggog
                 .SelectMany(_ => task());
         }
 
+        public static IObservable<R> SelectTask<T, R>(this IObservable<T> source, Func<T, Task<R>> task)
+        {
+            return source
+                .SelectMany(async i =>
+                {
+                    return await task(i).ConfigureAwait(false);
+                });
+        }
+
         public static IObservable<T> FilterSwitch<T>(this IObservable<T> source, IObservable<bool> filterSwitch)
         {
             return filterSwitch
