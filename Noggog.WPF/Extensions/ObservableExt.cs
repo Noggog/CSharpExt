@@ -59,13 +59,13 @@ namespace Noggog.WPF
             return source.Bind(obsCol, resetThreshold);
         }
 
-        public static IObservableCollection<TObj> ToObservableCollection<TObj>(this IObservable<IChangeSet<TObj>> changeSet, CompositeDisposable dispoosable)
+        public static IObservableCollection<TObj> ToObservableCollection<TObj>(this IObservable<IChangeSet<TObj>> changeSet, CompositeDisposable disposable)
         {
             changeSet
                 .ObserveOnGui()
                 .Bind(out IObservableCollection<TObj> display)
                 .Subscribe()
-                .DisposeWith(dispoosable);
+                .DisposeWith(disposable);
             return display;
         }
     }

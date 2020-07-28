@@ -104,10 +104,12 @@ namespace Noggog
             return source.Select(u => System.Reactive.Unit.Default);
         }
 
-        public static IObservable<T> NotNull<T>(this IObservable<T> source)
+        public static IObservable<T> NotNull<T>(this IObservable<T?> source)
             where T : class
         {
-            return source.Where(u => u != null);
+            return source
+                .Where(u => u != null)
+                .Select(u => u!);
         }
 
         public static IObservable<TSource> PublishRefCount<TSource>(this IObservable<TSource> source)
