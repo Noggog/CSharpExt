@@ -107,9 +107,7 @@ namespace Noggog
         public static IObservable<T> NotNull<T>(this IObservable<T?> source)
             where T : class
         {
-            return source
-                .Where(u => u != null)
-                .Select(u => u!);
+            return source.Where(u => u != null)!;
         }
 
         public static IObservable<TSource> PublishRefCount<TSource>(this IObservable<TSource> source)
