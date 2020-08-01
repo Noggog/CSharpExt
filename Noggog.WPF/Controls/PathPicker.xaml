@@ -62,6 +62,8 @@
         <TextBox Grid.Column="0"
             x:Name="PathTextBox"
             VerticalContentAlignment="Center"
+            mahapps:ControlsHelper.FocusBorderBrush="Transparent"
+            mahapps:ControlsHelper.MouseOverBorderBrush="Transparent"
             Text="{Binding PickerVM.TargetPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
             Visibility="{Binding PickerVM.ShowTextBoxInput, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" />
         <Grid Grid.Column="1" HorizontalAlignment="Right">
