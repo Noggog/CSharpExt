@@ -135,7 +135,7 @@ namespace Noggog
             }
         }
 
-        public static V TryCreate<K, V>(
+        public static V GetOrAdd<K, V>(
             this SortedList<K, V> sortedList,
             K key,
             Func<V> newVal)
@@ -146,7 +146,7 @@ namespace Noggog
             return v;
         }
 
-        public static V TryCreate<K, V>(
+        public static V GetOrAdd<K, V>(
             this SortedList<K, V> sortedList,
             K key)
             where V : new()

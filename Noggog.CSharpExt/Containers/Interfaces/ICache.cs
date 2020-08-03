@@ -13,13 +13,20 @@ namespace Noggog
         new int Count { get; }
 
         /// <summary>
-        /// Adds or updates the item using the specified key
+        /// Adds or updates the cache to contain item using the specified key
+        /// </summary>
+        /// <param name="item">The item.</param>
+        /// <exception cref="ArgumentException">If an item with the given key already exists within the cache</exception>
+        void Add(TObject item);
+
+        /// <summary>
+        /// Adds or updates the cache to contain item, based on its implicit key
         /// </summary>
         /// <param name="item">The item.</param>
         void Set(TObject item);
 
         /// <summary>
-        /// Adds or updates the item using the specified key
+        /// Adds or updates the cache to contain item, based on its implicit key
         /// </summary>
         /// <param name="items">The items.</param>
         void Set(IEnumerable<TObject> items);
@@ -55,7 +62,7 @@ namespace Noggog
 
         new bool ContainsKey(TKey key);
 
-        TObject TryCreateValue(TKey key, Func<TKey, TObject> createFunc);
+        TObject GetOrAdd(TKey key, Func<TKey, TObject> createFunc);
 
         new IEnumerator<IKeyValue<TObject, TKey>> GetEnumerator();
     }

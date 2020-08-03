@@ -33,10 +33,6 @@ namespace Noggog
 
         public void Remove(IEnumerable<TKey> keys)
         {
-            if (keys == null)
-            {
-                throw new ArgumentNullException(nameof(keys));
-            }
             foreach (var key in keys)
             {
                 this._dict.Remove(key);
@@ -57,10 +53,6 @@ namespace Noggog
 
         public void Refresh(IEnumerable<TKey> keys)
         {
-            if (keys == null)
-            {
-                throw new ArgumentNullException(nameof(keys));
-            }
             List<TObject> objs = new List<TObject>();
             foreach (var key in keys)
             {
@@ -98,38 +90,29 @@ namespace Noggog
 
         public void Set(IEnumerable<TObject> items)
         {
-            if (items == null)
-            {
-                throw new ArgumentNullException(nameof(items));
-            }
-
             foreach (var item in items)
             {
                 this._dict[this._keySelector(item)] = item;
             }
         }
 
+        public void Add(TObject item)
+        {
+            this._dict.Add(this._keySelector(item), item);
+        }
+
         public bool Remove(TObject obj) => this._dict.Remove(this._keySelector(obj));
 
         public void Remove(IEnumerable<TObject> objects)
         {
-            if (objects == null)
-            {
-                throw new ArgumentNullException(nameof(objects));
-            }
-
             foreach (var item in objects)
             {
                 this._dict.Remove(this._keySelector(item));
             }
         }
 
-        public TObject TryCreateValue(TKey key, Func<TKey, TObject> createFunc)
+        public TObject GetOrAdd(TKey key, Func<TKey, TObject> createFunc)
         {
-            if (createFunc == null)
-            {
-                throw new ArgumentNullException(nameof(createFunc));
-            }
             if (this._dict.TryGetValue(key, out var val)) return val;
             val = createFunc(key);
             this.Set(val);

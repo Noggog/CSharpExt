@@ -15,7 +15,7 @@ namespace Noggog
             }
         }
 
-        public static V TryCreateValue<K, V>(this IDictionary<K, V> dict, K key)
+        public static V GetOrAdd<K, V>(this IDictionary<K, V> dict, K key)
             where V : new()
         {
             if (!dict.TryGetValue(key, out V ret))
@@ -26,7 +26,7 @@ namespace Noggog
             return ret;
         }
 
-        public static V TryCreateValue<K, V>(this IDictionary<K, V> dict, K key, Func<V> getNew)
+        public static V GetOrAdd<K, V>(this IDictionary<K, V> dict, K key, Func<V> getNew)
         {
             if (!dict.TryGetValue(key, out V ret))
             {
