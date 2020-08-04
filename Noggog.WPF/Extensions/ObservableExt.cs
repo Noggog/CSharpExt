@@ -68,5 +68,16 @@ namespace Noggog.WPF
                 .DisposeWith(disposable);
             return display;
         }
+
+        public static IObservableCollection<TObj> ToObservableCollection<TObj, TKey>(this IObservable<IChangeSet<TObj, TKey>> changeSet, CompositeDisposable disposable)
+        {
+            ObservableCollectionExtended<TObj> display = new ObservableCollectionExtended<TObj>();
+            changeSet
+                .ObserveOnGui()
+                .Bind(display)
+                .Subscribe()
+                .DisposeWith(disposable);
+            return display;
+        }
     }
 }
