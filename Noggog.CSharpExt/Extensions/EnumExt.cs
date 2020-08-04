@@ -157,6 +157,14 @@ namespace Noggog
             return attributes.Length > 0 ? attributes[0].Description : string.Empty;
         }
 
+        public static string ToDescriptionString(this Enum value)
+        {
+            FieldInfo fieldInfo = value.GetType().GetField(value.ToString());
+            if (fieldInfo == null) return string.Empty;
+            var attribute = (DescriptionAttribute)fieldInfo.GetCustomAttribute(typeof(DescriptionAttribute));
+            return attribute.Description;
+        }
+
         public static TEnum FromDescriptionString<TEnum>(string value, TEnum defaultValue = default(TEnum))
             where TEnum : struct, IConvertible
         {
