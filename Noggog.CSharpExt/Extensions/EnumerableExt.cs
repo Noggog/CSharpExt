@@ -8,20 +8,9 @@ namespace Noggog
 {
     public static class EnumerableExt
     {
-        public static Type GetEnumeratedType<T>(this IEnumerable<T> e)
+        public static Type GetEnumeratedType<T>(this IEnumerable<T> _)
         {
             return typeof(T);
-        }
-
-        public static IEnumerable<T> Filter<T>(this IEnumerable<T> rhs, Func<T, bool> filter)
-        {
-            foreach (T t in rhs)
-            {
-                if (filter(t))
-                {
-                    yield return t;
-                }
-            }
         }
 
         public static IEnumerable<T> AsEnumerable<T>(this T item)
@@ -31,7 +20,7 @@ namespace Noggog
 
         public static bool Any(this IEnumerable enumer)
         {
-            foreach (var item in enumer)
+            foreach (var _ in enumer)
             {
                 return true;
             }
