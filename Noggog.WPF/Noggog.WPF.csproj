@@ -1,11 +1,11 @@
-<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <UseWPF>true</UseWPF>
     <AssemblyName>Noggog.WPF</AssemblyName>
     <RootNamespace>Noggog.WPF</RootNamespace>
-    <Version>1.0.14</Version>
+    <Version>1.0.15</Version>
     <Authors>Noggog</Authors>
     <Company>Noggog</Company>
     <Description>Generic reusable WPF classes and extension methods that apply to no specific project and flavored to taste</Description>
@@ -33,5 +33,9 @@
   <ItemGroup>
     <ProjectReference Include="..\Noggog.CSharpExt\Noggog.CSharpExt.csproj" />
   </ItemGroup>
+   
+  <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
+    <Exec Command="RD /S /Q &quot;%25USERPROFILE%25\.nuget\packages\noggog.wpf&quot;" />
+  </Target>
 
 </Project>
