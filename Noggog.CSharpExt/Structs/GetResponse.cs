@@ -6,9 +6,9 @@ namespace Noggog
     {
         public static readonly GetResponse<T> Failure = new GetResponse<T>();
 
-        public readonly T Value;
-        public readonly bool Succeeded;
-        public readonly Exception? Exception;
+        public T Value { get; }
+        public bool Succeeded { get; }
+        public Exception? Exception { get; }
         private readonly string _reason;
 
         public bool Failed => !Succeeded;

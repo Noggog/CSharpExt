@@ -11,8 +11,10 @@ namespace Noggog
         public readonly static ErrorResponse Success = Succeed();
         public readonly static ErrorResponse Failure = new ErrorResponse();
 
-        public readonly bool Succeeded;
-        public readonly Exception? Exception;
+        private readonly bool _succeeded;
+        public readonly bool Succeeded => _succeeded;
+        private readonly Exception? _exception;
+        public readonly Exception? Exception => _exception;
         private readonly string _reason;
 
         public bool Failed => !Succeeded;
@@ -36,9 +38,9 @@ namespace Noggog
             string reason = "",
             Exception? ex = null)
         {
-            this.Succeeded = succeeded;
+            this._succeeded = succeeded;
             this._reason = reason;
-            this.Exception = ex;
+            this._exception = ex;
         }
 
         public override string ToString()
