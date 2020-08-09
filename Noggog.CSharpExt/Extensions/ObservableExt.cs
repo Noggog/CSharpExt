@@ -214,5 +214,14 @@ namespace Noggog
             });
         }
 
+        public static IObservable<T> DoTask<T>(this IObservable<T> source, Func<T, Task> task)
+        {
+            return source
+                .SelectMany(async (x) =>
+                {
+                    await task(x).ConfigureAwait(false);
+                    return x;
+                });
+        }
     }
 }
