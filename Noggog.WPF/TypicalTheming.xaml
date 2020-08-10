@@ -964,6 +964,10 @@
     <Color x:Key="GreenBackground">#295c23</Color>
 
     <Color x:Key="Error">#e83a40</Color>
+    <Color x:Key="ErrorLight">#e65358</Color>
+    <Color x:Key="ErrorDark">#d92b32</Color>
+    <Color x:Key="ErrorHover">#e65358</Color>
+    <Color x:Key="ErrorPressed">#d92b32</Color>
     <Color x:Key="Warning">#ffc400</Color>
     <Color x:Key="WarningDark">#967400</Color>
 
@@ -982,6 +986,8 @@
     <SolidColorBrush x:Key="WarningDarkBrush" Color="{StaticResource WarningDark}" />
     <SolidColorBrush x:Key="ErrorBrush" Color="{StaticResource Error}" />
     <SolidColorBrush x:Key="ErrorLightBrush" Color="{StaticResource PinkRedForeground}" />
+    <SolidColorBrush x:Key="ErrorHoverBrush" Color="{StaticResource ErrorHover}" />
+    <SolidColorBrush x:Key="ErrorPressedBrush" Color="{StaticResource ErrorPressed}" />
     <SolidColorBrush x:Key="ErrorBackgroundBrush" Color="{StaticResource RedBackground}" />
     <SolidColorBrush x:Key="ControlFocusBrush" Color="{StaticResource FocusedBackground}" />
     <SolidColorBrush x:Key="ButtonNakedIconOverForegroundBrush" Color="{StaticResource MahApps.Colors.ThemeForeground}" />
