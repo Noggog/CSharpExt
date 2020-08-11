@@ -54,12 +54,6 @@ namespace Noggog
             return Enum.GetValues(typeof(T)).Cast<T>();
         }
 
-        public static T[] GetValueArray<T>()
-            where T : struct, Enum
-        {
-            return GetValues<T>().ToArray<T>();
-        }
-
         public static int GetSize<T>()
             where T : struct, Enum
         {
