@@ -77,7 +77,6 @@
         <Setter Property="FontSize" Value="{DynamicResource MahApps.Font.Size.Button}" />
         <Setter Property="FontWeight" Value="Bold" />
         <Setter Property="Foreground" Value="{DynamicResource ButtonNakedIconForegroundBrush}" />
-        <Setter Property="Padding" Value="5,6" />
         <Setter Property="SnapsToDevicePixels" Value="True" />
         <Setter Property="Template">
             <Setter.Value>
