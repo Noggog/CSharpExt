@@ -30,6 +30,17 @@ namespace Noggog
                 .Subscribe();
         }
 
+        public static IDisposable Subscribe<T>(this IObservable<T> source, Func<T, Task> action)
+        {
+            return source
+                .SelectMany(async i =>
+                {
+                    await action(i).ConfigureAwait(false);
+                    return System.Reactive.Unit.Default;
+                })
+                .Subscribe();
+        }
+
         public static IObservable<(T Previous, T Current)> Pairwise<T>(this IObservable<T> source)
         {
             T prevStorage = default;
@@ -239,6 +250,24 @@ namespace Noggog
                     await task(x).ConfigureAwait(false);
                     return x;
                 });
+        }
+
+        public static IObservable<Unit> TurnedOff(this IObservable<bool> source)
+        {
+            return source
+                .DistinctUntilChanged()
+                .Pairwise()
+                .Where(x => x.Previous && !x.Current)
+                .Unit();
+        }
+
+        public static IObservable<Unit> TurnedOn(this IObservable<bool> source)
+        {
+            return source
+                .DistinctUntilChanged()
+                .Pairwise()
+                .Where(x => !x.Previous && x.Current)
+                .Unit();
         }
     }
 }

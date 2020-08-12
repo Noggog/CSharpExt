@@ -12,10 +12,11 @@ namespace Noggog.WPF
 {
     public static class ObservableExt
     {
-        public static void DisposeWith<T>(this T item, ViewModel vm)
+        public static T DisposeWith<T>(this T item, ViewModel vm)
             where T : IDisposable
         {
             item.DisposeWith(vm.CompositeDisposable);
+            return item;
         }
 
         public static ObservableAsPropertyHelper<TRet> ToGuiProperty<TRet>(
