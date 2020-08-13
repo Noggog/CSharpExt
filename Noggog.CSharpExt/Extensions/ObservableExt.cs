@@ -269,5 +269,21 @@ namespace Noggog
                 .Where(x => !x.Previous && x.Current)
                 .Unit();
         }
+
+        public static IObservable<TimeSpan> TimePassed(TimeSpan notificationFrequency, IScheduler scheduler)
+        {
+            return Observable.Return(System.Reactive.Unit.Default)
+                .Select(_ =>
+                {
+                    return Observable.CombineLatest(
+                        Observable.Interval(notificationFrequency, scheduler),
+                        Observable.Return(DateTime.Now),
+                        (_, startTime) =>
+                        {
+                            return DateTime.Now - startTime;
+                        });
+                })
+                .Switch();
+        }
     }
 }
