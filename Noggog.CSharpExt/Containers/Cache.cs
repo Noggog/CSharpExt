@@ -1,11 +1,13 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
 
 namespace Noggog
 {
     public class Cache<TObject, TKey> : ICache<TObject, TKey>
+        where TKey : notnull
     {
         private readonly Func<TObject, TKey> _keySelector;
         private Dictionary<TKey, TObject> _dict = new Dictionary<TKey, TObject>();
@@ -39,7 +41,7 @@ namespace Noggog
             }
         }
 
-        public bool TryGetValue(TKey key, out TObject value) => this._dict.TryGetValue(key, out value);
+        public bool TryGetValue(TKey key, [MaybeNullWhen(false)] out TObject value) => this._dict.TryGetValue(key, out value);
 
         public void Refresh()
         {

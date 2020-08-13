@@ -30,7 +30,7 @@ namespace Noggog
             _list = list;
         }
 
-        public static SortingList<T> Factory_Wrap_AssumeSorted(IList<T> list)
+        public static SortingList<T> FactoryWrapAssumeSorted(IList<T> list)
         {
             return new SortingList<T>(list);
         }

@@ -21,7 +21,7 @@ namespace Noggog
         bool TryGetValueInDirection(
             TKey item,
             bool higher,
-            out TValue result);
+            [MaybeNullWhen(false)] out TValue result);
 
         bool TryGetInDirection(
             TKey item,

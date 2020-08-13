@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 namespace Noggog
 {
     public class SortingListDictionary<TKey, TValue> : ISortingListDictionary<TKey, TValue>
+        where TKey : notnull
     {
         private readonly IList<TKey> _internalKeys;
         private readonly IList<TValue> _internalValues;
@@ -28,8 +29,8 @@ namespace Noggog
         {
             _internalKeys = new List<TKey>();
             _internalValues = new List<TValue>();
-            _internalSortedKeys = SortingList<TKey>.Factory_Wrap_AssumeSorted(_internalKeys);
-            _internalSortedValues = SortingList<TValue>.Factory_Wrap_AssumeSorted(_internalValues);
+            _internalSortedKeys = SortingList<TKey>.FactoryWrapAssumeSorted(_internalKeys);
+            _internalSortedValues = SortingList<TValue>.FactoryWrapAssumeSorted(_internalValues);
         }
 
         private SortingListDictionary(
@@ -38,8 +39,8 @@ namespace Noggog
         {
             _internalKeys = keys;
             _internalValues = values;
-            _internalSortedKeys = SortingList<TKey>.Factory_Wrap_AssumeSorted(_internalKeys);
-            _internalSortedValues = SortingList<TValue>.Factory_Wrap_AssumeSorted(_internalValues);
+            _internalSortedKeys = SortingList<TKey>.FactoryWrapAssumeSorted(_internalKeys);
+            _internalSortedValues = SortingList<TValue>.FactoryWrapAssumeSorted(_internalValues);
         }
 
         public SortingListDictionary(IEnumerable<KeyValuePair<TKey, TValue>> e)
@@ -124,7 +125,9 @@ namespace Noggog
             _internalValues.RemoveAt(index);
         }
 
+#pragma warning disable CS8767 // Nullability of reference types in type of parameter doesn't match implicitly implemented member (possibly because of nullability attributes).
         public bool TryGetValue(TKey key, [MaybeNullWhen(false)] out TValue value)
+#pragma warning restore CS8767 // Nullability of reference types in type of parameter doesn't match implicitly implemented member (possibly because of nullability attributes).
         {
             var search = _internalKeys.BinarySearch(key);
             if (search < 0)

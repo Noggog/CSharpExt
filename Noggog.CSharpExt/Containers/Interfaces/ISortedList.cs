@@ -18,7 +18,7 @@ namespace Noggog
         bool TryGetValueInDirection(
             T item,
             bool higher,
-            out T result);
+            [MaybeNullWhen(false)] out T result);
 
         bool TryGetInDirection(
             T item,

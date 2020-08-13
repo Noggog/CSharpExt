@@ -15,8 +15,6 @@
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <NoWarn>1701;1702; 1998</NoWarn>
-    <WarningsAsErrors>NU1605, CS4014</WarningsAsErrors>
     <DocumentationFile>Noggog.CSharpExt.xml</DocumentationFile>
   </PropertyGroup>
 

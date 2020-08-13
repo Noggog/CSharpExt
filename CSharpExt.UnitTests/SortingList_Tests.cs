@@ -33,14 +33,14 @@ namespace CSharpExt.Tests
 
         public SortingList<WrappedInt> Typical()
         {
-            return SortingList<WrappedInt>.Factory_Wrap_AssumeSorted(TypicalBareList());
+            return SortingList<WrappedInt>.FactoryWrapAssumeSorted(TypicalBareList());
         }
 
         #region Factories
         [Fact]
         public void Factory_Wrap_AssumeSorted()
         {
-            var list = SortingList<WrappedInt>.Factory_Wrap_AssumeSorted(TypicalBareList());
+            var list = SortingList<WrappedInt>.FactoryWrapAssumeSorted(TypicalBareList());
             Assert.Equal(TypicalCount, list.Count);
             Assert.True(TypicalBareList().SequenceEqual(list));
         }
@@ -49,7 +49,7 @@ namespace CSharpExt.Tests
         public void Factory_Wrap_AssumeSorted_But_Not()
         {
             var badInts = new int[] { 4, 2, 5 };
-            var list = SortingList<int>.Factory_Wrap_AssumeSorted(
+            var list = SortingList<int>.FactoryWrapAssumeSorted(
                 new List<int>(badInts));
             Assert.Equal(badInts.Length, list.Count);
             Assert.True(badInts.SequenceEqual(list));
