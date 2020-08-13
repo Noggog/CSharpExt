@@ -837,6 +837,14 @@
         <Setter Property="Focusable" Value="False" />
     </Style>
 
+
+    <Style
+        x:Key="MainComboboxStyle"
+        BasedOn="{StaticResource MahApps.Styles.ComboBox}"
+        TargetType="ComboBox">
+        <Setter Property="Focusable" Value="False" />
+    </Style>
+
     <Style
         x:Key="MainListBoxItemStyle"
         BasedOn="{StaticResource MahApps.Styles.ListBoxItem}"
@@ -951,6 +959,7 @@
     <Style BasedOn="{StaticResource MainListBoxItemStyle}" TargetType="ListBoxItem" />
     <Style BasedOn="{StaticResource MainTextBoxStyle}" TargetType="TextBox" />
     <Style BasedOn="{StaticResource MainItemsControlStyle}" TargetType="ItemsControl" />
+    <Style BasedOn="{StaticResource MainComboboxStyle}" TargetType="ComboBox" />
 
     <!--  Colors  -->
     <Color x:Key="Yellow">#ffc400</Color>
