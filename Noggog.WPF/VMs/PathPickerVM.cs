@@ -65,8 +65,14 @@ namespace Noggog.WPF
         private readonly ObservableAsPropertyHelper<string> _errorTooltip;
         public string ErrorTooltip => _errorTooltip.Value;
 
+        public IObservable<GetResponse<string>> PathState() => this.WhenAnyValue(
+            x => x.ErrorState,
+            x => x.TargetPath,
+            (err, p) => GetResponse<string>.Create(successful: err.Succeeded, p));
+
         public SourceList<CommonFileDialogFilter> Filters { get; } = new SourceList<CommonFileDialogFilter>();
 
+        public const string FolderDoesNotExistText = "Folder does not exist";
         public const string PathDoesNotExistText = "Path does not exist";
         public const string DoesNotPassFiltersText = "Path does not pass designated filters";
 
@@ -202,12 +208,35 @@ namespace Noggog.WPF
                 .Replay(1)
                 .RefCount();
 
+            var errorText = Observable.CombineLatest(
+                    this.WhenAnyValue(x => x.Exists),
+                    doExistsCheck,
+                    resultSelector: (exists, doExists) => !doExists || exists)
+                .WithLatestFrom(
+                    this.WhenAnyValue(x => x.PathType),
+                    (exists, type) => (exists, type))
+                .Select(i =>
+                {
+                    string errStr;
+                    if (i.exists)
+                    {
+                        errStr = string.Empty;
+                    }
+                    else
+                    {
+                        errStr = i.type switch
+                        {
+                            PathTypeOptions.Folder => FolderDoesNotExistText,
+                            _ => PathDoesNotExistText
+                        };
+                    }
+                    return ErrorResponse.Create(successful: i.exists, reason: errStr);
+                })
+                .Replay(1)
+                .RefCount();
+
             _errorState = Observable.CombineLatest(
-                    Observable.CombineLatest(
-                            this.WhenAnyValue(x => x.Exists),
-                            doExistsCheck,
-                            resultSelector: (exists, doExists) => !doExists || exists)
-                        .Select(exists => ErrorResponse.Create(successful: exists, exists ? string.Empty : PathDoesNotExistText)),
+                    errorText,
                     passesFilters,
                     this.WhenAnyValue(x => x.AdditionalError)
                         .Select(x => x ?? Observable.Return<IErrorResponse>(ErrorResponse.Success))
@@ -228,11 +257,7 @@ namespace Noggog.WPF
             // Doesn't derive from ErrorState, as we want to bubble non-empty tooltips,
             // which is slightly different logic
             _errorTooltip = Observable.CombineLatest(
-                    Observable.CombineLatest(
-                            this.WhenAnyValue(x => x.Exists),
-                            doExistsCheck,
-                            resultSelector: (exists, doExists) => !doExists || exists)
-                        .Select(exists => exists ? string.Empty : PathDoesNotExistText),
+                    errorText.Select(x => x.Reason),
                     passesFilters
                         .Select(x => x.Reason),
                     this.WhenAnyValue(x => x.AdditionalError)
