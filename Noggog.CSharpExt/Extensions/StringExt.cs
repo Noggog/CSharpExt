@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace Noggog
 {
@@ -131,6 +133,17 @@ namespace Noggog
         public static byte[] ToBytes(this string str)
         {
             return Encoding.ASCII.GetBytes(str);
+        }
+
+        public static string RemoveDisallowedFilepathChars(string str)
+        {
+            Regex illegalInFileName = new Regex(@"[\\/:*?""<>|]");
+            return illegalInFileName.Replace(str, "");
+        }
+
+        public static bool IsViableFilename(string str)
+        {
+            return str.IndexOfAny(Path.GetInvalidFileNameChars()) == -1;
         }
     }
 }
