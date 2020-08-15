@@ -45,6 +45,24 @@ namespace Noggog
             return $"({(Succeeded ? "Success" : "Fail")}, {Reason})";
         }
 
+        public GetResponse<TRet> BubbleFailure<TRet>()
+        {
+            if (this.Exception == null)
+            {
+                return GetResponse<TRet>.Fail(this.Reason);
+            }
+            return GetResponse<TRet>.Fail(this.Exception);
+        }
+
+        public GetResponse<TRet> BubbleResult<TRet>(TRet item)
+        {
+            if (this.Exception != null)
+            {
+                return GetResponse<TRet>.Fail(item, this.Exception);
+            }
+            return GetResponse<TRet>.Create(successful: this.Succeeded, val: item, reason: this.Reason);
+        }
+
         #region Factories
         public static ErrorResponse Succeed()
         {
@@ -76,17 +94,5 @@ namespace Noggog
             return new ErrorResponse(successful, reason);
         }
         #endregion
-    }
-
-    public static class ErrorResponseExt
-    {
-        public static GetResponse<TRet> BubbleFailure<TRet>(this ErrorResponse resp)
-        {
-            if (resp.Exception == null)
-            {
-                return GetResponse<TRet>.Fail(resp.Reason);
-            }
-            return GetResponse<TRet>.Fail(resp.Exception);
-        }
     }
 }

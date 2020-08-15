@@ -68,7 +68,7 @@ namespace Noggog.WPF
         public IObservable<GetResponse<string>> PathState() => this.WhenAnyValue(
             x => x.ErrorState,
             x => x.TargetPath,
-            (err, p) => GetResponse<string>.Create(successful: err.Succeeded, p));
+            (err, p) => err.BubbleResult(p));
 
         public SourceList<CommonFileDialogFilter> Filters { get; } = new SourceList<CommonFileDialogFilter>();
 
