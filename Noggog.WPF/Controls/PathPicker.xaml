@@ -120,9 +120,6 @@
                     mahapps:ControlsHelper.CornerRadius="3"
                     Command="{Binding PickerVM.SetTargetPathCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
                     ToolTip="Set target path">
-                    <Button.Style>
-                        <Style BasedOn="{StaticResource NakedIconButtonStyle}" TargetType="Button" />
-                    </Button.Style>
                     <icon:PackIconMaterial
                         Width="16"
                         Height="12"
