@@ -93,4 +93,16 @@ namespace Noggog
         Exception? Exception { get; }
         string Reason { get; }
     }
+
+    public static class ErrorResponseExt
+    {
+        public static GetResponse<TRet> BubbleFailure<TRet>(this IErrorResponse resp)
+        {
+            if (resp.Exception == null)
+            {
+                return GetResponse<TRet>.Fail(resp.Reason);
+            }
+            return GetResponse<TRet>.Fail(resp.Exception);
+        }
+    }
 }
