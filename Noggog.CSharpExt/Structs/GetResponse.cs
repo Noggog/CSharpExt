@@ -2,7 +2,7 @@ using System;
 
 namespace Noggog
 {
-    public struct GetResponse<T> : IEquatable<GetResponse<T>>, IErrorResponse
+    public struct GetResponse<T> : IEquatable<GetResponse<T>>
     {
         public static readonly GetResponse<T> Failure = new GetResponse<T>();
 
@@ -23,9 +23,6 @@ namespace Noggog
                 return _reason;
             }
         }
-
-        bool IErrorResponse.Succeeded => this.Succeeded;
-        Exception? IErrorResponse.Exception => this.Exception;
 
         private GetResponse(
             bool succeeded,
@@ -93,6 +90,12 @@ namespace Noggog
         public static implicit operator GetResponse<T>(T item)
         {
             return GetResponse<T>.Succeed(item);
+        }
+
+        public static implicit operator ErrorResponse(GetResponse<T> item)
+        {
+            if (item.Exception != null) return ErrorResponse.Fail(item.Exception);
+            return ErrorResponse.Create(successful: item.Succeeded, reason: item.Reason);
         }
 
         #region Factories

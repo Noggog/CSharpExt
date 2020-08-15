@@ -51,7 +51,7 @@ namespace Noggog.WPF
         public CheckOptions FilterCheckOption { get; set; } = CheckOptions.IfPathNotEmpty;
 
         [Reactive]
-        public IObservable<IErrorResponse>? AdditionalError { get; set; }
+        public IObservable<ErrorResponse>? AdditionalError { get; set; }
 
         private readonly ObservableAsPropertyHelper<bool> _exists;
         public bool Exists => _exists.Value;
@@ -239,13 +239,13 @@ namespace Noggog.WPF
                     errorText,
                     passesFilters,
                     this.WhenAnyValue(x => x.AdditionalError)
-                        .Select(x => x ?? Observable.Return<IErrorResponse>(ErrorResponse.Success))
+                        .Select(x => x ?? Observable.Return<ErrorResponse>(ErrorResponse.Success))
                         .Switch(),
                     resultSelector: (existCheck, filter, err) =>
                     {
                         if (existCheck.Failed) return existCheck;
                         if (filter.Failed) return filter;
-                        return ErrorResponse.Convert(err);
+                        return err;
                     })
                 .ObserveOn(RxApp.MainThreadScheduler)
                 .ToProperty(this, nameof(ErrorState));
@@ -261,7 +261,7 @@ namespace Noggog.WPF
                     passesFilters
                         .Select(x => x.Reason),
                     this.WhenAnyValue(x => x.AdditionalError)
-                        .Select(x => x ?? Observable.Return<IErrorResponse>(ErrorResponse.Success))
+                        .Select(x => x ?? Observable.Return<ErrorResponse>(ErrorResponse.Success))
                         .Switch(),
                     resultSelector: (exists, filters, err) =>
                     {

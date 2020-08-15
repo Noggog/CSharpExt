@@ -6,18 +6,18 @@ using System.Threading.Tasks;
 
 namespace Noggog
 {
-    public struct ErrorResponse : IErrorResponse
+    public struct ErrorResponse
     {
         public readonly static ErrorResponse Success = Succeed();
         public readonly static ErrorResponse Failure = new ErrorResponse();
 
-        private readonly bool _succeeded;
-        public readonly bool Succeeded => _succeeded;
+        private readonly bool _failed;
+        public readonly bool Succeeded => !_failed;
         private readonly Exception? _exception;
         public readonly Exception? Exception => _exception;
         private readonly string _reason;
 
-        public bool Failed => !Succeeded;
+        public bool Failed => _failed;
         public string Reason
         {
             get
@@ -30,15 +30,12 @@ namespace Noggog
             }
         }
 
-        bool IErrorResponse.Succeeded => this.Succeeded;
-        Exception? IErrorResponse.Exception => this.Exception;
-
         private ErrorResponse(
             bool succeeded,
             string reason = "",
             Exception? ex = null)
         {
-            this._succeeded = succeeded;
+            this._failed = !succeeded;
             this._reason = reason;
             this._exception = ex;
         }
@@ -79,24 +76,11 @@ namespace Noggog
             return new ErrorResponse(successful, reason);
         }
         #endregion
-
-        public static ErrorResponse Convert(IErrorResponse err, bool nullIsSuccess = true)
-        {
-            if (err == null) return Create(nullIsSuccess);
-            return new ErrorResponse(err.Succeeded, err.Reason, err.Exception);
-        }
-    }
-
-    public interface IErrorResponse
-    {
-        bool Succeeded { get; }
-        Exception? Exception { get; }
-        string Reason { get; }
     }
 
     public static class ErrorResponseExt
     {
-        public static GetResponse<TRet> BubbleFailure<TRet>(this IErrorResponse resp)
+        public static GetResponse<TRet> BubbleFailure<TRet>(this ErrorResponse resp)
         {
             if (resp.Exception == null)
             {

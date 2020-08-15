@@ -147,7 +147,7 @@ namespace Noggog.WPF
         #endregion
 
         #region ErrorBinding
-        public static IDisposable BindError(this IObservable<IErrorResponse> err, Control control)
+        public static IDisposable BindError(this IObservable<ErrorResponse> err, Control control)
         {
             return err.Subscribe(x =>
             {
