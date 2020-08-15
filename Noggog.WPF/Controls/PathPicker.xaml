@@ -20,7 +20,7 @@
             </Style.Triggers>
         </Style>
     </UserControl.Resources>
-    <Grid ClipToBounds="True">
+    <Grid ClipToBounds="False">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="36" />
