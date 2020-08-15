@@ -8,6 +8,7 @@ using DynamicData;
 using DynamicData.Binding;
 using System.Windows.Input;
 using System.Reactive;
+using System.Windows.Controls;
 #nullable enable
 
 namespace Noggog.WPF
@@ -142,6 +143,26 @@ namespace Noggog.WPF
                     return true;
                 })
                 .Select(e => Unit.Default);
+        }
+        #endregion
+
+        #region ErrorBinding
+        public static IDisposable BindError(this IObservable<IErrorResponse> err, Control control)
+        {
+            return err.Subscribe(x =>
+            {
+                control.SetValue(Noggog.WPF.ControlsHelper.InErrorProperty, !x.Succeeded);
+                control.SetValue(Noggog.WPF.ControlsHelper.ErrorTooltipProperty, x.Reason);
+            });
+        }
+
+        public static IDisposable BindError<T>(this IObservable<GetResponse<T>> err, Control control)
+        {
+            return err.Subscribe(x =>
+            {
+                control.SetValue(Noggog.WPF.ControlsHelper.InErrorProperty, !x.Succeeded);
+                control.SetValue(Noggog.WPF.ControlsHelper.ErrorTooltipProperty, x.Reason);
+            });
         }
         #endregion
     }
