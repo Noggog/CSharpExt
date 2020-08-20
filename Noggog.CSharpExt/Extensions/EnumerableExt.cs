@@ -281,6 +281,32 @@ namespace Noggog
             if (e == null) return Enumerable.Empty<T>();
             return e;
         }
+
+        public static IEnumerable<T> Catch<T>(this IEnumerable<T> e, Action<Exception> onException)
+        {
+            using (var enumerator = e.GetEnumerator())
+            {
+                bool next = true;
+
+                while (next)
+                {
+                    try
+                    {
+                        next = enumerator.MoveNext();
+                    }
+                    catch (Exception ex)
+                    {
+                        onException(ex);
+                        continue;
+                    }
+
+                    if (next)
+                    {
+                        yield return enumerator.Current;
+                    }
+                }
+            }
+        }
     }
 
     public static class EnumerableExt<T>

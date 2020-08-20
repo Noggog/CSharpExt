@@ -145,5 +145,10 @@ namespace Noggog
         {
             return str.IndexOfAny(Path.GetInvalidFileNameChars()) == -1;
         }
+
+        public static bool ContainsInsensitive(this string str, string rhs)
+        {
+            return str.Contains(rhs, StringComparison.OrdinalIgnoreCase);
+        }
     }
 }
