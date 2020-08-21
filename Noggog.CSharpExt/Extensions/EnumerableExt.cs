@@ -2,6 +2,7 @@ using Noggog;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 namespace Noggog
@@ -306,6 +307,12 @@ namespace Noggog
                     }
                 }
             }
+        }
+
+        public static IEnumerable<T> EmptyIfNull<T>(this IEnumerable<T>? e)
+        {
+            if (e == null) return Enumerable.Empty<T>();
+            return e;
         }
     }
 
