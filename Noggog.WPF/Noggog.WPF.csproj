@@ -5,16 +5,17 @@
     <UseWPF>true</UseWPF>
     <AssemblyName>Noggog.WPF</AssemblyName>
     <RootNamespace>Noggog.WPF</RootNamespace>
-    <Version>1.1</Version>
+    <Version>1.1.1-dev</Version>
     <Authors>Noggog</Authors>
     <Company>Noggog</Company>
     <Description>Generic reusable WPF classes and extension methods that apply to no specific project and flavored to taste</Description>
-    <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DocumentationFile>Noggog.WPF.xml</DocumentationFile>
+    <DebugType>embedded</DebugType>
+    <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
 
   <ItemGroup>
