@@ -11,12 +11,14 @@ namespace Noggog.Utility
     {
         public DirectoryPath Dir { get; private set; }
         public bool DeleteAfter = true;
+        public bool ThrowIfUnsuccessfulDisposal = true;
 
-        public TempFolder(bool deleteAfter = true)
+        public TempFolder(bool deleteAfter = true, bool throwIfUnsuccessfulDisposal = true)
         {
             this.Dir = new DirectoryPath(Path.Combine(Path.GetTempPath(), Path.GetRandomFileName()));
             this.Dir.Create();
             this.DeleteAfter = deleteAfter;
+            this.ThrowIfUnsuccessfulDisposal = throwIfUnsuccessfulDisposal;
         }
 
         public TempFolder(DirectoryPath dir, bool deleteAfter = true)
@@ -38,7 +40,13 @@ namespace Noggog.Utility
         {
             if (DeleteAfter)
             {
-                this.Dir.DeleteEntireFolder();
+                try
+                {
+                    this.Dir.DeleteEntireFolder();
+                }
+                catch when(!ThrowIfUnsuccessfulDisposal)
+                {
+                }
             }
         }
     }

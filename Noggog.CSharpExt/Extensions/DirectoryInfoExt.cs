@@ -8,11 +8,24 @@ namespace Noggog
 {
     public static class DirectoryInfoExt
     {
-        public static bool DeleteEntireFolder(this DirectoryInfo dir, bool disableReadonly = true, bool deleteFolderItself = true)
+        public static bool TryDeleteEntireFolder(this DirectoryInfo dir, bool disableReadonly = true, bool deleteFolderItself = true)
         {
-            if (!dir.Exists()) return true;
-            bool pass = true;
+            try
+            {
+                DeleteEntireFolder(dir, disableReadonly, deleteFolderItself);
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+        public static void DeleteEntireFolder(this DirectoryInfo dir, bool disableReadonly = true, bool deleteFolderItself = true)
+        {
+            if (!dir.Exists()) return;
             FileInfo[] files = dir.GetFiles("*.*");
+            List<Exception> exceptions = new List<Exception>();
             foreach (FileInfo fi in files)
             {
                 if (fi.IsReadOnly)
@@ -24,29 +37,35 @@ namespace Noggog
                 {
                     fi.Delete();
                 }
-                catch (IOException)
+                catch (Exception ex)
                 {
-                    pass = false;
+                    exceptions.Add(ex);
                 }
             }
             foreach (DirectoryInfo subDir in dir.GetDirectories())
             {
                 subDir.DeleteEntireFolder(disableReadonly);
             }
-            if (!deleteFolderItself) return true;
-            dir.Refresh();
-            if (dir.GetFiles().Length == 0)
+            if (deleteFolderItself)
             {
-                try
+                dir.Refresh();
+                if (dir.GetFiles().Length == 0)
                 {
-                    dir.Delete();
-                }
-                catch (IOException)
-                {
-                    pass = false;
+                    try
+                    {
+                        dir.Delete();
+                    }
+                    catch (Exception ex)
+                    {
+                        exceptions.Add(ex);
+                    }
                 }
             }
-            return pass;
+            if (exceptions.Count == 1) throw exceptions[0];
+            if (exceptions.Count > 1)
+            {
+                throw new AggregateException(exceptions);
+            }
         }
 
         public static bool Exists(this DirectoryInfo source)
