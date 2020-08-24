@@ -267,6 +267,21 @@ namespace Noggog
             return false;
         }
 
+        public static void Remove<TItem>(this IList<TItem>? list, Func<TItem, bool> shouldRemove)
+        {
+            if (list == null) return;
+            int targetIndex = 0;
+            for (int i = 0; i < list.Count; i++)
+            {
+                var val = list[i];
+                if (!shouldRemove(val))
+                {
+                    list[targetIndex++] = val;
+                }
+            }
+            list.RemoveToCount(targetIndex);
+        }
+
         public static T LastByIndex<T>(this IReadOnlyList<T> list)
         {
             return list[list.Count - 1];
