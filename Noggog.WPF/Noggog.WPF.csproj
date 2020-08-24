@@ -19,7 +19,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="DynamicData" Version="6.16.1" />
     <PackageReference Include="MahApps.Metro" Version="2.1.1" />
     <PackageReference Include="MahApps.Metro.IconPacks" Version="4.3.0" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
