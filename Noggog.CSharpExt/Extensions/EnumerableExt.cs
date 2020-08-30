@@ -277,12 +277,6 @@ namespace Noggog
             return new ExtendedList<T>(e);
         }
 
-        public static IEnumerable<T> TryIterate<T>(this IEnumerable<T>? e)
-        {
-            if (e == null) return Enumerable.Empty<T>();
-            return e;
-        }
-
         public static IEnumerable<T> Catch<T>(this IEnumerable<T> e, Action<Exception> onException)
         {
             using (var enumerator = e.GetEnumerator())
