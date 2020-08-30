@@ -299,5 +299,22 @@ namespace Noggog
                 obs.Select(f => true),
                 obs.Delay(span).Select(f => false));
         }
+
+        // ToDo
+        // Have T implement IDisposable once resulting nullability errors can be dealt with
+        public static IObservable<T> DisposePrevious<T>(this IObservable<T> obs)
+        {
+            return obs
+                .StartWith(default(T)!)
+                .Pairwise()
+                .Do(x =>
+                {
+                    if (x.Previous is IDisposable disp)
+                    {
+                        disp.Dispose();
+                    }
+                })
+                .Select(x => x.Current);
+        }
     }
 }
