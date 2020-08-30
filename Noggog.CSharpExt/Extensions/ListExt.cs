@@ -267,7 +267,7 @@ namespace Noggog
             return false;
         }
 
-        public static void Remove<TItem>(this IList<TItem>? list, Func<TItem, bool> shouldRemove)
+        public static void RemoveWhere<TItem>(this IList<TItem>? list, Func<TItem, bool> shouldRemove)
         {
             if (list == null) return;
             int targetIndex = 0;
