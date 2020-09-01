@@ -308,6 +308,13 @@ namespace Noggog
             if (e == null) return Enumerable.Empty<T>();
             return e;
         }
+
+        public static bool SequenceEqualNullable<T>(this IEnumerable<T>? e1, IEnumerable<T>? e2)
+        {
+            if (e1 == null && e2 == null) return true;
+            if (e1 == null || e2 == null) return false;
+            return e1.SequenceEqual(e2);
+        }
     }
 
     public static class EnumerableExt<T>
