@@ -282,6 +282,26 @@ namespace Noggog
             list.RemoveToCount(targetIndex);
         }
 
+        public static void Remove<TItem>(this IList<TItem> list, IEnumerable<TItem> items)
+        {
+            Remove(list, items.ToHashSet());
+        }
+
+        public static void Remove<TItem>(this IList<TItem> list, HashSet<TItem> items)
+        {
+            if (list == null) return;
+            int targetIndex = 0;
+            for (int i = 0; i < list.Count; i++)
+            {
+                var val = list[i];
+                if (!items.Contains(val))
+                {
+                    list[targetIndex++] = val;
+                }
+            }
+            list.RemoveToCount(targetIndex);
+        }
+
         public static T LastByIndex<T>(this IReadOnlyList<T> list)
         {
             return list[list.Count - 1];
