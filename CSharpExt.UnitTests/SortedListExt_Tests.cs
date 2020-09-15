@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace CSharpExt.Tests
+namespace CSharpExt.UnitTests
 {
     public class SortedListExt_Tests
     {

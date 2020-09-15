@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CSharpExt.Tests
+namespace CSharpExt.UnitTests
 {
     public class BinaryMemoryStream_Tests : IBinaryStream_Tests
     {

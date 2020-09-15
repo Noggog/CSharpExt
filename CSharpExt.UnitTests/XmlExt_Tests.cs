@@ -7,7 +7,7 @@ using System.Xml.Linq;
 using Xunit;
 using Noggog;
 
-namespace CSharpExt.Tests
+namespace CSharpExt.UnitTests
 {
     public class XmlExt_Tests
     {

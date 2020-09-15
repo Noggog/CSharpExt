@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Xunit;
 using Noggog;
 
-namespace CSharpExt.Tests
+namespace CSharpExt.UnitTests
 {
     public class TypeExt_Tests
     {

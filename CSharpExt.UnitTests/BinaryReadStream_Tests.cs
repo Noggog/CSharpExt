@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Noggog;
 using Xunit;
 
-namespace CSharpExt.Tests
+namespace CSharpExt.UnitTests
 {
     public class BinaryReadStream_Tests : IBinaryStream_Tests
     {
