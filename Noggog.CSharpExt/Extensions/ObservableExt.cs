@@ -1,4 +1,3 @@
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +8,7 @@ using System.Reactive.Disposables;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using Noggog;
+using System.Threading;
 
 namespace Noggog
 {
@@ -315,6 +315,28 @@ namespace Noggog
                     }
                 })
                 .Select(x => x.Current);
+        }
+
+        public static IObservable<TRet> SelectReplace<TInput, TRet>(
+            this IObservable<TInput> obs,
+            Func<TInput, CancellationToken, Task<TRet>> func,
+            bool catchTaskCancelled = true)
+        {
+            return obs.Select(i => Observable.DeferAsync(async token =>
+            {
+                try
+                {
+                    return Observable.Return((true, await func(i, token).ConfigureAwait(false)));
+                }
+                catch (TaskCanceledException)
+                when (catchTaskCancelled)
+                {
+                    return Observable.Return((false, default(TRet)));
+                }
+            }))
+            .Switch()
+            .Where(x => x.Item1)
+            .Select(x => x.Item2);
         }
     }
 }
