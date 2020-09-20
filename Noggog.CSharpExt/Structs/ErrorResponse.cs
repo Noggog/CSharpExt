@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Noggog
 {
-    public struct ErrorResponse
+    public struct ErrorResponse : IEquatable<ErrorResponse>
     {
         public readonly static ErrorResponse Success = Succeed();
         public readonly static ErrorResponse Failure = new ErrorResponse();
@@ -61,6 +61,34 @@ namespace Noggog
                 return GetResponse<TRet>.Fail(item, this.Exception);
             }
             return GetResponse<TRet>.Create(successful: this.Succeeded, val: item, reason: this.Reason);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (!(obj is ErrorResponse resp)) return false;
+            return Equals(resp);
+        }
+
+        public bool Equals(ErrorResponse other)
+        {
+            if (this._failed != other._failed) return false;
+            if (_exception != null)
+            {
+                return object.Equals(_exception, other._exception);
+            }
+            else
+            {
+                return object.Equals(_reason, other._reason);
+            }
+        }
+
+        public override int GetHashCode()
+        {
+            HashCode hash = new HashCode();
+            hash.Add(_failed);
+            hash.Add(_exception);
+            hash.Add(_reason);
+            return hash.ToHashCode();
         }
 
         #region Factories
