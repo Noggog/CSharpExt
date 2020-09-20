@@ -338,5 +338,32 @@ namespace Noggog
             .Where(x => x.Item1)
             .Select(x => x.Item2);
         }
+
+        public static IObservable<TRet> SelectReplaceWithIntermediate<TInput, TRet>(
+            this IObservable<TInput> obs,
+            TRet newItemIntermediate,
+            Func<TInput, CancellationToken, Task<TRet>> func,
+            bool catchTaskCancelled = true)
+        {
+            return obs.Select(i =>
+            {
+                return Observable.Return((true, newItemIntermediate))
+                    .Concat(Observable.DeferAsync(async token =>
+                    {
+                        try
+                        {
+                            return Observable.Return((true, await func(i, token).ConfigureAwait(false)));
+                        }
+                        catch (TaskCanceledException)
+                        when (catchTaskCancelled)
+                        {
+                            return Observable.Return((false, default(TRet)));
+                        }
+                    }));
+            })
+            .Switch()
+            .Where(x => x.Item1)
+            .Select(x => x.Item2);
+        }
     }
 }
