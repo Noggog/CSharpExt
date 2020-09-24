@@ -365,5 +365,13 @@ namespace Noggog
             .Where(x => x.Item1)
             .Select(x => x.Item2);
         }
+
+        public static IObservable<T> ReplayMostRecent<T>(this IObservable<T> obs, IObservable<Unit> signal)
+        {
+            return obs.Merge(
+                signal.WithLatestFrom(
+                    obs,
+                    (_, o) => o));
+        }
     }
 }
