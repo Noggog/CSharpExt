@@ -373,5 +373,45 @@ namespace Noggog
                     obs,
                     (_, o) => o));
         }
+
+        private class DisposableWrapper<TResource> : IDisposable
+            where TResource : IDisposable
+        {
+            public GetResponse<TResource> Item;
+
+            public void Dispose()
+            {
+                Item.Value?.Dispose();
+            }
+        }
+
+        public static IObservable<TResult> UsingWithCatch<TResult, TResource>(
+            Func<TResource> resourceFactory, 
+            Func<GetResponse<TResource>, IObservable<TResult>> observableFactory) 
+            where TResource : IDisposable
+        {
+            return Observable.Using(
+                () =>
+                {
+                    try
+                    {
+                        return new DisposableWrapper<TResource>()
+                        {
+                            Item = GetResponse<TResource>.Succeed(resourceFactory())
+                        };
+                    }
+                    catch (Exception ex)
+                    {
+                        return new DisposableWrapper<TResource>()
+                        {
+                            Item = GetResponse<TResource>.Fail(ex)
+                        };
+                    }
+                },
+                (resource) =>
+                {
+                    return observableFactory(resource.Item);
+                });
+        }
     }
 }

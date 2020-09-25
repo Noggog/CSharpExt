@@ -1,21 +1,18 @@
-﻿using Microsoft.Reactive.Testing;
+using Microsoft.Reactive.Testing;
 using ReactiveUI.Testing;
 using System;
 using System.Collections.Generic;
 using System.Reactive.Subjects;
-using System.Text;
 using Xunit;
 using Noggog;
 using System.Threading.Tasks;
 using FluentAssertions;
 using System.Reactive.Linq;
 using System.Reactive.Threading.Tasks;
-using ReactiveUI;
-using System.Threading;
 
 namespace CSharpExt.UnitTests
 {
-    public class ObservableExt
+    public class ObservableExt_Tests
     {
         [Fact]
         public async Task SelectReplaceAsync() => await new TestScheduler().WithAsync(async scheduler =>
