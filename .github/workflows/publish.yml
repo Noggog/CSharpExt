@@ -17,10 +17,16 @@ jobs:
       run: dotnet build --no-restore -c Release /p:Version=${{ github.event.release.tag_name }} -p:PackageReleaseNotes="See https://github.com/Noggog/CSharpExt/releases/tag/${{ github.event.release.tag_name }}"
     - name: Test
       run: dotnet test -c Release --no-build
-    - name: Publish to Github
+    - name: Publish CSharpExt to Github
       uses: svenstaro/upload-release-action@v2
       with:
-        file: "**/*.nupkg"
+        file: Noggog.CSharpExt/bin/Release/Noggog.CSharpExt.${{ github.event.release.tag_name }}.nupkg
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        tag: ${{ github.event.release.tag_name }}
+    - name: Publish WPF to Github
+      uses: svenstaro/upload-release-action@v2
+      with:
+        file: Noggog.WPF/bin/Release/Noggog.WPF.${{ github.event.release.tag_name }}.nupkg
         repo_token: ${{ secrets.GITHUB_TOKEN }}
         tag: ${{ github.event.release.tag_name }}
     - name: Publish to Nuget.org
