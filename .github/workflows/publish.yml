@@ -19,8 +19,15 @@ jobs:
       run: dotnet test -c Release --no-build
     - name: Publish to Nuget.org
       run: dotnet nuget push **/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --no-symbols true
-    - name: Publish to Github Release
-      uses: actions/upload-artifact@v2
+    - name: Publish CSharpExt to Github
+      uses: JasonEtco/upload-to-release@master
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        name: packages
-        path: "**/*.nupkg"
+        args: Noggog.CSharpExt/bin/Release/Noggog.CSharpExt.${{ github.event.release.tag_name }}.nupkg
+    - name: Publish WPF to Github
+      uses: JasonEtco/upload-to-release@master
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        args: Noggog.CSharpExt/bin/Release/Noggog.WPF.${{ github.event.release.tag_name }}.nupkg
