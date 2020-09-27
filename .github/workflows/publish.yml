@@ -1,0 +1,26 @@
+name: Publish
+
+on:
+  release:
+    types: [published]
+    
+jobs:
+  release:
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+    - name: Install dependencies
+      run: dotnet restore
+    - name: Build
+      run: dotnet build --no-restore -c Release /p:Version=${{ github.event.release.tag_name }} -p:PackageReleaseNotes="See https://github.com/Noggog/CSharpExt/releases/tag/${{ github.event.release.tag_name }}"
+    - name: Test
+      run: dotnet test -c Release --no-build
+    - name: Publish to Nuget.org
+      run: dotnet nuget push **/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --no-symbols true
+    - name: Publish to Github Release
+      uses: actions/upload-artifact@v2
+      with:
+        name: packages
+        path: "**/*.nupkg"
