@@ -9,6 +9,7 @@ using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using Noggog;
 using System.Threading;
+using System.IO;
 
 namespace Noggog
 {
@@ -375,7 +376,7 @@ namespace Noggog
         }
 
         private class DisposableWrapper<TResource> : IDisposable
-            where TResource : IDisposable
+            where TResource : class, IDisposable
         {
             public GetResponse<TResource> Item;
 
@@ -386,9 +387,9 @@ namespace Noggog
         }
 
         public static IObservable<TResult> UsingWithCatch<TResult, TResource>(
-            Func<TResource> resourceFactory, 
-            Func<GetResponse<TResource>, IObservable<TResult>> observableFactory) 
-            where TResource : IDisposable
+            Func<TResource> resourceFactory,
+            Func<GetResponse<TResource>, IObservable<TResult>> observableFactory)
+            where TResource : class, IDisposable
         {
             return Observable.Using(
                 () =>
@@ -412,6 +413,46 @@ namespace Noggog
                 {
                     return observableFactory(resource.Item);
                 });
+        }
+
+        /// <summary>
+        /// An observable that fires a signal whenever a specific file is created/modified/deleted.
+        /// </summary>
+        /// <param name="path">File path to watch</param>
+        /// <param name="throwIfInvalidPath">Whether to error if path is invalid</param>
+        /// <exception cref="ArgumentException">Will throw if file path has no parent directory, or is malformed, and the throw parameter is on</exception>
+        /// <returns>Observable signal of when file created/modified/deleted</returns>
+        public static IObservable<Unit> WatchFile(string path, bool throwIfInvalidPath = false)
+        {
+            return ObservableExt.UsingWithCatch(
+                () =>
+                {
+                    var watcher = new FileSystemWatcher(Path.GetDirectoryName(path), filter: Path.GetFileName(path));
+                    watcher.EnableRaisingEvents = true;
+                    return watcher;
+                },
+                (watcher) =>
+                {
+                    if (watcher.Failed)
+                    {
+                        if (throwIfInvalidPath)
+                        {
+                            throw watcher.Exception!;
+                        }
+                        else
+                        {
+                            return Observable.Empty<Unit>();
+                        }
+                    }
+                    return Observable.Merge(
+                            Observable.FromEventPattern<FileSystemEventHandler, FileSystemEventArgs>(h => watcher.Value.Changed += h, h => watcher.Value.Changed -= h),
+                            Observable.FromEventPattern<FileSystemEventHandler, FileSystemEventArgs>(h => watcher.Value.Created += h, h => watcher.Value.Created -= h),
+                            Observable.FromEventPattern<FileSystemEventHandler, FileSystemEventArgs>(h => watcher.Value.Deleted += h, h => watcher.Value.Deleted -= h))
+                        .Where(x => x.EventArgs.FullPath.Equals(path, StringComparison.OrdinalIgnoreCase))
+                        .Unit();
+                })
+                .Replay(1)
+                .RefCount();
         }
     }
 }
