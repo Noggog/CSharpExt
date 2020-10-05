@@ -23,9 +23,10 @@
     <Grid ClipToBounds="False">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="36" />
         </Grid.ColumnDefinitions>
-        <Rectangle Grid.Column="0" Grid.ColumnSpan="2"
+        <Rectangle Grid.Column="0" Grid.ColumnSpan="3"
             x:Name="ErrorGlow"
             Fill="{StaticResource WarningBrush}"
             Opacity="0.3"
@@ -54,7 +55,7 @@
                 </Style>
             </Rectangle.Style>
         </Rectangle>
-        <Border Grid.Column="0" Grid.ColumnSpan="2"
+        <Border Grid.Column="0" Grid.ColumnSpan="3"
             x:Name="BackgroundCornerFillIn"
             Margin="0,0,5,0"
             CornerRadius="3"
@@ -67,7 +68,27 @@
             mahapps:TextBoxHelper.Watermark="{Binding RelativeSource={RelativeSource AncestorType={x:Type UserControl}}, Path=(mahapps:TextBoxHelper.Watermark)}"
             Text="{Binding PickerVM.TargetPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
             Visibility="{Binding PickerVM.ShowTextBoxInput, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" />
-        <Grid Grid.Column="1" HorizontalAlignment="Right">
+        <Button Grid.Column="1"
+            Width="30"
+            mahapps:ControlsHelper.CornerRadius="3"
+            Command="{Binding PickerVM.SetFolderPathCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+            ToolTip="Set target path">
+            <Button.Style>
+                <Style TargetType="Button" BasedOn="{StaticResource Noggog.Styles.Button}">
+                    <Setter Property="Visibility" Value="Collapsed" />
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding PickerVM.PathType, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}, Converter={StaticResource EnumToIntConverter}}" Value="1">
+                            <Setter Property="Visibility" Value="Visible" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Button.Style>
+            <icon:PackIconMaterial
+                Width="16"
+                Height="12"
+                Kind="Folder" />
+        </Button>
+        <Grid Grid.Column="2" HorizontalAlignment="Right">
             <Border
                 Margin="3,1,0,1"
                 HorizontalAlignment="Right"
@@ -135,7 +156,7 @@
                 </Border.Effect>
             </Border>
         </Grid>
-        <Border Grid.Column="0" Grid.ColumnSpan="2"
+        <Border Grid.Column="0" Grid.ColumnSpan="3"
             x:Name="ErrorBorder"
             Background="Transparent"
             BorderBrush="{StaticResource WarningBrush}"

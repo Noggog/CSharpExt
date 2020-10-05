@@ -35,6 +35,8 @@ namespace Noggog.WPF
         [Reactive]
         public ICommand SetTargetPathCommand { get; set; }
 
+        public ICommand SetFolderPathCommand { get; set; }
+
         [Reactive]
         public string TargetPath { get; set; } = string.Empty;
 
@@ -79,6 +81,7 @@ namespace Noggog.WPF
         public PathPickerVM()
         {
             SetTargetPathCommand = ConstructTypicalPickerCommand();
+            SetFolderPathCommand = ReactiveCommand.Create(() => OpenPicker(PathTypeOptions.Folder));
 
             var existsCheckTuple = Observable.CombineLatest(
                     this.WhenAnyValue(x => x.ExistCheckOption),
@@ -309,6 +312,40 @@ namespace Noggog.WPF
                     if (dlg.ShowDialog() != CommonFileDialogResult.Ok) return;
                     TargetPath = dlg.FileName;
                 });
+        }
+
+        private void OpenPicker(PathTypeOptions type)
+        {
+            string dirPath;
+            if (File.Exists(TargetPath))
+            {
+                dirPath = Path.GetDirectoryName(TargetPath) ?? string.Empty;
+            }
+            else
+            {
+                dirPath = TargetPath;
+            }
+            var dlg = new CommonOpenFileDialog
+            {
+                Title = PromptTitle,
+                IsFolderPicker = type == PathTypeOptions.Folder,
+                InitialDirectory = dirPath,
+                AddToMostRecentlyUsedList = false,
+                AllowNonFileSystemItems = false,
+                DefaultDirectory = dirPath,
+                EnsureFileExists = true,
+                EnsurePathExists = true,
+                EnsureReadOnly = false,
+                EnsureValidNames = true,
+                Multiselect = false,
+                ShowPlacesList = true,
+            };
+            foreach (var filter in Filters.Items)
+            {
+                dlg.Filters.Add(filter);
+            }
+            if (dlg.ShowDialog() != CommonFileDialogResult.Ok) return;
+            TargetPath = dlg.FileName;
         }
 
         public class PathPickerJsonConverter : JsonConverter

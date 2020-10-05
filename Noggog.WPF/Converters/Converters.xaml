@@ -12,5 +12,6 @@
     <local:IsNotEmptyVisibilityConverter x:Key="IsNotEmptyVisibilityConverter" />
     <local:InverseBooleanConverter x:Key="InverseBooleanConverter" />
     <local:EnumDescriptionConverter x:Key="EnumDescriptionConverter" />
+    <local:EnumToIntConverter x:Key="EnumToIntConverter" />
     <local:StringIsWhitespaceBooleanConverter x:Key="StringIsWhitespaceBooleanConverter" />
 </ResourceDictionary>
