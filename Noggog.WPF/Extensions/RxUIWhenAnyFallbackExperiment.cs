@@ -1,4 +1,4 @@
-﻿using ReactiveUI;
+using ReactiveUI;
 using Splat;
 using System;
 using System.Collections.Generic;
@@ -198,6 +198,13 @@ namespace Noggog.WPF
             return This.WhenAnyFallback(property1, (IObservedChange<TSender, TRet> c1) => c1.Value, fallback);
         }
 
+        public static IObservable<TRet> WhenAnyFallback<TSender, TRet>(
+            this TSender This,
+            Expression<Func<TSender, TRet>> property1)
+        {
+            return This.WhenAnyFallback(property1, (IObservedChange<TSender, TRet> c1) => c1.Value, default!);
+        }
+
         /// <summary>
         /// WhenAny allows you to observe whenever one or more properties on an
         /// object have changed, providing an initial value when the Observable
@@ -211,6 +218,13 @@ namespace Noggog.WPF
                             T1 fallback)
         {
             return This.ObservableForPropertyFallback(property1, fallback, false, false).Select(selector);
+        }
+
+        public static IObservable<TRet> WhenAnyFallback<TSender, TRet, T1>(this TSender This,
+                            Expression<Func<TSender, T1>> property1,
+                            Func<IObservedChange<TSender, T1>, TRet> selector)
+        {
+            return This.ObservableForPropertyFallback(property1, default!, false, false).Select(selector);
         }
     }
 }

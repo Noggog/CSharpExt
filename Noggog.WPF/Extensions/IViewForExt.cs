@@ -15,7 +15,7 @@ namespace Noggog.WPF
     {
         public static IReactiveBinding<TView, TViewModel, TProp> OneWayBindStrict<TViewModel, TView, TProp>(
             this TView view,
-            TViewModel viewModel,
+            TViewModel? viewModel,
             Expression<Func<TViewModel, TProp>> vmProperty,
             Expression<Func<TView, TProp>> viewProperty)
             where TViewModel : class
@@ -29,7 +29,7 @@ namespace Noggog.WPF
 
         public static IReactiveBinding<TView, TViewModel, TOut> OneWayBindStrict<TViewModel, TView, TProp, TOut>(
             this TView view,
-            TViewModel viewModel,
+            TViewModel? viewModel,
             Expression<Func<TViewModel, TProp>> vmProperty,
             Expression<Func<TView, TOut>> viewProperty,
             Func<TProp, TOut> selector)
@@ -43,9 +43,9 @@ namespace Noggog.WPF
                 selector: selector);
         }
 
-        public static IReactiveBinding<TView, TViewModel, (object view, bool isViewModel)> BindStrict<TViewModel, TView, TProp>(
+        public static IReactiveBinding<TView, TViewModel, (object? view, bool isViewModel)> BindStrict<TViewModel, TView, TProp>(
             this TView view,
-            TViewModel viewModel,
+            TViewModel? viewModel,
             Expression<Func<TViewModel, TProp>> vmProperty,
             Expression<Func<TView, TProp>> viewProperty)
             where TViewModel : class
@@ -57,9 +57,9 @@ namespace Noggog.WPF
                 viewProperty: viewProperty);
         }
 
-        public static IReactiveBinding<TView, TViewModel, (object view, bool isViewModel)> BindStrict<TViewModel, TView, TVMProp, TVProp>(
+        public static IReactiveBinding<TView, TViewModel, (object? view, bool isViewModel)> BindStrict<TViewModel, TView, TVMProp, TVProp>(
             this TView view,
-            TViewModel viewModel,
+            TViewModel? viewModel,
             Expression<Func<TViewModel, TVMProp>> vmProperty,
             Expression<Func<TView, TVProp>> viewProperty,
             Func<TVMProp, TVProp> vmToViewConverter,
