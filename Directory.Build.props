@@ -10,7 +10,7 @@
 	
   <Target Name="SetVersion" BeforeTargets="GetAssemblyVersion;GetPackageVersion" Condition="'$(ExcludeRestorePackageImports)' != 'true'">
     <PropertyGroup>
-      <DevLabel Condition="'$(GitCommits)' != '0' or $(GitIsDirty) == 'true'">-dev</DevLabel>
+      <DevLabel Condition="'$(GitCommits)' != '0' or $(GitIsDirty) == 'true'">.1-dev</DevLabel>
       <PackageVersion>$(GitSemVerMajor).$(GitSemVerMinor).$(GitSemVerPatch)$(DevLabel)</PackageVersion>
       <InformationalVersion>$(PackageVersion)</InformationalVersion>
     </PropertyGroup>
