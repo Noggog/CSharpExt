@@ -4,6 +4,10 @@
 	<WarningsAsErrors>nullable</WarningsAsErrors>
   </PropertyGroup>
   
+  <PropertyGroup>
+    <GitInfoReportImportance Condition="$(Configuration) == 'Release'">high</GitInfoReportImportance>
+  </PropertyGroup>
+	
   <Target Name="SetVersion" BeforeTargets="GetAssemblyVersion;GetPackageVersion" Condition="'$(ExcludeRestorePackageImports)' != 'true'">
     <PropertyGroup>
       <DevLabel Condition="'$(GitCommits)' == '0' or $(GitIsDirty) == 'true'">-dev</DevLabel>
