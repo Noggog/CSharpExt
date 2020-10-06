@@ -2,6 +2,14 @@
   <PropertyGroup>
     <Nullable>enable</Nullable>
 	<WarningsAsErrors>nullable</WarningsAsErrors>
-    <Version>1.5</Version>
   </PropertyGroup>
+  
+  <Target Name="SetVersion" BeforeTargets="GetAssemblyVersion;GetPackageVersion" Condition="'$(ExcludeRestorePackageImports)' != 'true'">
+    <PropertyGroup>
+      <DevLabel Condition="'$(GitCommits)' == '0' or $(GitIsDirty) == 'true'">-dev</DevLabel>
+      <PackageVersion>$(GitSemVerMajor).$(GitSemVerMinor).$(GitSemVerPatch)$(DevLabel)</PackageVersion>
+      <InformationalVersion>$(PackageVersion)</InformationalVersion>
+    </PropertyGroup>
+  </Target>
+
 </Project>
