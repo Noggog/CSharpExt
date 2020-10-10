@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -149,6 +150,30 @@ namespace Noggog
         public static bool ContainsInsensitive(this string str, string rhs)
         {
             return str.Contains(rhs, StringComparison.OrdinalIgnoreCase);
+        }
+
+        /// <summary>
+        /// Takes in a nullable string, and applies a string converter if it is not null or empty.
+        /// </summary>
+        /// <param name="src">String to process</param>
+        /// <param name="decorator">String decorator if source not null or empty</param>
+        /// <returns>Decorated string, or null/empty if source was null/empty</returns>
+        [return: NotNullIfNotNull("src")]
+        public static string? Decorate(this string? src, Func<string, string> decorator)
+        {
+            if (src == null) return null;
+            if (src == string.Empty) return string.Empty;
+            return decorator(src);
+        }
+
+        public static bool IsNullOrWhitespace(this string? src)
+        {
+            return string.IsNullOrWhiteSpace(src);
+        }
+
+        public static bool IsNullOrEmpty(this string? src)
+        {
+            return string.IsNullOrEmpty(src);
         }
     }
 }
