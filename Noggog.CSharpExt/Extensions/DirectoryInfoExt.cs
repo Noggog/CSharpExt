@@ -130,5 +130,23 @@ namespace Noggog
             }
             return false;
         }
+
+        public static void DeepCopy(this DirectoryInfo from, DirectoryInfo to)
+        {
+            if (!to.Exists)
+            {
+                to.Create();
+            }
+            
+            foreach (var file in from.GetFiles())
+            {
+                file.CopyTo(Path.Combine(to.FullName, file.Name));
+            }
+
+            foreach (var dir in from.GetDirectories())
+            {
+                dir.DeepCopy(new DirectoryInfo(Path.Combine(to.FullName, dir.Name)));
+            }
+        }
     }
 }
