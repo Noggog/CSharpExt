@@ -1,6 +1,7 @@
 using Noggog;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 namespace Noggog
@@ -35,7 +36,17 @@ namespace Noggog
             }
             return ret;
         }
-        
+
+        [return: MaybeNull()]
+        public static V GetOrDefault<K, V>(this IDictionary<K, V> dict, K key)
+        {
+            if (!dict.TryGetValue(key, out V ret))
+            {
+                return default;
+            }
+            return ret;
+        }
+
         public static IEnumerable<KeyValuePair<K, R>> SelectAgainst<K, V, R>(
             this IReadOnlyDictionary<K, V> lhs, 
             IReadOnlyDictionary<K, V> rhs, 
