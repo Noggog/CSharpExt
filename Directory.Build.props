@@ -1,8 +1,23 @@
 <Project>
   <PropertyGroup>
     <Nullable>enable</Nullable>
-	<WarningsAsErrors>nullable</WarningsAsErrors>
-    <Version>1.6.1</Version> 
-  </PropertyGroup> 
+    <WarningsAsErrors>nullable</WarningsAsErrors>
+  </PropertyGroup>
 
+  <!-- To be redefined by GitInfo after restore. -->
+  <Target Name="GitVersion" />
+
+  <Target Name="SetVersion"
+		  BeforeTargets="GetAssemblyVersion;GetPackageVersion"
+		  DependsOnTargets="GitVersion"
+		  Returns="$(PackageVersion)">
+    <PropertyGroup>
+      <DevLabel Condition="'$(GitCommits)' != '0' or $(GitIsDirty) == 'true'">.1-dev</DevLabel>
+      <AssemblyDevLabel Condition="'$(GitCommits)' != '0' or $(GitIsDirty) == 'true'">.1</AssemblyDevLabel>
+      <FileVersion>$(GitBaseVersionMajor).$(GitBaseVersionMinor).$(GitBaseVersionPatch)$(AssemblyDevLabel)</FileVersion>
+      <PackageVersion>$(GitBaseVersionMajor).$(GitBaseVersionMinor).$(GitBaseVersionPatch)$(DevLabel)</PackageVersion>
+      <InformationalVersion>$(PackageVersion)</InformationalVersion>
+    </PropertyGroup>
+  </Target>
+  
 </Project>

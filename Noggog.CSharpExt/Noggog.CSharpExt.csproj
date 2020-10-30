@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
@@ -8,6 +8,7 @@
     <Authors>Noggog</Authors>
     <Company>Noggog</Company>
     <LangVersion>preview</LangVersion>
+    <IsPackable>true</IsPackable>
     <Description>Generic reusable classes and extension methods that apply to no specific project and flavored to taste</Description>
   </PropertyGroup>
 
@@ -26,6 +27,10 @@
 
   <ItemGroup>
     <PackageReference Include="GitInfo" Version="2.1.2">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="NuGetizer" Version="0.4.10">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
