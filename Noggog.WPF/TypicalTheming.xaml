@@ -9,7 +9,7 @@
     xmlns:po="http://schemas.microsoft.com/winfx/2006/xaml/presentation/options">
 
     <Style x:Key="Noggog.Styles.Button.Background" TargetType="{x:Type Button}">
-        <Setter Property="Focusable" Value="False" />
+        <Setter Property="FocusVisualStyle" Value="{x:Null}" />
         <Setter Property="Background" Value="Transparent" />
         <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.TextBox.Border}" />
         <Setter Property="BorderThickness" Value="0" />
@@ -70,7 +70,7 @@
     </Style>
 
     <Style x:Key="Noggog.Styles.Button" TargetType="{x:Type Button}">
-        <Setter Property="Focusable" Value="False" />
+        <Setter Property="FocusVisualStyle" Value="{x:Null}" />
         <Setter Property="Background" Value="Transparent" />
         <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.TextBox.Border}" />
         <Setter Property="BorderThickness" Value="0" />
@@ -254,7 +254,7 @@
                                 Controls:TextBoxHelper.IsClearTextButtonBehaviorEnabled="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=(Controls:TextBoxHelper.ClearTextButton), Mode=OneWay}"
                                 Content="{TemplateBinding Controls:TextBoxHelper.ButtonContent}"
                                 ContentTemplate="{TemplateBinding Controls:TextBoxHelper.ButtonContentTemplate}"
-                                Focusable="False"
+                                FocusVisualStyle="{x:Null}"
                                 FontFamily="{TemplateBinding Controls:TextBoxHelper.ButtonFontFamily}"
                                 FontSize="{TemplateBinding Controls:TextBoxHelper.ButtonFontSize}"
                                 Foreground="{TemplateBinding Foreground}"
@@ -774,7 +774,7 @@
                                     x:Name="CheckGlyph"
                                     Content="{TemplateBinding Controls:CheckBoxHelper.CheckGlyphUnchecked}"
                                     ContentTemplate="{TemplateBinding Controls:CheckBoxHelper.CheckGlyphUncheckedTemplate}"
-                                    Focusable="False"
+                                    FocusVisualStyle="{x:Null}"
                                     Foreground="{TemplateBinding Controls:CheckBoxHelper.CheckGlyphForegroundUnchecked}"
                                     IsTabStop="False" />
                             </Grid>
@@ -1012,7 +1012,7 @@
             </Setter.Value>
         </Setter>
         <Setter Property="VerticalContentAlignment" Value="Center" />
-        <Setter Property="Focusable" Value="False" />
+        <Setter Property="FocusVisualStyle" Value="{x:Null}" />
         <Style.Triggers>
             <Trigger Property="Controls:ToggleButtonHelper.ContentDirection" Value="RightToLeft">
                 <Setter Property="HorizontalContentAlignment" Value="Right" />
@@ -1095,7 +1095,7 @@
         x:Key="Noggog.Styles.ListBox"
         BasedOn="{StaticResource MahApps.Styles.ListBox.Virtualized}"
         TargetType="ListBox">
-        <Setter Property="Focusable" Value="False" />
+        <Setter Property="FocusVisualStyle" Value="{x:Null}" />
     </Style>
 
 
@@ -1103,7 +1103,7 @@
         x:Key="Noggog.Styles.ComboBox"
         BasedOn="{StaticResource MahApps.Styles.ComboBox}"
         TargetType="ComboBox">
-        <Setter Property="Focusable" Value="False" />
+        <Setter Property="FocusVisualStyle" Value="{x:Null}" />
     </Style>
 
     <Style
@@ -1128,7 +1128,7 @@
     </Style>
 
     <Style x:Key="Noggog.Styles.ItemsControl" TargetType="ItemsControl">
-        <Setter Property="Focusable" Value="False" />
+        <Setter Property="FocusVisualStyle" Value="{x:Null}" />
     </Style>
 
     <Style x:Key="Noggog.Styles.ListBox.Terminal" TargetType="{x:Type ListBox}">
@@ -1153,7 +1153,7 @@
                         BorderBrush="{TemplateBinding BorderBrush}"
                         BorderThickness="{TemplateBinding BorderThickness}"
                         SnapsToDevicePixels="true">
-                        <ScrollViewer Padding="{TemplateBinding Padding}" Focusable="false">
+                        <ScrollViewer Padding="{TemplateBinding Padding}" FocusVisualStyle="{x:Null}">
                             <ItemsPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
                         </ScrollViewer>
                     </Border>
