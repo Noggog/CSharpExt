@@ -234,7 +234,7 @@ namespace Noggog
             var ret = new byte[amount];
             if (Read(ret, offset: 0, amount: amount) != amount)
             {
-                throw new ArgumentException("Coult not read desired amount");
+                throw new ArgumentException("Could not read desired amount");
             }
             return new MemorySlice<byte>(ret);
         }
