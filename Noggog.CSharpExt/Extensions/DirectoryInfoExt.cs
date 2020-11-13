@@ -49,11 +49,13 @@ namespace Noggog
             if (deleteFolderItself)
             {
                 dir.Refresh();
-                if (dir.GetFiles().Length == 0)
+                if (dir.GetFiles().Length == 0
+                    && dir.GetDirectories().Length == 0)
                 {
                     try
                     {
                         dir.Delete();
+                        dir.Refresh();
                     }
                     catch (Exception ex)
                     {

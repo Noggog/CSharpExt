@@ -9,6 +9,9 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using System.Reactive.Linq;
 using System.Reactive.Threading.Tasks;
+using Noggog.Utility;
+using System.IO;
+using DynamicData;
 
 namespace CSharpExt.UnitTests
 {
@@ -53,5 +56,31 @@ namespace CSharpExt.UnitTests
             results.Should().HaveCount(1);
             results.Should().ContainInOrder(secondWait);
         });
+
+        [Fact]
+        public async Task WatchFolder()
+        {
+            using var temp = new TempFolder(Path.Combine(Utility.TempFolderPath, nameof(WatchFolder)));
+            var fileA = Path.Combine(temp.Dir.Path, "FileA");
+            var fileB = Path.Combine(temp.Dir.Path, "FileB");
+            File.WriteAllText(fileA, string.Empty);
+            var live = ObservableExt.WatchFolderContents(temp.Dir.Path)
+                .RemoveKey();
+            await Task.Delay(2000);
+            var list = live.AsObservableList();
+            list.Count.Should().Be(1);
+            list.Items.ToExtendedList()[0].Should().Be(fileA);
+            File.WriteAllText(fileB, string.Empty);
+            await Task.Delay(2000);
+            list = live.AsObservableList();
+            list.Count.Should().Be(2);
+            list.Items.ToExtendedList()[0].Should().Be(fileA);
+            list.Items.ToExtendedList()[1].Should().Be(fileB);
+            File.Delete(fileA);
+            await Task.Delay(2000);
+            list = live.AsObservableList();
+            list.Count.Should().Be(1);
+            list.Items.ToExtendedList()[0].Should().Be(fileB);
+        }
     }
 }

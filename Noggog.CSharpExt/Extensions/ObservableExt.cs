@@ -10,6 +10,8 @@ using System.Reactive.Linq;
 using Noggog;
 using System.Threading;
 using System.IO;
+using DynamicData;
+using DynamicData.Kernel;
 
 namespace Noggog
 {
@@ -454,5 +456,117 @@ namespace Noggog
                 .Replay(1)
                 .RefCount();
         }
+
+        /// <summary>
+        /// An observable stream of a folder's contents
+        /// </summary>
+        /// <param name="path">File path to watch</param>
+        /// <param name="throwIfInvalidPath">Whether to error if path is invalid</param>
+        /// <exception cref="ArgumentException">Will throw if file path has no parent directory, or is malformed, and the throw parameter is on</exception>
+        /// <returns>Observable signal of when file created/modified/deleted</returns>
+        public static IObservable<ChangeSet<string, string>> WatchFolderContents(
+            string path,
+            bool throwIfInvalidPath = false)
+        {
+            return ObservableExt.UsingWithCatch(
+                () =>
+                {
+                    var watcher = new FileSystemWatcher(path);
+                    watcher.EnableRaisingEvents = true;
+                    return watcher;
+                },
+                (watcher) =>
+                {
+                    if (watcher.Failed)
+                    {
+                        if (throwIfInvalidPath)
+                        {
+                            throw watcher.Exception!;
+                        }
+                        else
+                        {
+                            return Observable.Empty<ChangeSet<string, string>>();
+                        }
+                    }
+                    return Observable.Merge(
+                            Observable.FromEventPattern<FileSystemEventHandler, FileSystemEventArgs>(h => watcher.Value.Created += h, h => watcher.Value.Created -= h),
+                            Observable.FromEventPattern<FileSystemEventHandler, FileSystemEventArgs>(h => watcher.Value.Deleted += h, h => watcher.Value.Deleted -= h))
+                        .Select(x =>
+                        {
+                            switch (x.EventArgs.ChangeType)
+                            {
+                                case WatcherChangeTypes.Created:
+                                    return new ChangeSet<string, string>(new Change<string, string>(ChangeReason.Add, key: x.EventArgs.FullPath, current: x.EventArgs.FullPath).AsEnumerable());
+                                case WatcherChangeTypes.Deleted:
+                                    return new ChangeSet<string, string>(new Change<string, string>(ChangeReason.Remove, key: x.EventArgs.FullPath, current: x.EventArgs.FullPath).AsEnumerable());
+                                default:
+                                    throw new NotImplementedException();
+                            }
+                        })
+                        .Merge(Observable.FromEventPattern<RenamedEventHandler, RenamedEventArgs>(h => watcher.Value.Renamed += h, h => watcher.Value.Renamed -= h)
+                            .Select(x =>
+                            {
+                                return new ChangeSet<string, string>(new Change<string, string>(ChangeReason.Moved, key: x.EventArgs.FullPath, current: x.EventArgs.FullPath, previous: x.EventArgs.OldFullPath).AsEnumerable());
+                            }))
+                        .StartWith(
+                            new ChangeSet<string, string>(Directory.EnumerateFiles(path)
+                                .Select(x => new Change<string, string>(ChangeReason.Add, x, x))));
+                });
+        }
+
+        /// These snippets were provided by RolandPheasant (author of DynamicData)
+        /// They'll be going into the official library at some point, but are here for now.
+        
+        #region Dynamic Data EnsureUniqueChanges
+        /// <summary>
+        /// Removes outdated key events from a changeset, only leaving the last relevent change for each key.
+        /// </summary>
+        public static IObservable<IChangeSet<TObject, TKey>> EnsureUniqueChanges<TObject, TKey>(this IObservable<IChangeSet<TObject, TKey>> source)
+        {
+            return source.Select(EnsureUniqueChanges);
+        }
+
+        /// <summary>
+        /// Removes outdated key events from a changeset, only leaving the last relevent change for each key.
+        /// </summary>
+        public static IChangeSet<TObject, TKey> EnsureUniqueChanges<TObject, TKey>(this IChangeSet<TObject, TKey> input)
+        {
+            var changes = input
+                .GroupBy(kvp => kvp.Key)
+                .Select(g => g.Aggregate(Optional<Change<TObject, TKey>>.None, Reduce))
+                .Where(x => x.HasValue)
+                .Select(x => x.Value);
+
+            return new ChangeSet<TObject, TKey>(changes);
+        }
+
+        internal static Optional<Change<TObject, TKey>> Reduce<TObject, TKey>(Optional<Change<TObject, TKey>> previous, Change<TObject, TKey> next)
+        {
+            if (!previous.HasValue)
+            {
+                return next;
+            }
+
+            var previousValue = previous.Value;
+
+            switch (previousValue.Reason)
+            {
+                case ChangeReason.Add when next.Reason == ChangeReason.Remove:
+                    return Optional<Change<TObject, TKey>>.None;
+
+                case ChangeReason.Remove when next.Reason == ChangeReason.Add:
+                    return new Change<TObject, TKey>(ChangeReason.Update, next.Key, next.Current, previousValue.Current, next.CurrentIndex, previousValue.CurrentIndex);
+
+                case ChangeReason.Add when next.Reason == ChangeReason.Update:
+                    return new Change<TObject, TKey>(ChangeReason.Add, next.Key, next.Current, next.CurrentIndex);
+
+                case ChangeReason.Update when next.Reason == ChangeReason.Update:
+                    return new Change<TObject, TKey>(ChangeReason.Update, previousValue.Key, next.Current, previousValue.Previous, next.CurrentIndex, previousValue.PreviousIndex);
+
+                default:
+                    return next;
+            }
+        }
+        #endregion
     }
 }
