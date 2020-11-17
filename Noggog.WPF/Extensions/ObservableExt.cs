@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Reactive.Disposables;
@@ -9,6 +9,7 @@ using DynamicData.Binding;
 using System.Windows.Input;
 using System.Reactive;
 using System.Windows.Controls;
+using System.Diagnostics.CodeAnalysis;
 #nullable enable
 
 namespace Noggog.WPF
@@ -26,11 +27,35 @@ namespace Noggog.WPF
             this IObservable<TRet> source,
             ViewModel vm,
             string property,
-            TRet initialValue = default,
+            TRet initialValue,
             bool deferSubscription = false)
         {
             return source
-                .ToProperty(vm, property, initialValue, deferSubscription, RxApp.MainThreadScheduler)
+                .ToProperty(vm, property, initialValue, deferSubscription: deferSubscription, scheduler: RxApp.MainThreadScheduler)
+                .DisposeWith(vm.CompositeDisposable);
+        }
+
+        public static ObservableAsPropertyHelper<TRet> ToGuiProperty<TRet>(
+            this IObservable<TRet> source,
+            ViewModel vm,
+            string property,
+            bool deferSubscription = false)
+            where TRet : struct
+        {
+            return source
+                .ToProperty(vm, property, initialValue: default!, deferSubscription, RxApp.MainThreadScheduler)
+                .DisposeWith(vm.CompositeDisposable);
+        }
+
+        public static void ToGuiProperty<TRet>(
+            this IObservable<TRet> source,
+            ViewModel vm,
+            string property,
+            TRet initialValue,
+            out ObservableAsPropertyHelper<TRet> result,
+            bool deferSubscription = false)
+        {
+            source.ToProperty(vm, property, out result, initialValue, deferSubscription, RxApp.MainThreadScheduler)
                 .DisposeWith(vm.CompositeDisposable);
         }
 
@@ -39,10 +64,10 @@ namespace Noggog.WPF
             ViewModel vm,
             string property,
             out ObservableAsPropertyHelper<TRet> result,
-            TRet initialValue = default,
             bool deferSubscription = false)
+            where TRet : struct
         {
-            source.ToProperty(vm, property, out result, initialValue, deferSubscription, RxApp.MainThreadScheduler)
+            source.ToProperty(vm, property, out result, initialValue: default, deferSubscription, RxApp.MainThreadScheduler)
                 .DisposeWith(vm.CompositeDisposable);
         }
 

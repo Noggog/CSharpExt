@@ -106,9 +106,9 @@ namespace Noggog
             return new Percent(percent, check: false);
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
-            if (!(obj is Percent rhs)) return false;
+            if (obj is not Percent rhs) return false;
             return Equals(rhs);
         }
 
@@ -155,7 +155,7 @@ namespace Noggog
             }
         }
 
-        public int CompareTo(object obj)
+        public int CompareTo(object? obj)
         {
             if (obj is Percent rhs)
             {

@@ -120,9 +120,9 @@ namespace Noggog
             }
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
-            if (!(obj is RangeUDouble rhs)) return false;
+            if (obj is not RangeUDouble rhs) return false;
             return Equals(rhs);
         }
 

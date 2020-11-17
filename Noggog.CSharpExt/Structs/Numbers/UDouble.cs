@@ -45,7 +45,7 @@ namespace Noggog
             return d.Value - amount;
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (obj is UDouble uRhs)
             {

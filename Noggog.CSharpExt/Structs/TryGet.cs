@@ -26,7 +26,7 @@ namespace Noggog
             bool succeeded,
             T val = default(T))
         {
-            this.Value = val;
+            this.Value = val!;
             this.Succeeded = succeeded;
         }
 
@@ -36,9 +36,9 @@ namespace Noggog
                 && object.Equals(this.Value, other.Value);
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
-            if (!(obj is TryGet<T> rhs)) return false;
+            if (obj is not TryGet<T> rhs) return false;
             return Equals(rhs);
         }
 
@@ -85,7 +85,7 @@ namespace Noggog
         [DebuggerStepThrough]
         public static TryGet<T> Create(bool successful, T val = default(T))
         {
-            return new TryGet<T>(successful, val);
+            return new TryGet<T>(successful, val!);
         }
         #endregion
     }

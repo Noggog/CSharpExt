@@ -194,9 +194,18 @@ namespace Noggog
             return this.ContainsKey((TKey)key);
         }
 
-        void IDictionary.Add(object key, object value)
+        void IDictionary.Add(object key, object? value)
         {
-            this.Add((TKey)key, (TValue)value);
+            TValue? conv;
+            if (value == null)
+            {
+                conv = default;
+            }
+            else
+            {
+                conv = (TValue)value;
+            }
+            this.Add((TKey)key, conv!);
         }
 
         IDictionaryEnumerator IDictionary.GetEnumerator()

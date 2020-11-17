@@ -2,6 +2,7 @@ using Noggog;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
 using System.Linq.Expressions;
@@ -19,7 +20,7 @@ namespace Noggog
         public static int Length<T>()
             where T : struct, Enum
         {
-            return Length((Enum)Activator.CreateInstance(typeof(T)));
+            return Length((Enum)Activator.CreateInstance(typeof(T))!);
         }
 
         public static bool TryParse<T>(int number, out T val)
@@ -83,7 +84,7 @@ namespace Noggog
         {
             Array s = Enum.GetValues(typeof(T));
             if (s.Length <= n) return defaultPick;
-            return (T)s.GetValue(n);
+            return (T)s.GetValue(n)!;
         }
 
         public static Dictionary<Type, Dictionary<int, string>> NameDictionary = new Dictionary<Type, Dictionary<int, string>>();
@@ -104,7 +105,7 @@ namespace Noggog
         }
 
         // Slower
-        public static bool TryToStringFast_Enum_Only<T>(this T e, out string str)
+        public static bool TryToStringFast_Enum_Only<T>(this T e, [MaybeNullWhen(false)] out string str)
             where T : struct, Enum
         {
             IConvertible cv = (IConvertible)e;
@@ -112,7 +113,7 @@ namespace Noggog
         }
 
         // Faster
-        public static bool TryToStringFast_Enum_Only<T>(int enumVal, out string str)
+        public static bool TryToStringFast_Enum_Only<T>(int enumVal, [MaybeNullWhen(false)] out string str)
             where T : struct, Enum
         {
             return EnumStrings<T>.TryGetEnumString(enumVal, out str);
@@ -120,7 +121,7 @@ namespace Noggog
 
         public static string ToStringFast_Enum_Only(Type enumType, int index)
         {
-            if (!NameDictionary.TryGetValue(enumType, out Dictionary<int, string> arr))
+            if (!NameDictionary.TryGetValue(enumType, out var arr))
             {
                 if (enumType.IsEnum)
                 {
@@ -140,27 +141,27 @@ namespace Noggog
         }
 
         public static string ToDescriptionString<TEnum>(this TEnum val)
-            where TEnum : struct, IConvertible
+            where TEnum : struct, Enum
         {
             if (!typeof(TEnum).IsEnum)
             {
                 throw new ArgumentException("T must be an Enum");
             }
 
-            DescriptionAttribute[] attributes = (DescriptionAttribute[])val.GetType().GetField(val.ToString()).GetCustomAttributes(typeof(DescriptionAttribute), false);
+            DescriptionAttribute[] attributes = (DescriptionAttribute[])val.GetType().GetField(val.ToString())!.GetCustomAttributes(typeof(DescriptionAttribute), false);
             return attributes.Length > 0 ? attributes[0].Description : string.Empty;
         }
 
         public static string ToDescriptionString(this Enum value)
         {
-            FieldInfo fieldInfo = value.GetType().GetField(value.ToString());
+            FieldInfo fieldInfo = value.GetType().GetField(value.ToString())!;
             if (fieldInfo == null) return string.Empty;
-            var attribute = (DescriptionAttribute)fieldInfo.GetCustomAttribute(typeof(DescriptionAttribute));
+            var attribute = (DescriptionAttribute)fieldInfo.GetCustomAttribute(typeof(DescriptionAttribute))!;
             return attribute.Description;
         }
 
         public static TEnum FromDescriptionString<TEnum>(string value, TEnum defaultValue = default(TEnum))
-            where TEnum : struct, IConvertible
+            where TEnum : struct, Enum
         {
             if (!typeof(TEnum).IsEnum)
             {
@@ -192,7 +193,7 @@ namespace Noggog
         }
 
         public static TEnum SetFlag<TEnum>(this TEnum e, Enum flag, bool on)
-            where TEnum : Enum
+            where TEnum : struct, Enum
         {
             var lhs = Convert.ToInt64(e);
             var rhs = Convert.ToInt64(flag);
@@ -211,7 +212,7 @@ namespace Noggog
         private static object _loadLock = new object();
         private static Dictionary<string, Type>? enums;
 
-        public static bool TryGetEnumType(string fullTypeName, out Type t)
+        public static bool TryGetEnumType(string fullTypeName, [MaybeNullWhen(false)] out Type t)
         {
             return LoadEnumTypes().TryGetValue(fullTypeName, out t);
         }
@@ -238,7 +239,7 @@ namespace Noggog
                 {
                     if (t.IsEnum)
                     {
-                        dict[t.FullName] = t;
+                        dict[t.FullName!] = t;
                     }
                 }
             }
@@ -397,7 +398,7 @@ namespace Noggog
             return _strings[enumValue];
         }
 
-        public static bool TryGetEnumString(int enumValue, out string str)
+        public static bool TryGetEnumString(int enumValue, [MaybeNullWhen(false)] out string str)
         {
             return _strings.TryGetValue(enumValue, out str);
         }

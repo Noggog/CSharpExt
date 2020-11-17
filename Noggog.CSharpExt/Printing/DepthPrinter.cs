@@ -15,7 +15,7 @@ namespace Noggog.Printing
             List<string> strs = new List<string>(objs.Length);
             foreach (var o in objs)
             {
-                strs.Add(o.ToString());
+                strs.Add(o.ToString() ?? string.Empty);
             }
             list.Add(new KeyValuePair<int, List<string>>(depth, strs));
         }

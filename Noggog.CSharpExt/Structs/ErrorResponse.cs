@@ -63,9 +63,9 @@ namespace Noggog
             return GetResponse<TRet>.Create(successful: this.Succeeded, val: item, reason: this.Reason);
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
-            if (!(obj is ErrorResponse resp)) return false;
+            if (obj is not ErrorResponse resp) return false;
             return Equals(resp);
         }
 

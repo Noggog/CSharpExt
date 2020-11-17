@@ -14,7 +14,7 @@ namespace Noggog
         /// <summary>
         /// Transitions the underlying Task into the RanToCompletion state.
         /// </summary>
-        public void Complete()
+        public void SetResult()
         {
             this.SetResult(true);
         }

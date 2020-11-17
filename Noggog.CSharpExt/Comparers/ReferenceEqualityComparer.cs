@@ -23,7 +23,7 @@ namespace Noggog
         /// <param name="lhs">Left hand side</param>
         /// <param name="rhs">Right hand side</param>
         /// <returns>True if same referencec</returns>
-        public override bool Equals(T lhs, T rhs)
+        public override bool Equals(T? lhs, T? rhs)
         {
             return ReferenceEquals(lhs, rhs);
         }

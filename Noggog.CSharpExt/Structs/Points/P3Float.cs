@@ -77,9 +77,9 @@ namespace Noggog
             return true;
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
-            if (!(obj is P3Float rhs)) return false;
+            if (obj is not P3Float rhs) return false;
             return Equals(rhs);
         }
 

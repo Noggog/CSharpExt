@@ -128,9 +128,9 @@ namespace Noggog
             }
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
-            if (!(obj is RangeInt16 rhs)) return false;
+            if (obj is not RangeInt16 rhs) return false;
             return Equals(rhs);
         }
 

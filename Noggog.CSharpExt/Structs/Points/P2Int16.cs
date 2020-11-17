@@ -67,10 +67,10 @@ namespace Noggog
             return $"({X},{Y})";
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
-            if (!(obj is P2Int16)) return false;
-            return Equals((P2Int16)obj);
+            if (obj is not P2Int16 p) return false;
+            return Equals(p);
         }
 
         public bool Equals(P2Int16 rhs)

@@ -24,20 +24,20 @@ namespace Noggog
             return Value;
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
-            if (!(obj is StringCaseAgnostic rhs)) return false;
+            if (obj is not StringCaseAgnostic rhs) return false;
             return Equals(rhs);
         }
 
-        public bool Equals(string other)
+        public bool Equals(string? other)
         {
-            return object.Equals(this.Upper, other.ToUpper());
+            return string.Equals(this.Upper, other?.ToUpper());
         }
 
         public bool Equals(StringCaseAgnostic other)
         {
-            return object.Equals(this.Upper, other.Upper);
+            return string.Equals(this.Upper, other.Upper);
         }
 
         public override int GetHashCode() => HashCode.Combine(this.Upper);

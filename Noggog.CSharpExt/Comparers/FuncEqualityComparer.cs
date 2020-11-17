@@ -9,7 +9,7 @@ namespace Noggog
     /// <typeparam name="T">Type of object being compared</typeparam>
     public class FuncEqualityComparer<T> : EqualityComparer<T>
     {
-        private readonly Func<T, T, bool> _equals;
+        private readonly Func<T?, T?, bool> _equals;
         private readonly Func<T, int> _hash;
 
         /// <summary>
@@ -19,7 +19,7 @@ namespace Noggog
         /// <param name="hash">Func to call for Hash requests</param>
         /// <returns>True if func returned true</returns>
         public FuncEqualityComparer(
-            Func<T, T, bool> equals,
+            Func<T?, T?, bool> equals,
             Func<T, int> hash)
         {
             this._equals = equals;
@@ -32,7 +32,7 @@ namespace Noggog
         /// <param name="lhs">Left hand side</param>
         /// <param name="rhs">Right hand side</param>
         /// <returns>Equality result returned by func</returns>
-        public override bool Equals(T lhs, T rhs)
+        public override bool Equals(T? lhs, T? rhs)
         {
             return this._equals(lhs, rhs);
         }

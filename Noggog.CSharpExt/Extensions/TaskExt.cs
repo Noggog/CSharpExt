@@ -122,7 +122,7 @@ namespace Noggog
             try
             {
                 await action().ConfigureAwait(false);
-                tcs?.Complete();
+                tcs?.SetResult();
             }
             catch (Exception ex)
             {

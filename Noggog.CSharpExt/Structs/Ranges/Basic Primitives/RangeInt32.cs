@@ -129,9 +129,9 @@ namespace Noggog
             }
         }
         
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
-            if (!(obj is RangeInt32 rhs)) return false;
+            if (obj is not RangeInt32 rhs) return false;
             return Equals(rhs);
         }
 

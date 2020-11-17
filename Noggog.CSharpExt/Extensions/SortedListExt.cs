@@ -15,6 +15,7 @@ namespace Noggog
             K key,
             bool higher, 
             out int result)
+            where K : notnull
         {
             var binSearch = sortedList.Keys.BinarySearch(key);
             if (binSearch >= 0)
@@ -54,6 +55,7 @@ namespace Noggog
             K key,
             bool higher, 
             out KeyValuePair<int, V> result)
+            where K : notnull
         {
             if (!sortedList.TryGetIndexInDirection(
                 key: key,
@@ -74,6 +76,7 @@ namespace Noggog
             K lowerKey,
             K higherKey,
             out RangeInt32 result)
+            where K : notnull
         {
             var comp = Comparer<K>.Default;
             if (comp.Compare(lowerKey, higherKey) > 0)
@@ -111,6 +114,7 @@ namespace Noggog
             K lowerKey,
             K higherKey,
             [MaybeNullWhen(false)] out IEnumerable<KeyValuePair<int, V>> result)
+            where K : notnull
         {
             if (!TryGetEncapsulatedIndices(
                 sortedList: sortedList,
@@ -128,6 +132,7 @@ namespace Noggog
         public static void Add<K, V>(
             this SortedList<K, V> sortedList,
             IEnumerable<KeyValuePair<K, V>> vals)
+            where K : notnull
         {
             foreach(var val in vals)
             {
@@ -139,6 +144,7 @@ namespace Noggog
             this SortedList<K, V> sortedList,
             K key,
             Func<V> newVal)
+            where K : notnull
         {
             if (sortedList.TryGetValue(key, out var v)) return v;
             v = newVal();
@@ -149,6 +155,7 @@ namespace Noggog
         public static V GetOrAdd<K, V>(
             this SortedList<K, V> sortedList,
             K key)
+            where K : notnull
             where V : new()
         {
             if (sortedList.TryGetValue(key, out var v)) return v;

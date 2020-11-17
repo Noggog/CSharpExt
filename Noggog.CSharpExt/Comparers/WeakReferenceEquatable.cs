@@ -13,13 +13,13 @@ namespace Noggog
             _weakReferenceToTarget = new WeakReference(target);
         }
 
-        public object Target =>_weakReferenceToTarget.Target;
+        public object? Target => _weakReferenceToTarget.Target;
 
         public bool IsAlive => _weakReferenceToTarget.IsAlive;
 
         public override int GetHashCode() => _targetHashCode;
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (obj is WeakReferenceEquatable rhs)
             {
@@ -36,15 +36,17 @@ namespace Noggog
             }
         }
 
-        public bool Equals(WeakReferenceEquatable other)
+        public bool Equals(WeakReferenceEquatable? other)
         {
+            if (other == null) return false;
             if (this.IsAlive != other.IsAlive) return false;
             if (!this.IsAlive) return true;
             return object.Equals(this.Target, other.Target);
         }
 
-        public bool Equals(WeakReference other)
+        public bool Equals(WeakReference? other)
         {
+            if (other == null) return false;
             if (this.IsAlive != other.IsAlive) return false;
             if (!this.IsAlive) return true;
             return object.Equals(this.Target, other.Target);

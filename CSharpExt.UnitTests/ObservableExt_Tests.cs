@@ -43,7 +43,7 @@ namespace CSharpExt.UnitTests
                 })
                 .Subscribe(
                     onNext: (i) => { },
-                    onCompleted: () => complete.Complete());
+                    onCompleted: () => complete.SetResult());
             waitSubject.OnNext(longInitialWait);
             scheduler.AdvanceBy(longInitialWait / 2);
             waitSubject.OnNext(secondWait);

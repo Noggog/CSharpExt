@@ -161,7 +161,7 @@ namespace Noggog
 
         public static IEnumerable<(T Item, bool Last)> IterateMarkLast<T>(this IEnumerable<T> en)
         {
-            T last = default(T);
+            T last = default(T)!;
             bool first = true;
             foreach (var item in en)
             {

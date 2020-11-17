@@ -30,7 +30,7 @@ namespace Noggog
             string reason = "",
             Exception? ex = null)
         {
-            this.Value = val;
+            this.Value = val!;
             this.Succeeded = succeeded;
             this._reason = reason;
             this.Exception = ex;
@@ -42,9 +42,9 @@ namespace Noggog
                 && object.Equals(this.Value, other.Value);
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
-            if (!(obj is GetResponse<T> rhs)) return false;
+            if (obj is not GetResponse<T> rhs) return false;
             return Equals(rhs);
         }
 
@@ -136,7 +136,7 @@ namespace Noggog
 
         public static GetResponse<T> Create(bool successful, T val = default, string reason = "")
         {
-            return new GetResponse<T>(successful, val, reason);
+            return new GetResponse<T>(successful, val!, reason);
         }
         #endregion
     }

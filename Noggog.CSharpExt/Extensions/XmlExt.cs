@@ -113,7 +113,7 @@ namespace Noggog
             return val != null;
         }
 
-        public static P GetAttribute<P>(this XElement node, string str, P defaultVal = default, bool throwException = false)
+        public static P? GetAttribute<P>(this XElement node, string str, P defaultVal = default, bool throwException = false)
         {
             if (!TryGetAttribute(node, str, out P val, throwException))
             {
@@ -187,14 +187,14 @@ namespace Noggog
             */
             PropertyInfo innerWriterPropInfo = writer.GetType().GetProperty(
                 "InnerWriter",
-                BindingFlags.NonPublic | BindingFlags.Instance);
+                BindingFlags.NonPublic | BindingFlags.Instance)!;
 
             /*
                 get the XmlEncodedRawTextWriter or the XmlEncodedRawTextWriterIndent
                 which are the actual underlying XmlWriter objects that do the meat of the work
                 when writing to a StringBuilder or StringWriter
             */
-            System.Xml.XmlWriter innerWriter = (System.Xml.XmlWriter)innerWriterPropInfo.GetValue(writer, null);
+            System.Xml.XmlWriter innerWriter = (System.Xml.XmlWriter)innerWriterPropInfo.GetValue(writer, null)!;
 
             /*
                 get the FieldInfo for the "encoding" field, which is a Protected field
@@ -202,7 +202,7 @@ namespace Noggog
             */
             FieldInfo encodingFieldInfo = innerWriter.GetType().GetField(
                 "encoding",
-                BindingFlags.NonPublic | BindingFlags.Instance);
+                BindingFlags.NonPublic | BindingFlags.Instance)!;
 
             /*
                 assign the encoding we want, any encoding can be used here

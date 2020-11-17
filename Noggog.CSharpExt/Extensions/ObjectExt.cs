@@ -36,7 +36,7 @@ namespace Noggog
                 Type fieldType = field.FieldType;
                 if (!fieldType.IsPrimitive())
                 {
-                    object fieldObj = field.GetValue(obj);
+                    object? fieldObj = field.GetValue(obj);
                     if (fieldObj == null || !set.Add(fieldObj)) continue;
                     fieldType = fieldObj.GetType();
                     if (target.IsAssignableFrom(fieldType))
@@ -45,13 +45,13 @@ namespace Noggog
                     }
                     if (fieldType.IsArray)
                     {
-                        var arrayType = fieldType.GetElementType();
+                        var arrayType = fieldType.GetElementType()!;
                         Array arrayObject = (Array)(fieldObj);
                         if (target.IsAssignableFrom(arrayType))
                         {
                             for (int i = 0; i < arrayObject.Length; ++i)
                             {
-                                ret.Add((T)arrayObject.GetValue(i));
+                                ret.Add((T)arrayObject.GetValue(i)!);
                             }
                         }
                         else

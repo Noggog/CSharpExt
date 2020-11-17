@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,8 +9,8 @@ using System.Threading.Tasks;
 namespace Noggog
 {
     /// <summary>
-    /// A readonly interface of IDictionary<K, V>.
-    /// IDictionary<K, V> itself will not implement this, which makes some APIs a bit tricky.
+    /// A readonly interface of IDictionary
+    /// IDictionary itself will not implement this, which makes some APIs a bit tricky.
     /// </summary>
     /// <typeparam name="K">Key Type</typeparam>
     /// <typeparam name="V">Value Type</typeparam>
@@ -34,7 +35,7 @@ namespace Noggog
         /// an element with the specified key; otherwise, false.
         /// </returns>
         /// <exception cref="ArgumentNullException">key is null.</exception>
-        bool TryGetValue(K key, out V value);
+        bool TryGetValue(K key, [MaybeNullWhen(false)] out V value);
         
         /// <summary>
         /// An ICollection containing the keys of the object that implements IDictionaryGetter.
@@ -93,7 +94,7 @@ namespace Noggog
         }
 
         /// <inheritdoc />
-        public bool TryGetValue(K key, out V val)
+        public bool TryGetValue(K key, [MaybeNullWhen(false)] out V val)
         {
             return dict.TryGetValue(key, out val);
         }

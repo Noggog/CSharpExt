@@ -170,7 +170,7 @@ namespace Noggog.WPF
                 .StartWith(kicker);
         }
 
-        private static IObservable<IObservedChange<object, object>>? NotifyForProperty(object sender, Expression expression, bool beforeChange, bool suppressWarnings)
+        private static IObservable<IObservedChange<object, object>> NotifyForProperty(object sender, Expression expression, bool beforeChange, bool suppressWarnings)
         {
             var propertyName = expression.GetMemberInfo().Name;
             var result = notifyFactoryCache.Get((sender.GetType(), propertyName, beforeChange));
@@ -180,7 +180,7 @@ namespace Noggog.WPF
                 throw new Exception($"Could not find a ICreatesObservableForProperty for {sender.GetType()} property {propertyName}. This should never happen, your service locator is probably broken. Please make sure you have installed the latest version of the ReactiveUI packages for your platform. See https://reactiveui.net/docs/getting-started/installation for guidance.");
             }
 
-            return result.GetNotificationForProperty(sender, expression, propertyName, beforeChange, suppressWarnings);
+            return result.GetNotificationForProperty(sender, expression, propertyName, beforeChange, suppressWarnings)!;
         }
 
         /// <summary>

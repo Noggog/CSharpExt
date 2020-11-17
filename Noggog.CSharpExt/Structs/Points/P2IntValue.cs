@@ -52,9 +52,9 @@ namespace Noggog
             return $"({this.X}, {this.Y}, {this.Value})";
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
-            if (!(obj is P2IntValue<T> rhs)) return false;
+            if (obj is not P2IntValue<T> rhs) return false;
             return Equals(rhs);
         }
         

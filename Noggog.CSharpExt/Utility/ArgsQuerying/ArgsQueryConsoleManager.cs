@@ -25,7 +25,7 @@ namespace Noggog.Utility.ArgsQuerying
 
         private static string Read()
         {
-            return System.Console.ReadLine();
+            return System.Console.ReadLine() ?? throw new ArgumentNullException();
         }
     }
 }

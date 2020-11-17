@@ -128,9 +128,9 @@ namespace Noggog
             }
         }
         
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
-            if (!(obj is RangeUInt64 rhs)) return false;
+            if (obj is not RangeUInt64 rhs) return false;
             return Equals(rhs);
         }
 
@@ -144,7 +144,7 @@ namespace Noggog
 
         public override string ToString()
         {
-            return Min == Max ? $"({Min.ToString()})" : $"({Min} - {Max})";
+            return Min == Max ? $"({Min})" : $"({Min} - {Max})";
         }
 
         public string ToString(string format)

@@ -68,9 +68,9 @@ namespace Noggog
             return Shift(p.X, p.Y, p.Z);
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
-            if (!(obj is P3Int rhs)) return false;
+            if (obj is not P3Int rhs) return false;
             return Equals(rhs);
         }
 

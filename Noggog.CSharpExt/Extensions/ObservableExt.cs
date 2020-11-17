@@ -44,7 +44,7 @@ namespace Noggog
                 .Subscribe();
         }
 
-        public static IObservable<(T Previous, T Current)> Pairwise<T>(this IObservable<T> source)
+        public static IObservable<(T? Previous, T Current)> Pairwise<T>(this IObservable<T> source)
         {
             T prevStorage = default;
             return source.Select(i =>
@@ -209,7 +209,7 @@ namespace Noggog
                         // We have another value that came in to fire.
                         // Reregister for callback
                         dueTimeDisposable.Disposable = scheduler.Schedule(interval, internalCallback);
-                        o.OnNext(value);
+                        o.OnNext(value!);
                         value = default;
                         hasValue = false;
                     }
@@ -334,7 +334,7 @@ namespace Noggog
                 catch (TaskCanceledException)
                 when (catchTaskCancelled)
                 {
-                    return Observable.Return((false, default(TRet)));
+                    return Observable.Return((false, default(TRet)!));
                 }
             }))
             .Switch()
@@ -360,7 +360,7 @@ namespace Noggog
                         catch (TaskCanceledException)
                         when (catchTaskCancelled)
                         {
-                            return Observable.Return((false, default(TRet)));
+                            return Observable.Return((false, default(TRet)!));
                         }
                     }));
             })
@@ -429,7 +429,7 @@ namespace Noggog
             return ObservableExt.UsingWithCatch(
                 () =>
                 {
-                    var watcher = new FileSystemWatcher(Path.GetDirectoryName(path), filter: Path.GetFileName(path));
+                    var watcher = new FileSystemWatcher(Path.GetDirectoryName(path)!, filter: Path.GetFileName(path));
                     watcher.EnableRaisingEvents = true;
                     return watcher;
                 },

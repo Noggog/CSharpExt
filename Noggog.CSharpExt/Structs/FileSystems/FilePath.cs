@@ -14,7 +14,7 @@ namespace Noggog
         private readonly FileInfo _fileInfo;
         private readonly string _originalPath;
 
-        public DirectoryPath Directory => new DirectoryPath(_fileInfo.Directory.FullName);
+        public DirectoryPath Directory => new DirectoryPath(_fileInfo.Directory!.FullName);
         public string Path => _fullPath;
         public string RelativePath => _originalPath;
         public string Name => _fileInfo.Name;
@@ -51,9 +51,9 @@ namespace Noggog
             return true;
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
-            if (!(obj is FilePath rhs)) return false;
+            if (obj is not FilePath rhs) return false;
             return Equals(rhs);
         }
 

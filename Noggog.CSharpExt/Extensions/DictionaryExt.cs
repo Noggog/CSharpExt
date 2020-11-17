@@ -113,7 +113,11 @@ namespace Noggog
             }
         }
 
-        public static IReadOnlyDictionary<K, V> Empty<K, V>() => DictEmptyExt<K, V>.Empty;
+        public static IReadOnlyDictionary<K, V> Empty<K, V>()
+            where K : notnull
+        {
+            return DictEmptyExt<K, V>.Empty;
+        }
 
         public static IReadOnlyDictionary<TKey, TTargetValue> Covariant<TKey, TSourceValue, TTargetValue>(this IReadOnlyDictionary<TKey, TSourceValue> dict)
             where TSourceValue : TTargetValue
@@ -122,11 +126,13 @@ namespace Noggog
         }
 
         private static class DictEmptyExt<K, V>
+            where K : notnull
         {
             public static Dictionary<K, V> Empty = new Dictionary<K, V>();
         }
 
         public static Dictionary<TKey, TValue> ToDictionary<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> keyValuePairs)
+            where TKey : notnull
         {
             return keyValuePairs.ToDictionary(kv => kv.Key, kv => kv.Value);
         }

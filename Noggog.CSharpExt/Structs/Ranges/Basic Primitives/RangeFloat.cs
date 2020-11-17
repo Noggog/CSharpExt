@@ -86,9 +86,9 @@ namespace Noggog
 
         public override int GetHashCode() => HashCode.Combine(Min, Max);
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
-            if (!(obj is RangeFloat rhs)) return false;
+            if (obj is not RangeFloat rhs) return false;
             return Equals(rhs);
         }
 

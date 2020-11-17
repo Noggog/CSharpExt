@@ -41,9 +41,10 @@ namespace Noggog.Utility
 
         class FileCompare : System.Collections.Generic.IEqualityComparer<System.IO.FileInfo>
         {
-            public bool Equals(System.IO.FileInfo f1, System.IO.FileInfo f2)
+            public bool Equals(System.IO.FileInfo? f1, System.IO.FileInfo? f2)
             {
-                if (f1.Name != f2.Name) return false;
+                if (f1 == null || f2 == null) return false;
+                if (!string.Equals(f1.Name, f2.Name)) return false;
                 return FileComparison.FilesAreEqual(f1, f2);
             }
             

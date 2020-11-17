@@ -19,7 +19,8 @@ namespace Noggog
                 if (IsAssignableToGenericType(t, baseType, couldInherit: couldInherit)) return true;
             }
             if (couldInherit
-                && baseType.IsGenericParameter)
+                && baseType.IsGenericParameter
+                && baseType.BaseType != null)
             {
                 return t.InheritsFrom(baseType.BaseType, excludeSelf: excludeSelf, couldInherit: couldInherit);
             }
@@ -54,13 +55,13 @@ namespace Noggog
                     {
                         if (!couldInherit) return false;
                         if (!genType.IsGenericParameter) return false;
-                        if (!givenType.GenericTypeArguments[i].InheritsFrom(genType.BaseType, excludeSelf: false, couldInherit: true)) return false;
+                        if (!givenType.GenericTypeArguments[i].InheritsFrom(genType.BaseType!, excludeSelf: false, couldInherit: true)) return false;
                     }
                 }
                 return true;
             }
 
-            Type baseType = givenType.BaseType;
+            Type? baseType = givenType.BaseType;
             if (baseType == null) return false;
 
             return IsAssignableToGenericType(baseType, genericType);
@@ -131,7 +132,7 @@ namespace Noggog
                 {
                     return true;
                 }
-                toCheck = toCheck.BaseType;
+                toCheck = toCheck.BaseType!;
             }
             return false;
         }
@@ -287,7 +288,7 @@ namespace Noggog
          */
         public static Type? FindType(string qualifiedTypeName)
         {
-            Type t = Type.GetType(qualifiedTypeName);
+            Type? t = Type.GetType(qualifiedTypeName);
 
             if (t != null)
             {
@@ -320,7 +321,7 @@ namespace Noggog
             return false;
         }
 
-        private static bool IsNullable_Internal(Type type, out Type underlying)
+        private static bool IsNullable_Internal(Type type, [MaybeNullWhen(false)] out Type underlying)
         {
             if (!type.IsValueType)
             {
@@ -342,12 +343,12 @@ namespace Noggog
             return IsNullable_Internal(t, out var _);
         }
 
-        public static bool IsNullable<T>(out Type underlying)
+        public static bool IsNullable<T>([MaybeNullWhen(false)] out Type underlying)
         {
             return IsNullable_Internal(typeof(T), out underlying);
         }
 
-        public static bool IsNullable<T>(Type t, out Type underlying)
+        public static bool IsNullable<T>(Type t, [MaybeNullWhen(false)] out Type underlying)
         {
             return IsNullable_Internal(t, out underlying);
         }
