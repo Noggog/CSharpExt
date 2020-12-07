@@ -568,5 +568,17 @@ namespace Noggog
             }
         }
         #endregion
+
+        public static IObservable<bool> Any(params IObservable<bool>[] observables)
+        {
+            return Observable.CombineLatest(observables)
+                .Select(l => l.Any(x => x));
+        }
+
+        public static IObservable<bool> All(params IObservable<bool>[] observables)
+        {
+            return Observable.CombineLatest(observables)
+                .Select(l => l.All(x => x));
+        }
     }
 }
