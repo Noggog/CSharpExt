@@ -1,9 +1,12 @@
-﻿using ReactiveUI;
+using ReactiveUI;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
 using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace Noggog.WPF
 {
@@ -24,6 +27,23 @@ namespace Noggog.WPF
                 .Pairwise()
                 .Where(x => x.Previous && !x.Current)
                 .Unit();
+        }
+
+        public static ReactiveCommand<Unit, Unit> CreateCombinedAny(params ReactiveCommand<Unit, Unit>[] commands)
+        {
+
+            return ReactiveCommand.CreateFromTask(
+                execute: () =>
+                {
+                    return Task.WhenAll(commands.Select(async c =>
+                    {
+                        if (((ICommand)c).CanExecute(Unit.Default))
+                        {
+                            await c.Execute();
+                        }
+                    }));
+                },
+                canExecute: Noggog.ObservableExt.Any(commands.Select(x => x.CanExecute).ToArray()));
         }
     }
 }
