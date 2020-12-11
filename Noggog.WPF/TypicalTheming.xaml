@@ -377,6 +377,38 @@
     </Style>
 
     <Style
+        x:Key="Noggog.Styles.TextBoxStyleless"
+        BasedOn="{StaticResource Noggog.Styles.TextBox}"
+        TargetType="TextBox">
+        <Setter Property="Background" Value="{x:Null}" />
+        <Setter Property="Controls:ControlsHelper.FocusBorderBrush" Value="{x:Null}" />
+        <Setter Property="Controls:ControlsHelper.MouseOverBorderBrush" Value="{x:Null}" />
+        <Setter Property="BorderBrush" Value="{x:Null}" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="Controls:ControlsHelper.CornerRadius" Value="0" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type TextBox}">
+                    <Grid>
+                        <Grid x:Name="PART_InnerGrid">
+                            <ScrollViewer Grid.Row="1" Grid.Column="0"
+                                x:Name="PART_ContentHost"
+                                Margin="0"
+                                Padding="{TemplateBinding Padding}"
+                                VerticalAlignment="Stretch"
+                                Background="{x:Null}"
+                                BorderThickness="0"
+                                IsTabStop="False"
+                                SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+                        </Grid>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style
         x:Key="Noggog.Styles.TextBox.ErrorState"
         BasedOn="{StaticResource Noggog.Styles.TextBox}"
         TargetType="TextBox">
