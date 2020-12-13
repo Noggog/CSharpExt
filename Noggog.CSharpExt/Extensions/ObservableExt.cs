@@ -61,6 +61,14 @@ namespace Noggog
             return source.Select<T, R>(x => x);
         }
 
+        public static IObservable<R> WhereCastable<T, R>(this IObservable<T> source)
+            where T : class
+            where R : class
+        {
+            return source.Select(x => x as R)
+                .NotNull();
+        }
+
         public static IObservable<Unit> SelectTask<T>(this IObservable<T> source, Func<T, Task> task)
         {
             return source
@@ -579,6 +587,32 @@ namespace Noggog
         {
             return Observable.CombineLatest(observables)
                 .Select(l => l.All(x => x));
+        }
+
+        public static IObservable<IChangeSet<TRet, TKey>> WhereCastable<TObj, TKey, TRet>(this IObservable<IChangeSet<TObj, TKey>> obs)
+            where TRet : class, TObj
+        {
+            return obs.Filter(x => x is TRet)
+                .Transform(x => (TRet)x!);
+        }
+
+        public static IObservable<IChangeSet<TRet>> WhereCastable<TObj, TRet>(this IObservable<IChangeSet<TObj>> obs)
+            where TRet : class, TObj
+        {
+            return obs.Filter(x => x is TRet)
+                .Transform(x => (TRet)x!);
+        }
+
+        public static IObservable<IChangeSet<TObj, TKey>> NotNull<TObj, TKey>(this IObservable<IChangeSet<TObj?, TKey>> obs)
+            where TObj : class
+        {
+            return obs.Filter(x => x != null)!;
+        }
+
+        public static IObservable<IChangeSet<TObj>> NotNull<TObj>(this IObservable<IChangeSet<TObj?>> obs)
+            where TObj : class
+        {
+            return obs.Filter(x => x != null)!;
         }
     }
 }
