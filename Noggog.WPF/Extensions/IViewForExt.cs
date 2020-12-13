@@ -13,7 +13,7 @@ namespace Noggog.WPF
 {
     public static class IViewForExt
     {
-        public static IReactiveBinding<TView, TViewModel, TProp> OneWayBindStrict<TViewModel, TView, TProp>(
+        public static IReactiveBinding<TView, TProp> OneWayBindStrict<TViewModel, TView, TProp>(
             this TView view,
             TViewModel? viewModel,
             Expression<Func<TViewModel, TProp>> vmProperty,
@@ -27,7 +27,7 @@ namespace Noggog.WPF
                 viewProperty: viewProperty);
         }
 
-        public static IReactiveBinding<TView, TViewModel, TOut> OneWayBindStrict<TViewModel, TView, TProp, TOut>(
+        public static IReactiveBinding<TView, TOut> OneWayBindStrict<TViewModel, TView, TProp, TOut>(
             this TView view,
             TViewModel? viewModel,
             Expression<Func<TViewModel, TProp>> vmProperty,
@@ -43,7 +43,7 @@ namespace Noggog.WPF
                 selector: selector);
         }
 
-        public static IReactiveBinding<TView, TViewModel, (object? view, bool isViewModel)> BindStrict<TViewModel, TView, TProp>(
+        public static IReactiveBinding<TView, (object? view, bool isViewModel)> BindStrict<TViewModel, TView, TProp>(
             this TView view,
             TViewModel? viewModel,
             Expression<Func<TViewModel, TProp>> vmProperty,
@@ -57,7 +57,7 @@ namespace Noggog.WPF
                 viewProperty: viewProperty);
         }
 
-        public static IReactiveBinding<TView, TViewModel, (object? view, bool isViewModel)> BindStrict<TViewModel, TView, TVMProp, TVProp>(
+        public static IReactiveBinding<TView, (object? view, bool isViewModel)> BindStrict<TViewModel, TView, TVMProp, TVProp>(
             this TView view,
             TViewModel? viewModel,
             Expression<Func<TViewModel, TVMProp>> vmProperty,

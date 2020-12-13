@@ -141,16 +141,15 @@ namespace Noggog.WPF
 
         private static IObservedChange<object?, object?> ObservedChangeFor(Expression expression, IObservedChange<object?, object?> sourceChange)
         {
-            var propertyName = expression.GetMemberInfo().Name;
             if (sourceChange.Value == null)
             {
-                return new ObservedChange<object?, object>(sourceChange.Value, expression);
+                return new ObservedChange<object?, object?>(sourceChange.Value, expression, default);
             }
 
             // expression is always a simple expression
             Reflection.TryGetValueForPropertyChain(out object value, sourceChange.Value, new[] { expression });
 
-            return new ObservedChange<object, object>(sourceChange.Value, expression, value);
+            return new ObservedChange<object?, object?>(sourceChange.Value, expression, value);
         }
 
         private static IObservable<IObservedChange<object?, object?>> NestedObservedChanges(Expression expression, IObservedChange<object?, object?> sourceChange, bool beforeChange, bool suppressWarnings)
@@ -172,7 +171,7 @@ namespace Noggog.WPF
 
         private static IObservable<IObservedChange<object, object>> NotifyForProperty(object sender, Expression expression, bool beforeChange, bool suppressWarnings)
         {
-            var propertyName = expression.GetMemberInfo().Name;
+            var propertyName = expression.GetMemberInfo()!.Name;
             var result = notifyFactoryCache.Get((sender.GetType(), propertyName, beforeChange));
 
             if (result == null)

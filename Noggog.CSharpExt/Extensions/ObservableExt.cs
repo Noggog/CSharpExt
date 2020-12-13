@@ -522,6 +522,7 @@ namespace Noggog
         /// Removes outdated key events from a changeset, only leaving the last relevent change for each key.
         /// </summary>
         public static IObservable<IChangeSet<TObject, TKey>> EnsureUniqueChanges<TObject, TKey>(this IObservable<IChangeSet<TObject, TKey>> source)
+            where TKey : notnull
         {
             return source.Select(EnsureUniqueChanges);
         }
@@ -530,6 +531,7 @@ namespace Noggog
         /// Removes outdated key events from a changeset, only leaving the last relevent change for each key.
         /// </summary>
         public static IChangeSet<TObject, TKey> EnsureUniqueChanges<TObject, TKey>(this IChangeSet<TObject, TKey> input)
+            where TKey : notnull
         {
             var changes = input
                 .GroupBy(kvp => kvp.Key)
@@ -541,6 +543,7 @@ namespace Noggog
         }
 
         internal static Optional<Change<TObject, TKey>> Reduce<TObject, TKey>(Optional<Change<TObject, TKey>> previous, Change<TObject, TKey> next)
+            where TKey : notnull
         {
             if (!previous.HasValue)
             {

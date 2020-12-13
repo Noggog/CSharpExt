@@ -55,7 +55,26 @@ namespace Noggog.WPF
             out ObservableAsPropertyHelper<TRet> result,
             bool deferSubscription = false)
         {
-            source.ToProperty(vm, property, out result, initialValue, deferSubscription, RxApp.MainThreadScheduler)
+            OAPHCreationHelperMixin.ToProperty(
+                target: source, 
+                source: vm,
+                property: property, 
+                getInitialValue: () => initialValue,
+                result: out result, 
+                deferSubscription: deferSubscription,
+                scheduler: RxApp.MainThreadScheduler)
+                .DisposeWith(vm.CompositeDisposable);
+        }
+
+        public static void ToGuiProperty<TRet>(
+            this IObservable<TRet> source,
+            ViewModel vm,
+            string property,
+            Func<TRet> getInitialValue,
+            out ObservableAsPropertyHelper<TRet> result,
+            bool deferSubscription = false)
+        {
+            source.ToProperty(source: vm, property: property, result: out result, getInitialValue: getInitialValue, deferSubscription: deferSubscription, scheduler: RxApp.MainThreadScheduler)
                 .DisposeWith(vm.CompositeDisposable);
         }
 
@@ -67,7 +86,7 @@ namespace Noggog.WPF
             bool deferSubscription = false)
             where TRet : struct
         {
-            source.ToProperty(vm, property, out result, initialValue: default, deferSubscription, RxApp.MainThreadScheduler)
+            source.ToProperty(vm, property, out result, getInitialValue: () => default, deferSubscription, RxApp.MainThreadScheduler)
                 .DisposeWith(vm.CompositeDisposable);
         }
 
@@ -99,6 +118,7 @@ namespace Noggog.WPF
         }
 
         public static IObservableCollection<TObj> ToObservableCollection<TObj, TKey>(this IObservable<IChangeSet<TObj, TKey>> changeSet, CompositeDisposable disposable)
+            where TKey : notnull
         {
             ObservableCollectionExtended<TObj> display = new ObservableCollectionExtended<TObj>();
             changeSet
