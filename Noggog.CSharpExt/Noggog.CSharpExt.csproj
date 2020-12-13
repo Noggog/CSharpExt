@@ -40,7 +40,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Convenience Classes\" />
     <Folder Include="Properties\" />
   </ItemGroup>
 
