@@ -9,7 +9,6 @@ using DynamicData.Binding;
 using System.Windows.Input;
 using System.Reactive;
 using System.Windows.Controls;
-using System.Diagnostics.CodeAnalysis;
 #nullable enable
 
 namespace Noggog.WPF
