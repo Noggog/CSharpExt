@@ -18,7 +18,7 @@ namespace Noggog.WPF
         {
             Command = cmd;
             _CanExecute = cmd.CanExecute
-                .ToProperty(this, nameof(CanExecute), false);
+                .ToProperty(this, nameof(CanExecute), initialValue: false);
         }
 
         public static CommandVM Factory(ReactiveCommand<Unit, Unit> cmd)

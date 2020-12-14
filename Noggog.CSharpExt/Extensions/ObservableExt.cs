@@ -593,6 +593,7 @@ namespace Noggog
         }
 
         public static IObservable<IChangeSet<TRet, TKey>> WhereCastable<TObj, TKey, TRet>(this IObservable<IChangeSet<TObj, TKey>> obs)
+            where TKey : notnull
             where TRet : class, TObj
         {
             return obs.Filter(x => x is TRet)
@@ -607,6 +608,7 @@ namespace Noggog
         }
 
         public static IObservable<IChangeSet<TObj, TKey>> NotNull<TObj, TKey>(this IObservable<IChangeSet<TObj?, TKey>> obs)
+            where TKey : notnull
             where TObj : class
         {
             return obs.Filter(x => x != null)!;
