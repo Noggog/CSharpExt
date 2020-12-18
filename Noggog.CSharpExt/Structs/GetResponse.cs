@@ -39,7 +39,9 @@ namespace Noggog
         public bool Equals(GetResponse<T> other)
         {
             return this.Succeeded == other.Succeeded
-                && object.Equals(this.Value, other.Value);
+                && object.Equals(this.Value, other.Value)
+                && string.Equals(_reason, other.Reason)
+                && object.Equals(Exception, other.Exception);
         }
 
         public override bool Equals(object? obj)
@@ -53,6 +55,8 @@ namespace Noggog
             HashCode hash = new HashCode();
             hash.Add(Value);
             hash.Add(Succeeded);
+            hash.Add(_reason);
+            hash.Add(Exception);
             return hash.ToHashCode();
         }
 
