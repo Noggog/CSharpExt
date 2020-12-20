@@ -1,3 +1,4 @@
+using DynamicData;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
@@ -61,6 +62,44 @@ namespace Noggog
                     break;
                 case Noggog.SetTo.SetExisting:
                     cache.Set(items);
+                    break;
+                default:
+                    throw new NotImplementedException();
+            }
+        }
+
+        public static void SetTo<V, K>(this ISourceCache<V, K> cache, IEnumerable<V> items)
+            where K : notnull
+        {
+            cache.Clear();
+            cache.AddOrUpdate(items);
+        }
+
+        public static void SetTo<V, K>(this ISourceCache<V, K> cache, Func<V, K> keySelector, IEnumerable<V> items, SetTo setTo = Noggog.SetTo.Whitewash)
+            where K : notnull
+        {
+            if (setTo == Noggog.SetTo.Whitewash)
+            {
+                SetTo(cache, items);
+                return;
+            }
+            var toRemove = new HashSet<K>(cache.Keys);
+            var keyPairs = items.Select(i => new KeyValuePair<K, V>(keySelector(i), i)).ToArray();
+            toRemove.Remove(keyPairs.Select(kv => kv.Key));
+            cache.Remove(toRemove);
+            switch (setTo)
+            {
+                case Noggog.SetTo.SkipExisting:
+                    foreach (var item in keyPairs)
+                    {
+                        if (!cache.Lookup(item.Key).HasValue)
+                        {
+                            cache.AddOrUpdate(item.Value);
+                        }
+                    }
+                    break;
+                case Noggog.SetTo.SetExisting:
+                    cache.AddOrUpdate(items);
                     break;
                 default:
                     throw new NotImplementedException();
