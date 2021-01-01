@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Reactive.Disposables;
@@ -25,12 +25,11 @@ namespace Noggog.Utility
         {
         }
 
-        public static ProcessWrapper Start(
+        public static ProcessWrapper Create(
             ProcessStartInfo startInfo,
             CancellationToken? cancel = null,
             bool hideWindow = true,
-            bool hookOntoOutput = true,
-            bool childProcess = true)
+            bool hookOntoOutput = true)
         {
             var process = new Process();
             if (hideWindow)
@@ -130,7 +129,7 @@ namespace Noggog.Utility
             return ret;
         }
 
-        public async Task<int> Start()
+        public async Task<int> Run()
         {
             _process.Start();
             if (_hookingOutput)
