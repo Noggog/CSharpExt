@@ -1,10 +1,7 @@
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -29,7 +26,8 @@ namespace Noggog.Utility
             ProcessStartInfo startInfo,
             CancellationToken? cancel = null,
             bool hideWindow = true,
-            bool hookOntoOutput = true)
+            bool hookOntoOutput = true,
+            bool killWithParent = true)
         {
             var process = new Process();
             if (hideWindow)
@@ -132,6 +130,7 @@ namespace Noggog.Utility
         public async Task<int> Run()
         {
             _process.Start();
+            ChildProcessTracker.AddProcess(_process);
             if (_hookingOutput)
             {
                 _process.BeginErrorReadLine();
