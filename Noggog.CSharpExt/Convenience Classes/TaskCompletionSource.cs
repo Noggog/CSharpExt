@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-#if NET_5
+#if NET5_0
 #else
 namespace Noggog
 {
