@@ -166,12 +166,12 @@ namespace Noggog
             return decorator(src);
         }
 
-        public static bool IsNullOrWhitespace(this string? src)
+        public static bool IsNullOrWhitespace([NotNullWhen(false)] this string? src)
         {
             return string.IsNullOrWhiteSpace(src);
         }
 
-        public static bool IsNullOrEmpty(this string? src)
+        public static bool IsNullOrEmpty([NotNullWhen(false)] this string? src)
         {
             return string.IsNullOrEmpty(src);
         }
