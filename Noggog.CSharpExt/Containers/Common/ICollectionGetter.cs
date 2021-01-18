@@ -8,8 +8,8 @@ using System.Threading.Tasks;
 namespace Noggog
 {
     /// <summary>
-    /// A readonly interface of ICollection<T>.
-    /// ICollection<T> itself will not implement this, which makes some APIs a bit tricky.
+    /// A readonly interface of ICollection.
+    /// ICollection itself will not implement this, which makes some APIs a bit tricky.
     /// </summary>
     /// <typeparam name="T">Type of object the collection contains</typeparam>
     public interface ICollectionGetter<T> : IEnumerable<T>, IEnumerable
