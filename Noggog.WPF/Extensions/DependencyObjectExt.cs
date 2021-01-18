@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Text;
@@ -27,6 +27,26 @@ namespace Noggog.WPF
                 return ancestor;
             }
             return default;
+        }
+
+        public static bool TryGetChildOfType<TObj>(this DependencyObject depObj, [MaybeNullWhen(false)] out TObj foundObj)
+            where TObj : DependencyObject
+        {
+            foundObj = GetChildOfType<TObj>(depObj);
+            return foundObj != null;
+        }
+
+        public static TObj? GetChildOfType<TObj>(this DependencyObject depObj)
+            where TObj : DependencyObject
+        {
+            for (int i = 0; i < VisualTreeHelper.GetChildrenCount(depObj); i++)
+            {
+                var child = VisualTreeHelper.GetChild(depObj, i);
+
+                var result = (child as TObj) ?? GetChildOfType<TObj>(child);
+                if (result != null) return result;
+            }
+            return null;
         }
     }
 }
