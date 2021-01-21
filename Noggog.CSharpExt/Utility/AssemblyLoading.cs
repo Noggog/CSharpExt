@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.Loader;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Noggog.Utility
@@ -69,6 +70,20 @@ namespace Noggog.Utility
                 // right away, GC has to kick in later to collect all the stuff.
                 alc.Unload();
             }
+        }
+
+        // Unloading happens on GC, so have to run GC several times after unload
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        public static TRet ExecuteAndForceUnload<TRet>(string assemblyPath, Func<Assembly, TRet> getter)
+        {
+            WeakReference hostAlcWeakRef;
+            var ret = ExecuteAndUnload(assemblyPath, out hostAlcWeakRef, getter);
+            for (int i = 0; hostAlcWeakRef.IsAlive && (i < 10); i++)
+            {
+                GC.Collect();
+                GC.WaitForPendingFinalizers();
+            }
+            return ret;
         }
     }
 }
