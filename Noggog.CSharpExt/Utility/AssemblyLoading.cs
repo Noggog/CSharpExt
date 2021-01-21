@@ -1,6 +1,7 @@
 #if NET5_0
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
@@ -48,10 +49,10 @@ namespace Noggog.Utility
         // instances may get lifetime extended beyond the point when the plugin is expected to be
         // unloaded.
         [MethodImpl(MethodImplOptions.NoInlining)]
-        public static TRet ExecuteAndUnload<TRet>(string assemblyPath, out WeakReference alcWeakRef, Func<Assembly, TRet> getter)
+        public static TRet ExecuteAndUnload<TRet>(string assemblyPath, out WeakReference alcWeakRef, Func<Assembly, TRet> getter, string? contextNickname = null)
         {
             // Create the unloadable HostAssemblyLoadContext
-            var alc = new HostAssemblyLoadContext(assemblyPath);
+            var alc = new AssemblyLoadContext(contextNickname ?? Path.GetRandomFileName(), isCollectible: true);
 
             // Create a weak reference to the AssemblyLoadContext that will allow us to detect
             // when the unload completes.
