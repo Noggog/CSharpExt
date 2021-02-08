@@ -7,6 +7,7 @@ using System.Globalization;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Runtime.InteropServices;
 
 namespace Noggog
 {
@@ -336,6 +337,12 @@ namespace Noggog
                 return (byte)(origValue & ~flagToSet);
             }
         }
+
+        public static IEnumerable<TEnum> EnumerateContainedFlags<TEnum>(this TEnum flags, bool includeUndefined = true)
+            where TEnum : struct, Enum
+        {
+            return EnumExt<TEnum>.EnumerateContainedFlags(flags, includeUndefined: includeUndefined);
+        }
     }
 
     public static class EnumExt<T>
@@ -362,7 +369,8 @@ namespace Noggog
             return false;
         }
 
-        public static readonly Func<long, T> Convert = GenerateConverter();
+        private static readonly Lazy<Func<long, T>> _convert = new Lazy<Func<long, T>>(GenerateConverter);
+        public static Func<long, T> Convert => _convert.Value;
         static Func<long, T> GenerateConverter()
         {
             var parameter = Expression.Parameter(typeof(long));
@@ -370,6 +378,22 @@ namespace Noggog
                 Expression.Convert(parameter, typeof(T)),
                 parameter);
             return dynamicMethod.Compile();
+        }
+
+        public static readonly int Bits = Marshal.SizeOf(Enum.GetUnderlyingType(typeof(T))) * 8;
+        public static readonly uint MaxSize = (uint)(Math.Pow(2, Bits) - 1);
+        public static IEnumerable<T> EnumerateContainedFlags(T flags, bool includeUndefined = true)
+        {
+            ulong flagsLong = System.Convert.ToUInt64(flags);
+            for (ulong i = 1; ; i <<= 1)
+            {
+                if ((flagsLong & i) > 0
+                    && (includeUndefined || Enum.IsDefined(typeof(T), i)))
+                {
+                    yield return (T)Enum.ToObject(typeof(T), i);
+                }
+                if (i >= MaxSize) break;
+            }
         }
     }
 
