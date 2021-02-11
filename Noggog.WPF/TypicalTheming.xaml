@@ -578,6 +578,10 @@
                             <Setter TargetName="DisabledVisualElement" Property="Opacity" Value="0.6" />
                         </Trigger>
                         <Trigger Property="IsFocused" Value="True">
+                            <Setter TargetName="PART_BackgroundCornerFillIn" Property="BorderBrush" Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=(Controls:ControlsHelper.FocusBorderBrush)}" />
+                            <Setter TargetName="PART_BackgroundCornerFillIn" Property="Background" Value="{DynamicResource TextBoxFocusBackgroundBrush}" />
+                            <Setter TargetName="PART_RightSideErrorBlockShadow" Property="BorderBrush" Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=(Controls:ControlsHelper.FocusBorderBrush)}" />
+                            <Setter TargetName="PART_RightSideErrorBlockShadow" Property="Background" Value="{DynamicResource TextBoxFocusBackgroundBrush}" />
                             <Setter TargetName="PART_FloatingMessage" Property="Foreground" Value="{DynamicResource MahApps.Brushes.Accent}" />
                             <Setter TargetName="PART_FloatingMessage" Property="Opacity" Value="1" />
                         </Trigger>
