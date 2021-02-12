@@ -79,7 +79,6 @@ namespace Noggog.WPF
         public static IObservable<DragEventParams<TType>> ListBoxDrops<TType>(
             ListBox control,
             Action<ListBoxItem, Point> dragBegin)
-            where TType : class
         {
             return ConstructParamExtraction<TType>(ConstructBeginDrag(control, dragBegin))
                 .Replay(1)
@@ -90,7 +89,6 @@ namespace Noggog.WPF
             ListBox control,
             bool onlyWithinSameBox = true,
             Func<object, DragEventArgs, bool>? filter = null)
-            where TType : class
         {
             return Observable.Create<DragEventParams<TType>>((obs) =>
                 {
@@ -109,7 +107,6 @@ namespace Noggog.WPF
         }
 
         private static IObservable<DragEventParams<TType>> ConstructParamExtraction<TType>(IObservable<DragEventArgs> args)
-            where TType : class
         {
             return args
                 .Select(e =>
@@ -117,9 +114,19 @@ namespace Noggog.WPF
                     var ret = new DragEventParams<TType>(e);
                     if (e.Data.GetDataPresent(SourceVmKey))
                     {
+                        TType vmTarget;
+                        var rawData = e.Data.GetData(SourceVmKey);
+                        if (rawData is TType)
+                        {
+                            vmTarget = (TType)rawData;
+                        }
+                        else
+                        {
+                            vmTarget = default;
+                        }
                         ret = ret with
                         {
-                            Vm = e.Data.GetData(SourceVmKey) as TType
+                            Vm = vmTarget
                         };
                     }
                     if (e.Data.GetDataPresent(SourceListControlKey))
@@ -138,7 +145,6 @@ namespace Noggog.WPF
             Func<IList<TType>?> vmListGetter,
             bool onlyWithinSameBox = true,
             Func<object, DragEventArgs, bool>? filter = null)
-            where TType : class
         {
             return ListBoxDrops<TType>(
                 control,
@@ -172,7 +178,6 @@ namespace Noggog.WPF
             Func<ISourceList<TType>?> vmListGetter,
             bool onlyWithinSameBox = true,
             Func<object, DragEventArgs, bool>? filter = null)
-            where TType : class
         {
             return ListBoxDrops<TType>(
                 control,
@@ -206,7 +211,6 @@ namespace Noggog.WPF
             Func<ObservableCollection<TType>?> vmListGetter,
             bool onlyWithinSameBox = true,
             Func<object, DragEventArgs, bool>? filter = null)
-            where TType : class
         {
             return ListBoxDrops<TType>(
                 control,
@@ -239,7 +243,6 @@ namespace Noggog.WPF
             ListBox control,
             Func<IList<TType>?> vmListGetter,
             Action<ListBoxItem, Point> dragBegin)
-            where TType : class
         {
             return ListBoxDrops<TType>(control, dragBegin)
                 .Subscribe(e =>
@@ -269,7 +272,6 @@ namespace Noggog.WPF
             ListBox control,
             Func<ISourceList<TType>?> vmListGetter,
             Action<ListBoxItem, Point> dragBegin)
-            where TType : class
         {
             return ListBoxDrops<TType>(control, dragBegin)
                 .Subscribe(e =>
@@ -299,7 +301,6 @@ namespace Noggog.WPF
             ListBox control,
             Func<ObservableCollection<TType>?> vmListGetter,
             Action<ListBoxItem, Point> dragBegin)
-            where TType : class
         {
             return ListBoxDrops<TType>(control, dragBegin)
                 .Subscribe(e =>
