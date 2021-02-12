@@ -25,7 +25,7 @@ namespace Noggog.WPF
         public override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
-            _templateDisposable.Dispose();
+            _templateDisposable.Clear();
         }
     }
 }
