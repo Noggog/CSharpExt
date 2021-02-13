@@ -17,7 +17,7 @@ namespace Noggog.WPF
             {
                 compareTo = p;
             }
-            else if (parameter is string str && str.ToUpper().Equals("FALSE"))
+            else if (parameter is string str && str.Equals("FALSE", StringComparison.OrdinalIgnoreCase))
             {
                 compareTo = false;
             }
