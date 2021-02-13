@@ -1274,6 +1274,7 @@
     <Color x:Key="FocusedBackground">#FF080808</Color>
     <Color x:Key="GreenBackground">#295c23</Color>
     <Color x:Key="Success">#52b545</Color>
+    <Color x:Key="Passive">#666666</Color>
 
     <Color x:Key="Error">#e83a40</Color>
     <Color x:Key="ErrorLight">#e65358</Color>
@@ -1282,30 +1283,102 @@
     <Color x:Key="ErrorPressed">#d92b32</Color>
     <Color x:Key="Warning">#ffc400</Color>
     <Color x:Key="WarningDark">#967400</Color>
+    <Color x:Key="ProcessingNeon">#00ffd5</Color>
+    <Color x:Key="Processing">#21b59f</Color>
 
     <!--  Brushes  -->
-    <SolidColorBrush x:Key="ForegroundDarkBrush" Color="{StaticResource MahApps.Colors.Gray3}" />
-    <SolidColorBrush x:Key="BackgroundBrush" Color="{StaticResource MahApps.Colors.ThemeBackground}" />
-    <SolidColorBrush x:Key="BackgroundLightBrush" Color="#323232" />
-    <SolidColorBrush x:Key="BackgroundDarkBrush" Color="#202020" />
-    <SolidColorBrush x:Key="YellowBrush" Color="{StaticResource Yellow}" />
-    <SolidColorBrush x:Key="YellowDarkBrush" Color="{StaticResource YellowDark}" />
-    <SolidColorBrush x:Key="GreenBrush" Color="{StaticResource Green}" />
-    <SolidColorBrush x:Key="GreenBackgroundBrush" Color="{StaticResource GreenBackground}" />
-    <SolidColorBrush x:Key="RedBrush" Color="{StaticResource Red}" />
-    <SolidColorBrush x:Key="RedBackgroundBrush" Color="{StaticResource RedBackground}" />
-    <SolidColorBrush x:Key="WarningBrush" Color="{StaticResource Warning}" />
-    <SolidColorBrush x:Key="WarningDarkBrush" Color="{StaticResource WarningDark}" />
-    <SolidColorBrush x:Key="SuccessBrush" Color="{StaticResource Success}" />
-    <SolidColorBrush x:Key="ErrorBrush" Color="{StaticResource Error}" />
-    <SolidColorBrush x:Key="ErrorLightBrush" Color="{StaticResource PinkRedForeground}" />
-    <SolidColorBrush x:Key="ErrorHoverBrush" Color="{StaticResource ErrorHover}" />
-    <SolidColorBrush x:Key="ErrorPressedBrush" Color="{StaticResource ErrorPressed}" />
-    <SolidColorBrush x:Key="ErrorBackgroundBrush" Color="{StaticResource RedBackground}" />
-    <SolidColorBrush x:Key="ControlFocusBrush" Color="{StaticResource FocusedBackground}" />
-    <SolidColorBrush x:Key="ButtonNakedIconOverForegroundBrush" Color="{StaticResource MahApps.Colors.ThemeForeground}" />
-    <SolidColorBrush x:Key="ButtonNakedIconForegroundBrush" Color="{StaticResource MahApps.Colors.Gray6}" />
-    <SolidColorBrush x:Key="ButtonNakedIconPressedForegroundBrush" Color="{StaticResource MahApps.Colors.AccentBase}" />
+    <SolidColorBrush
+        x:Key="ForegroundDarkBrush"
+        options:Freeze="True"
+        Color="{StaticResource MahApps.Colors.Gray3}" />
+    <SolidColorBrush
+        x:Key="BackgroundBrush"
+        options:Freeze="True"
+        Color="{StaticResource MahApps.Colors.ThemeBackground}" />
+    <SolidColorBrush
+        x:Key="BackgroundLightBrush"
+        options:Freeze="True"
+        Color="#323232" />
+    <SolidColorBrush
+        x:Key="BackgroundDarkBrush"
+        options:Freeze="True"
+        Color="#202020" />
+    <SolidColorBrush
+        x:Key="PassiveBrush"
+        options:Freeze="True"
+        Color="{StaticResource Passive}" />
+    <SolidColorBrush
+        x:Key="YellowBrush"
+        options:Freeze="True"
+        Color="{StaticResource Yellow}" />
+    <SolidColorBrush
+        x:Key="YellowDarkBrush"
+        options:Freeze="True"
+        Color="{StaticResource YellowDark}" />
+    <SolidColorBrush
+        x:Key="GreenBrush"
+        options:Freeze="True"
+        Color="{StaticResource Green}" />
+    <SolidColorBrush
+        x:Key="GreenBackgroundBrush"
+        options:Freeze="True"
+        Color="{StaticResource GreenBackground}" />
+    <SolidColorBrush
+        x:Key="RedBrush"
+        options:Freeze="True"
+        Color="{StaticResource Red}" />
+    <SolidColorBrush
+        x:Key="RedBackgroundBrush"
+        options:Freeze="True"
+        Color="{StaticResource RedBackground}" />
+    <SolidColorBrush
+        x:Key="WarningBrush"
+        options:Freeze="True"
+        Color="{StaticResource Warning}" />
+    <SolidColorBrush
+        x:Key="WarningDarkBrush"
+        options:Freeze="True"
+        Color="{StaticResource WarningDark}" />
+    <SolidColorBrush
+        x:Key="SuccessBrush"
+        options:Freeze="True"
+        Color="{StaticResource Success}" />
+    <SolidColorBrush
+        x:Key="ErrorBrush"
+        options:Freeze="True"
+        Color="{StaticResource Error}" />
+    <SolidColorBrush
+        x:Key="ErrorLightBrush"
+        options:Freeze="True"
+        Color="{StaticResource PinkRedForeground}" />
+    <SolidColorBrush
+        x:Key="ErrorHoverBrush"
+        options:Freeze="True"
+        Color="{StaticResource ErrorHover}" />
+    <SolidColorBrush
+        x:Key="ErrorPressedBrush"
+        options:Freeze="True"
+        Color="{StaticResource ErrorPressed}" />
+    <SolidColorBrush
+        x:Key="ErrorBackgroundBrush"
+        options:Freeze="True"
+        Color="{StaticResource RedBackground}" />
+    <SolidColorBrush
+        x:Key="ControlFocusBrush"
+        options:Freeze="True"
+        Color="{StaticResource FocusedBackground}" />
+    <SolidColorBrush
+        x:Key="ButtonNakedIconOverForegroundBrush"
+        options:Freeze="True"
+        Color="{StaticResource MahApps.Colors.ThemeForeground}" />
+    <SolidColorBrush
+        x:Key="ButtonNakedIconForegroundBrush"
+        options:Freeze="True"
+        Color="{StaticResource MahApps.Colors.Gray6}" />
+    <SolidColorBrush
+        x:Key="ButtonNakedIconPressedForegroundBrush"
+        options:Freeze="True"
+        Color="{StaticResource MahApps.Colors.AccentBase}" />
     <SolidColorBrush
         x:Key="MahApps.Brushes.Control.Background"
         options:Freeze="True"
@@ -1344,4 +1417,12 @@
         x:Key="ControlsDisabledBrush"
         options:Freeze="True"
         Color="#35FFFFFF" />
+    <SolidColorBrush
+        x:Key="ProcessingNeonBrush"
+        options:Freeze="True"
+        Color="{StaticResource ProcessingNeon}" />
+    <SolidColorBrush
+        x:Key="ProcessingBrush"
+        options:Freeze="True"
+        Color="{StaticResource Processing}" />
 </ResourceDictionary>

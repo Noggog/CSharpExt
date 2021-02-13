@@ -1,8 +1,10 @@
-<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:local="clr-namespace:Noggog.WPF">
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="clr-namespace:Noggog.WPF">
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="/Noggog.WPF;component/TypicalTheming.xaml" />
         <ResourceDictionary Source="/Noggog.WPF;component/Converters/Converters.xaml" />
+        <ResourceDictionary Source="/Noggog.WPF;component/Controls/Controls.xaml" />
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>
