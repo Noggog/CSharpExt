@@ -8,28 +8,22 @@ namespace Noggog.WPF.Brushes
 {
     public static class Constants
     {
-        public const string ForegroundDark = "ForegroundDarkBrush";
-        public const string Background = "BackgroundBrush";
-        public const string BackgroundLight = "BackgroundLightBrush";
-        public const string BackgroundDark = "BackgroundDarkBrush";
-        public const string Passive = "PassiveBrush";
-        public const string Yellow = "YellowBrush";
-        public const string YellowDark = "YellowDarkBrush";
-        public const string Green = "GreenBrush";
-        public const string GreenBackground = "GreenBackgroundBrush";
-        public const string Red = "RedBrush";
-        public const string RedBackground = "RedBackgroundBrush";
-        public const string Warning = "WarningBrush";
-        public const string WarningDark = "WarningDarkBrush";
-        public const string Success = "SuccessBrush";
-        public const string Error = "ErrorBrush";
-        public const string ErrorLight = "ErrorLightBrush";
-        public const string ErrorPressed = "ErrorPressedBrush";
-        public const string ErrorBackground = "ErrorBackgroundBrush";
-        public const string ControlFocus = "ControlFocusBrush";
-        public const string SubtleBorder = "SubtleBorderBrush";
-        public const string ControlsDisabled = "ControlsDisabledBrush";
-        public const string ProcessingNeon = "ProcessingNeonBrush";
-        public const string Processing = "ProcessingBrush";
+        public const string PassiveForeground = "Noggog.Brushes.Passive.Foreground";
+        public const string YellowForeground = "Noggog.Brushes.Yellow.Foreground";
+        public const string YellowDark = "Noggog.Brushes.Yellow.Dark";
+        public const string GreenForeground = "Noggog.Brushes.Green.Foreground";
+        public const string GreenBackground = "Noggog.Brushes.Green.Background";
+        public const string RedForeground = "Noggog.Brushes.Red.Foreground";
+        public const string RedBackground = "Noggog.Brushes.Green.Background";
+        public const string WarningForeground = "Noggog.Brushes.Warning.Foreground";
+        public const string WarningDark = "Noggog.Brushes.Warning.Dark";
+        public const string SuccessForeground = "Noggog.Brushes.Success.Foreground";
+        public const string ErrorForeground = "Noggog.Brushes.Error.Foreground";
+        public const string ErrorLight = "Noggog.Brushes.Error.Light";
+        public const string ErrorPressed = "Noggog.Brushes.Error.Pressed";
+        public const string ErrorBackground = "Noggog.Brushes.Error.Background";
+        public const string SelectedNeon = "Noggog.Brushes.Selected.Neon";
+        public const string SelectedForeground = "Noggog.Brushes.Selected.Foreground";
+        public const string SelectedBackground = "Noggog.Brushes.Selected.Background";
     }
 }

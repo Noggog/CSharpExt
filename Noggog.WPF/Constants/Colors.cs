@@ -8,24 +8,22 @@ namespace Noggog.WPF.Colors
 {
     public static class Constants
     {
-        public const string Yellow = "Yellow";
-        public const string YellowDark = "YellowDark";
-        public const string Red = "Red";
-        public const string RedBackground = "RedBackground";
-        public const string PinkRedForeground = "PinkRedForeground";
-        public const string Green = "Green";
-        public const string FocusedBackground = "FocusedBackground";
-        public const string GreenBackground = "GreenBackground";
-        public const string Success = "Success";
-        public const string Passive = "Passive";
-        public const string Error = "Error";
-        public const string ErrorLight = "ErrorLight";
-        public const string ErrorDark = "ErrorDark";
-        public const string ErrorHover = "ErrorHover";
-        public const string ErrorPressed = "ErrorPressed";
-        public const string Warning = "Warning";
-        public const string WarningDark = "WarningDark";
-        public const string ProcessingNeon = "ProcessingNeon";
-        public const string Processing = "Processing";
+        public const string PassiveForeground = "Noggog.Colors.Passive.Foreground";
+        public const string YellowForeground = "Noggog.Colors.Yellow.Foreground";
+        public const string YellowDark = "Noggog.Colors.Yellow.Dark";
+        public const string GreenForeground = "Noggog.Colors.Green.Foreground";
+        public const string GreenBackground = "Noggog.Colors.Green.Background";
+        public const string RedForeground = "Noggog.Colors.Red.Foreground";
+        public const string RedBackground = "Noggog.Colors.Green.Background";
+        public const string WarningForeground = "Noggog.Colors.Warning.Foreground";
+        public const string WarningDark = "Noggog.Colors.Warning.Dark";
+        public const string SuccessForeground = "Noggog.Colors.Success.Foreground";
+        public const string ErrorForeground = "Noggog.Colors.Error.Foreground";
+        public const string ErrorLight = "Noggog.Colors.Error.Light";
+        public const string ErrorPressed = "Noggog.Colors.Error.Pressed";
+        public const string ErrorBackground = "Noggog.Colors.Error.Background";
+        public const string SelectedNeon = "Noggog.Colors.Selected.Neon";
+        public const string SelectedForeground = "Noggog.Colors.Selected.Foreground";
+        public const string SelectedBackground = "Noggog.Colors.Selected.Background";
     }
 }

@@ -319,7 +319,7 @@
                         </Trigger>
                         <Trigger Property="IsFocused" Value="True">
                             <Setter TargetName="Base" Property="BorderBrush" Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=(Controls:ControlsHelper.FocusBorderBrush)}" />
-                            <Setter TargetName="Base" Property="Background" Value="{DynamicResource TextBoxFocusBackgroundBrush}" />
+                            <Setter TargetName="Base" Property="Background" Value="{DynamicResource Noggog.Brushes.Focused.Background}" />
                             <Setter TargetName="PART_FloatingMessage" Property="Foreground" Value="{DynamicResource MahApps.Brushes.Accent}" />
                             <Setter TargetName="PART_FloatingMessage" Property="Opacity" Value="1" />
                         </Trigger>
@@ -420,7 +420,7 @@
                         </Grid.ColumnDefinitions>
                         <Rectangle Grid.Column="0" Grid.ColumnSpan="2"
                             x:Name="PART_ErrorGlow"
-                            Fill="{DynamicResource WarningBrush}"
+                            Fill="{DynamicResource Noggog.Brushes.Warning.Foreground}"
                             Opacity="0.3"
                             Visibility="Collapsed">
                             <Rectangle.Effect>
@@ -507,7 +507,7 @@
                                 Width="5"
                                 Margin="3,1,0,1"
                                 HorizontalAlignment="Right"
-                                Background="{DynamicResource WarningBrush}"
+                                Background="{DynamicResource Noggog.Brushes.Warning.Foreground}"
                                 CornerRadius="2"
                                 ToolTip="{TemplateBinding local:ControlsHelper.ErrorTooltip}" />
                             <Border
@@ -528,7 +528,7 @@
                         <Border Grid.Column="0" Grid.ColumnSpan="2"
                             x:Name="PART_ErrorBorder"
                             Background="Transparent"
-                            BorderBrush="{DynamicResource WarningBrush}"
+                            BorderBrush="{DynamicResource Noggog.Brushes.Warning.Foreground}"
                             BorderThickness="1"
                             CornerRadius="3"
                             IsHitTestVisible="False"
@@ -577,9 +577,9 @@
                         </Trigger>
                         <Trigger Property="IsFocused" Value="True">
                             <Setter TargetName="PART_BackgroundCornerFillIn" Property="BorderBrush" Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=(Controls:ControlsHelper.FocusBorderBrush)}" />
-                            <Setter TargetName="PART_BackgroundCornerFillIn" Property="Background" Value="{DynamicResource TextBoxFocusBackgroundBrush}" />
+                            <Setter TargetName="PART_BackgroundCornerFillIn" Property="Background" Value="{DynamicResource Noggog.Brushes.Focused.Background}" />
                             <Setter TargetName="PART_RightSideErrorBlockShadow" Property="BorderBrush" Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=(Controls:ControlsHelper.FocusBorderBrush)}" />
-                            <Setter TargetName="PART_RightSideErrorBlockShadow" Property="Background" Value="{DynamicResource TextBoxFocusBackgroundBrush}" />
+                            <Setter TargetName="PART_RightSideErrorBlockShadow" Property="Background" Value="{DynamicResource Noggog.Brushes.Focused.Background}" />
                             <Setter TargetName="PART_FloatingMessage" Property="Foreground" Value="{DynamicResource MahApps.Brushes.Accent}" />
                             <Setter TargetName="PART_FloatingMessage" Property="Opacity" Value="1" />
                         </Trigger>
@@ -1269,164 +1269,209 @@
     <Style BasedOn="{StaticResource Noggog.Styles.ComboBox}" TargetType="ComboBox" />
 
     <!--  Colors  -->
-    <Color x:Key="Yellow">#ffc400</Color>
-    <Color x:Key="YellowDark">#967400</Color>
-    <Color x:Key="Red">#e83a40</Color>
-    <Color x:Key="RedBackground">#912327</Color>
-    <Color x:Key="PinkRedForeground">#f2c2bd</Color>
-    <Color x:Key="Green">#52b545</Color>
-    <Color x:Key="FocusedBackground">#FF080808</Color>
-    <Color x:Key="GreenBackground">#295c23</Color>
-    <Color x:Key="Success">#52b545</Color>
-    <Color x:Key="Passive">#666666</Color>
-
-    <Color x:Key="Error">#e83a40</Color>
-    <Color x:Key="ErrorLight">#e65358</Color>
-    <Color x:Key="ErrorDark">#d92b32</Color>
-    <Color x:Key="ErrorHover">#e65358</Color>
-    <Color x:Key="ErrorPressed">#d92b32</Color>
-    <Color x:Key="Warning">#ffc400</Color>
-    <Color x:Key="WarningDark">#967400</Color>
-    <Color x:Key="ProcessingNeon">#00ffd5</Color>
-    <Color x:Key="Processing">#21b59f</Color>
-
-    <!--  Brushes  -->
+    <Color x:Key="Noggog.Colors.Yellow.Foreground" options:Freeze="True">#ffc400</Color>
     <SolidColorBrush
-        x:Key="ForegroundDarkBrush"
+        x:Key="Noggog.Brushes.Yellow.Foreground"
+        options:Freeze="True"
+        Color="{StaticResource Noggog.Colors.Yellow.Foreground}" />
+
+    <Color x:Key="Noggog.Colors.Yellow.Dark" options:Freeze="True">#967400</Color>
+    <SolidColorBrush
+        x:Key="Noggog.Brushes.Yellow.Dark"
+        options:Freeze="True"
+        Color="{StaticResource Noggog.Colors.Yellow.Dark}" />
+
+    <Color x:Key="Noggog.Colors.Red.Foreground" options:Freeze="True">#e83a40</Color>
+    <SolidColorBrush
+        x:Key="Noggog.Brushes.Red.Foreground"
+        options:Freeze="True"
+        Color="{StaticResource Noggog.Colors.Red.Foreground}" />
+
+    <Color x:Key="Noggog.Colors.Red.Background" options:Freeze="True">#912327</Color>
+    <SolidColorBrush
+        x:Key="Noggog.Brushes.Red.Background"
+        options:Freeze="True"
+        Color="{StaticResource Noggog.Colors.Red.Background}" />
+
+    <Color x:Key="Noggog.Colors.PinkRed.Foreground" options:Freeze="True">#f2c2bd</Color>
+    <SolidColorBrush
+        x:Key="Noggog.Brushes.PinkRed.Foreground"
+        options:Freeze="True"
+        Color="{StaticResource Noggog.Colors.PinkRed.Foreground}" />
+
+    <Color x:Key="Noggog.Colors.Green.Foreground" options:Freeze="True">#52b545</Color>
+    <SolidColorBrush
+        x:Key="Noggog.Brushes.Green.Foreground"
+        options:Freeze="True"
+        Color="{StaticResource Noggog.Colors.Green.Foreground}" />
+
+    <Color x:Key="Noggog.Colors.Green.Background" options:Freeze="True">#295c23</Color>
+    <SolidColorBrush
+        x:Key="Noggog.Brushes.Green.Background"
+        options:Freeze="True"
+        Color="{StaticResource Noggog.Colors.Green.Background}" />
+
+    <Color x:Key="Noggog.Colors.Focused.Background" options:Freeze="True">#FF080808</Color>
+    <SolidColorBrush
+        x:Key="Noggog.Brushes.Focused.Background"
+        options:Freeze="True"
+        Color="{StaticResource Noggog.Colors.Focused.Background}" />
+
+    <Color x:Key="Noggog.Colors.Success.Background" options:Freeze="True">#295c23</Color>
+    <SolidColorBrush
+        x:Key="Noggog.Brushes.Success.Background"
+        options:Freeze="True"
+        Color="{StaticResource Noggog.Colors.Success.Background}" />
+
+    <Color x:Key="Noggog.Colors.Success.Foreground" options:Freeze="True">#52b545</Color>
+    <SolidColorBrush
+        x:Key="Noggog.Brushes.Success.Foreground"
+        options:Freeze="True"
+        Color="{StaticResource Noggog.Colors.Success.Foreground}" />
+
+    <Color x:Key="Noggog.Colors.Passive.Foreground" options:Freeze="True">#666666</Color>
+    <SolidColorBrush
+        x:Key="Noggog.Brushes.Passive.Foreground"
+        options:Freeze="True"
+        Color="{StaticResource Noggog.Colors.Passive.Foreground}" />
+
+    <Color x:Key="Noggog.Colors.Error.Foreground" options:Freeze="True">#e83a40</Color>
+    <SolidColorBrush
+        x:Key="Noggog.Brushes.Error.Foreground"
+        options:Freeze="True"
+        Color="{StaticResource Noggog.Colors.Error.Foreground}" />
+
+    <Color x:Key="Noggog.Colors.Error.Background" options:Freeze="True">#912327</Color>
+    <SolidColorBrush
+        x:Key="Noggog.Brushes.Error.Background"
+        options:Freeze="True"
+        Color="{StaticResource Noggog.Colors.Error.Background}" />
+
+    <Color x:Key="Noggog.Colors.Error.Light" options:Freeze="True">#e65358</Color>
+    <SolidColorBrush
+        x:Key="Noggog.Brushes.Error.Light"
+        options:Freeze="True"
+        Color="{StaticResource Noggog.Colors.Error.Light}" />
+
+    <Color x:Key="Noggog.Colors.Error.Dark" options:Freeze="True">#d92b32</Color>
+    <SolidColorBrush
+        x:Key="Noggog.Brushes.Error.Dark"
+        options:Freeze="True"
+        Color="{StaticResource Noggog.Colors.Error.Dark}" />
+
+    <Color x:Key="Noggog.Colors.Error.Hover" options:Freeze="True">#e65358</Color>
+    <SolidColorBrush
+        x:Key="Noggog.Brushes.Error.Hover"
+        options:Freeze="True"
+        Color="{StaticResource Noggog.Colors.Error.Hover}" />
+
+    <Color x:Key="Noggog.Colors.Error.Pressed" options:Freeze="True">#d92b32</Color>
+    <SolidColorBrush
+        x:Key="Noggog.Brushes.Error.Pressed"
+        options:Freeze="True"
+        Color="{StaticResource Noggog.Colors.Error.Pressed}" />
+
+    <Color x:Key="Noggog.Colors.Warning.Foreground" options:Freeze="True">#ffc400</Color>
+    <SolidColorBrush
+        x:Key="Noggog.Brushes.Warning.Foreground"
+        options:Freeze="True"
+        Color="{StaticResource Noggog.Colors.Warning.Foreground}" />
+
+    <Color x:Key="Noggog.Colors.Warning.Dark" options:Freeze="True">#967400</Color>
+    <SolidColorBrush
+        x:Key="Noggog.Brushes.Warning.Dark"
+        options:Freeze="True"
+        Color="{StaticResource Noggog.Colors.Warning.Dark}" />
+
+    <Color x:Key="Noggog.Colors.Selected.Neon" options:Freeze="True">#00ffd5</Color>
+    <SolidColorBrush
+        x:Key="Noggog.Brushes.Selected.Neon"
+        options:Freeze="True"
+        Color="{StaticResource Noggog.Colors.Selected.Neon}" />
+
+    <Color x:Key="Noggog.Colors.Selected.Foreground" options:Freeze="True">#21b59f</Color>
+    <SolidColorBrush
+        x:Key="Noggog.Brushes.Selected.Foreground"
+        options:Freeze="True"
+        Color="{StaticResource Noggog.Colors.Selected.Foreground}" />
+
+    <Color x:Key="Noggog.Colors.Selected.Background" options:Freeze="True">#0E1716</Color>
+    <SolidColorBrush
+        x:Key="Noggog.Brushes.Selected.Background"
+        options:Freeze="True"
+        Color="{StaticResource Noggog.Colors.Selected.Background}" />
+
+    <SolidColorBrush
+        x:Key="Noggog.Brushes.Foreground.Dark"
         options:Freeze="True"
         Color="{StaticResource MahApps.Colors.Gray3}" />
     <SolidColorBrush
-        x:Key="BackgroundBrush"
+        x:Key="Noggog.Brushes.Background"
         options:Freeze="True"
         Color="{StaticResource MahApps.Colors.ThemeBackground}" />
+
+    <Color x:Key="Noggog.Colors.Background.Light" options:Freeze="True">#323232</Color>
     <SolidColorBrush
         x:Key="BackgroundLightBrush"
         options:Freeze="True"
-        Color="#323232" />
+        Color="{StaticResource Noggog.Colors.Background.Light}" />
+
+    <Color x:Key="Noggog.Colors.Background.Dark" options:Freeze="True">#202020</Color>
     <SolidColorBrush
         x:Key="BackgroundDarkBrush"
         options:Freeze="True"
-        Color="#202020" />
-    <SolidColorBrush
-        x:Key="PassiveBrush"
-        options:Freeze="True"
-        Color="{StaticResource Passive}" />
-    <SolidColorBrush
-        x:Key="YellowBrush"
-        options:Freeze="True"
-        Color="{StaticResource Yellow}" />
-    <SolidColorBrush
-        x:Key="YellowDarkBrush"
-        options:Freeze="True"
-        Color="{StaticResource YellowDark}" />
-    <SolidColorBrush
-        x:Key="GreenBrush"
-        options:Freeze="True"
-        Color="{StaticResource Green}" />
-    <SolidColorBrush
-        x:Key="GreenBackgroundBrush"
-        options:Freeze="True"
-        Color="{StaticResource GreenBackground}" />
-    <SolidColorBrush
-        x:Key="RedBrush"
-        options:Freeze="True"
-        Color="{StaticResource Red}" />
-    <SolidColorBrush
-        x:Key="RedBackgroundBrush"
-        options:Freeze="True"
-        Color="{StaticResource RedBackground}" />
-    <SolidColorBrush
-        x:Key="WarningBrush"
-        options:Freeze="True"
-        Color="{StaticResource Warning}" />
-    <SolidColorBrush
-        x:Key="WarningDarkBrush"
-        options:Freeze="True"
-        Color="{StaticResource WarningDark}" />
-    <SolidColorBrush
-        x:Key="SuccessBrush"
-        options:Freeze="True"
-        Color="{StaticResource Success}" />
-    <SolidColorBrush
-        x:Key="ErrorBrush"
-        options:Freeze="True"
-        Color="{StaticResource Error}" />
-    <SolidColorBrush
-        x:Key="ErrorLightBrush"
-        options:Freeze="True"
-        Color="{StaticResource PinkRedForeground}" />
-    <SolidColorBrush
-        x:Key="ErrorHoverBrush"
-        options:Freeze="True"
-        Color="{StaticResource ErrorHover}" />
-    <SolidColorBrush
-        x:Key="ErrorPressedBrush"
-        options:Freeze="True"
-        Color="{StaticResource ErrorPressed}" />
-    <SolidColorBrush
-        x:Key="ErrorBackgroundBrush"
-        options:Freeze="True"
-        Color="{StaticResource RedBackground}" />
-    <SolidColorBrush
-        x:Key="ControlFocusBrush"
-        options:Freeze="True"
-        Color="{StaticResource FocusedBackground}" />
+        Color="{StaticResource Noggog.Colors.Background.Dark}" />
+
     <SolidColorBrush
         x:Key="ButtonNakedIconOverForegroundBrush"
         options:Freeze="True"
         Color="{StaticResource MahApps.Colors.ThemeForeground}" />
+
     <SolidColorBrush
         x:Key="ButtonNakedIconForegroundBrush"
         options:Freeze="True"
         Color="{StaticResource MahApps.Colors.Gray6}" />
+
     <SolidColorBrush
         x:Key="ButtonNakedIconPressedForegroundBrush"
         options:Freeze="True"
         Color="{StaticResource MahApps.Colors.AccentBase}" />
+
     <SolidColorBrush
         x:Key="MahApps.Brushes.Control.Background"
         options:Freeze="True"
         Color="#FF101010" />
+
     <SolidColorBrush
         x:Key="MahApps.Brushes.TextBox.Border"
         options:Freeze="True"
         Color="Transparent" />
-    <!--  Gray2  -->
+
     <SolidColorBrush
         x:Key="MahApps.Brushes.TextBox.FocusBorder"
         options:Freeze="True"
         Color="Transparent" />
-    <!--  Gray8  -->
+
     <SolidColorBrush
         x:Key=" MahApps.Brushes.Border.NonActive"
         options:Freeze="True"
         Color="Transparent" />
-    <SolidColorBrush
-        x:Key="FocusBackgroundBrush"
-        options:Freeze="True"
-        Color="{StaticResource FocusedBackground}" />
-    <SolidColorBrush
-        x:Key="TextBoxFocusBackgroundBrush"
-        options:Freeze="True"
-        Color="{StaticResource FocusedBackground}" />
+
     <SolidColorBrush
         x:Key="MahApps.Brushes.TextBox.MouseOverBorder"
         options:Freeze="True"
         Color="Transparent" />
+
+    <Color x:Key="Noggog.Colors.Border.Subtle" options:Freeze="True">#404040</Color>
     <SolidColorBrush
-        x:Key="SubtleBorderBrush"
+        x:Key="Noggog.Brushes.Border.Subtle"
         options:Freeze="True"
-        Color="#404040" />
+        Color="{StaticResource Noggog.Colors.Border.Subtle}" />
+
+    <Color x:Key="Noggog.Colors.Disabled.Overlay" options:Freeze="True">#35FFFFFF</Color>
     <SolidColorBrush
-        x:Key="ControlsDisabledBrush"
+        x:Key="Noggog.Brushes.Disabled.Overlay"
         options:Freeze="True"
-        Color="#35FFFFFF" />
-    <SolidColorBrush
-        x:Key="ProcessingNeonBrush"
-        options:Freeze="True"
-        Color="{StaticResource ProcessingNeon}" />
-    <SolidColorBrush
-        x:Key="ProcessingBrush"
-        options:Freeze="True"
-        Color="{StaticResource Processing}" />
+        Color="{StaticResource Noggog.Colors.Disabled.Overlay}" />
+
 </ResourceDictionary>

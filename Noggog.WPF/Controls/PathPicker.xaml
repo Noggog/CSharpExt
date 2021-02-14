@@ -15,7 +15,7 @@
             <Setter Property="Background" Value="{StaticResource MahApps.Brushes.Control.Background}" />
             <Style.Triggers>
                 <DataTrigger Binding="{Binding IsFocused, ElementName=PathTextBox}" Value="True">
-                    <Setter Property="Background" Value="{StaticResource TextBoxFocusBackgroundBrush}" />
+                    <Setter Property="Background" Value="{StaticResource Noggog.Brushes.Focused.Background}" />
                 </DataTrigger>
             </Style.Triggers>
         </Style>
@@ -28,7 +28,7 @@
         </Grid.ColumnDefinitions>
         <Rectangle Grid.Column="0" Grid.ColumnSpan="3"
             x:Name="ErrorGlow"
-            Fill="{StaticResource WarningBrush}"
+            Fill="{StaticResource Noggog.Brushes.Warning.Foreground}"
             Opacity="0.3"
             Visibility="{Binding PickerVM.InError, Converter={StaticResource VisibilityConverter}, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}">
             <Rectangle.Effect>
@@ -45,7 +45,7 @@
                                             AutoReverse="True"
                                             RepeatBehavior="Forever"
                                             Storyboard.TargetProperty="(Rectangle.Fill).(SolidColorBrush.Color)"
-                                            To="{StaticResource WarningDark}"
+                                            To="{StaticResource Noggog.Colors.Warning.Dark}"
                                             Duration="0:0:0.8" />
                                     </Storyboard>
                                 </BeginStoryboard>
@@ -74,7 +74,7 @@
             Command="{Binding PickerVM.SetFolderPathCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
             ToolTip="Set target path">
             <Button.Style>
-                <Style TargetType="Button" BasedOn="{StaticResource Noggog.Styles.Button}">
+                <Style BasedOn="{StaticResource Noggog.Styles.Button}" TargetType="Button">
                     <Setter Property="Visibility" Value="Collapsed" />
                     <Style.Triggers>
                         <DataTrigger Binding="{Binding PickerVM.PathType, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}, Converter={StaticResource EnumToIntConverter}}" Value="1">
@@ -92,7 +92,7 @@
             <Border
                 Margin="3,1,0,1"
                 HorizontalAlignment="Right"
-                Background="{StaticResource WarningBrush}"
+                Background="{StaticResource Noggog.Brushes.Warning.Foreground}"
                 CornerRadius="2"
                 ToolTip="{Binding PickerVM.ErrorTooltip, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}">
                 <Border.Style>
@@ -159,7 +159,7 @@
         <Border Grid.Column="0" Grid.ColumnSpan="3"
             x:Name="ErrorBorder"
             Background="Transparent"
-            BorderBrush="{StaticResource WarningBrush}"
+            BorderBrush="{StaticResource Noggog.Brushes.Warning.Foreground}"
             BorderThickness="1"
             CornerRadius="3"
             IsHitTestVisible="False"
@@ -175,7 +175,7 @@
                                             AutoReverse="True"
                                             RepeatBehavior="Forever"
                                             Storyboard.TargetProperty="(Border.BorderBrush).(SolidColorBrush.Color)"
-                                            To="{StaticResource YellowDark}"
+                                            To="{StaticResource Noggog.Colors.Yellow.Dark}"
                                             Duration="0:0:0.8" />
                                     </Storyboard>
                                 </BeginStoryboard>

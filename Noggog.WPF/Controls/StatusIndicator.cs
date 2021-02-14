@@ -22,7 +22,7 @@ namespace Noggog.WPF
             set => SetValue(ErrorBrushProperty, value);
         }
         public static readonly DependencyProperty ErrorBrushProperty = DependencyProperty.Register(nameof(ErrorBrush), typeof(Brush), typeof(StatusIndicator),
-             new FrameworkPropertyMetadata(Application.Current.Resources[Brushes.Constants.Error]));
+             new FrameworkPropertyMetadata(Application.Current.Resources[Brushes.Constants.ErrorForeground]));
 
         public Brush SuccessBrush
         {
@@ -30,7 +30,7 @@ namespace Noggog.WPF
             set => SetValue(SuccessBrushProperty, value);
         }
         public static readonly DependencyProperty SuccessBrushProperty = DependencyProperty.Register(nameof(SuccessBrush), typeof(Brush), typeof(StatusIndicator),
-             new FrameworkPropertyMetadata(Application.Current.Resources[Brushes.Constants.Success]));
+             new FrameworkPropertyMetadata(Application.Current.Resources[Brushes.Constants.SuccessForeground]));
 
         public Brush PassiveBrush
         {
@@ -38,7 +38,7 @@ namespace Noggog.WPF
             set => SetValue(PassiveBrushProperty, value);
         }
         public static readonly DependencyProperty PassiveBrushProperty = DependencyProperty.Register(nameof(PassiveBrush), typeof(Brush), typeof(StatusIndicator),
-             new FrameworkPropertyMetadata(Application.Current.Resources[Brushes.Constants.Passive]));
+             new FrameworkPropertyMetadata(Application.Current.Resources[Brushes.Constants.PassiveForeground]));
 
         public Color ProcessingSpinnerGlow
         {
@@ -46,7 +46,7 @@ namespace Noggog.WPF
             set => SetValue(ProcessingSpinnerGlowProperty, value);
         }
         public static readonly DependencyProperty ProcessingSpinnerGlowProperty = DependencyProperty.Register(nameof(ProcessingSpinnerGlow), typeof(Color), typeof(StatusIndicator),
-             new FrameworkPropertyMetadata(Application.Current.Resources[Colors.Constants.Processing]));
+             new FrameworkPropertyMetadata(Application.Current.Resources[Colors.Constants.SelectedForeground]));
 
         public Brush ProcessingSpinnerForeground
         {
@@ -54,7 +54,7 @@ namespace Noggog.WPF
             set => SetValue(ProcessingSpinnerForegroundProperty, value);
         }
         public static readonly DependencyProperty ProcessingSpinnerForegroundProperty = DependencyProperty.Register(nameof(ProcessingSpinnerForeground), typeof(Brush), typeof(StatusIndicator),
-             new FrameworkPropertyMetadata(Application.Current.Resources[Brushes.Constants.Processing]));
+             new FrameworkPropertyMetadata(Application.Current.Resources[Brushes.Constants.SelectedForeground]));
 
         public bool Processing
         {
