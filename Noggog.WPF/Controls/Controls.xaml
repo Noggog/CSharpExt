@@ -24,16 +24,16 @@
                                 HorizontalAlignment="Center"
                                 VerticalAlignment="Center"
                                 Kind="Circle"
-                                ToolTip="{Binding Status.Reason, RelativeSource={RelativeSource TemplatedParent}}"
+                                ToolTip="{TemplateBinding ToolTip}"
                                 Visibility="{Binding Processing, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay, Converter={StaticResource VisibilityConverter}, ConverterParameter=False}">
                                 <icon:PackIconMaterial.Style>
                                     <Style TargetType="icon:PackIconMaterial">
                                         <Setter Property="Foreground" Value="{Binding PassiveBrush, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}" />
                                         <Style.Triggers>
-                                            <DataTrigger Binding="{Binding Status.Failed, RelativeSource={RelativeSource AncestorType=local:StatusIndicator}, Mode=OneWay}" Value="True">
+                                            <DataTrigger Binding="{Binding Status, RelativeSource={RelativeSource AncestorType=local:StatusIndicator}, Mode=OneWay}" Value="{x:Static local:StatusIndicatorState.Failure}">
                                                 <Setter Property="Foreground" Value="{Binding ErrorBrush, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}" />
                                             </DataTrigger>
-                                            <DataTrigger Binding="{Binding Status.Failed, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}" Value="False">
+                                            <DataTrigger Binding="{Binding Status, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}" Value="{x:Static local:StatusIndicatorState.Success}">
                                                 <Setter Property="Foreground" Value="{Binding SuccessBrush, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}" />
                                             </DataTrigger>
                                         </Style.Triggers>
@@ -46,7 +46,7 @@
                                 HorizontalAlignment="Center"
                                 VerticalAlignment="Center"
                                 Kind="Circle"
-                                ToolTip="{Binding Status.Reason, RelativeSource={RelativeSource TemplatedParent}}"
+                                ToolTip="{TemplateBinding ToolTip}"
                                 Visibility="{Binding Processing, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay, Converter={StaticResource VisibilityConverter}, ConverterParameter=False}">
                                 <icon:PackIconMaterial.Style>
                                     <Style TargetType="icon:PackIconMaterial">
@@ -79,7 +79,7 @@
                                 Height="15"
                                 HorizontalAlignment="Center"
                                 VerticalAlignment="Center"
-                                ToolTip="{TemplateBinding ProcessingTooltip}"
+                                ToolTip="{TemplateBinding ToolTip}"
                                 Visibility="{Binding Processing, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay, Converter={StaticResource VisibilityConverter}}">
                                 <mahapps:ProgressRing Grid.Column="2"
                                     x:Name="PART_ProgressRing"

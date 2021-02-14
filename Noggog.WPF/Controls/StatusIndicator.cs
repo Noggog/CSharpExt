@@ -8,13 +8,13 @@ namespace Noggog.WPF
 {
     public class StatusIndicator : Control
     {
-        public ErrorResponse? Status
+        public StatusIndicatorState Status
         {
-            get => (ErrorResponse?)GetValue(StatusProperty);
+            get => (StatusIndicatorState)GetValue(StatusProperty);
             set => SetValue(StatusProperty, value);
         }
-        public static readonly DependencyProperty StatusProperty = DependencyProperty.Register(nameof(Status), typeof(ErrorResponse?), typeof(StatusIndicator),
-             new FrameworkPropertyMetadata(default(ErrorResponse?)));
+        public static readonly DependencyProperty StatusProperty = DependencyProperty.Register(nameof(Status), typeof(StatusIndicatorState), typeof(StatusIndicator),
+             new FrameworkPropertyMetadata(default(StatusIndicatorState)));
 
         public Brush ErrorBrush
         {
@@ -64,14 +64,6 @@ namespace Noggog.WPF
         public static readonly DependencyProperty ProcessingProperty = DependencyProperty.Register(nameof(Processing), typeof(bool), typeof(StatusIndicator),
              new FrameworkPropertyMetadata(default(bool)));
 
-        public string ProcessingTooltip
-        {
-            get => (string)GetValue(ProcessingTooltipProperty);
-            set => SetValue(ProcessingTooltipProperty, value);
-        }
-        public static readonly DependencyProperty ProcessingTooltipProperty = DependencyProperty.Register(nameof(ProcessingTooltip), typeof(string), typeof(StatusIndicator),
-             new FrameworkPropertyMetadata(default(string)));
-
         public ICommand ClickCommand
         {
             get => (ICommand)GetValue(ClickCommandProperty);
@@ -89,9 +81,9 @@ namespace Noggog.WPF
         {
             ClickCommand = ReactiveCommand.Create(() =>
             {
-                var reason = Status?.Reason;
+                var reason = ToolTip;
                 if (reason == null) return;
-                Clipboard.SetText(reason);
+                Clipboard.SetText(reason.ToString());
             });
         }
     }
