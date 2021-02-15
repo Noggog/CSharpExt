@@ -15,10 +15,18 @@ namespace Noggog.WPF
 
         public NoggogControl()
         {
+            this.Loaded += (_, _) => OnLoaded();
+            this.Loaded += (_, _) =>
+            {
+                if (Template != null)
+                {
+                    OnApplyTemplate();
+                }
+            };
             this.Unloaded += (_, _) =>
             {
-                _templateDisposable.Dispose();
-                _unloadDisposable.Dispose();
+                _templateDisposable.Clear();
+                _unloadDisposable.Clear();
             };
         }
 
@@ -26,6 +34,10 @@ namespace Noggog.WPF
         {
             base.OnApplyTemplate();
             _templateDisposable.Clear();
+        }
+
+        protected virtual void OnLoaded()
+        {
         }
     }
 }
