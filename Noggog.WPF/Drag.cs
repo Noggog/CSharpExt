@@ -34,8 +34,8 @@ namespace Noggog.WPF
                     control.Events().PreviewMouseLeftButtonDown
                         .Select(e =>
                         {
-                            var item = VisualTreeHelper.HitTest(control, Mouse.GetPosition(control)).VisualHit;
-                            if (!item.TryGetAncestor<ListBoxItem>(out var hoveredItem))
+                            var item = VisualTreeHelper.HitTest(control, Mouse.GetPosition(control))?.VisualHit;
+                            if (item == null || !item.TryGetAncestor<ListBoxItem>(out var hoveredItem))
                             {
                                 return (default(ListBoxItem?), default(Point?));
                             }
