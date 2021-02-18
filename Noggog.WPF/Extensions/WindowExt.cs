@@ -1,4 +1,3 @@
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -6,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Text.Json;
 
 namespace Noggog.WPF
 {
@@ -49,13 +49,13 @@ namespace Noggog.WPF
         public static T WireMainVM<T>(
             this Window window,
             string settingsPath,
-            JsonSerializerSettings? settings = null)
+            JsonSerializerOptions? settings = null)
             where T : IDisposable, new()
         {
             return window.WireMainVM(
                 settingsPath: settingsPath,
-                load: (s) => (T)JsonConvert.DeserializeObject<T>(File.ReadAllText(s), settings)!,
-                save: (s, vm) => File.WriteAllText(s, JsonConvert.SerializeObject(vm, Formatting.Indented, settings)));
+                load: (s) => (T)JsonSerializer.Deserialize<T>(File.ReadAllText(s), settings)!,
+                save: (s, vm) => File.WriteAllText(s, JsonSerializer.Serialize(vm, settings)));
         }
 
         public static T WireMainVM<T>(

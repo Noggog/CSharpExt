@@ -1,6 +1,5 @@
 using DynamicData;
 using Microsoft.WindowsAPICodePack.Dialogs;
-using Newtonsoft.Json;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 using System;
@@ -9,7 +8,8 @@ using System.IO;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Windows.Input;
 
 namespace Noggog.WPF
@@ -348,28 +348,19 @@ namespace Noggog.WPF
             TargetPath = dlg.FileName;
         }
 
-        public class PathPickerJsonConverter : JsonConverter
+        public class PathPickerJsonConverter : JsonConverter<PathPickerVM>
         {
-            public override void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer)
+            public override PathPickerVM Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
             {
-                if (!(value is PathPickerVM vm)) throw new ArgumentException();
-                writer.WriteValue(vm.TargetPath);
-            }
-
-            public override object ReadJson(JsonReader reader, Type objectType, object? existingValue, JsonSerializer serializer)
-            {
-                if (!(existingValue is PathPickerVM vm))
+                return new PathPickerVM()
                 {
-                    vm = new PathPickerVM();
-                }
-                if (!(reader.Value is string str)) throw new ArgumentException();
-                vm.TargetPath = str;
-                return vm;
+                    TargetPath = reader.GetString() ?? string.Empty
+                };
             }
 
-            public override bool CanConvert(Type objectType)
+            public override void Write(Utf8JsonWriter writer, PathPickerVM value, JsonSerializerOptions options)
             {
-                return objectType == typeof(PathPickerVM);
+                writer.WriteStringValue(value.TargetPath);
             }
         }
     }
