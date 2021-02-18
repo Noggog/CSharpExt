@@ -1,15 +1,23 @@
 using System;
+using System.Runtime.Serialization;
 
 namespace Noggog
 {
     public struct P2Float : IEquatable<P2Float>
     {
+        [DataMember]
         public readonly float X;
+        [DataMember]
         public readonly float Y;
+
+        [IgnoreDataMember]
         public float Length => (float)Math.Sqrt(X * X + Y * Y);
+        [IgnoreDataMember]
         public float Magnitude => Length;
+        [IgnoreDataMember]
         public float SqrMagnitude => (X * X + Y * Y);
 
+        [IgnoreDataMember]
         public P2Float Normalized
         {
             get
@@ -19,6 +27,7 @@ namespace Noggog
             }
         }
 
+        [IgnoreDataMember]
         public P2Float Absolute => new P2Float(
             Math.Abs(this.X),
             Math.Abs(this.Y));

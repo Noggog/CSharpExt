@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.Serialization;
 
 namespace Noggog
 {
@@ -19,11 +20,17 @@ namespace Noggog
 
     public struct P2IntValue<T> : IP2IntGet, IEquatable<P2IntValue<T>>
     {
+        [DataMember]
         public readonly int X;
+        [DataMember]
         public readonly int Y;
+        [DataMember]
         public readonly T Value;
+        [IgnoreDataMember]
         int IP2IntGet.X => this.X;
+        [IgnoreDataMember]
         int IP2IntGet.Y => this.Y;
+        [IgnoreDataMember]
         public P2Int Point => new P2Int(this.X, this.Y);
 
         public P2IntValue(int x, int y, T val)

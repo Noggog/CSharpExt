@@ -1,12 +1,16 @@
 using System;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 
 namespace Noggog
 {
     public interface IP2Int16Get
     {
+        [DataMember]
         short X { get; }
+        [DataMember]
         short Y { get; }
+        [IgnoreDataMember]
         P2Int16 Point { get; }
     }
 
@@ -14,12 +18,18 @@ namespace Noggog
     {
         public readonly static P2Int16 Origin = new P2Int16(0, 0);
         public readonly static P2Int16 One = new P2Int16(1, 1);
+        [IgnoreDataMember]
         public bool IsZero => X == 0 && Y == 0;
 
+        [IgnoreDataMember]
         P2Int16 IP2Int16Get.Point => this;
+        [DataMember]
         public readonly short X;
+        [IgnoreDataMember]
         short IP2Int16Get.X => this.X;
+        [DataMember]
         public readonly short Y;
+        [IgnoreDataMember]
         short IP2Int16Get.Y => this.Y;
 
         #region Ctors

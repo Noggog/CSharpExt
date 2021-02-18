@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.Serialization;
 
 namespace Noggog
 {
@@ -19,13 +20,21 @@ namespace Noggog
 
     public struct P3IntValue<T> : IP3IntGet, IEquatable<P3IntValue<T>>
     {
+        [DataMember]
         public readonly int X;
+        [DataMember]
         public readonly int Y;
+        [DataMember]
         public readonly int Z;
+        [DataMember]
         public readonly T Value;
+        [IgnoreDataMember]
         int IP3IntGet.X => this.X;
+        [IgnoreDataMember]
         int IP3IntGet.Y => this.Y;
+        [IgnoreDataMember]
         int IP3IntGet.Z => this.Z;
+        [IgnoreDataMember]
         P3Int IP3IntGet.Point => new P3Int(this.X, this.Y, this.Z);
 
         public P3IntValue(int x, int y, int z, T val)
@@ -96,5 +105,4 @@ namespace Noggog
             return new P3Int(p.X, p.Y, p.Z);
         }
     }
-
 }

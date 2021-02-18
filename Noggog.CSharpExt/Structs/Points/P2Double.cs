@@ -1,16 +1,23 @@
 using System;
+using System.Runtime.Serialization;
 
 namespace Noggog
 {
     public struct P2Double : IEquatable<P2Double>
     {
+        [DataMember]
         public readonly double X;
+        [DataMember]
         public readonly double Y;
 
+        [IgnoreDataMember]
         public double Length => Math.Sqrt(X * X + Y * Y);
+        [IgnoreDataMember]
         public double Magnitude => Length;
+        [IgnoreDataMember]
         public double SqrMagnitude => (X * X + Y * Y);
 
+        [IgnoreDataMember]
         public P2Double Normalized
         {
             get
@@ -20,6 +27,7 @@ namespace Noggog
             }
         }
 
+        [IgnoreDataMember]
         public P2Double Absolute => new P2Double(
             Math.Abs(this.X),
             Math.Abs(this.Y));

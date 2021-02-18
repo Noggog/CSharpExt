@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.Serialization;
 
 namespace Noggog
 {
@@ -14,56 +15,99 @@ namespace Noggog
         public static readonly P3Double Left = new P3Double(-1, 0, 0);
         public static readonly P3Double Right = new P3Double(1, 0, 0);
 
+        [DataMember]
         public readonly double X;
+        [DataMember]
         public readonly double Y;
+        [DataMember]
         public readonly double Z;
-
+        
+        [IgnoreDataMember]
         public P3Double XPoint => new P3Double(X, 0, 0);
+        [IgnoreDataMember]
         public P3Double YPoint => new P3Double(0, Y, 0);
+        [IgnoreDataMember]
         public P3Double ZPoint => new P3Double(0, 0, Z);
 
+        [IgnoreDataMember]
         public P2Double XY => new P2Double(X, Y);
+        [IgnoreDataMember]
         public P2Double XZ => new P2Double(X, Z);
+        [IgnoreDataMember]
         public P2Double YZ => new P2Double(Y, Z);
+        [IgnoreDataMember]
         public P2Double ZY => new P2Double(Z, Y);
+        [IgnoreDataMember]
         public P2Double ZX => new P2Double(Z, X);
+        [IgnoreDataMember]
         public P2Double YX => new P2Double(Y, X);
 
+        [IgnoreDataMember]
         public P2Double XX => new P2Double(X, X);
+        [IgnoreDataMember]
         public P2Double YY => new P2Double(Y, Y);
+        [IgnoreDataMember]
         public P2Double ZZ => new P2Double(Z, Z);
 
+        [IgnoreDataMember]
         public P3Double XXX => new P3Double(X, X, X);
+        [IgnoreDataMember]
         public P3Double XXY => new P3Double(X, X, Y);
+        [IgnoreDataMember]
         public P3Double XXZ => new P3Double(X, X, Z);
+        [IgnoreDataMember]
         public P3Double XYX => new P3Double(X, Y, X);
+        [IgnoreDataMember]
         public P3Double XYY => new P3Double(X, Y, Y);
+        [IgnoreDataMember]
         public P3Double XYZ => new P3Double(X, Y, Z);
+        [IgnoreDataMember]
         public P3Double XZX => new P3Double(X, Z, X);
+        [IgnoreDataMember]
         public P3Double XZY => new P3Double(X, Z, Y);
+        [IgnoreDataMember]
         public P3Double XZZ => new P3Double(X, Z, Z);
 
+        [IgnoreDataMember]
         public P3Double YXX => new P3Double(Y, X, X);
+        [IgnoreDataMember]
         public P3Double YXY => new P3Double(Y, X, Y);
+        [IgnoreDataMember]
         public P3Double YXZ => new P3Double(Y, X, Z);
+        [IgnoreDataMember]
         public P3Double YYX => new P3Double(Y, Y, X);
+        [IgnoreDataMember]
         public P3Double YYY => new P3Double(Y, Y, Y);
+        [IgnoreDataMember]
         public P3Double YYZ => new P3Double(Y, Y, Z);
+        [IgnoreDataMember]
         public P3Double YZX => new P3Double(Y, Z, X);
+        [IgnoreDataMember]
         public P3Double YZY => new P3Double(Y, Z, Y);
+        [IgnoreDataMember]
         public P3Double YZZ => new P3Double(Y, Z, Z);
 
+        [IgnoreDataMember]
         public P3Double ZXX => new P3Double(Z, X, X);
+        [IgnoreDataMember]
         public P3Double ZXY => new P3Double(Z, X, Y);
+        [IgnoreDataMember]
         public P3Double ZXZ => new P3Double(Z, X, Z);
+        [IgnoreDataMember]
         public P3Double ZYX => new P3Double(Z, Y, X);
+        [IgnoreDataMember]
         public P3Double ZYY => new P3Double(Z, Y, Y);
+        [IgnoreDataMember]
         public P3Double ZYZ => new P3Double(Z, Y, Z);
+        [IgnoreDataMember]
         public P3Double ZZX => new P3Double(Z, Z, X);
+        [IgnoreDataMember]
         public P3Double ZZY => new P3Double(Z, Z, Y);
+        [IgnoreDataMember]
         public P3Double ZZZ => new P3Double(Z, Z, Z);
 
 
+        [IgnoreDataMember]
         public P3Double Normalized
         {
             get
@@ -73,11 +117,20 @@ namespace Noggog
             }
         }
 
+        [IgnoreDataMember]
         public double Length => Math.Sqrt(X * X + Y * Y + Z * Z);
 
+        [IgnoreDataMember]
         public double Magnitude => Length;
 
+        [IgnoreDataMember]
         public double SqrMagnitude => (X * X + Y * Y + Z * Z);
+
+        [IgnoreDataMember]
+        public P3Double Absolute => new P3Double(
+            Math.Abs(X),
+            Math.Abs(Y),
+            Math.Abs(Z));
 
         public P3Double(double x, double y, double z)
         {
@@ -157,11 +210,6 @@ namespace Noggog
         {
             return X.EqualsWithin(value.X, within) && Y.EqualsWithin(value.Y, within) && Z.EqualsWithin(value.Z, within);
         }
-
-        public P3Double Absolute => new P3Double(
-            Math.Abs(X),
-            Math.Abs(Y),
-            Math.Abs(Z));
 
         public static P3Double ProjectOnPlane(P3Double v, P3Double planeNormal)
         {

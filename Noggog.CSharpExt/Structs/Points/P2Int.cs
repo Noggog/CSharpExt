@@ -1,17 +1,22 @@
 using System;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 
 namespace Noggog
 {
     public interface IP2IntGet
     {
+        [DataMember]
         int X { get; }
+        [DataMember]
         int Y { get; }
+        [IgnoreDataMember]
         P2Int Point { get; }
     }
 
     public class P2IntObj
     {
+        [IgnoreDataMember]
         public P2Int Point;
     }
 
@@ -26,12 +31,20 @@ namespace Noggog
 
         public readonly static P2Int Origin = new P2Int(0, 0);
         public readonly static P2Int One = new P2Int(1, 1);
+
+        [IgnoreDataMember]
         public bool IsZero => X == 0 && Y == 0;
 
+        [IgnoreDataMember]
         P2Int IP2IntGet.Point => this;
+
+        [DataMember]
         public readonly int X;
+        [IgnoreDataMember]
         int IP2IntGet.X => this.X;
+        [DataMember]
         public readonly int Y;
+        [IgnoreDataMember]
         int IP2IntGet.Y => this.Y;
 
         #region Ctors

@@ -1,12 +1,17 @@
 using System;
+using System.Runtime.Serialization;
 
 namespace Noggog
 {
     public interface IP3UInt16Get
     {
+        [DataMember]
         ushort X { get; }
+        [DataMember]
         ushort Y { get; }
+        [DataMember]
         ushort Z { get; }
+        [IgnoreDataMember]
         P3UInt16 Point { get; }
     }
 
@@ -15,13 +20,20 @@ namespace Noggog
         public static readonly P3UInt16 Origin = new P3UInt16(0, 0, 0);
         public static readonly P3UInt16 One = new P3UInt16(1, 1, 1);
 
+        [DataMember]
         public readonly ushort X;
+        [DataMember]
         public readonly ushort Y;
+        [DataMember]
         public readonly ushort Z;
 
+        [IgnoreDataMember]
         ushort IP3UInt16Get.X => this.X;
+        [IgnoreDataMember]
         ushort IP3UInt16Get.Y => this.Y;
+        [IgnoreDataMember]
         ushort IP3UInt16Get.Z => this.Z;
+        [IgnoreDataMember]
         public P3UInt16 Point => this;
 
         public P3UInt16(ushort x, ushort y, ushort z)
