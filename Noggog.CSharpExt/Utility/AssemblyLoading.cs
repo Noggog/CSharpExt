@@ -35,7 +35,6 @@ namespace Noggog.Utility
                 string? assemblyPath = _resolver.ResolveAssemblyToPath(name);
                 if (assemblyPath != null)
                 {
-                    Console.WriteLine($"Loading assembly {assemblyPath} into the HostAssemblyLoadContext");
                     return LoadFromAssemblyPath(assemblyPath);
                 }
 
@@ -49,10 +48,10 @@ namespace Noggog.Utility
         // instances may get lifetime extended beyond the point when the plugin is expected to be
         // unloaded.
         [MethodImpl(MethodImplOptions.NoInlining)]
-        public static TRet ExecuteAndUnload<TRet>(string assemblyPath, out WeakReference alcWeakRef, Func<Assembly, TRet> getter, string? contextNickname = null)
+        public static TRet ExecuteAndUnload<TRet>(string assemblyPath, out WeakReference alcWeakRef, Func<Assembly, TRet> getter, Func<AssemblyLoadContext>? loadContextGetter = null)
         {
             // Create the unloadable HostAssemblyLoadContext
-            var alc = new AssemblyLoadContext(contextNickname ?? Path.GetRandomFileName(), isCollectible: true);
+            var alc = loadContextGetter == null ? new HostAssemblyLoadContext(assemblyPath) : loadContextGetter();
 
             // Create a weak reference to the AssemblyLoadContext that will allow us to detect
             // when the unload completes.
@@ -75,10 +74,10 @@ namespace Noggog.Utility
 
         // Unloading happens on GC, so have to run GC several times after unload
         [MethodImpl(MethodImplOptions.NoInlining)]
-        public static TRet ExecuteAndForceUnload<TRet>(string assemblyPath, Func<Assembly, TRet> getter)
+        public static TRet ExecuteAndForceUnload<TRet>(string assemblyPath, Func<Assembly, TRet> getter, Func<AssemblyLoadContext>? loadContextGetter = null)
         {
             WeakReference hostAlcWeakRef;
-            var ret = ExecuteAndUnload(assemblyPath, out hostAlcWeakRef, getter);
+            var ret = ExecuteAndUnload(assemblyPath, out hostAlcWeakRef, getter, loadContextGetter);
             for (int i = 0; hostAlcWeakRef.IsAlive && (i < 10); i++)
             {
                 GC.Collect();
