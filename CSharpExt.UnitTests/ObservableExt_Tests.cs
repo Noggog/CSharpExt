@@ -64,7 +64,7 @@ namespace CSharpExt.UnitTests
         [Fact]
         public async Task WatchFolder()
         {
-            using var temp = new TempFolder(Path.Combine(Utility.TempFolderPath, nameof(WatchFolder)));
+            using var temp = TempFolder.FactoryByPath(Path.Combine(Utility.TempFolderPath, nameof(WatchFolder)));
             var fileA = Path.Combine(temp.Dir.Path, "FileA");
             var fileB = Path.Combine(temp.Dir.Path, "FileB");
             File.WriteAllText(fileA, string.Empty);
