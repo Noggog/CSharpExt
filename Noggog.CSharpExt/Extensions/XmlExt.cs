@@ -113,9 +113,9 @@ namespace Noggog
             return val != null;
         }
 
-        public static P? GetAttribute<P>(this XElement node, string str, P defaultVal = default, bool throwException = false)
+        public static P? GetAttribute<P>(this XElement node, string str, P? defaultVal = default, bool throwException = false)
         {
-            if (!TryGetAttribute(node, str, out P val, throwException))
+            if (!TryGetAttribute<P>(node, str, out var val, throwException))
             {
                 val = defaultVal;
             }
@@ -124,7 +124,7 @@ namespace Noggog
 
         public static void TransferAttribute<P>(this XElement node, string str, Action<P> acti, bool throwException = false)
         {
-            if (TryGetAttribute(node, str, out P val, throwException))
+            if (TryGetAttribute<P>(node, str, out var val, throwException))
             {
                 acti(val);
             }

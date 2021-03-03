@@ -19,7 +19,7 @@ namespace Noggog
         public static V GetOrAdd<K, V>(this IDictionary<K, V> dict, K key)
             where V : new()
         {
-            if (!dict.TryGetValue(key, out V ret))
+            if (!dict.TryGetValue(key, out var ret))
             {
                 ret = new V();
                 dict[key] = ret;
@@ -29,7 +29,7 @@ namespace Noggog
 
         public static V GetOrAdd<K, V>(this IDictionary<K, V> dict, K key, Func<V> getNew)
         {
-            if (!dict.TryGetValue(key, out V ret))
+            if (!dict.TryGetValue(key, out var ret))
             {
                 ret = getNew();
                 dict[key] = ret;
@@ -40,7 +40,7 @@ namespace Noggog
         [return: MaybeNull()]
         public static V GetOrDefault<K, V>(this IDictionary<K, V> dict, K key)
         {
-            if (!dict.TryGetValue(key, out V ret))
+            if (!dict.TryGetValue(key, out var ret))
             {
                 return default;
             }

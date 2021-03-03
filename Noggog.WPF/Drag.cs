@@ -114,8 +114,9 @@ namespace Noggog.WPF
                     var ret = new DragEventParams<TType>(e);
                     if (e.Data.GetDataPresent(SourceVmKey))
                     {
-                        TType vmTarget;
+                        TType? vmTarget;
                         var rawData = e.Data.GetData(SourceVmKey);
+                        // Keep as is, to support non-objects
                         if (rawData is TType)
                         {
                             vmTarget = (TType)rawData;

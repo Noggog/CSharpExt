@@ -46,7 +46,7 @@ namespace Noggog
 
         public static IObservable<(T? Previous, T Current)> Pairwise<T>(this IObservable<T> source)
         {
-            T prevStorage = default;
+            T? prevStorage = default;
             return source.Select(i =>
             {
                 var prev = prevStorage;
@@ -206,7 +206,7 @@ namespace Noggog
             {
                 var hasValue = false;
                 bool throttling = false;
-                T value = default;
+                T? value = default;
 
                 var dueTimeDisposable = new SerialDisposable();
 

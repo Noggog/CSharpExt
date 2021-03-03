@@ -24,7 +24,7 @@ namespace Noggog
 
         private TryGet(
             bool succeeded,
-            T val = default(T))
+            T? val = default(T))
         {
             this.Value = val!;
             this.Succeeded = succeeded;
@@ -83,7 +83,7 @@ namespace Noggog
         }
 
         [DebuggerStepThrough]
-        public static TryGet<T> Create(bool successful, T val = default(T))
+        public static TryGet<T> Create(bool successful, T? val = default(T))
         {
             return new TryGet<T>(successful, val!);
         }

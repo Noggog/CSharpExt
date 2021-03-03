@@ -26,7 +26,7 @@ namespace Noggog
 
         private GetResponse(
             bool succeeded,
-            T val = default,
+            T? val = default,
             string reason = "",
             Exception? ex = null)
         {
@@ -138,7 +138,7 @@ namespace Noggog
             return new GetResponse<T>(false, val);
         }
 
-        public static GetResponse<T> Create(bool successful, T val = default, string reason = "")
+        public static GetResponse<T> Create(bool successful, T? val = default, string reason = "")
         {
             return new GetResponse<T>(successful, val!, reason);
         }

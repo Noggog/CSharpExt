@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
@@ -35,11 +35,9 @@ namespace Noggog
             return _dict.Select(kv => new KeyValuePair<TKey, TTargetValue>(kv.Key, kv.Value)).GetEnumerator();
         }
 
-#pragma warning disable CS8767 // Nullability of reference types in type of parameter doesn't match implicitly implemented member (possibly because of nullability attributes).
         public bool TryGetValue(TKey key, [MaybeNullWhen(false)] out TTargetValue value)
-#pragma warning restore CS8767 // Nullability of reference types in type of parameter doesn't match implicitly implemented member (possibly because of nullability attributes).
         {
-            if (!_dict.TryGetValue(key, out TSourceValue source))
+            if (!_dict.TryGetValue(key, out var source))
             {
                 value = default;
                 return false;
