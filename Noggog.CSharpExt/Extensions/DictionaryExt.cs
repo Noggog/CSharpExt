@@ -16,6 +16,11 @@ namespace Noggog
             }
         }
 
+        public static void Set<K, V>(this IDictionary<K, V> dict, K key, V value)
+        {
+            dict[key] = value;
+        }
+
         public static V GetOrAdd<K, V>(this IDictionary<K, V> dict, K key)
             where V : new()
         {
