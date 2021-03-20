@@ -1,12 +1,11 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Text;
 
 namespace Noggog
 {
-    public interface ICovariantReadOnlyCache<out TValue, TKey> : IEnumerable<IKeyValue<TValue, TKey>>, IEnumerable
+    public interface IReadOnlyCache<out TValue, TKey> : IEnumerable<IKeyValue<TValue, TKey>>, IEnumerable
     {
         //
         // Summary:
@@ -67,12 +66,5 @@ namespace Noggog
         //   T:System.ArgumentNullException:
         //     key is null.
         bool ContainsKey(TKey key);
-
-        TValue? TryGetValue(TKey key);
-    }
-
-    public interface IReadOnlyCache<TValue, TKey> : ICovariantReadOnlyCache<TValue, TKey>
-    {
-        public bool TryGetValue(TKey key, [MaybeNullWhen(false)] out TValue value);
     }
 }
