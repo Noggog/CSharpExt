@@ -204,18 +204,5 @@ namespace Noggog
                     }));
             }
         }
-
-        public static bool TryGetValue<TObject, TKey>(this IReadOnlyCache<TObject, TKey> cache, TKey key, [MaybeNullWhen(false)] out TObject value)
-        {
-            // ToDo
-            // Improve to not double query
-            if (cache.ContainsKey(key))
-            {
-                value = cache[key];
-                return true;
-            }
-            value = default;
-            return false;
-        }
     }
 }

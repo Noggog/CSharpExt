@@ -120,5 +120,14 @@ namespace Noggog
             this.Set(val);
             return val;
         }
+
+        public TObject? TryGetValue(TKey key)
+        {
+            if (_dict.TryGetValue(key, out var val))
+            {
+                return val;
+            }
+            return default;
+        }
     }
 }
