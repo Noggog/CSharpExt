@@ -70,7 +70,6 @@ namespace Noggog.Extensions
         }
         #endregion
 
-
         #region Invalid Filename Chars
         private static readonly char[] _invalidFileNameChars = Path.GetInvalidFileNameChars();
 
