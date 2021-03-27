@@ -287,6 +287,12 @@ namespace Noggog
         }
         #endregion
 
+        public static bool HasFlag<T>(this T e, T toCheck)
+            where T : struct, Enum
+        {
+            return e.HasFlag((Enum)toCheck);
+        }
+
         public static bool HasFlag(int value, int flagToCheck)
         {
             return (value & flagToCheck) > 0;
