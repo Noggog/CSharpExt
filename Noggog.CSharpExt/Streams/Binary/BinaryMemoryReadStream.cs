@@ -273,12 +273,12 @@ namespace Noggog
 
         public float GetFloat(int offset)
         {
-            return SpanExt.Float(this._data.Span.Slice(_pos + offset));
+            return BinaryPrimitives.ReadSingleLittleEndian(this._data.Span.Slice(_pos + offset));
         }
 
         public double GetDouble(int offset)
         {
-            return SpanExt.Double(this._data.Span.Slice(_pos + offset));
+            return BinaryPrimitives.ReadDoubleLittleEndian(this._data.Span.Slice(_pos + offset));
         }
 
         public string GetStringUTF8(int amount, int offset)
@@ -333,12 +333,12 @@ namespace Noggog
 
         public float GetFloat()
         {
-            return SpanExt.Float(this._data.Span.Slice(_pos));
+            return BinaryPrimitives.ReadSingleLittleEndian(this._data.Span.Slice(_pos));
         }
 
         public double GetDouble()
         {
-            return SpanExt.Double(this._data.Span.Slice(_pos));
+            return BinaryPrimitives.ReadDoubleLittleEndian(this._data.Span.Slice(_pos));
         }
 
         public string GetStringUTF8(int amount)

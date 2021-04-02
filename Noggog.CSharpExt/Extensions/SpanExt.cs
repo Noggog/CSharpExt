@@ -53,26 +53,14 @@ namespace Noggog
             return MemoryMarshal.Cast<byte, double>(span);
         }
 
-        public static unsafe float Float(this ReadOnlySpan<byte> span)
+        public static float Float(this ReadOnlySpan<byte> span)
         {
-            // ToDo
-            // Swap for BinaryPrimitives when implemented
-            // https://github.com/dotnet/corefx/issues/35791
-            fixed (byte* ptr = &MemoryMarshal.GetReference(span))
-            {
-                return *(float*)ptr;
-            }
+            return BinaryPrimitives.ReadSingleLittleEndian(span);
         }
 
         public static unsafe double Double(this ReadOnlySpan<byte> span)
         {
-            // ToDo
-            // Swap for BinaryPrimitives when implemented
-            // https://github.com/dotnet/corefx/issues/35791
-            fixed (byte* ptr = &MemoryMarshal.GetReference(span))
-            {
-                return *(double*)ptr;
-            }
+            return BinaryPrimitives.ReadDoubleLittleEndian(span);
         }
 
         public static unsafe string StringUTF8(this ReadOnlySpan<byte> span)
@@ -123,9 +111,9 @@ namespace Noggog
             return BinaryPrimitives.ReadInt64LittleEndian(span);
         }
 
-        public static float Float(this ReadOnlyMemorySlice<byte> span) => span.Span.Float();
+        public static float Float(this ReadOnlyMemorySlice<byte> span) => BinaryPrimitives.ReadSingleLittleEndian(span);
 
-        public static double Double(this ReadOnlyMemorySlice<byte> span) => span.Span.Double();
+        public static double Double(this ReadOnlyMemorySlice<byte> span) => BinaryPrimitives.ReadDoubleLittleEndian(span);
 
         public static string StringUTF8(this ReadOnlyMemorySlice<byte> span) => span.Span.StringUTF8();
 
