@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace Noggog
 {
+    /// <summary>
+    /// Not finished or tested
+    /// </summary>
     public class BinaryWriteStream : Stream, IBinaryWriteStream
     {
         public readonly Stream _stream;
@@ -60,7 +63,7 @@ namespace Noggog
 
         private void SetPosition(long pos)
         {
-
+            throw new NotImplementedException();
         }
 
         private void LoadAmount(int amount)
@@ -147,14 +150,6 @@ namespace Noggog
         }
 
         public override void Write(byte[] buffer, int offset, int amount)
-        {
-            if (amount <= _internalMemoryStream.Remaining)
-            {
-
-            }
-        }
-
-        public void Write(byte[] buffer)
         {
             throw new NotImplementedException();
         }

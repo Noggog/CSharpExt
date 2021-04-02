@@ -28,14 +28,14 @@ namespace Noggog
             IsLittleEndian = isLittleEndian;
         }
 
-        public void Write(byte[] buffer, int offset, int amount)
+        public void Write(ReadOnlySpan<byte> buffer, int offset, int amount)
         {
-            Array.Copy(buffer, offset, _data, _pos, amount);
+            buffer.Slice(offset, amount).CopyTo(_data.AsSpan().Slice(_pos));
         }
 
-        public void Write(byte[] buffer)
+        public void Write(ReadOnlySpan<byte> buffer)
         {
-            Array.Copy(buffer, 0, _data, _pos, _data.Length);
+            buffer.CopyTo(_data.AsSpan().Slice(_pos));
         }
 
         public void Write(bool b)

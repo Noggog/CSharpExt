@@ -12,8 +12,7 @@ namespace Noggog
         long Position { get; set; }
         long Length { get; }
         bool IsLittleEndian { get; }
-        void Write(byte[] buffer, int offset, int amount);
-        void Write(byte[] buffer);
+        void Write(ReadOnlySpan<byte> buffer);
         void Write(bool value);
         void Write(byte value);
         void Write(ushort value);
