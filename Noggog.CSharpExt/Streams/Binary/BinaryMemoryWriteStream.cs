@@ -15,15 +15,17 @@ namespace Noggog
         public int Length => this._data.Length;
         public int Remaining => this._data.Length - this._pos;
         public bool Complete => this._data.Length <= this._pos;
+        public bool IsLittleEndian { get; }
 
         #region IBinaryWriteStream
         long IBinaryWriteStream.Position { get => _pos; set => _pos = checked((int)value); }
         long IBinaryWriteStream.Length => this._data.Length;
         #endregion
 
-        public BinaryMemoryWriteStream(byte[] buffer)
+        public BinaryMemoryWriteStream(byte[] buffer, bool isLittleEndian = true)
         {
             this._data = buffer;
+            IsLittleEndian = isLittleEndian;
         }
 
         public void Write(byte[] buffer, int offset, int amount)
@@ -55,28 +57,60 @@ namespace Noggog
 
         public void Write(ushort value)
         {
-            _data[_pos++] = (byte)value;
-            _data[_pos++] = (byte)(value >> 8);
+            if (IsLittleEndian)
+            {
+                _data[_pos++] = (byte)value;
+                _data[_pos++] = (byte)(value >> 8);
+            }
+            else
+            {
+                _data[_pos++] = (byte)(value >> 8);
+                _data[_pos++] = (byte)value;
+            }
         }
 
         public void Write(uint value)
         {
-            _data[_pos++] = (byte)value;
-            _data[_pos++] = (byte)(value >> 8);
-            _data[_pos++] = (byte)(value >> 0x10);
-            _data[_pos++] = (byte)(value >> 0x18);
+            if (IsLittleEndian)
+            {
+                _data[_pos++] = (byte)value;
+                _data[_pos++] = (byte)(value >> 8);
+                _data[_pos++] = (byte)(value >> 0x10);
+                _data[_pos++] = (byte)(value >> 0x18);
+            }
+            else
+            {
+                _data[_pos++] = (byte)(value >> 0x18);
+                _data[_pos++] = (byte)(value >> 0x10);
+                _data[_pos++] = (byte)(value >> 8);
+                _data[_pos++] = (byte)value;
+            }
         }
 
         public void Write(ulong value)
         {
-            _data[_pos++] = (byte)value;
-            _data[_pos++] = (byte)(value >> 8);
-            _data[_pos++] = (byte)(value >> 0x10);
-            _data[_pos++] = (byte)(value >> 0x18);
-            _data[_pos++] = (byte)(value >> 0x20);
-            _data[_pos++] = (byte)(value >> 0x28);
-            _data[_pos++] = (byte)(value >> 0x30);
-            _data[_pos++] = (byte)(value >> 0x38);
+            if (IsLittleEndian)
+            {
+                _data[_pos++] = (byte)value;
+                _data[_pos++] = (byte)(value >> 8);
+                _data[_pos++] = (byte)(value >> 0x10);
+                _data[_pos++] = (byte)(value >> 0x18);
+                _data[_pos++] = (byte)(value >> 0x20);
+                _data[_pos++] = (byte)(value >> 0x28);
+                _data[_pos++] = (byte)(value >> 0x30);
+                _data[_pos++] = (byte)(value >> 0x38);
+            }
+            else
+            {
+                _data[_pos++] = (byte)(value >> 0x38);
+                _data[_pos++] = (byte)(value >> 0x30);
+                _data[_pos++] = (byte)(value >> 0x28);
+                _data[_pos++] = (byte)(value >> 0x20);
+                _data[_pos++] = (byte)(value >> 0x18);
+                _data[_pos++] = (byte)(value >> 0x10);
+                _data[_pos++] = (byte)(value >> 8);
+                _data[_pos++] = (byte)value;
+            }
         }
 
         public void Write(sbyte value)
@@ -86,28 +120,60 @@ namespace Noggog
 
         public void Write(short value)
         {
-            _data[_pos++] = (byte)value;
-            _data[_pos++] = (byte)(value >> 8);
+            if (IsLittleEndian)
+            {
+                _data[_pos++] = (byte)value;
+                _data[_pos++] = (byte)(value >> 8);
+            }
+            else
+            {
+                _data[_pos++] = (byte)(value >> 8);
+                _data[_pos++] = (byte)value;
+            }
         }
 
         public void Write(int value)
         {
-            _data[_pos++] = (byte)value;
-            _data[_pos++] = (byte)(value >> 8);
-            _data[_pos++] = (byte)(value >> 0x10);
-            _data[_pos++] = (byte)(value >> 0x18);
+            if (IsLittleEndian)
+            {
+                _data[_pos++] = (byte)value;
+                _data[_pos++] = (byte)(value >> 8);
+                _data[_pos++] = (byte)(value >> 0x10);
+                _data[_pos++] = (byte)(value >> 0x18);
+            }
+            else
+            {
+                _data[_pos++] = (byte)(value >> 0x18);
+                _data[_pos++] = (byte)(value >> 0x10);
+                _data[_pos++] = (byte)(value >> 8);
+                _data[_pos++] = (byte)value;
+            }
         }
 
         public void Write(long value)
         {
-            _data[_pos++] = (byte)value;
-            _data[_pos++] = (byte)(value >> 8);
-            _data[_pos++] = (byte)(value >> 0x10);
-            _data[_pos++] = (byte)(value >> 0x18);
-            _data[_pos++] = (byte)(value >> 0x20);
-            _data[_pos++] = (byte)(value >> 0x28);
-            _data[_pos++] = (byte)(value >> 0x30);
-            _data[_pos++] = (byte)(value >> 0x38);
+            if (IsLittleEndian)
+            {
+                _data[_pos++] = (byte)value;
+                _data[_pos++] = (byte)(value >> 8);
+                _data[_pos++] = (byte)(value >> 0x10);
+                _data[_pos++] = (byte)(value >> 0x18);
+                _data[_pos++] = (byte)(value >> 0x20);
+                _data[_pos++] = (byte)(value >> 0x28);
+                _data[_pos++] = (byte)(value >> 0x30);
+                _data[_pos++] = (byte)(value >> 0x38);
+            }
+            else
+            {
+                _data[_pos++] = (byte)(value >> 0x38);
+                _data[_pos++] = (byte)(value >> 0x30);
+                _data[_pos++] = (byte)(value >> 0x28);
+                _data[_pos++] = (byte)(value >> 0x20);
+                _data[_pos++] = (byte)(value >> 0x18);
+                _data[_pos++] = (byte)(value >> 0x10);
+                _data[_pos++] = (byte)(value >> 8);
+                _data[_pos++] = (byte)value;
+            }
         }
 
         public void Write(float value)

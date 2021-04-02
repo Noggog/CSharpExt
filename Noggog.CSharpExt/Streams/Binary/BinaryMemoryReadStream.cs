@@ -28,6 +28,7 @@ namespace Noggog
         public ReadOnlyMemorySlice<byte> RemainingMemory => _data.Slice(_pos);
         public int UnderlyingPosition => _data.StartPosition + this.Position;
         public bool IsPersistantBacking => true;
+        public bool IsLittleEndian { get; }
 
         #region IBinaryReadStream
         long IBinaryReadStream.Position { get => _pos; set => SetPosition(checked((int)value)); }
@@ -36,14 +37,16 @@ namespace Noggog
         #endregion
 
         [DebuggerStepThrough]
-        public BinaryMemoryReadStream(ReadOnlyMemorySlice<byte> data)
+        public BinaryMemoryReadStream(ReadOnlyMemorySlice<byte> data, bool isLittleEndian = true)
         {
             this._data = data;
+            IsLittleEndian = isLittleEndian;
         }
 
-        public BinaryMemoryReadStream(byte[] data)
+        public BinaryMemoryReadStream(byte[] data, bool isLittleEndian = true)
         {
             this._data = new MemorySlice<byte>(data);
+            IsLittleEndian = isLittleEndian;
         }
 
         private void SetPosition(int value)
@@ -141,19 +144,22 @@ namespace Noggog
         public ushort ReadUInt16()
         {
             _pos += 2;
-            return BinaryPrimitives.ReadUInt16LittleEndian(this._data.Span.Slice(_pos - 2));
+            var span = this._data.Span.Slice(_pos - 2);
+            return IsLittleEndian ? BinaryPrimitives.ReadUInt16LittleEndian(span) : BinaryPrimitives.ReadUInt16BigEndian(span);
         }
 
         public uint ReadUInt32()
         {
             _pos += 4;
-            return BinaryPrimitives.ReadUInt32LittleEndian(this._data.Span.Slice(_pos - 4));
+            var span = this._data.Span.Slice(_pos - 4);
+            return IsLittleEndian ? BinaryPrimitives.ReadUInt32LittleEndian(span) : BinaryPrimitives.ReadUInt32BigEndian(span);
         }
 
         public ulong ReadUInt64()
         {
             _pos += 8;
-            return BinaryPrimitives.ReadUInt64LittleEndian(this._data.Span.Slice(_pos - 8));
+            var span = this._data.Span.Slice(_pos - 8);
+            return IsLittleEndian ? BinaryPrimitives.ReadUInt64LittleEndian(span) : BinaryPrimitives.ReadUInt64BigEndian(span);
         }
 
         public sbyte ReadInt8()
@@ -164,19 +170,22 @@ namespace Noggog
         public short ReadInt16()
         {
             _pos += 2;
-            return BinaryPrimitives.ReadInt16LittleEndian(this._data.Span.Slice(_pos - 2));
+            var span = this._data.Span.Slice(_pos - 2);
+            return IsLittleEndian ? BinaryPrimitives.ReadInt16LittleEndian(span) : BinaryPrimitives.ReadInt16BigEndian(span);
         }
 
         public int ReadInt32()
         {
             _pos += 4;
-            return BinaryPrimitives.ReadInt32LittleEndian(this._data.Span.Slice(_pos - 4));
+            var span = this._data.Span.Slice(_pos - 4);
+            return IsLittleEndian ? BinaryPrimitives.ReadInt32LittleEndian(span) : BinaryPrimitives.ReadInt32BigEndian(span);
         }
 
         public long ReadInt64()
         {
             _pos += 8;
-            return BinaryPrimitives.ReadInt64LittleEndian(this._data.Span.Slice(_pos - 8));
+            var span = this._data.Span.Slice(_pos - 8);
+            return IsLittleEndian ? BinaryPrimitives.ReadInt64LittleEndian(span) : BinaryPrimitives.ReadInt64BigEndian(span);
         }
 
         public string ReadStringUTF8(int amount)
@@ -238,17 +247,20 @@ namespace Noggog
 
         public ushort GetUInt16(int offset)
         {
-            return BinaryPrimitives.ReadUInt16LittleEndian(this._data.Span.Slice(_pos + offset));
+            var span = this._data.Span.Slice(_pos + offset);
+            return IsLittleEndian ? BinaryPrimitives.ReadUInt16LittleEndian(span) : BinaryPrimitives.ReadUInt16BigEndian(span);
         }
 
         public uint GetUInt32(int offset)
         {
-            return BinaryPrimitives.ReadUInt32LittleEndian(this._data.Span.Slice(_pos + offset));
+            var span = this._data.Span.Slice(_pos + offset);
+            return IsLittleEndian ? BinaryPrimitives.ReadUInt32LittleEndian(span) : BinaryPrimitives.ReadUInt32BigEndian(span);
         }
 
         public ulong GetUInt64(int offset)
         {
-            return BinaryPrimitives.ReadUInt64LittleEndian(this._data.Span.Slice(_pos + offset));
+            var span = this._data.Span.Slice(_pos + offset);
+            return IsLittleEndian ? BinaryPrimitives.ReadUInt64LittleEndian(span) : BinaryPrimitives.ReadUInt64BigEndian(span);
         }
 
         public sbyte GetInt8(int offset)
@@ -258,27 +270,32 @@ namespace Noggog
 
         public short GetInt16(int offset)
         {
-            return BinaryPrimitives.ReadInt16LittleEndian(this._data.Span.Slice(_pos + offset));
+            var span = this._data.Span.Slice(_pos + offset);
+            return IsLittleEndian ? BinaryPrimitives.ReadInt16LittleEndian(span) : BinaryPrimitives.ReadInt16BigEndian(span);
         }
 
         public int GetInt32(int offset)
         {
-            return BinaryPrimitives.ReadInt32LittleEndian(this._data.Span.Slice(_pos + offset));
+            var span = this._data.Span.Slice(_pos + offset);
+            return IsLittleEndian ? BinaryPrimitives.ReadInt32LittleEndian(span) : BinaryPrimitives.ReadInt32BigEndian(span);
         }
 
         public long GetInt64(int offset)
         {
-            return BinaryPrimitives.ReadInt64LittleEndian(this._data.Span.Slice(_pos + offset));
+            var span = this._data.Span.Slice(_pos + offset);
+            return IsLittleEndian ? BinaryPrimitives.ReadInt64LittleEndian(span) : BinaryPrimitives.ReadInt64BigEndian(span);
         }
 
         public float GetFloat(int offset)
         {
-            return BinaryPrimitives.ReadSingleLittleEndian(this._data.Span.Slice(_pos + offset));
+            var span = this._data.Span.Slice(_pos + offset);
+            return IsLittleEndian ? BinaryPrimitives.ReadSingleLittleEndian(span) : BinaryPrimitives.ReadSingleBigEndian(span);
         }
 
         public double GetDouble(int offset)
         {
-            return BinaryPrimitives.ReadDoubleLittleEndian(this._data.Span.Slice(_pos + offset));
+            var span = this._data.Span.Slice(_pos + offset);
+            return IsLittleEndian ? BinaryPrimitives.ReadDoubleLittleEndian(span) : BinaryPrimitives.ReadDoubleBigEndian(span);
         }
 
         public string GetStringUTF8(int amount, int offset)
@@ -298,17 +315,20 @@ namespace Noggog
 
         public ushort GetUInt16()
         {
-            return BinaryPrimitives.ReadUInt16LittleEndian(this._data.Span.Slice(_pos));
+            var span = this._data.Span.Slice(_pos);
+            return IsLittleEndian ? BinaryPrimitives.ReadUInt16LittleEndian(span) : BinaryPrimitives.ReadUInt16BigEndian(span);
         }
 
         public uint GetUInt32()
         {
-            return BinaryPrimitives.ReadUInt32LittleEndian(this._data.Span.Slice(_pos));
+            var span = this._data.Span.Slice(_pos);
+            return IsLittleEndian ? BinaryPrimitives.ReadUInt32LittleEndian(span) : BinaryPrimitives.ReadUInt32BigEndian(span);
         }
 
         public ulong GetUInt64()
         {
-            return BinaryPrimitives.ReadUInt64LittleEndian(this._data.Span.Slice(_pos));
+            var span = this._data.Span.Slice(_pos);
+            return IsLittleEndian ? BinaryPrimitives.ReadUInt64LittleEndian(span) : BinaryPrimitives.ReadUInt64BigEndian(span);
         }
 
         public sbyte GetInt8()
@@ -318,27 +338,32 @@ namespace Noggog
 
         public short GetInt16()
         {
-            return BinaryPrimitives.ReadInt16LittleEndian(this._data.Span.Slice(_pos));
+            var span = this._data.Span.Slice(_pos);
+            return IsLittleEndian ? BinaryPrimitives.ReadInt16LittleEndian(span) : BinaryPrimitives.ReadInt16BigEndian(span);
         }
 
         public int GetInt32()
         {
-            return BinaryPrimitives.ReadInt32LittleEndian(this._data.Span.Slice(_pos));
+            var span = this._data.Span.Slice(_pos);
+            return IsLittleEndian ? BinaryPrimitives.ReadInt32LittleEndian(span) : BinaryPrimitives.ReadInt32BigEndian(span);
         }
 
         public long GetInt64()
         {
-            return BinaryPrimitives.ReadInt64LittleEndian(this._data.Span.Slice(_pos));
+            var span = this._data.Span.Slice(_pos);
+            return IsLittleEndian ? BinaryPrimitives.ReadInt64LittleEndian(span) : BinaryPrimitives.ReadInt64BigEndian(span);
         }
 
         public float GetFloat()
         {
-            return BinaryPrimitives.ReadSingleLittleEndian(this._data.Span.Slice(_pos));
+            var span = this._data.Span.Slice(_pos);
+            return IsLittleEndian ? BinaryPrimitives.ReadSingleLittleEndian(span) : BinaryPrimitives.ReadSingleBigEndian(span);
         }
 
         public double GetDouble()
         {
-            return BinaryPrimitives.ReadDoubleLittleEndian(this._data.Span.Slice(_pos));
+            var span = this._data.Span.Slice(_pos);
+            return IsLittleEndian ? BinaryPrimitives.ReadDoubleLittleEndian(span) : BinaryPrimitives.ReadDoubleBigEndian(span);
         }
 
         public string GetStringUTF8(int amount)

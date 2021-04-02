@@ -33,7 +33,9 @@ namespace Noggog
         public bool CheckUnderlyingStreamPosition = false;
         public bool IsPersistantBacking => false;
 
-        public BinaryReadStream(Stream stream, int bufferSize = 4096, bool dispose = true)
+        public bool IsLittleEndian { get; }
+
+        public BinaryReadStream(Stream stream, int bufferSize = 4096, bool dispose = true, bool isLittleEndian = true)
         {
             if (stream.Position != 0)
             {
@@ -43,13 +45,14 @@ namespace Noggog
             this._stream = stream;
             this._length = this._stream.Length;
             this._data = new byte[bufferSize];
-            this._internalMemoryStream = new BinaryMemoryReadStream(new MemorySlice<byte>(this._data));
+            this._internalMemoryStream = new BinaryMemoryReadStream(new MemorySlice<byte>(this._data), isLittleEndian: isLittleEndian);
             this._internalMemoryStream.Position = _data.Length;
             this._internalBufferLength = _data.Length;
+            IsLittleEndian = isLittleEndian;
         }
 
-        public BinaryReadStream(string path, int bufferSize = 4096)
-            : this(File.OpenRead(path), bufferSize)
+        public BinaryReadStream(string path, int bufferSize = 4096, bool isLittleEndian = true)
+            : this(File.OpenRead(path), bufferSize, isLittleEndian: isLittleEndian)
         {
         }
 

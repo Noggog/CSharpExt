@@ -28,17 +28,19 @@ namespace Noggog
         public override bool CanRead => false;
         public override bool CanSeek => true;
         public override bool CanWrite => true;
+        public bool IsLittleEndian { get; }
 
-        public BinaryWriteStream(Stream stream, int bufferSize = 4096, bool dispose = true)
+        public BinaryWriteStream(Stream stream, int bufferSize = 4096, bool dispose = true, bool isLittleEndian = true)
         {
             this._dispose = dispose;
             this._stream = stream;
             this._data = new byte[bufferSize];
-            this._internalMemoryStream = new BinaryMemoryWriteStream(this._data);
+            this._internalMemoryStream = new BinaryMemoryWriteStream(this._data, isLittleEndian);
+            IsLittleEndian = isLittleEndian;
         }
 
-        public BinaryWriteStream(string path, int bufferSize = 4096)
-            : this(File.OpenWrite(path), bufferSize)
+        public BinaryWriteStream(string path, int bufferSize = 4096, bool isLittleEndian = true)
+            : this(File.OpenWrite(path), bufferSize, isLittleEndian: isLittleEndian)
         {
         }
 

@@ -13,6 +13,7 @@ namespace Noggog
         long Length { get; }
         long Remaining { get; }
         bool Complete { get; }
+        bool IsLittleEndian { get; }
 
         /// <summary>
         /// True if the backing data is reliable between reading events
@@ -50,7 +51,6 @@ namespace Noggog
         /// Returns a span of size amount
         /// </summary>
         /// <param name="amount">Amount to get</param>
-        /// <param name="offset">Offset to read from relative to current position</param>
         /// <param name="readSafe">Whether to ensure the span returned will not be modified by subsequent reads</param>
         /// <returns>Span of size amount</returns>
         ReadOnlySpan<byte> GetSpan(int amount, bool readSafe = true);
@@ -87,7 +87,6 @@ namespace Noggog
         /// Returns a span of size amount
         /// </summary>
         /// <param name="amount">Amount to get</param>
-        /// <param name="offset">Offset to read from relative to current position</param>
         /// <param name="readSafe">Whether to ensure the span returned will not be modified by subsequent reads</param>
         /// <returns>Span of size amount</returns>
         ReadOnlyMemorySlice<byte> GetMemory(int amount, bool readSafe = true);
