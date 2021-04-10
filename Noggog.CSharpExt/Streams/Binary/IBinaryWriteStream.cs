@@ -24,6 +24,6 @@ namespace Noggog
         void Write(long value);
         void Write(float value);
         void Write(double value);
-        void Write(string value);
+        void Write(ReadOnlySpan<char> value);
     }
 }

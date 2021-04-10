@@ -154,7 +154,7 @@ namespace Noggog
             throw new NotImplementedException();
         }
 
-        public void Write(string value)
+        public void Write(ReadOnlySpan<char> value)
         {
             throw new NotImplementedException();
         }

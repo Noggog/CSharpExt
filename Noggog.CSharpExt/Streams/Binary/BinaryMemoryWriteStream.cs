@@ -186,7 +186,7 @@ namespace Noggog
             Write(BitConverter.DoubleToInt64Bits(value));
         }
 
-        public void Write(string str)
+        public void Write(ReadOnlySpan<char> str)
         {
             for (int i = 0; i < str.Length; i++)
             {
