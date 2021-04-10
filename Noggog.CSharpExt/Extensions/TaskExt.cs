@@ -117,7 +117,6 @@ namespace Noggog
             return await task.ConfigureAwait(false);
         }
 
-#if NET5_0
         public static async Task DoThenComplete(TaskCompletionSource tcs, Func<Task> action)
         {
             try
@@ -131,21 +130,6 @@ namespace Noggog
                 throw;
             }
         }
-#else
-        public static async Task DoThenComplete(TaskCompletionSource tcs, Func<Task> action)
-        {
-            try
-            {
-                await action().ConfigureAwait(false);
-                tcs?.SetResult();
-            }
-            catch (Exception ex)
-            {
-                tcs?.SetException(ex);
-                throw;
-            }
-        }
-#endif
 
         public static async void FireAndForget(this Task task, Action<Exception>? onException = null)
         {

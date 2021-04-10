@@ -1,4 +1,3 @@
-#if NET5_0
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -87,4 +86,3 @@ namespace Noggog.Utility
         }
     }
 }
-#endif

@@ -25,11 +25,7 @@ namespace CSharpExt.UnitTests
             List<int> results = new List<int>();
             Subject<int> waitSubject = new Subject<int>();
             int throwCount = 0;
-#if NET5_0
             TaskCompletionSource complete = new TaskCompletionSource();
-#else
-            Noggog.TaskCompletionSource complete = new Noggog.TaskCompletionSource();
-#endif
             waitSubject
                 .SelectReplace(async (i, c) =>
                 {
