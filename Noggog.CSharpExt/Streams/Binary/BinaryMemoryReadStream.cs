@@ -1,12 +1,6 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Buffers.Binary;
-using System.Buffers.Text;
-using System.Runtime.InteropServices;
 using System.Diagnostics;
 
 namespace Noggog
@@ -29,6 +23,7 @@ namespace Noggog
         public int UnderlyingPosition => _data.StartPosition + this.Position;
         public bool IsPersistantBacking => true;
         public bool IsLittleEndian { get; }
+        public Stream BaseStream => throw new NotImplementedException();
 
         #region IBinaryReadStream
         long IBinaryReadStream.Position { get => _pos; set => SetPosition(checked((int)value)); }

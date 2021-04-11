@@ -33,6 +33,8 @@ namespace Noggog
         public override bool CanWrite => true;
         public bool IsLittleEndian { get; }
 
+        Stream IBinaryWriteStream.BaseStream => this;
+
         public BinaryWriteStream(Stream stream, int bufferSize = 4096, bool dispose = true, bool isLittleEndian = true)
         {
             this._dispose = dispose;

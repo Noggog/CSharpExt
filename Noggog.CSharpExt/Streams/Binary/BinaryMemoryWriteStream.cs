@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -20,6 +21,7 @@ namespace Noggog
         #region IBinaryWriteStream
         long IBinaryWriteStream.Position { get => _pos; set => _pos = checked((int)value); }
         long IBinaryWriteStream.Length => this._data.Length;
+        Stream IBinaryWriteStream.BaseStream => throw new NotImplementedException();
         #endregion
 
         public BinaryMemoryWriteStream(byte[] buffer, bool isLittleEndian = true)

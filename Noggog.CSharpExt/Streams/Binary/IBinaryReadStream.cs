@@ -14,6 +14,7 @@ namespace Noggog
         long Remaining { get; }
         bool Complete { get; }
         bool IsLittleEndian { get; }
+        Stream BaseStream { get; }
 
         /// <summary>
         /// True if the backing data is reliable between reading events
