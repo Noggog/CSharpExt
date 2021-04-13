@@ -121,7 +121,7 @@ namespace Noggog
             return _data.Slice(_pos + offset, amount);
         }
 
-        public bool ReadBool()
+        public bool ReadBoolean()
         {
             return _data.Span[_pos++] > 0;
         }
@@ -230,7 +230,7 @@ namespace Noggog
             return Get(buffer, targetOffset: targetOffset, amount: buffer.Length);
         }
 
-        public bool GetBool(int offset)
+        public bool GetBoolean(int offset)
         {
             return _data.Span[_pos + offset] > 0;
         }
@@ -298,7 +298,7 @@ namespace Noggog
             return SpanExt.StringUTF8(this._data.Span.Slice(_pos + offset, amount));
         }
 
-        public bool GetBool()
+        public bool GetBoolean()
         {
             return _data.Span[_pos] > 0;
         }

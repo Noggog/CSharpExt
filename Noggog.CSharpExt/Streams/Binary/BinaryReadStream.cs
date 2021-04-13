@@ -264,10 +264,10 @@ namespace Noggog
             return ret;
         }
 
-        public bool ReadBool()
+        public bool ReadBoolean()
         {
             LoadPosition(1);
-            return _internalMemoryStream.ReadBool();
+            return _internalMemoryStream.ReadBoolean();
         }
 
         public byte ReadUInt8()
@@ -379,10 +379,10 @@ namespace Noggog
             return ret;
         }
 
-        public bool GetBool(int offset)
+        public bool GetBoolean(int offset)
         {
             LoadPosition(1 + offset);
-            return _internalMemoryStream.GetBool(offset);
+            return _internalMemoryStream.GetBoolean(offset);
         }
 
         public byte GetUInt8(int offset)
@@ -514,10 +514,10 @@ namespace Noggog
             }
         }
 
-        public bool GetBool()
+        public bool GetBoolean()
         {
             LoadPosition(1);
-            return _internalMemoryStream.GetBool();
+            return _internalMemoryStream.GetBoolean();
         }
 
         public byte GetUInt8()

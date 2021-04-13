@@ -114,20 +114,20 @@ namespace CSharpExt.Benchmark
         [Benchmark]
         public bool GetBool()
         {
-            return readStream.GetBool();
+            return readStream.GetBoolean();
         }
 
         [Benchmark]
         public bool GetBoolOffset()
         {
-            return readStream.GetBool(offset: offset);
+            return readStream.GetBoolean(offset: offset);
         }
 
         [Benchmark]
         public bool ReadBool()
         {
             readStream.Position = 0;
-            return readStream.ReadBool();
+            return readStream.ReadBoolean();
         }
 
         [Benchmark]

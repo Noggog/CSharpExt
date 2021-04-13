@@ -100,9 +100,9 @@ namespace Noggog
         /// <param name="readSafe">Whether to ensure the span returned will not be modified by subsequent reads</param>
         /// <returns>Span of size amount</returns>
         ReadOnlyMemorySlice<byte> GetMemory(int amount, int offset, bool readSafe = true);
-        bool ReadBool();
-        bool GetBool();
-        bool GetBool(int offset);
+        bool ReadBoolean();
+        bool GetBoolean();
+        bool GetBoolean(int offset);
         byte ReadUInt8();
         byte GetUInt8();
         byte GetUInt8(int offset);
