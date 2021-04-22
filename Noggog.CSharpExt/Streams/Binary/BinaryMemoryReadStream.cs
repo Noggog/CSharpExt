@@ -5,30 +5,39 @@ using System.Diagnostics;
 
 namespace Noggog
 {
-    public class BinaryMemoryReadStream : IBinaryReadStream
+    public class BinaryMemoryReadStream : Stream, IBinaryReadStream
     {
         internal int _pos;
         internal ReadOnlyMemorySlice<byte> _data;
         public ReadOnlyMemorySlice<byte> Data => _data;
-        public int Position
+        public override long Position
         {
             get => this._pos;
-            set => SetPosition(value);
+            set => SetPosition(checked((int)value));
         }
-        public int Length => this._data.Length;
+        public int PositionInt
+        { 
+            get => this._pos;
+            set => _pos = value;
+        }
         public int Remaining => this._data.Length - this._pos;
         public bool Complete => this._data.Length <= this._pos;
         public ReadOnlySpan<byte> RemainingSpan => _data.Span.Slice(_pos);
         public ReadOnlyMemorySlice<byte> RemainingMemory => _data.Slice(_pos);
-        public int UnderlyingPosition => _data.StartPosition + this.Position;
+        public int UnderlyingPosition => _data.StartPosition + this._pos;
         public bool IsPersistantBacking => true;
         public bool IsLittleEndian { get; }
-        public Stream BaseStream => throw new NotImplementedException();
+        public Stream BaseStream => this;
 
         #region IBinaryReadStream
         long IBinaryReadStream.Position { get => _pos; set => SetPosition(checked((int)value)); }
         long IBinaryReadStream.Length => this._data.Length;
         long IBinaryReadStream.Remaining => this._data.Length - this._pos;
+        public override bool CanRead => true;
+        public override bool CanSeek => true;
+        public override bool CanWrite => false;
+        public override long Length => this._data.Length;
+        public int LengthInt => this._data.Length;
         #endregion
 
         [DebuggerStepThrough]
@@ -58,7 +67,7 @@ namespace Noggog
             return Read(buffer, offset: 0, amount: buffer.Length);
         }
 
-        public int Read(byte[] buffer, int offset, int amount)
+        public override int Read(byte[] buffer, int offset, int amount)
         {
             var ret = Get(buffer, offset, amount);
             _pos += amount;
@@ -131,7 +140,7 @@ namespace Noggog
             return _data.Span[_pos++];
         }
 
-        public byte ReadByte()
+        public override int ReadByte()
         {
             return _data.Span[_pos++];
         }
@@ -201,9 +210,10 @@ namespace Noggog
             return GetDouble(offset: -8);
         }
 
-        public void Dispose()
+        protected override void Dispose(bool disposing)
         {
             this._data = default;
+            base.Dispose(disposing);
         }
 
         public void WriteTo(Stream stream, int amount)
@@ -364,6 +374,39 @@ namespace Noggog
         public string GetStringUTF8(int amount)
         {
             return SpanExt.StringUTF8(this._data.Span.Slice(_pos, amount));
+        }
+
+        public override void Flush()
+        {
+        }
+
+        public override long Seek(long offset, SeekOrigin origin)
+        {
+            switch (origin)
+            {
+                case SeekOrigin.Begin:
+                    this.Position = offset;
+                    break;
+                case SeekOrigin.Current:
+                    this.Position += offset;
+                    break;
+                case SeekOrigin.End:
+                    this.Position = this.Length + offset;
+                    break;
+                default:
+                    throw new NotImplementedException();
+            }
+            return this.Position;
+        }
+
+        public override void SetLength(long value)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void Write(byte[] buffer, int offset, int count)
+        {
+            _data.Span.Slice(this._pos, count).CopyTo(buffer.AsSpan().Slice(offset));
         }
     }
 }
