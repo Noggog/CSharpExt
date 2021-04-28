@@ -79,6 +79,7 @@ namespace Noggog
         protected override void Dispose(bool disposing)
         {
             base.Dispose(disposing);
+            this.Flush();
             if (this._dispose)
             {
                 this._stream.Dispose();
