@@ -154,7 +154,7 @@ namespace Noggog
 
         public override void Write(byte[] buffer, int offset, int amount)
         {
-            throw new NotImplementedException();
+            _internalMemoryStream.Write(buffer, offset, amount);
         }
 
         public void Write(ReadOnlySpan<char> value)

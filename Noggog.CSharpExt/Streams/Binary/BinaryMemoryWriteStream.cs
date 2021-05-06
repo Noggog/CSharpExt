@@ -33,11 +33,13 @@ namespace Noggog
         public void Write(ReadOnlySpan<byte> buffer, int offset, int amount)
         {
             buffer.Slice(offset, amount).CopyTo(_data.AsSpan().Slice(_pos));
+            _pos += amount;
         }
 
         public void Write(ReadOnlySpan<byte> buffer)
         {
             buffer.CopyTo(_data.AsSpan().Slice(_pos));
+            _pos += buffer.Length;
         }
 
         public void Write(bool b)
