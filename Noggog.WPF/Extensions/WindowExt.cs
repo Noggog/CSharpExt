@@ -38,7 +38,7 @@ namespace Noggog.WPF
             window.Closed += (a, b) =>
             {
                 FilePath filePath = new FilePath(settingsPath);
-                filePath.Directory.Create();
+                filePath.Directory?.Create();
                 save(settingsPath, mainVM);
                 mainVM.Dispose();
             };
@@ -73,7 +73,7 @@ namespace Noggog.WPF
             window.Closed += (a, b) =>
             {
                 FilePath filePath = new FilePath(settingsPath);
-                filePath.Directory.Create();
+                filePath.Directory?.Create();
                 save(settingsPath, mainVM);
                 mainVM.Dispose();
             };
@@ -96,7 +96,7 @@ namespace Noggog.WPF
             window.Closed += (a, b) =>
             {
                 FilePath filePath = new FilePath(settingsPath);
-                filePath.Directory.Create();
+                filePath.Directory?.Create();
                 save(settingsPath, mainVM);
                 mainVM.Dispose();
             };

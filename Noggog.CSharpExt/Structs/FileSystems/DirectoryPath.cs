@@ -3,28 +3,33 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Noggog
 {
     public struct DirectoryPath : IEquatable<DirectoryPath>, IPath
     {
-        private readonly string _fullPath;
-        private readonly FileInfo _fileInfo;
-        public DirectoryInfo Info { get; }
-        public DirectoryPath Directory => new DirectoryPath(_fileInfo.Directory!.FullName);
-        public bool Exists => Info?.Exists() ?? false;
-        public string Path => _fullPath;
-        public string Name => Info.Name;
-        public bool Empty => !Info.EnumerateFiles().Any()
-            && !Info.EnumerateDirectories().Any();
+        private readonly string? _fullPath;
+        private readonly string? _originalPath;
+        public DirectoryPath? Directory
+        {
+            get
+            {
+                var dirPath = System.IO.Path.GetDirectoryName(_fullPath);
+                if (dirPath.IsNullOrWhitespace()) return null;
+                return new DirectoryPath(dirPath);
+            }
+        }
+        public bool Exists => System.IO.Directory.Exists(Path);
+        public string Path => _fullPath ?? string.Empty;
+        public string RelativePath => _originalPath ?? string.Empty;
+        public FileName Name => System.IO.Path.GetFileName(Path);
+        public bool Empty => !System.IO.Directory.EnumerateFiles(Path).Any()
+            && !System.IO.Directory.EnumerateDirectories(Path).Any();
 
         public DirectoryPath(string path)
         {
-            this._fileInfo = new FileInfo(path);
-            this._fullPath = System.IO.Path.GetFullPath(path);
-            this.Info = new DirectoryInfo(this._fullPath);
+            this._originalPath = path;
+            this._fullPath = path == string.Empty ? string.Empty : System.IO.Path.GetFullPath(path);
         }
 
         public DirectoryPath(string path, string referencePath)
@@ -33,15 +38,13 @@ namespace Noggog
             {
                 path = System.IO.Path.Combine(referencePath, path);
             }
-            this._fileInfo = new FileInfo(path);
-            this._fullPath = System.IO.Path.GetFullPath(path);
-            this.Info = new DirectoryInfo(this._fullPath);
+            this._originalPath = path;
+            this._fullPath = path == string.Empty ? string.Empty : System.IO.Path.GetFullPath(path);
         }
 
         public bool Equals(DirectoryPath other)
         {
-            if (!this._fullPath.Equals(other._fullPath, StringComparison.OrdinalIgnoreCase)) return false;
-            return true;
+            return Path.Equals(other.Path, StringComparison.OrdinalIgnoreCase);
         }
 
         public override bool Equals(object? obj)
@@ -52,88 +55,94 @@ namespace Noggog
 
         public override int GetHashCode()
         {
-            return this._fullPath.GetHashCode(StringComparison.OrdinalIgnoreCase);
+            return Path.GetHashCode(StringComparison.OrdinalIgnoreCase);
         }
 
-        public override string ToString()
-        {
-            return this.Info.FullName;
-        }
+        public override string ToString() => Path;
 
         public FilePath GetFile(string filePath)
         {
             return new FilePath(System.IO.Path.Combine(this.Path, filePath));
         }
 
-        public bool IsSubfolderOf(DirectoryPath rhs)
+        public bool IsSubfolderOf(DirectoryPath potentialParent)
         {
-            return this.Info.IsSubfolderOf(rhs.Info);
+            var parent = System.IO.Directory.GetParent(Path);
+            while (parent != null)
+            {
+                if (parent.FullName.Equals(potentialParent.Name))
+                {
+                    return true;
+                }
+                parent = System.IO.Directory.GetParent(parent.FullName);
+            }
+            return false;
         }
 
         public bool TryDeleteEntireFolder(bool disableReadOnly = true, bool deleteFolderItself = true)
         {
-            return this.Info.TryDeleteEntireFolder(disableReadOnly, deleteFolderItself: deleteFolderItself);
+            try
+            {
+                DeleteEntireFolder(disableReadOnly, deleteFolderItself);
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
 
         public void DeleteEntireFolder(bool disableReadOnly = true, bool deleteFolderItself = true)
         {
-            this.Info.DeleteEntireFolder(disableReadOnly, deleteFolderItself: deleteFolderItself);
+            if (!Exists) return;
+            var dirInfo = new DirectoryInfo(Path);
+            dirInfo.DeleteEntireFolder(disableReadOnly, deleteFolderItself);
         }
 
         public void DeleteContainedFiles(bool recursive)
         {
-            this.Info.DeleteContainedFiles(recursive);
+            if (!Exists) return;
+            var dirInfo = new DirectoryInfo(Path);
+            dirInfo.DeleteContainedFiles(recursive);
         }
 
         public void Create()
         {
-            if (this.Exists) return;
-            this.Info.Create();
+            System.IO.Directory.CreateDirectory(Path);
         }
 
         public string GetRelativePathTo(DirectoryPath relativeTo)
         {
             return PathExt.MakeRelativePath(
                 relativeTo.Path + "\\",
-                this._fullPath + "\\");
+                Path + "\\");
         }
 
-        public IEnumerable<FileInfo> EnumerateFileInfos(bool recursive = false)
+        public IEnumerable<FilePath> EnumerateFiles(bool recursive = false, string? searchPattern = null)
         {
-            if (recursive)
-            {
-                return this.Info.EnumerateFilesRecursive();
-            }
-            else
-            {
-                this.Info.Refresh();
-                return this.Info.EnumerateFiles();
-            }
-        }
-
-        public IEnumerable<FilePath> EnumerateFiles(bool recursive = false)
-        {
-            foreach (var file in (recursive ? this.Info.EnumerateFilesRecursive() : this.Info.EnumerateFiles()))
-            {
-                yield return new FilePath(file.FullName);
-            }
-        }
-
-        public IEnumerable<DirectoryInfo> EnumerateDirectoryInfos(bool includeSelf, bool recursive)
-        {
-            return this.Info.EnumerateDirectories(
-                includeSelf: includeSelf,
-                recursive: recursive);
+            return (searchPattern == null ? System.IO.Directory.EnumerateFiles(Path) : System.IO.Directory.EnumerateFiles(Path, searchPattern))
+                .Select(x => new FilePath(x))
+                .Concat(EnumerateDirectories(includeSelf: false, recursive: recursive)
+                    .SelectMany(d => d.EnumerateFiles(recursive: false, searchPattern: searchPattern)));
         }
 
         public IEnumerable<DirectoryPath> EnumerateDirectories(bool includeSelf, bool recursive)
         {
-            foreach (var file in this.Info.EnumerateDirectories(
-                includeSelf: includeSelf, 
-                recursive: recursive))
+            if (!Exists) return EnumerableExt<DirectoryPath>.Empty;
+            var ret = System.IO.Directory.EnumerateDirectories(Path)
+                .Select(x => new DirectoryPath(x));
+            if (recursive)
             {
-                yield return new DirectoryPath(file.FullName);
+                ret = ret
+                    .Concat(System.IO.Directory.EnumerateDirectories(Path)
+                    .Select(x => new DirectoryPath(x))
+                    .SelectMany(d => d.EnumerateDirectories(includeSelf: false, recursive: true)));
             }
+            if (includeSelf)
+            {
+                ret = this.AsEnumerable().Concat(ret);
+            }
+            return ret;
         }
 
         public static implicit operator DirectoryPath(DirectoryInfo info)
@@ -144,6 +153,16 @@ namespace Noggog
         public static implicit operator DirectoryPath(string path)
         {
             return new DirectoryPath(path);
+        }
+
+        public static implicit operator string(DirectoryPath dir)
+        {
+            return dir.Path;
+        }
+
+        public static implicit operator ReadOnlySpan<char>(DirectoryPath dir)
+        {
+            return dir.Path;
         }
     }
 }

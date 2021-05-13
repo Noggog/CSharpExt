@@ -1,9 +1,6 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Noggog.Utility
 {
@@ -40,25 +37,17 @@ namespace Noggog.Utility
 
         public void Dispose()
         {
-            foreach (var item in _dir.Info.EnumerateFilesRecursive())
+            foreach (var item in _dir.EnumerateFiles(recursive: true))
             {
-                item.Refresh();
-                DateTime cleanTime;
-                switch (_clean)
+                var info = new FileInfo(item.Path);
+                var cleanTime = _clean switch
                 {
-                    case CleanType.AccessTime:
-                        cleanTime = item.LastAccessTime;
-                        break;
-                    case CleanType.WriteTime:
-                        cleanTime = item.LastWriteTime;
-                        break;
-                    case CleanType.CreationTime:
-                        cleanTime = item.CreationTime;
-                        break;
-                    default:
-                        throw new NotImplementedException();
-                }
-                if (item.LastAccessTime < _startTime)
+                    CleanType.AccessTime => info.LastAccessTime,
+                    CleanType.WriteTime => info.LastWriteTime,
+                    CleanType.CreationTime => info.CreationTime,
+                    _ => throw new NotImplementedException(),
+                };
+                if (info.LastAccessTime < _startTime)
                 {
                     item.Delete();
                 }

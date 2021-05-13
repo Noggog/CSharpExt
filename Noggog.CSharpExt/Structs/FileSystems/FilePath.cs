@@ -1,54 +1,40 @@
 using Noggog.Extensions;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Noggog
 {
     public struct FilePath : IEquatable<FilePath>, IPath
     {
-        private readonly string _fullPath;
-        private readonly FileInfo _fileInfo;
-        private readonly string _originalPath;
+        private readonly string? _fullPath;
+        private readonly string? _originalPath;
 
-        public DirectoryPath Directory => new DirectoryPath(_fileInfo.Directory!.FullName);
-        public string Path => _fullPath;
-        public string RelativePath => _originalPath;
-        public string Name => _fileInfo.Name;
-        public string Extension => _fileInfo.Extension;
-        public string NameWithoutExtension => _fileInfo.Name.Substring(0, _fileInfo.Name.LastIndexOf(_fileInfo.Extension));
-        public bool Exists
+        public DirectoryPath? Directory
         {
             get
             {
-                _fileInfo?.Refresh();
-                return _fileInfo?.Exists ?? false;
+                var dirPath = System.IO.Path.GetDirectoryName(_originalPath);
+                if (dirPath.IsNullOrWhitespace()) return null;
+                return new DirectoryPath(dirPath);
             }
         }
-        public long Length
-        {
-            get
-            {
-                _fileInfo.Refresh();
-                return _fileInfo.Length;
-            }
-        }
-        public FileInfo Info => _fileInfo;
+
+        public string Path => _fullPath ?? string.Empty;
+        public string RelativePath => _originalPath ?? string.Empty;
+        public FileName Name => System.IO.Path.GetFileName(Path);
+        public string Extension => System.IO.Path.GetExtension(Path);
+        public string NameWithoutExtension => System.IO.Path.GetFileNameWithoutExtension(Path);
+        public bool Exists => System.IO.File.Exists(_fullPath);
 
         public FilePath(string path)
         {
             this._originalPath = path;
-            this._fileInfo = new FileInfo(path);
-            this._fullPath = System.IO.Path.GetFullPath(path);
+            this._fullPath = path == string.Empty ? string.Empty : System.IO.Path.GetFullPath(path);
         }
 
         public bool Equals(FilePath other)
         {
-            if (!this._fullPath.Equals(other._fullPath, StringComparison.OrdinalIgnoreCase)) return false;
-            return true;
+            return string.Equals(Path, other.Path, StringComparison.OrdinalIgnoreCase);
         }
 
         public override bool Equals(object? obj)
@@ -61,38 +47,34 @@ namespace Noggog
         {
             return PathExt.MakeRelativePath(
                 relativeTo.Path + "\\",
-                this._fullPath);
+                Path);
         }
 
         public string GetRelativePathTo(FilePath relativeTo)
         {
             return PathExt.MakeRelativePath(
                 relativeTo.Path,
-                this._fullPath);
+                Path);
         }
 
         public void Delete()
         {
-            this._fileInfo.Refresh();
-            if (this._fileInfo.Exists)
+            if (File.Exists(Path))
             {
-                this._fileInfo.Delete();
+                File.Delete(Path);
             }
         }
 
         public override int GetHashCode()
         {
-            return this._fullPath.GetHashCode(StringComparison.OrdinalIgnoreCase);
+            return Path.GetHashCode(StringComparison.OrdinalIgnoreCase);
         }
 
-        public override string ToString()
-        {
-            return this._fileInfo.FullName;
-        }
+        public override string ToString() => Path;
 
         public FileStream OpenRead()
         {
-            return _fileInfo.OpenRead();
+            return File.OpenRead(Path);
         }
 
         public static implicit operator FilePath(FileInfo info)
@@ -103,6 +85,11 @@ namespace Noggog
         public static implicit operator FilePath(string path)
         {
             return new FilePath(path);
+        }
+
+        public static implicit operator string(FilePath path)
+        {
+            return path._originalPath ?? string.Empty;
         }
     }
 }

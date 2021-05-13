@@ -8,6 +8,6 @@ namespace Noggog
     {
         bool Exists { get; }
         string Path { get; }
-        string Name { get; }
+        FileName Name { get; }
     }
 }

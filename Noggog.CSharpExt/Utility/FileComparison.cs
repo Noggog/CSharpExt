@@ -1,9 +1,6 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Noggog.Utility
 {
@@ -13,13 +10,15 @@ namespace Noggog.Utility
         const int BYTES_TO_READ = sizeof(Int64);
         public static bool FilesAreEqual(FilePath first, FilePath second)
         {
-            if (first.Length != second.Length)
+            var firstInfo = new FileInfo(first.Path);
+            var secondInfo = new FileInfo(second.Path);
+            if (firstInfo.Length != secondInfo.Length)
                 return false;
 
             if (string.Equals(first.Path, second.Path, StringComparison.OrdinalIgnoreCase))
                 return true;
 
-            int iterations = (int)Math.Ceiling((double)first.Length / BYTES_TO_READ);
+            int iterations = (int)Math.Ceiling((double)firstInfo.Length / BYTES_TO_READ);
 
             using (FileStream fs1 = first.OpenRead())
             {
@@ -33,22 +32,21 @@ namespace Noggog.Utility
         private static readonly FileCompare comp = new FileCompare();
         public static bool FoldersAreEqual(DirectoryPath first, DirectoryPath second)
         {
-            return first.Info.GetFiles("*.*", System.IO.SearchOption.AllDirectories)
+            return first.EnumerateFiles(recursive: true)
                 .SequenceEqual(
-                    second.Info.GetFiles("*.*", System.IO.SearchOption.AllDirectories),
+                    second.EnumerateFiles(recursive: true),
                     comp);
         }
 
-        class FileCompare : System.Collections.Generic.IEqualityComparer<System.IO.FileInfo>
+        class FileCompare : System.Collections.Generic.IEqualityComparer<FilePath>
         {
-            public bool Equals(System.IO.FileInfo? f1, System.IO.FileInfo? f2)
+            public bool Equals(FilePath x, FilePath y)
             {
-                if (f1 == null || f2 == null) return false;
-                if (!string.Equals(f1.Name, f2.Name)) return false;
-                return FileComparison.FilesAreEqual(f1, f2);
+                if (!string.Equals(x.Name, y.Name)) return false;
+                return FileComparison.FilesAreEqual(x, y);
             }
-            
-            public int GetHashCode(System.IO.FileInfo fi)
+
+            public int GetHashCode(FilePath fi)
             {
                 throw new NotImplementedException();
             }

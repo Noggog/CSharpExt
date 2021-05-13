@@ -1,9 +1,5 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Noggog.Utility
 {
@@ -20,9 +16,9 @@ namespace Noggog.Utility
                 path = Path.Combine(extraDirectoryPaths, path);
             }
             File = new FilePath(Path.Combine(Path.GetTempPath(), path));
-            if (createFolder && !File.Directory.Exists)
+            if (createFolder && File.Directory != null && !File.Directory.Value.Exists)
             {
-                File.Directory.Create();
+                File.Directory.Value.Create();
             }
             this.DeleteAfter = deleteAfter;
         }
@@ -30,9 +26,9 @@ namespace Noggog.Utility
         public TempFile(FilePath file, bool deleteAfter = true, bool createFolder = true)
         {
             this.File = file;
-            if (createFolder && !file.Directory.Exists)
+            if (createFolder && file.Directory != null && !file.Directory.Value.Exists)
             {
-                file.Directory.Create();
+                file.Directory.Value.Create();
             }
             this.DeleteAfter = deleteAfter;
         }

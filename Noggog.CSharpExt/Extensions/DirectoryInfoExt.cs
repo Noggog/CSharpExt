@@ -95,11 +95,11 @@ namespace Noggog
             }
         }
 
-        public static IEnumerable<FileInfo> EnumerateFilesRecursive(this DirectoryInfo dir)
+        public static IEnumerable<FileInfo> EnumerateFilesRecursive(this DirectoryInfo dir, string? searchPattern = null)
         {
-            return dir.EnumerateFiles()
+            return (searchPattern == null ? dir.EnumerateFiles() : dir.EnumerateFiles(searchPattern))
                 .Concat(dir.EnumerateDirectories()
-                    .SelectMany(d => d.EnumerateFilesRecursive()));
+                    .SelectMany(d => d.EnumerateFilesRecursive(searchPattern: searchPattern)));
         }
 
         // Ensures that the higher directories iterate first before lower directories
