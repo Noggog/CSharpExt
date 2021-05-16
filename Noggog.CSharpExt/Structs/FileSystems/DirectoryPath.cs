@@ -120,10 +120,11 @@ namespace Noggog
 
         public IEnumerable<FilePath> EnumerateFiles(bool recursive = false, string? searchPattern = null)
         {
-            return (searchPattern == null ? System.IO.Directory.EnumerateFiles(Path) : System.IO.Directory.EnumerateFiles(Path, searchPattern))
-                .Select(x => new FilePath(x))
-                .Concat(EnumerateDirectories(includeSelf: false, recursive: recursive)
-                    .SelectMany(d => d.EnumerateFiles(recursive: false, searchPattern: searchPattern)));
+            var ret = (searchPattern == null ? System.IO.Directory.EnumerateFiles(Path) : System.IO.Directory.EnumerateFiles(Path, searchPattern))
+                .Select(x => new FilePath(x));
+            if (!recursive) return ret;
+            return ret.Concat(EnumerateDirectories(includeSelf: false, recursive: true)
+                .SelectMany(d => d.EnumerateFiles(recursive: false, searchPattern: searchPattern)));
         }
 
         public IEnumerable<DirectoryPath> EnumerateDirectories(bool includeSelf, bool recursive)
