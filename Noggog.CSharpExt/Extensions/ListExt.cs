@@ -111,6 +111,16 @@ namespace Noggog
             return list[index];
         }
 
+        public static TryGet<T> TryGet<T>(this IReadOnlyList<T> list, int index)
+        {
+            if (!InRange(list, index))
+            {
+                return Noggog.TryGet<T>.Failure;
+            }
+
+            return Noggog.TryGet<T>.Succeed(list[index]);
+        }
+
         public static List<T> Populate<T>(this List<T> list, int num) where T : new()
         {
             for (int i = 0; i < num; i++)
