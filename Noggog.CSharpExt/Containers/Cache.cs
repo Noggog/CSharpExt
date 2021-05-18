@@ -42,7 +42,17 @@ namespace Noggog
         }
 
         public bool TryGetValue(TKey key, [MaybeNullWhen(false)] out TObject value) => this._dict.TryGetValue(key, out value);
+        
+        public TObject? TryGetValue(TKey key)
+        {
+            if (_dict.TryGetValue(key, out var val))
+            {
+                return val;
+            }
 
+            return default;
+        }
+        
         public void Refresh()
         {
             var tmp = this._dict;

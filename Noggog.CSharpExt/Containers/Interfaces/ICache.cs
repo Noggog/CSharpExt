@@ -6,12 +6,6 @@ namespace Noggog
 {
     public interface ICache<TObject, TKey> : IReadOnlyCache<TObject, TKey>
     {
-        /// <inheritdoc />
-        new IEnumerable<TKey> Keys { get; }
-
-        /// <inheritdoc />
-        new int Count { get; }
-
         /// <summary>
         /// Adds or updates the cache to contain item using the specified key
         /// </summary>
@@ -63,7 +57,5 @@ namespace Noggog
         new bool ContainsKey(TKey key);
 
         TObject GetOrAdd(TKey key, Func<TKey, TObject> createFunc);
-
-        new IEnumerator<IKeyValue<TObject, TKey>> GetEnumerator();
     }
 }

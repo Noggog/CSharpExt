@@ -1,70 +1,41 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Noggog
 {
-    public interface IReadOnlyCache<out TValue, TKey> : IEnumerable<IKeyValue<TValue, TKey>>, IEnumerable
+    public interface IReadOnlyCache<out TValue, TKey> : IReadOnlyCollection<IKeyValue<TValue, TKey>>
     {
-        //
-        // Summary:
-        //     Gets the number of elements in the collection.
-        //
-        // Returns:
-        //     The number of elements in the collection.
-        int Count { get; }
-
-        //
-        // Summary:
-        //     Gets the element that has the specified key in the read-only dictionary.
-        //
-        // Parameters:
-        //   key:
-        //     The key to locate.
-        //
-        // Returns:
-        //     The element that has the specified key in the read-only dictionary.
-        //
-        // Exceptions:
-        //   T:System.ArgumentNullException:
-        //     key is null.
-        //
-        //   T:System.Collections.Generic.KeyNotFoundException:
-        //     The property is retrieved and key is not found.
+        /// <summary>
+        /// Gets the element that has the specified key in the read-only dictionary.
+        /// </summary>
+        /// <param name="key">The key to locate.</param>
+        /// <exception cref="ArgumentNullException">key is null</exception>
+        /// <exception cref="KeyNotFoundException">The property is retrieved and key is not found.</exception>
         TValue this[TKey key] { get; }
 
-        //
-        // Summary:
-        //     Gets an enumerable collection that contains the keys in the read-only dictionary.
-        //
-        // Returns:
-        //     An enumerable collection that contains the keys in the read-only dictionary.
+        /// <summary>
+        /// An enumerable collection that contains the keys in the read-only dictionary.
+        /// </summary>
         IEnumerable<TKey> Keys { get; }
-        //
-        // Summary:
-        //     Gets an enumerable collection that contains the values in the read-only dictionary.
-        //
-        // Returns:
-        //     An enumerable collection that contains the values in the read-only dictionary.
+        
+        /// <summary>
+        /// An enumerable collection that contains the values in the read-only dictionary.
+        /// </summary>
         IEnumerable<TValue> Items { get; }
 
-        //
-        // Summary:
-        //     Determines whether the read-only dictionary contains an element that has the
-        //     specified key.
-        //
-        // Parameters:
-        //   key:
-        //     The key to locate.
-        //
-        // Returns:
-        //     true if the read-only dictionary contains an element that has the specified key;
-        //     otherwise, false.
-        //
-        // Exceptions:
-        //   T:System.ArgumentNullException:
-        //     key is null.
+        /// <summary>
+        /// Determines whether the read-only dictionary contains an element that has the specified key.
+        /// </summary>
+        /// <param name="key">The key to locate.</param>
+        /// <returns>true if the read-only dictionary contains an element that has the specified key; otherwise, false.</returns>
+        /// <exception cref="ArgumentNullException">key is null.</exception>
         bool ContainsKey(TKey key);
+
+        /// <summary>
+        /// Try to retrieve item with the given key
+        /// </summary>
+        /// <param name="key">The key to query.</param>
+        /// <returns>A TryGet struct with the results</returns>
+        TValue? TryGetValue(TKey key);
     }
 }

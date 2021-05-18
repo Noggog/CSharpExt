@@ -15,7 +15,7 @@ namespace Noggog
             Func<K, V, V, R> selector,
             out bool equal)
         {
-            List<KeyValuePair<K, R>> ret = new List<KeyValuePair<K, R>>();
+            var ret = new List<KeyValuePair<K, R>>();
             equal = lhs.Count == rhs.Count;
             foreach (var item in lhs)
             {
