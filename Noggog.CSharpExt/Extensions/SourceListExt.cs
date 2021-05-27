@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using DynamicData;
 
-namespace Noggog.WPF
+namespace Noggog
 {
     public static class SourceListExt
     {
