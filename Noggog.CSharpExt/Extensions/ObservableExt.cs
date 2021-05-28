@@ -149,6 +149,12 @@ namespace Noggog
             return source.Where(u => u != null)!;
         }
 
+        public static IObservable<T> NotNull<T>(this IObservable<T?> source)
+            where T : struct
+        {
+            return source.Where(u => u != null).Select(x => x!.Value);
+        }
+
         public static IObservable<TSource> PublishRefCount<TSource>(this IObservable<TSource> source)
         {
             return source.Publish().RefCount();
