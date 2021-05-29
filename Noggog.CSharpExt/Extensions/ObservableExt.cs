@@ -611,14 +611,14 @@ namespace Noggog
                 .Transform(x => (TRet)x!);
         }
 
-        public static IObservable<IChangeSet<TObj, TKey>> NotNull<TObj, TKey>(this IObservable<IChangeSet<TObj?, TKey>> obs)
+        public static IObservable<IChangeSet<TObj, TKey>> ChangeNotNull<TObj, TKey>(this IObservable<IChangeSet<TObj?, TKey>> obs)
             where TKey : notnull
             where TObj : class
         {
             return obs.Filter(x => x != null)!;
         }
 
-        public static IObservable<IChangeSet<TObj>> NotNull<TObj>(this IObservable<IChangeSet<TObj?>> obs)
+        public static IObservable<IChangeSet<TObj>> ChangeNotNull<TObj>(this IObservable<IChangeSet<TObj?>> obs)
             where TObj : class
         {
             return obs.Filter(x => x != null)!;
