@@ -9,6 +9,7 @@ namespace Noggog.Streams
         private readonly bool _dispose;
         private readonly long _limit;
         private readonly long _offset;
+        private readonly long _len;
 
         public FramedStream(Stream wrap, long limit, bool doDispose = true)
         {
@@ -16,6 +17,7 @@ namespace Noggog.Streams
             _wrap = wrap;
             _dispose = doDispose;
             _limit = limit;
+            _len = _wrap.Remaining();
         }
 
         public override bool CanRead => _wrap.CanRead;
@@ -24,7 +26,7 @@ namespace Noggog.Streams
 
         public override bool CanWrite => _wrap.CanWrite;
 
-        public override long Length => Math.Min(_wrap.Remaining(), _limit);
+        public override long Length => Math.Min(_len, _limit);
 
         public override long Position 
         {
