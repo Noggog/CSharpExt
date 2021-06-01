@@ -436,7 +436,7 @@ namespace Noggog
         /// <param name="throwIfInvalidPath">Whether to error if path is invalid</param>
         /// <exception cref="ArgumentException">Will throw if file path has no parent directory, or is malformed, and the throw parameter is on</exception>
         /// <returns>Observable signal of when file created/modified/deleted</returns>
-        public static IObservable<Unit> WatchFile(string path, bool throwIfInvalidPath = false)
+        public static IObservable<Unit> WatchFile(FilePath path, bool throwIfInvalidPath = false)
         {
             return ObservableExt.UsingWithCatch(
                 () =>
@@ -477,7 +477,7 @@ namespace Noggog
         /// <exception cref="ArgumentException">Will throw if file path has no parent directory, or is malformed, and the throw parameter is on</exception>
         /// <returns>Observable signal of when file created/modified/deleted</returns>
         public static IObservable<ChangeSet<string, string>> WatchFolderContents(
-            string path,
+            FilePath path,
             bool throwIfInvalidPath = false)
         {
             return ObservableExt.UsingWithCatch(
