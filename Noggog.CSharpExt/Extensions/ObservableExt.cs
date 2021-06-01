@@ -623,5 +623,20 @@ namespace Noggog
         {
             return obs.Filter(x => x != null)!;
         }
+
+        public static IObservable<TSource> RetryWithRampingBackoff<TSource>(this IObservable<TSource> obs,
+            TimeSpan interval, TimeSpan max)
+        {
+            var maxTimes = max / interval;
+            return obs.RetryWithBackOff<TSource, Exception>((_, times) =>
+            {
+                if (times >= maxTimes)
+                {
+                    return max;
+                }
+
+                return times * interval;
+            });
+        }
     }
 }
