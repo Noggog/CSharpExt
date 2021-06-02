@@ -9,16 +9,6 @@ namespace Noggog.Streams
         private readonly bool _dispose;
         private readonly long _limit;
         private readonly long _offset;
-        private readonly long _len;
-
-        public FramedStream(Stream wrap, long limit, bool doDispose = true)
-        {
-            _offset = -wrap.Position;
-            _wrap = wrap;
-            _dispose = doDispose;
-            _limit = limit;
-            _len = _wrap.Remaining();
-        }
 
         public override bool CanRead => _wrap.CanRead;
 
@@ -26,12 +16,28 @@ namespace Noggog.Streams
 
         public override bool CanWrite => _wrap.CanWrite;
 
-        public override long Length => Math.Min(_len, _limit);
+        public override long Length { get; }
 
         public override long Position 
         {
             get => _wrap.Position + _offset;
             set => _wrap.Position = value - _offset;
+        }
+
+        public FramedStream(Stream wrap, long limit, bool doDispose = true)
+        {
+            _offset = -wrap.Position;
+            _wrap = wrap;
+            _dispose = doDispose;
+            _limit = limit;
+            if (_wrap.Length >= 0)
+            {
+                Length = Math.Min(_wrap.Remaining(), _limit);
+            }
+            else
+            {
+                Length = _limit;
+            }
         }
 
         public override void Flush()
@@ -69,7 +75,7 @@ namespace Noggog.Streams
 
         public override void SetLength(long value)
         {
-            _wrap.SetLength(value);
+            throw new NotImplementedException();
         }
 
         public override void Write(byte[] buffer, int offset, int count)
