@@ -28,6 +28,7 @@ namespace Noggog
 
         public DirectoryPath(string path)
         {
+            path = System.IO.Path.TrimEndingDirectorySeparator(path);
             this._originalPath = path;
             this._fullPath = path == string.Empty ? string.Empty : System.IO.Path.GetFullPath(path);
         }
