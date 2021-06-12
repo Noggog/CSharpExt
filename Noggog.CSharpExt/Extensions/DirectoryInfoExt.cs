@@ -24,7 +24,7 @@ namespace Noggog
         public static void DeleteEntireFolder(this DirectoryInfo dir, bool disableReadonly = true, bool deleteFolderItself = true)
         {
             if (!dir.Exists()) return;
-            FileInfo[] files = dir.GetFiles("*.*");
+            FileInfo[] files = dir.GetFiles();
             List<Exception> exceptions = new List<Exception>();
             foreach (FileInfo fi in files)
             {
@@ -80,7 +80,7 @@ namespace Noggog
         {
             if (dir.Exists)
             {
-                FileInfo[] files = dir.GetFiles("*.*");
+                FileInfo[] files = dir.GetFiles();
                 foreach (FileInfo fi in files)
                 {
                     fi.Delete();
@@ -124,7 +124,7 @@ namespace Noggog
         {
             while (dir.Parent != null)
             {
-                if (dir.Parent.FullName.Equals(potentialParent.FullName))
+                if (dir.Parent.FullName.Equals(potentialParent.FullName, StringComparison.OrdinalIgnoreCase))
                 {
                     return true;
                 }
