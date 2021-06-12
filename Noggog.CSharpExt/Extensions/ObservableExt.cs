@@ -10,6 +10,7 @@ using System.Reactive.Linq;
 using Noggog;
 using System.Threading;
 using System.IO;
+using System.IO.Abstractions;
 using DynamicData;
 using DynamicData.Kernel;
 
@@ -436,12 +437,61 @@ namespace Noggog
         /// <param name="throwIfInvalidPath">Whether to error if path is invalid</param>
         /// <exception cref="ArgumentException">Will throw if file path has no parent directory, or is malformed, and the throw parameter is on</exception>
         /// <returns>Observable signal of when file created/modified/deleted</returns>
-        public static IObservable<Unit> WatchFile(FilePath path, bool throwIfInvalidPath = false)
+        public static IObservable<Unit> WatchFile(
+            FilePath path, 
+            bool throwIfInvalidPath = false,
+            IFileSystemWatcherFactory? fileWatcherFactory = null)
         {
+            fileWatcherFactory ??= new FileSystemWatcherFactory();
             return ObservableExt.UsingWithCatch(
                 () =>
                 {
-                    var watcher = new FileSystemWatcher(Path.GetDirectoryName(path)!, filter: Path.GetFileName(path));
+                    var targetPath = Path.GetDirectoryName(path)!;
+                    var watcher = fileWatcherFactory.CreateNew(targetPath, filter: Path.GetFileName(path));
+                    watcher.EnableRaisingEvents = true;
+                    return watcher;
+                },
+                (watcher) =>
+                {
+                    if (watcher.Failed)
+                    {
+                        if (throwIfInvalidPath)
+                        {
+                            throw watcher.Exception!;
+                        }
+                        else
+                        {
+                            return Observable.Empty<Unit>();
+                        }
+                    }
+                    return Observable.Merge(
+                            Observable.FromEventPattern<FileSystemEventHandler, FileSystemEventArgs>(h => watcher.Value.Changed += h, h => watcher.Value.Changed -= h),
+                            Observable.FromEventPattern<FileSystemEventHandler, FileSystemEventArgs>(h => watcher.Value.Created += h, h => watcher.Value.Created -= h),
+                            Observable.FromEventPattern<FileSystemEventHandler, FileSystemEventArgs>(h => watcher.Value.Deleted += h, h => watcher.Value.Deleted -= h))
+                        .Where(x => x.EventArgs.FullPath.Equals(path, StringComparison.OrdinalIgnoreCase))
+                        .Unit();
+                })
+                .Replay(1)
+                .RefCount();
+        }
+
+        /// <summary>
+        /// An observable that fires a signal whenever a specific file is created/modified/deleted.
+        /// </summary>
+        /// <param name="path">File path to watch</param>
+        /// <param name="throwIfInvalidPath">Whether to error if path is invalid</param>
+        /// <exception cref="ArgumentException">Will throw if file path has no parent directory, or is malformed, and the throw parameter is on</exception>
+        /// <returns>Observable signal of when file created/modified/deleted</returns>
+        public static IObservable<Unit> WatchFolder(
+            DirectoryPath path, 
+            bool throwIfInvalidPath = false,
+            IFileSystemWatcherFactory? fileWatcherFactory = null)
+        {
+            fileWatcherFactory ??= new FileSystemWatcherFactory();
+            return ObservableExt.UsingWithCatch(
+                () =>
+                {
+                    var watcher = fileWatcherFactory.CreateNew(path);
                     watcher.EnableRaisingEvents = true;
                     return watcher;
                 },
@@ -477,13 +527,15 @@ namespace Noggog
         /// <exception cref="ArgumentException">Will throw if file path has no parent directory, or is malformed, and the throw parameter is on</exception>
         /// <returns>Observable signal of when file created/modified/deleted</returns>
         public static IObservable<ChangeSet<string, string>> WatchFolderContents(
-            FilePath path,
-            bool throwIfInvalidPath = false)
+            DirectoryPath path,
+            bool throwIfInvalidPath = false,
+            IFileSystemWatcherFactory? fileWatcherFactory = null)
         {
+            fileWatcherFactory ??= new FileSystemWatcherFactory();
             return ObservableExt.UsingWithCatch(
                 () =>
                 {
-                    var watcher = new FileSystemWatcher(path);
+                    var watcher = fileWatcherFactory.CreateNew(path);
                     watcher.EnableRaisingEvents = true;
                     return watcher;
                 },
