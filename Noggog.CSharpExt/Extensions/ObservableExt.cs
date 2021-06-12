@@ -690,5 +690,16 @@ namespace Noggog
                 return times * interval;
             });
         }
+
+        public static IObservable<TSource> TakeUntilDisposed<TSource>(this IObservable<TSource> obs,
+            CompositeDisposable disposable)
+        {
+            return obs.TakeUntil<TSource, Unit>(Observable.Create<Unit>(obs =>
+            {
+                var signal = Disposable.Create(() => obs.OnNext(System.Reactive.Unit.Default));
+                disposable.Add(signal);
+                return Disposable.Create(() => disposable.Remove(signal));
+            }));
+        }
     }
 }

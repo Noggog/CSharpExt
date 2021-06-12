@@ -209,5 +209,11 @@ namespace Noggog.WPF
             });
         }
         #endregion
+
+        public static IObservable<TSource> TakeUntilDisposed<TSource>(this IObservable<TSource> obs,
+            ViewModel vm)
+        {
+            return obs.TakeUntilDisposed(vm.CompositeDisposable);
+        }
     }
 }
