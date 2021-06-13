@@ -7,7 +7,16 @@ using System.Threading.Tasks;
 
 namespace Noggog.Utility
 {
-    public class ProcessWrapper : IDisposable
+    public interface IProcessWrapper : IDisposable
+    {
+        IObservable<string> Output { get; }
+        IObservable<string> Error { get; }
+        Task<int> Complete { get; }
+        ProcessStartInfo StartInfo { get; }
+        Task<int> Run();
+    }
+
+    public class ProcessWrapper : IProcessWrapper
     {
         public IObservable<string> Output { get; private set; } = null!;
         public IObservable<string> Error { get; private set; } = null!;
