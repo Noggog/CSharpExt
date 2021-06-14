@@ -33,7 +33,11 @@ namespace Noggog
 
         public override int GetHashCode()
         {
+#if NETSTANDARD2_0 
+            return String.ToLower().GetHashCode();
+#else 
             return String.GetHashCode(StringComparison.OrdinalIgnoreCase);
+#endif
         }
 
         public override string ToString()
@@ -50,10 +54,13 @@ namespace Noggog
         {
             return name.String;
         }
-
+        
+#if NETSTANDARD2_0 
+#else 
         public static implicit operator ReadOnlySpan<char>(FileName name)
         {
             return name.String;
         }
+#endif
     }
 }

@@ -4,12 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-#if NET_5
-#else
+#if NETSTANDARD2_0
 namespace System.Runtime.CompilerServices
 {
     public sealed class IsExternalInit
     {
     }
 }
+#else
 #endif

@@ -1,3 +1,5 @@
+#if NETSTANDARD2_0
+#else
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -86,3 +88,4 @@ namespace Noggog.Utility
         }
     }
 }
+#endif

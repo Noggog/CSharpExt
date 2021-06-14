@@ -294,7 +294,11 @@ namespace Noggog
 
         public static void Remove<TItem>(this IList<TItem> list, IEnumerable<TItem> items)
         {
+#if NETSTANDARD2_0 
+            Remove(list, new HashSet<TItem>(items));
+#else 
             Remove(list, items.ToHashSet());
+#endif
         }
 
         public static void Remove<TItem>(this IList<TItem> list, HashSet<TItem> items)

@@ -1,3 +1,5 @@
+#if NETSTANDARD2_0
+#else
 using System;
 using System.IO;
 using System.Text;
@@ -51,3 +53,4 @@ namespace Noggog.Utility
         }
     }
 }
+#endif

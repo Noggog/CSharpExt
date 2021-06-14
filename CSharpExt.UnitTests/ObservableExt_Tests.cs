@@ -12,6 +12,11 @@ using System.Reactive.Threading.Tasks;
 using Noggog.Utility;
 using System.IO;
 using DynamicData;
+#if NETSTANDARD2_0 
+using TaskCompletionSource = Noggog.TaskCompletionSource;
+#else 
+using TaskCompletionSource = System.Threading.Tasks.TaskCompletionSource;
+#endif
 
 namespace CSharpExt.UnitTests
 {

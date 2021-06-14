@@ -147,10 +147,13 @@ namespace Noggog
             return str.IndexOfAny(Path.GetInvalidFileNameChars()) == -1;
         }
 
+#if NETSTANDARD2_0
+#else
         public static bool ContainsInsensitive(this string str, string rhs)
         {
             return str.Contains(rhs, StringComparison.OrdinalIgnoreCase);
         }
+#endif
 
         /// <summary>
         /// Takes in a nullable string, and applies a string converter if it is not null or empty.

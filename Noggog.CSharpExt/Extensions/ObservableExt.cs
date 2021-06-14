@@ -676,6 +676,8 @@ namespace Noggog
             return obs.Filter(x => x != null)!;
         }
 
+#if NETSTANDARD2_0
+#else
         public static IObservable<TSource> RetryWithRampingBackoff<TSource>(this IObservable<TSource> obs,
             TimeSpan interval, TimeSpan max)
         {
@@ -690,6 +692,7 @@ namespace Noggog
                 return times * interval;
             });
         }
+#endif
 
         public static IObservable<TSource> TakeUntilDisposed<TSource>(this IObservable<TSource> obs,
             CompositeDisposable disposable)

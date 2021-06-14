@@ -13,7 +13,10 @@ namespace Noggog
         long Length { get; }
         bool IsLittleEndian { get; }
         Stream BaseStream { get; }
+#if NETSTANDARD2_0
+#else
         void Write(ReadOnlySpan<byte> buffer);
+#endif
         void Write(bool value);
         void Write(byte value);
         void Write(ushort value);
@@ -25,6 +28,9 @@ namespace Noggog
         void Write(long value);
         void Write(float value);
         void Write(double value);
+#if NETSTANDARD2_0
+#else
         void Write(ReadOnlySpan<char> value);
+#endif
     }
 }

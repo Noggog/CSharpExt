@@ -67,7 +67,11 @@ namespace Noggog
 
         public override int GetHashCode()
         {
+#if NETSTANDARD2_0 
+            return Path.ToLower().GetHashCode();
+#else 
             return Path.GetHashCode(StringComparison.OrdinalIgnoreCase);
+#endif
         }
 
         public override string ToString() => Path;

@@ -1,6 +1,5 @@
 using System;
 using System.Buffers.Binary;
-using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Text;
 
@@ -53,6 +52,8 @@ namespace Noggog
             return MemoryMarshal.Cast<byte, double>(span);
         }
 
+#if NETSTANDARD2_0
+#else
         public static float Float(this ReadOnlySpan<byte> span)
         {
             return BinaryPrimitives.ReadSingleLittleEndian(span);
@@ -62,6 +63,7 @@ namespace Noggog
         {
             return BinaryPrimitives.ReadDoubleLittleEndian(span);
         }
+#endif
 
         public static unsafe string StringUTF8(this ReadOnlySpan<byte> span)
         {
@@ -111,9 +113,12 @@ namespace Noggog
             return BinaryPrimitives.ReadInt64LittleEndian(span);
         }
 
+#if NETSTANDARD2_0 
+#else 
         public static float Float(this ReadOnlyMemorySlice<byte> span) => BinaryPrimitives.ReadSingleLittleEndian(span);
 
         public static double Double(this ReadOnlyMemorySlice<byte> span) => BinaryPrimitives.ReadDoubleLittleEndian(span);
+#endif
 
         public static string StringUTF8(this ReadOnlyMemorySlice<byte> span) => span.Span.StringUTF8();
 

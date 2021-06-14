@@ -64,6 +64,8 @@ namespace Noggog.Utility
                 throwIfUnsuccessfulDisposal: throwIfUnsuccessfulDisposal);
         }
 
+#if NETSTANDARD2_0
+#else
         public static AsyncTempFolder Factory(int retryCount, TimeSpan delay, bool throwIfUnsuccessfulDisposal = true)
         {
             return new AsyncTempFolder(
@@ -90,8 +92,11 @@ namespace Noggog.Utility
                 delay: delay,
                 throwIfUnsuccessfulDisposal: throwIfUnsuccessfulDisposal);
         }
+#endif
     }
 
+#if NETSTANDARD2_0
+#else
     public class AsyncTempFolder : TempFolder, IAsyncDisposable
     {
         public int RetryCount;
@@ -130,4 +135,5 @@ namespace Noggog.Utility
             }
         }
     }
+#endif
 }

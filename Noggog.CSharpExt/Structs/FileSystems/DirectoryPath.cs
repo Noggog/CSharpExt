@@ -28,7 +28,11 @@ namespace Noggog
 
         public DirectoryPath(string path)
         {
+#if NETSTANDARD2_0
+            path = path.TrimEnd('/').TrimEnd('\\');
+#else 
             path = System.IO.Path.TrimEndingDirectorySeparator(path);
+#endif
             this._originalPath = path;
             this._fullPath = path == string.Empty ? string.Empty : System.IO.Path.GetFullPath(path);
         }
@@ -56,7 +60,11 @@ namespace Noggog
 
         public override int GetHashCode()
         {
+#if NETSTANDARD2_0 
+            return Path.ToLower().GetHashCode();
+#else 
             return Path.GetHashCode(StringComparison.OrdinalIgnoreCase);
+#endif
         }
 
         public override string ToString() => Path;
@@ -161,10 +169,13 @@ namespace Noggog
         {
             return dir.Path;
         }
-
+        
+#if NETSTANDARD2_0 
+#else 
         public static implicit operator ReadOnlySpan<char>(DirectoryPath dir)
         {
             return dir.Path;
         }
+#endif
     }
 }

@@ -293,14 +293,22 @@ namespace Noggog
 
         public float GetFloat(int offset)
         {
+#if NETSTANDARD2_0
+            throw new NotImplementedException();
+#else
             var span = this._data.Span.Slice(_pos + offset);
             return IsLittleEndian ? BinaryPrimitives.ReadSingleLittleEndian(span) : BinaryPrimitives.ReadSingleBigEndian(span);
+#endif
         }
 
         public double GetDouble(int offset)
         {
+#if NETSTANDARD2_0
+            throw new NotImplementedException();
+#else
             var span = this._data.Span.Slice(_pos + offset);
             return IsLittleEndian ? BinaryPrimitives.ReadDoubleLittleEndian(span) : BinaryPrimitives.ReadDoubleBigEndian(span);
+#endif
         }
 
         public string GetStringUTF8(int amount, int offset)
@@ -361,14 +369,22 @@ namespace Noggog
 
         public float GetFloat()
         {
+#if NETSTANDARD2_0
+            throw new NotImplementedException();
+#else
             var span = this._data.Span.Slice(_pos);
             return IsLittleEndian ? BinaryPrimitives.ReadSingleLittleEndian(span) : BinaryPrimitives.ReadSingleBigEndian(span);
+#endif
         }
 
         public double GetDouble()
         {
+#if NETSTANDARD2_0
+            throw new NotImplementedException();
+#else
             var span = this._data.Span.Slice(_pos);
             return IsLittleEndian ? BinaryPrimitives.ReadDoubleLittleEndian(span) : BinaryPrimitives.ReadDoubleBigEndian(span);
+#endif
         }
 
         public string GetStringUTF8(int amount)

@@ -1,3 +1,5 @@
+#if NETSTANDARD2_0
+#else
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -52,3 +54,4 @@ namespace Noggog
         }
     }
 }
+#endif

@@ -1,9 +1,10 @@
-using Noggog;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
+#if NETSTANDARD2_0 
+using TaskCompletionSource = Noggog.TaskCompletionSource;
+#else 
+using TaskCompletionSource = System.Threading.Tasks.TaskCompletionSource;
+#endif
 
 namespace Noggog
 {
@@ -117,6 +118,7 @@ namespace Noggog
             return await task.ConfigureAwait(false);
         }
 
+#if NETSTANDARD2_0
         public static async Task DoThenComplete(TaskCompletionSource tcs, Func<Task> action)
         {
             try
@@ -130,6 +132,21 @@ namespace Noggog
                 throw;
             }
         }
+#else
+        public static async Task DoThenComplete(TaskCompletionSource tcs, Func<Task> action)
+        {
+            try
+            {
+                await action().ConfigureAwait(false);
+                tcs?.SetResult();
+            }
+            catch (Exception ex)
+            {
+                tcs?.SetException(ex);
+                throw;
+            }
+        }
+#endif
 
         public static async void FireAndForget(this Task task, Action<Exception>? onException = null)
         {

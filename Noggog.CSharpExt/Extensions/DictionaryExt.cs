@@ -124,11 +124,14 @@ namespace Noggog
             return DictEmptyExt<K, V>.Empty;
         }
 
+#if NETSTANDARD2_0
+#else
         public static IReadOnlyDictionary<TKey, TTargetValue> Covariant<TKey, TSourceValue, TTargetValue>(this IReadOnlyDictionary<TKey, TSourceValue> dict)
             where TSourceValue : TTargetValue
         {
             return new DictionaryCovariantWrapper<TKey, TSourceValue, TTargetValue>(dict);
         }
+#endif
 
         private static class DictEmptyExt<K, V>
             where K : notnull
