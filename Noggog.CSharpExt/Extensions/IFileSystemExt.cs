@@ -138,5 +138,10 @@ namespace Noggog
                 system.DeepCopy(dir, Path.Combine(to.Path, Path.GetFileName(dir)));
             }
         }
+
+        public static IFileSystem GetOrDefault(this IFileSystem? system)
+        {
+            return system ?? DefaultFilesystem;
+        }
     }
 }
