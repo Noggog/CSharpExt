@@ -145,6 +145,19 @@ namespace CSharpExt.UnitTests
         }
 
         [Fact]
+        public void ReadAll()
+        {
+            var framedStream = Substitute.For<Stream>();
+            framedStream.Length.Returns(10);
+            framedStream.Position.Returns(0);
+            var frame = new FramedStream(framedStream, 6, doDispose: false);
+            const int offset = 5;
+            byte[] b = new byte[10];
+            frame.Read(b, offset, (int)frame.Length);
+            framedStream.Received().Read(b, offset, (int)frame.Length);
+        }
+
+        [Fact]
         public void WriteOutOfRange()
         {
             var framedStream = Substitute.For<Stream>();

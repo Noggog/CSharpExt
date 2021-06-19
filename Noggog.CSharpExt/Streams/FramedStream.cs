@@ -48,7 +48,6 @@ namespace Noggog.Streams
         public override int Read(byte[] buffer, int offset, int count)
         {
             var diff = Length - (Position + count);
-            if (diff == 0) return 0;
             if (diff < 0)
             {
                 count = (int)(count + diff);
