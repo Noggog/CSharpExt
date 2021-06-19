@@ -71,6 +71,12 @@ namespace Noggog
             }
         }
 
+        public static IEnumerable<FilePath> EnumerateFilePaths(this IDirectory system, DirectoryPath path, string? searchPattern = null)
+        {
+            return system.EnumerateFiles(path.Path, searchPattern: searchPattern)
+                .Select(x => new FilePath(x));
+        }
+
         public static IEnumerable<FilePath> EnumerateFilesRecursive(this IDirectory system, DirectoryPath path, string? searchPattern = null)
         {
             return (searchPattern == null ? system.EnumerateFiles(path) : system.EnumerateFiles(path, searchPattern))
