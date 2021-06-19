@@ -47,9 +47,11 @@ namespace Noggog.Streams
 
         public override int Read(byte[] buffer, int offset, int count)
         {
-            if (Position + count > Length)
+            var diff = Length - (Position + count);
+            if (diff == 0) return 0;
+            if (diff < 0)
             {
-                throw new ArgumentOutOfRangeException($"Tried to write more data than was available: {Position + count} > {Length}");
+                count = (int)(count + diff);
             }
             return _wrap.Read(buffer, offset, count);
         }

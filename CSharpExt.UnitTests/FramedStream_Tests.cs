@@ -108,12 +108,26 @@ namespace CSharpExt.UnitTests
         [Fact]
         public void ReadOutOfRange()
         {
-            var framedStream = Substitute.For<Stream>();
-            framedStream.Length.Returns(10);
-            framedStream.Position.Returns(0);
+            byte[] bufIn = new byte[10];
+            for (byte i = 0; i < 10; i++)
+            {
+                bufIn[i] = i;
+            }
+
+            var framedStream = new MemoryStream(bufIn);
             var frame = new FramedStream(framedStream, 6, doDispose: false);
-            Action act = () => frame.Read(Array.Empty<byte>(), 0, 7);
-            act.Should().Throw<ArgumentOutOfRangeException>();
+            byte[] buf = new byte[100];
+            frame.Read(buf, 0, 7)
+                .Should().Be(6);
+            for (byte i = 0; i < 6; i++)
+            {
+                buf[i].Should().Be(i);
+            }
+
+            for (int i = 6; i < 100; i++)
+            {
+                buf[i].Should().Be(0);
+            }
         }
 
         [Fact]
