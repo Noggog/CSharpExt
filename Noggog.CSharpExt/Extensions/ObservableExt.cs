@@ -1,18 +1,20 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Reactive;
 using System.Threading.Tasks;
 using System.Reactive.Disposables;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
-using Noggog;
 using System.Threading;
-using System.IO;
 using System.IO.Abstractions;
 using DynamicData;
 using DynamicData.Kernel;
+using Path = System.IO.Path;
+using RenamedEventHandler = System.IO.RenamedEventHandler;
+using FileSystemEventArgs = System.IO.FileSystemEventArgs;
+using FileSystemEventHandler = System.IO.FileSystemEventHandler;
+using WatcherChangeTypes = System.IO.WatcherChangeTypes;
+using RenamedEventArgs = System.IO.RenamedEventArgs;
 
 namespace Noggog
 {
@@ -468,7 +470,7 @@ namespace Noggog
                             Observable.FromEventPattern<FileSystemEventHandler, FileSystemEventArgs>(h => watcher.Value.Changed += h, h => watcher.Value.Changed -= h),
                             Observable.FromEventPattern<FileSystemEventHandler, FileSystemEventArgs>(h => watcher.Value.Created += h, h => watcher.Value.Created -= h),
                             Observable.FromEventPattern<FileSystemEventHandler, FileSystemEventArgs>(h => watcher.Value.Deleted += h, h => watcher.Value.Deleted -= h))
-                        .Where(x => x.EventArgs.FullPath.Equals(path, StringComparison.OrdinalIgnoreCase))
+                        .Where(x => x.EventArgs.FullPath.Equals(path.Path, StringComparison.OrdinalIgnoreCase))
                         .Unit();
                 })
                 .Replay(1)
@@ -512,7 +514,7 @@ namespace Noggog
                             Observable.FromEventPattern<FileSystemEventHandler, FileSystemEventArgs>(h => watcher.Value.Changed += h, h => watcher.Value.Changed -= h),
                             Observable.FromEventPattern<FileSystemEventHandler, FileSystemEventArgs>(h => watcher.Value.Created += h, h => watcher.Value.Created -= h),
                             Observable.FromEventPattern<FileSystemEventHandler, FileSystemEventArgs>(h => watcher.Value.Deleted += h, h => watcher.Value.Deleted -= h))
-                        .Where(x => x.EventArgs.FullPath.Equals(path, StringComparison.OrdinalIgnoreCase))
+                        .Where(x => x.EventArgs.FullPath.Equals(path.Path, StringComparison.OrdinalIgnoreCase))
                         .Unit();
                 })
                 .Replay(1)
@@ -524,18 +526,19 @@ namespace Noggog
         /// </summary>
         /// <param name="path">File path to watch</param>
         /// <param name="throwIfInvalidPath">Whether to error if path is invalid</param>
+        /// <param name="fileSystem">FIlesystem to watch</param>
         /// <exception cref="ArgumentException">Will throw if file path has no parent directory, or is malformed, and the throw parameter is on</exception>
         /// <returns>Observable signal of when file created/modified/deleted</returns>
-        public static IObservable<ChangeSet<string, string>> WatchFolderContents(
+        public static IObservable<ChangeSet<FilePath, FilePath>> WatchFolderContents(
             DirectoryPath path,
             bool throwIfInvalidPath = false,
-            IFileSystemWatcherFactory? fileWatcherFactory = null)
+            IFileSystem? fileSystem = null)
         {
-            fileWatcherFactory ??= new FileSystemWatcherFactory();
+            fileSystem ??= IFileSystemExt.DefaultFilesystem;
             return ObservableExt.UsingWithCatch(
                 () =>
                 {
-                    var watcher = fileWatcherFactory.CreateNew(path);
+                    var watcher = fileSystem.FileSystemWatcher.CreateNew(path);
                     watcher.EnableRaisingEvents = true;
                     return watcher;
                 },
@@ -549,7 +552,7 @@ namespace Noggog
                         }
                         else
                         {
-                            return Observable.Empty<ChangeSet<string, string>>();
+                            return Observable.Empty<ChangeSet<FilePath, FilePath>>();
                         }
                     }
                     return Observable.Merge(
@@ -560,9 +563,9 @@ namespace Noggog
                             switch (x.EventArgs.ChangeType)
                             {
                                 case WatcherChangeTypes.Created:
-                                    return new ChangeSet<string, string>(new Change<string, string>(ChangeReason.Add, key: x.EventArgs.FullPath, current: x.EventArgs.FullPath).AsEnumerable());
+                                    return new ChangeSet<FilePath, FilePath>(new Change<FilePath, FilePath>(ChangeReason.Add, key: x.EventArgs.FullPath, current: x.EventArgs.FullPath).AsEnumerable());
                                 case WatcherChangeTypes.Deleted:
-                                    return new ChangeSet<string, string>(new Change<string, string>(ChangeReason.Remove, key: x.EventArgs.FullPath, current: x.EventArgs.FullPath).AsEnumerable());
+                                    return new ChangeSet<FilePath, FilePath>(new Change<FilePath, FilePath>(ChangeReason.Remove, key: x.EventArgs.FullPath, current: x.EventArgs.FullPath).AsEnumerable());
                                 default:
                                     throw new NotImplementedException();
                             }
@@ -570,11 +573,11 @@ namespace Noggog
                         .Merge(Observable.FromEventPattern<RenamedEventHandler, RenamedEventArgs>(h => watcher.Value.Renamed += h, h => watcher.Value.Renamed -= h)
                             .Select(x =>
                             {
-                                return new ChangeSet<string, string>(new Change<string, string>(ChangeReason.Moved, key: x.EventArgs.FullPath, current: x.EventArgs.FullPath, previous: x.EventArgs.OldFullPath).AsEnumerable());
+                                return new ChangeSet<FilePath, FilePath>(new Change<FilePath, FilePath>(ChangeReason.Moved, key: x.EventArgs.FullPath, current: x.EventArgs.FullPath, previous: new FilePath(x.EventArgs.OldFullPath)).AsEnumerable());
                             }))
                         .StartWith(
-                            new ChangeSet<string, string>(Directory.EnumerateFiles(path)
-                                .Select(x => new Change<string, string>(ChangeReason.Add, x, x))));
+                            new ChangeSet<FilePath, FilePath>(fileSystem.Directory.EnumerateFiles(path)
+                                .Select(x => new Change<FilePath, FilePath>(ChangeReason.Add, x, x))));
                 });
         }
 
