@@ -17,6 +17,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		Directory.Build.targets = Directory.Build.targets
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Noggog.Testing", "Noggog.Testing\Noggog.Testing.csproj", "{15D7A959-E0AE-4D45-8DD2-F5A6A72FADBB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{4AF8BA72-661C-4B9F-A1DF-C849D78B0225}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4AF8BA72-661C-4B9F-A1DF-C849D78B0225}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4AF8BA72-661C-4B9F-A1DF-C849D78B0225}.Release|Any CPU.Build.0 = Release|Any CPU
+		{15D7A959-E0AE-4D45-8DD2-F5A6A72FADBB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{15D7A959-E0AE-4D45-8DD2-F5A6A72FADBB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{15D7A959-E0AE-4D45-8DD2-F5A6A72FADBB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{15D7A959-E0AE-4D45-8DD2-F5A6A72FADBB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
