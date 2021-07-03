@@ -639,6 +639,11 @@ namespace Noggog
         }
         #endregion
 
+        public static IObservable<T> ObserveOnIfApplicable<T>(IObservable<T> obs, IScheduler? scheduler)
+        {
+            return scheduler == null ? obs : obs.ObserveOn(scheduler);
+        }
+
         public static IObservable<bool> Any(params IObservable<bool>[] observables)
         {
             return Observable.CombineLatest(observables)
