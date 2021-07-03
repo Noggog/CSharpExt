@@ -639,9 +639,14 @@ namespace Noggog
         }
         #endregion
 
-        public static IObservable<T> ObserveOnIfApplicable<T>(IObservable<T> obs, IScheduler? scheduler)
+        public static IObservable<T> ObserveOnIfApplicable<T>(this IObservable<T> obs, IScheduler? scheduler)
         {
             return scheduler == null ? obs : obs.ObserveOn(scheduler);
+        }
+
+        public static IObservable<T> ThrottleWithOptionalScheduler<T>(this IObservable<T> obs, TimeSpan dueTime, IScheduler? scheduler)
+        {
+            return scheduler == null ? obs.Throttle(dueTime) : obs.Throttle(dueTime, scheduler);
         }
 
         public static IObservable<bool> Any(params IObservable<bool>[] observables)
