@@ -688,14 +688,41 @@ namespace Noggog
         {
             return obs.Filter(x => x != null)!;
         }
+        
+        public static IObservable<TSource> RetryWithBackOff<TSource, TException>(
+            this IObservable<TSource> source,
+            Func<TException, int, TimeSpan?> backOffStrategy,
+            IScheduler scheduler)
+            where TException : Exception
+        {
+            IObservable<TSource> Retry(int failureCount) =>
+                source.Catch<TSource, TException>(
+                    error =>
+                    {
+                        TimeSpan? delay = backOffStrategy(error, failureCount);
+                        if (!delay.HasValue)
+                        {
+                            return Observable.Throw<TSource>(error);
+                        }
+
+                        return Observable.Timer(delay.Value, scheduler)
+                            .SelectMany(Retry(failureCount + 1));
+                    });
+
+            return Retry(0);
+        }
 
 #if NETSTANDARD2_0
 #else
-        public static IObservable<TSource> RetryWithRampingBackoff<TSource>(this IObservable<TSource> obs,
-            TimeSpan interval, TimeSpan max)
+        public static IObservable<TSource> RetryWithRampingBackoff<TSource, TException>(
+            this IObservable<TSource> obs,
+            TimeSpan interval, 
+            TimeSpan max,
+            IScheduler? scheduler = null)
+            where TException : Exception
         {
             var maxTimes = max / interval;
-            return obs.RetryWithBackOff<TSource, Exception>((_, times) =>
+            Func<TException, int, TimeSpan?> strat = (_, times) =>
             {
                 if (times >= maxTimes)
                 {
@@ -703,7 +730,15 @@ namespace Noggog
                 }
 
                 return times * interval;
-            });
+            };
+            if (scheduler == null)
+            {
+                return obs.RetryWithBackOff(strat);
+            }
+            else
+            {
+                return obs.RetryWithBackOff(strat, scheduler);
+            }
         }
 #endif
 
