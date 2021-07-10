@@ -1,108 +1,82 @@
 ﻿using System;
 using System.IO;
-using System.Linq;
+using FakeItEasy;
 using FluentAssertions;
 using Noggog.Streams;
-using NSubstitute;
-using NSubstitute.ExceptionExtensions;
+using Noggog.Testing.AutoFixture;
 using Xunit;
 
 namespace CSharpExt.UnitTests
 {
-    public class FramedStream_Tests
+    public class FramedStreamTests
     {
-        [Fact]
-        public void FramedStreamLonger()
+        [Theory, AutoFakeItEasyData(false)]
+        public void FramedStreamLonger(Stream framedStream)
         {
-            var framedStream = Substitute.For<Stream>();
-            framedStream.Length.Returns(10);
+            A.CallTo(() => framedStream.Length).Returns(10);
             var frame = new FramedStream(framedStream, 6);
             frame.Length.Should().Be(6);
             frame.Position.Should().Be(0);
         }
 
-        [Fact]
-        public void FramedStreamShorter()
+        [Theory, AutoFakeItEasyData(false)]
+        public void FramedStreamShorter(Stream framedStream)
         {
-            var framedStream = Substitute.For<Stream>();
-            framedStream.Length.Returns(4);
+            A.CallTo(() => framedStream.Length).Returns(4);
             var frame = new FramedStream(framedStream, 6);
             frame.Length.Should().Be(4);
             frame.Position.Should().Be(0);
         }
 
-        [Fact]
-        public void FramedStreamShorterDueToPos()
+        [Theory, AutoFakeItEasyData(false)]
+        public void FramedStreamShorterDueToPos(Stream framedStream)
         {
-            var framedStream = Substitute.For<Stream>();
-            framedStream.Length.Returns(10);
-            framedStream.Position.Returns(8);
+            A.CallTo(() => framedStream.Length).Returns(10);
+            A.CallTo(() => framedStream.Position).Returns(8);
             var frame = new FramedStream(framedStream, 6);
             frame.Length.Should().Be(2);
             frame.Position.Should().Be(0);
         }
 
-        [Fact]
-        public void FramedStreamUnknown()
+        [Theory, AutoFakeItEasyData(false)]
+        public void FramedStreamUnknown(Stream framedStream)
         {
-            var framedStream = Substitute.For<Stream>();
-            framedStream.Length.Returns(-1);
-            framedStream.Position.Returns(0);
+            A.CallTo(() => framedStream.Length).Returns(-1);
+            A.CallTo(() => framedStream.Position).Returns(0);
             var frame = new FramedStream(framedStream, 6);
             frame.Length.Should().Be(6);
             frame.Position.Should().Be(0);
         }
 
-        [Fact]
-        public void FramedPositionIncrement()
+        [Theory, AutoFakeItEasyData(false)]
+        public void FramedPositionIncrement(Stream framedStream)
         {
-            var framedStream = Substitute.For<Stream>();
-            framedStream.Length.Returns(10);
-            framedStream.Position.Returns(0);
+            A.CallTo(() => framedStream.Length).Returns(10);
+            A.CallTo(() => framedStream.Position).Returns(0);
             var frame = new FramedStream(framedStream, 6);
             frame.Length.Should().Be(6);
             frame.Position.Should().Be(0);
-            framedStream.Position.Returns(6);
+            A.CallTo(() => framedStream.Position).Returns(6);
             frame.Length.Should().Be(6);
             frame.Position.Should().Be(6);
         }
 
-        [Fact]
-        public void FramedPositionSet()
+        [Theory, AutoFakeItEasyData(false)]
+        public void FramedPositionSet(Stream framedStream)
         {
-            var framedStream = Substitute.For<Stream>();
-            framedStream.Length.Returns(10);
-            framedStream.Position.Returns(0);
+            A.CallTo(() => framedStream.Length).Returns(10);
+            framedStream.Position = 0;
             var frame = new FramedStream(framedStream, 6);
             frame.Position += 2;
             framedStream.Position.Should().Be(2);
         }
 
-        [Fact]
-        public void Flush()
+        [Theory, AutoFakeItEasyData(false)]
+        public void Flush(Stream framedStream)
         {
-            var framedStream = Substitute.For<Stream>();
             var frame = new FramedStream(framedStream, 6);
             frame.Flush();
-            framedStream.Received().Flush();
-        }
-
-        [Fact]
-        public void Disposes()
-        {
-            var framedStream = Substitute.For<Stream>();
-            var frame = new FramedStream(framedStream, 6, doDispose: true);
-            frame.Dispose();
-            framedStream.Received().Dispose();
-        }
-
-        [Fact]
-        public void NotDisposes()
-        {
-            var framedStream = Substitute.For<Stream>();
-            var frame = new FramedStream(framedStream, 6, doDispose: false);
-            frame.Dispose();
-            framedStream.DidNotReceive().Dispose();
+            A.CallTo(() => framedStream.Flush()).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -130,84 +104,79 @@ namespace CSharpExt.UnitTests
             }
         }
 
-        [Fact]
-        public void Read()
+        [Theory, AutoFakeItEasyData(false)]
+        public void Read(Stream framedStream)
         {
-            var framedStream = Substitute.For<Stream>();
-            framedStream.Length.Returns(10);
-            framedStream.Position.Returns(0);
+            A.CallTo(() => framedStream.Length).Returns(10);
+            A.CallTo(() => framedStream.Position).Returns(0);
             var frame = new FramedStream(framedStream, 6, doDispose: false);
             const int offset = 5;
             const int count = 3;
             byte[] b = new byte[10];
             frame.Read(b, offset, count);
-            framedStream.Received().Read(b, offset, 3);
+            A.CallTo(() => framedStream.Read(b, offset, 3)).MustHaveHappenedOnceExactly();
         }
 
-        [Fact]
-        public void ReadAll()
+        [Theory, AutoFakeItEasyData(false)]
+        public void ReadAll(Stream framedStream)
         {
-            var framedStream = Substitute.For<Stream>();
-            framedStream.Length.Returns(10);
-            framedStream.Position.Returns(0);
+            A.CallTo(() => framedStream.Length).Returns(10);
+            A.CallTo(() => framedStream.Position).Returns(0);
             var frame = new FramedStream(framedStream, 6, doDispose: false);
             const int offset = 5;
             byte[] b = new byte[10];
             frame.Read(b, offset, (int)frame.Length);
-            framedStream.Received().Read(b, offset, (int)frame.Length);
+            A.CallTo(() => framedStream.Read(b, offset, (int)frame.Length))
+                .MustHaveHappenedOnceExactly();
         }
 
-        [Fact]
-        public void WriteOutOfRange()
+        [Theory, AutoFakeItEasyData(false)]
+        public void WriteOutOfRange(Stream framedStream)
         {
-            var framedStream = Substitute.For<Stream>();
-            framedStream.Length.Returns(10);
-            framedStream.Position.Returns(0);
+            A.CallTo(() => framedStream.Length).Returns(10);
+            A.CallTo(() => framedStream.Position).Returns(0);
             var frame = new FramedStream(framedStream, 6, doDispose: false);
             Action act = () => frame.Write(Array.Empty<byte>(), 0, 7);
             act.Should().Throw<ArgumentOutOfRangeException>();
         }
 
-        [Fact]
-        public void Write()
+        [Theory, AutoFakeItEasyData(false)]
+        public void Write(Stream framedStream)
         {
-            var framedStream = Substitute.For<Stream>();
-            framedStream.Length.Returns(10);
-            framedStream.Position.Returns(0);
+            A.CallTo(() => framedStream.Length).Returns(10);
+            framedStream.Position = 0;
             var frame = new FramedStream(framedStream, 6, doDispose: false);
             const int offset = 5;
             const int count = 3;
             byte[] b = new byte[10];
             frame.Write(b, offset, count);
-            framedStream.Received().Write(b, offset, 3);
+            A.CallTo(() => framedStream.Write(b, offset, 3))
+                .MustHaveHappenedOnceExactly();
         }
 
-        [Fact]
-        public void PositionSet()
+        [Theory, AutoFakeItEasyData(false)]
+        public void PositionSet(Stream framedStream)
         {
-            var framedStream = Substitute.For<Stream>();
-            framedStream.Position.Returns(3);
+            framedStream.Position = 3;
             var frame = new FramedStream(framedStream, 6, doDispose: false);
             frame.Position += 10;
             frame.Position.Should().Be(10);
             framedStream.Position.Should().Be(13);
         }
 
-        [Fact]
-        public void SeekBegin()
+        [Theory, AutoFakeItEasyData(false)]
+        public void SeekBegin(Stream framedStream)
         {
-            var framedStream = Substitute.For<Stream>();
-            framedStream.Position.Returns(3);
+            framedStream.Position = 3;
             var frame = new FramedStream(framedStream, 6, doDispose: false);
             frame.Seek(10, SeekOrigin.Begin);
             framedStream.Position.Should().Be(13);
         }
 
-        [Fact]
-        public void SeekCurrent()
+        [Theory, AutoFakeItEasyData(false)]
+        public void SeekCurrent(Stream framedStream)
         {
-            var framedStream = Substitute.For<Stream>();
-            framedStream.Position.Returns(3);
+            framedStream.Position = 3;
             var frame = new FramedStream(framedStream, 6, doDispose: false);
             frame.Position = 3;
             frame.Seek(10, SeekOrigin.Current);
@@ -215,12 +184,11 @@ namespace CSharpExt.UnitTests
             framedStream.Position.Should().Be(16);
         }
 
-        [Fact]
-        public void SeekEnd()
+        [Theory, AutoFakeItEasyData(false)]
+        public void SeekEnd(Stream framedStream)
         {
-            var framedStream = Substitute.For<Stream>();
-            framedStream.Position.Returns(3);
-            framedStream.Length.Returns(10);
+            framedStream.Position = 3;
+            A.CallTo(() => framedStream.Length).Returns(10);
             var frame = new FramedStream(framedStream, 6, doDispose: false);
             frame.Seek(-3, SeekOrigin.End);
             frame.Position.Should().Be(3);

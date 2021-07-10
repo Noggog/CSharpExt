@@ -5,13 +5,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoFixture" Version="4.17.0" />
+    <PackageReference Include="AutoFixture.AutoFakeItEasy" Version="4.17.0" />
+    <PackageReference Include="AutoFixture.Xunit2" Version="4.17.0" />
+    <PackageReference Include="FakeItEasy" Version="7.1.0" />
     <PackageReference Include="FluentAssertions" Version="5.10.3" />
     <PackageReference Include="GitInfo" Version="2.1.2">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.10.0" />
-    <PackageReference Include="NSubstitute" Version="4.2.2" />
     <PackageReference Include="NuGetizer" Version="0.7.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -26,7 +29,17 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Noggog.Autofac\Noggog.Autofac.csproj" />
     <ProjectReference Include="..\Noggog.CSharpExt\Noggog.CSharpExt.csproj" />
+    <ProjectReference Include="..\Noggog.Testing\Noggog.Testing.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Autofac\ValidationTests.cs">
+      <CodeLanguage>cs</CodeLanguage>
+      <DefaultPackFolder>content</DefaultPackFolder>
+      <BuildAction>Compile</BuildAction>
+    </Compile>
   </ItemGroup>
 
 </Project>

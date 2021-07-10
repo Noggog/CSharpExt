@@ -2,9 +2,9 @@
 using System.IO;
 using System.IO.Abstractions;
 using System.IO.Abstractions.TestingHelpers;
+using FakeItEasy;
 using FluentAssertions;
 using Noggog;
-using NSubstitute;
 using Xunit;
 
 namespace CSharpExt.UnitTests
@@ -30,10 +30,9 @@ namespace CSharpExt.UnitTests
         [Fact]
         public void DeleteEntireFolder_NotExists()
         {
-            var dir = Substitute.For<IDirectory>();
-            dir.Exists(Arg.Any<string>()).Returns(false);
+            var dir = A.Fake<IDirectory>(x => x.Strict());
+            A.CallTo(() => dir.Exists(A<string>._)).Returns(false);
             dir.DeleteEntireFolder(default, default, default);
-            dir.DidNotReceiveWithAnyArgs().GetFiles(default);
         }
 
         [Fact]
