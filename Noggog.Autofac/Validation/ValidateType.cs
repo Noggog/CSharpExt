@@ -58,6 +58,5 @@ namespace Noggog.Autofac.Validation
                     $"'{type.FullName}' Could not find registration for type `{param.ParameterType}`");
             }
         }
-
     }
 }

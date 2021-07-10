@@ -3,9 +3,9 @@ using Noggog.Autofac;
 using Noggog.Autofac.Validation;
 using Xunit;
 
-namespace CSharpExt.UnitTests.Autofac
+namespace CSharpExt.UnitTests.Autofac.Integration
 {
-    public class ValidateIntegration
+    public class Self
     {
         [Fact]
         public void ValidateSelf()
@@ -18,6 +18,6 @@ namespace CSharpExt.UnitTests.Autofac
                 cfg.RegisterInstance(builder.Build()).As<IContainer>();
             });
             scope.Resolve<IValidate>().ValidateRegistrations(true);
-        }
+        } 
     }
 }

@@ -14,15 +14,18 @@ namespace Noggog.Autofac.Validation
         private readonly IRegistrations _registrations;
         private readonly IValidateType _validateType;
         private readonly IShouldSkipType _shouldSkipType;
+        private readonly ICircularReferenceChecker _circularReferenceChecker;
 
         public ValidateAllRegistrations(
             IRegistrations registrations,
             IValidateType validateType,
-            IShouldSkipType shouldSkipType)
+            IShouldSkipType shouldSkipType,
+            ICircularReferenceChecker circularReferenceChecker)
         {
             _registrations = registrations;
             _validateType = validateType;
             _shouldSkipType = shouldSkipType;
+            _circularReferenceChecker = circularReferenceChecker;
         }
         
         public void Check(HashSet<Type>? usages)
@@ -43,6 +46,8 @@ namespace Noggog.Autofac.Validation
                     _validateType.Check(regis);
                 }
             }
+            
+            _circularReferenceChecker.Check();
         }
     }
 }

@@ -28,7 +28,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Compile Update="Validation\FillUsages.cs">
+      <Compile Update="Validation\GetUsages.cs">
         <CodeLanguage>cs</CodeLanguage>
         <DefaultPackFolder>content</DefaultPackFolder>
         <BuildAction>Compile</BuildAction>

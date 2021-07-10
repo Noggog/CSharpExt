@@ -13,9 +13,12 @@ namespace CSharpExt.UnitTests.Autofac
         [Theory, AutoFakeItEasyData]
         public void Empty(
             [Frozen]IRegistrations registrations,
+            [Frozen]ICircularReferenceChecker circular,
             ValidateAllRegistrations sut)
         {
             A.CallTo(() => registrations.Items).Returns(new Dictionary<Type, IReadOnlyList<Type>>());
+            A.CallTo(() => circular.Check()).DoesNothing();
+            
             sut.Check(null);
         }
         
@@ -24,10 +27,12 @@ namespace CSharpExt.UnitTests.Autofac
             Dictionary<Type, IReadOnlyList<Type>> items,
             [Frozen]IRegistrations registrations,
             [Frozen]IShouldSkipType shouldSkipType,
+            [Frozen]ICircularReferenceChecker circular,
             ValidateAllRegistrations sut)
         {
             A.CallTo(() => registrations.Items).Returns(items);
             A.CallTo(() => shouldSkipType.ShouldSkip(A<Type>._)).Returns(true);
+            A.CallTo(() => circular.Check()).DoesNothing();
             sut.Check(null);
         }
         
