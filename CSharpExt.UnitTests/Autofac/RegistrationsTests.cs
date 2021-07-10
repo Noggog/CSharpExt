@@ -16,7 +16,7 @@ namespace CSharpExt.UnitTests.Autofac
             IContainer container,
             Registrations getRegistrations)
         {
-            Assert.Throws<InvalidOperationException>(() =>
+            Assert.Throws<AutofacValidationException>(() =>
             {
                 A.CallTo(() => container.ComponentRegistry.Registrations)
                     .Returns(Enumerable.Empty<IComponentRegistration>());

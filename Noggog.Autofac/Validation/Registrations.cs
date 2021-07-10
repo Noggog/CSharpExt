@@ -38,7 +38,7 @@ namespace Noggog.Autofac.Validation
 
                 if (registrations.Count == 0)
                 {
-                    throw new InvalidOperationException("No registrations to validate");
+                    throw new AutofacValidationException("No registrations to validate");
                 }
 
                 return registrations.ToDictionary<KeyValuePair<Type, List<Type>>, Type, IReadOnlyList<Type>>(

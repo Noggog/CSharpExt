@@ -64,7 +64,7 @@ namespace CSharpExt.UnitTests.Autofac
                 { typeof(string), new List<Type>() }
             });
             A.CallTo(() => shouldSkipType.ShouldSkip(A<Type>._)).Returns(false);
-            Assert.Throws<InvalidOperationException>(() =>
+            Assert.Throws<AutofacValidationException>(() =>
             {
                 sut.Check(null);
             });

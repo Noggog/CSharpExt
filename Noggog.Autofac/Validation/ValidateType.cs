@@ -39,7 +39,7 @@ namespace Noggog.Autofac.Validation
             var constr = type.GetConstructors();
             if (constr.Length > 1)
             {
-                throw new InvalidOperationException(
+                throw new AutofacValidationException(
                     $"'{type.FullName}' has more than one constructor");
             }
 
@@ -54,7 +54,7 @@ namespace Noggog.Autofac.Validation
                 if (_allowableLazy.IsAllowed(param.ParameterType)) continue;
                 if (_allowableEnumerable.IsAllowed(param.ParameterType)) continue;
                 if (_isDelegateFactory.Check(param.ParameterType)) continue;
-                throw new InvalidOperationException(
+                throw new AutofacValidationException(
                     $"'{type.FullName}' Could not find registration for type `{param.ParameterType}`");
             }
         }

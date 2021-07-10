@@ -34,7 +34,7 @@ namespace Noggog.Autofac.Validation
                 
                 if (registration.Value.Count == 0)
                 {
-                    throw new InvalidOperationException(
+                    throw new AutofacValidationException(
                         $"'{registration.Key.FullName}' does not have an implementation");
                 }
 

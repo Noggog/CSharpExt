@@ -51,7 +51,7 @@ namespace CSharpExt.UnitTests.Autofac
         public void MultipleCtors([Frozen]IShouldSkipType shouldSkip, ValidateType sut)
         {
             A.CallTo(() => shouldSkip.ShouldSkip(A<Type>._)).Returns(false);
-            Assert.Throws<InvalidOperationException>(() =>
+            Assert.Throws<AutofacValidationException>(() =>
             {
                 sut.Check(typeof(MultipleCtor));
             });
