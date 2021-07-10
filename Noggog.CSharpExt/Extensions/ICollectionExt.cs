@@ -61,6 +61,17 @@ namespace Noggog
             }
         }
 
+        public static IEnumerable<(T Item, bool First)> IterateMarkFirst<T>(
+            this ICollection<T> coll)
+        {
+            bool first = true;
+            foreach (var item in coll)
+            {
+                yield return (item, first);
+                first = false;
+            }
+        }
+
         public static void First<T>(
             this ICollection<T> coll,
             Action<T, bool> each)
