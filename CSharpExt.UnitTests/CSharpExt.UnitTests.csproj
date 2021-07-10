@@ -35,7 +35,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="Autofac\ValidationTests.cs">
+    <Compile Update="Autofac\ValidateTests.cs">
       <CodeLanguage>cs</CodeLanguage>
       <DefaultPackFolder>content</DefaultPackFolder>
       <BuildAction>Compile</BuildAction>
