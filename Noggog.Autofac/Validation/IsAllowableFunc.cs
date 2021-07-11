@@ -10,7 +10,7 @@ namespace Noggog.Autofac.Validation
 
     public class IsAllowableFunc : IIsAllowableFunc
     {
-        public IValidateType ValidateType { get; set; } = null!;
+        public IValidateTypeCtor ValidateTypeCtor { get; set; } = null!;
 
         public bool IsAllowed(Type type)
         {
@@ -18,7 +18,7 @@ namespace Noggog.Autofac.Validation
                 && type.IsGenericType
                 && type.GenericTypeArguments.Length == 1)
             {
-                ValidateType.Check(type.GenericTypeArguments[0]);
+                ValidateTypeCtor.Check(type.GenericTypeArguments[0]);
                 return true;
             }
             return false;

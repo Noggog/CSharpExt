@@ -12,7 +12,7 @@ namespace CSharpExt.UnitTests.Autofac
     public class IsAllowableFuncTests
     {
         [Theory, AutoFakeItEasyData(false)]
-        public void Typical([Frozen]IValidateType validate, IsAllowableFunc sut)
+        public void Typical([Frozen]IValidateTypeCtor validate, IsAllowableFunc sut)
         {
             sut.IsAllowed(typeof(Func<string>))
                 .Should().BeTrue();

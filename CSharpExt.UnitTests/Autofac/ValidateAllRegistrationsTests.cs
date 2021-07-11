@@ -39,7 +39,7 @@ namespace CSharpExt.UnitTests.Autofac
         [Theory, AutoFakeItEasyData(false, ConfigureMembers: true)]
         public void TypicalValidate(
             [Frozen]IRegistrations registrations,
-            [Frozen]IValidateType validateType,
+            [Frozen]IValidateTypeCtor validateTypeCtor,
             ValidateTypes sut)
         {
             A.CallTo(() => registrations.Items).Returns(new Dictionary<Type, IReadOnlyList<Type>>()
@@ -47,7 +47,7 @@ namespace CSharpExt.UnitTests.Autofac
                 { typeof(string), new List<Type>() { typeof(int) } }
             });
             sut.Validate(typeof(string).AsEnumerable());
-            A.CallTo(() => validateType.Check(typeof(int), default(HashSet<string>?)))
+            A.CallTo(() => validateTypeCtor.Check(typeof(int), default(HashSet<string>?)))
                 .MustHaveHappened();
         }
     }

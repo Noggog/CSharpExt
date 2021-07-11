@@ -22,7 +22,7 @@ namespace CSharpExt.UnitTests.Autofac
         }
         
         [Theory, AutoFakeItEasyData]
-        public void Typical([Frozen]IValidateType validate, CheckIsDelegateFactory sut)
+        public void Typical([Frozen]IValidateTypeCtor validate, CheckIsDelegateFactory sut)
         {
             A.CallTo(() => validate.Check(A<Type>._, A<HashSet<string>>._)).DoesNothing();
             sut.Check(typeof(ClassWithFactory.Factory))

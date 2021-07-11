@@ -12,14 +12,14 @@ namespace Noggog.Autofac.Validation
     public class ValidateTypes : IValidateTypes
     {
         private readonly IRegistrations _registrations;
-        private readonly IValidateType _validateType;
+        private readonly IValidateTypeCtor _validateTypeCtor;
 
         public ValidateTypes(
             IRegistrations registrations,
-            IValidateType validateType)
+            IValidateTypeCtor validateTypeCtor)
         {
             _registrations = registrations;
-            _validateType = validateType;
+            _validateTypeCtor = validateTypeCtor;
         }
         
         public void Validate(IEnumerable<Type> types)
@@ -35,7 +35,7 @@ namespace Noggog.Autofac.Validation
 
                 foreach (var regis in registrations)
                 {
-                    _validateType.Check(regis);
+                    _validateTypeCtor.Check(regis);
                 }
             }
         }

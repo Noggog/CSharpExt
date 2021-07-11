@@ -12,7 +12,7 @@ namespace CSharpExt.UnitTests.Autofac
     public class IsAllowableLazyTests
     {
         [Theory, AutoFakeItEasyData(false)]
-        public void Typical([Frozen]IValidateType validate, IsAllowableLazy sut)
+        public void Typical([Frozen]IValidateTypeCtor validate, IsAllowableLazy sut)
         {
             sut.IsAllowed(typeof(Lazy<string>))
                 .Should().BeTrue();

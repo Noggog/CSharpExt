@@ -13,7 +13,7 @@ namespace CSharpExt.UnitTests.Autofac
     {
         [Theory, AutoFakeItEasyData(false)]
         public void Typical(
-            [Frozen]IValidateType validate,
+            [Frozen]IValidateTypeCtor validate,
             IsAllowableEnumerable sut)
         {
             sut.IsAllowed(typeof(IEnumerable<string>))
