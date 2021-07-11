@@ -437,6 +437,7 @@ namespace Noggog
         /// </summary>
         /// <param name="path">File path to watch</param>
         /// <param name="throwIfInvalidPath">Whether to error if path is invalid</param>
+        /// <param name="fileWatcherFactory">Factory to create file watcher to use</param>
         /// <exception cref="ArgumentException">Will throw if file path has no parent directory, or is malformed, and the throw parameter is on</exception>
         /// <returns>Observable signal of when file created/modified/deleted</returns>
         public static IObservable<Unit> WatchFile(
@@ -482,6 +483,7 @@ namespace Noggog
         /// </summary>
         /// <param name="path">File path to watch</param>
         /// <param name="throwIfInvalidPath">Whether to error if path is invalid</param>
+        /// <param name="fileWatcherFactory">Factory to create file watcher to use</param>
         /// <exception cref="ArgumentException">Will throw if file path has no parent directory, or is malformed, and the throw parameter is on</exception>
         /// <returns>Observable signal of when file created/modified/deleted</returns>
         public static IObservable<Unit> WatchFolder(
@@ -526,7 +528,7 @@ namespace Noggog
         /// </summary>
         /// <param name="path">File path to watch</param>
         /// <param name="throwIfInvalidPath">Whether to error if path is invalid</param>
-        /// <param name="fileSystem">FIlesystem to watch</param>
+        /// <param name="fileSystem">Filesystem to watch</param>
         /// <exception cref="ArgumentException">Will throw if file path has no parent directory, or is malformed, and the throw parameter is on</exception>
         /// <returns>Observable signal of when file created/modified/deleted</returns>
         public static IObservable<ChangeSet<FilePath, FilePath>> WatchFolderContents(

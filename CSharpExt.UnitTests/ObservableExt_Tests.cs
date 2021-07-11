@@ -10,8 +10,12 @@ using FluentAssertions;
 using System.Reactive.Linq;
 using System.Reactive.Threading.Tasks;
 using Noggog.Utility;
-using System.IO;
+using Path = System.IO.Path;
+using System.IO.Abstractions.TestingHelpers;
+using AutoFixture.Xunit2;
 using DynamicData;
+using Noggog.Testing.AutoFixture;
+using Noggog.Testing.FileSystem;
 #if NETSTANDARD2_0 
 using TaskCompletionSource = Noggog.TaskCompletionSource;
 #else 
@@ -62,95 +66,100 @@ namespace CSharpExt.UnitTests
             results.Should().ContainInOrder(secondWait);
         });
 
-        [Fact]
-        public async Task WatchFile_Typical()
+        [Theory, AutoFakeItEasyData]
+        public void WatchFile_Typical(
+            [Frozen]FilePath path,
+            [Frozen]MockFileSystemWatcher mockFileWatcher,
+            [Frozen]MockFileSystem fs)
         {
-            using var temp = TempFolder.FactoryByPath(Path.Combine(Utility.TempFolderPath, nameof(WatchFile_Typical)));
-            var fileA = Path.Combine(temp.Dir.Path, "FileA");
             int count = 0;
-            using var sub = ObservableExt.WatchFile(fileA)
+            using var sub = ObservableExt.WatchFile(path, fileWatcherFactory: fs.FileSystemWatcher)
                 .Subscribe(x => count++);
             count.Should().Be(0);
-            File.WriteAllText(fileA, string.Empty);
-            await Task.Delay(2000);
+            fs.File.WriteAllText(path, string.Empty);
+            mockFileWatcher.MarkCreated(path);
             count.Should().Be(1);
         }
 
-        [Fact]
-        public async Task WatchFile_AtypicalPathSeparators()
+        [Theory, AutoFakeItEasyData]
+        public void WatchFile_AtypicalPathSeparators(
+            [Frozen]FilePath path,
+            [Frozen]MockFileSystemWatcher mockFileWatcher,
+            [Frozen]MockFileSystem fs)
         {
-            using var temp = TempFolder.FactoryByPath(Path.Combine(Utility.TempFolderPath, nameof(WatchFile_AtypicalPathSeparators)));
-            var fileA = Path.Combine(temp.Dir.Path, "FileA");
             int count = 0;
-            using var sub = ObservableExt.WatchFile($"{temp.Dir.Path}/FileA")
+            using var sub = ObservableExt.WatchFile(path.Path.Replace('\\', '/'), fileWatcherFactory: fs.FileSystemWatcher)
                 .Subscribe(x => count++);
             count.Should().Be(0);
-            File.WriteAllText(fileA, string.Empty);
-            await Task.Delay(2000);
+            fs.File.WriteAllText(path, string.Empty);
+            mockFileWatcher.MarkCreated(path);
             count.Should().Be(1);
         }
 
-        [Fact]
-        public async Task WatchFolder_Typical()
+        [Theory, AutoFakeItEasyData]
+        public void WatchFolder_Typical(
+            [Frozen]DirectoryPath dir,
+            [Frozen]MockFileSystemWatcher mockFileWatcher,
+            [Frozen]MockFileSystem fs)
         {
-            using var temp = TempFolder.FactoryByPath(Path.Combine(Utility.TempFolderPath, nameof(WatchFolder_Typical)));
-            FilePath fileA = Path.Combine(temp.Dir.Path, "FileA");
-            FilePath fileB = Path.Combine(temp.Dir.Path, "FileB");
-            File.WriteAllText(fileA, string.Empty);
-            var live = ObservableExt.WatchFolderContents(temp.Dir.Path)
+            FilePath fileA = Path.Combine(dir.Path, "FileA");
+            FilePath fileB = Path.Combine(dir.Path, "FileB");
+            fs.File.WriteAllText(fileA, string.Empty);
+            var live = ObservableExt.WatchFolderContents(dir.Path, fileSystem: fs)
                 .RemoveKey();
-            await Task.Delay(2000);
             var list = live.AsObservableList();
             list.Count.Should().Be(1);
             list.Items.ToExtendedList()[0].Should().Be(fileA);
-            File.WriteAllText(fileB, string.Empty);
-            await Task.Delay(2000);
+            fs.File.WriteAllText(fileB, string.Empty);
+            mockFileWatcher.MarkCreated(fileB);
             list = live.AsObservableList();
             list.Count.Should().Be(2);
             list.Items.ToExtendedList()[0].Should().Be(fileA);
             list.Items.ToExtendedList()[1].Should().Be(fileB);
-            File.Delete(fileA);
-            await Task.Delay(2000);
+            fs.File.Delete(fileA);
+            mockFileWatcher.MarkDeleted(fileA);
             list = live.AsObservableList();
             list.Count.Should().Be(1);
             list.Items.ToExtendedList()[0].Should().Be(fileB);
         }
 
-        [Fact]
-        public async Task WatchFolder_OnlySubfolder()
+        [Theory, AutoFakeItEasyData]
+        public void WatchFolder_OnlySubfolder(
+            [Frozen]DirectoryPath dir,
+            [Frozen]MockFileSystemWatcher mockFileWatcher,
+            [Frozen]MockFileSystem fs)
         {
-            using var temp = TempFolder.FactoryByPath(Path.Combine(Utility.TempFolderPath, nameof(WatchFolder_Typical)));
-            FilePath fileA = Path.Combine(temp.Dir.Path, "SomeFolder", "FileA");
-            FilePath fileB = Path.Combine(temp.Dir.Path, "FileB");
-            Directory.CreateDirectory(Path.GetDirectoryName(fileA)!);
-            File.WriteAllText(fileA, string.Empty);
-            var live = ObservableExt.WatchFolderContents(Path.Combine(temp.Dir.Path, "SomeFolder"))
+            FilePath fileA = Path.Combine(dir.Path, "SomeFolder", "FileA");
+            FilePath fileB = Path.Combine(dir.Path, "FileB");
+            fs.Directory.CreateDirectory(Path.GetDirectoryName(fileA)!);
+            fs.File.WriteAllText(fileA, string.Empty);
+            var live = ObservableExt.WatchFolderContents(Path.Combine(dir.Path, "SomeFolder"), fileSystem: fs)
                 .RemoveKey();
-            await Task.Delay(2000);
             var list = live.AsObservableList();
             list.Count.Should().Be(1);
             list.Items.ToExtendedList()[0].Should().Be(fileA);
-            File.WriteAllText(fileB, string.Empty);
-            await Task.Delay(2000);
+            fs.File.WriteAllText(fileB, string.Empty);
+            mockFileWatcher.MarkCreated(fileB);
             list = live.AsObservableList();
             list.Count.Should().Be(1);
             list.Items.ToExtendedList()[0].Should().Be(fileA);
         }
 
-        [Fact]
-        public async Task WatchFolder_ATypicalSeparator()
+        [Theory, AutoFakeItEasyData]
+        public void WatchFolder_ATypicalSeparator(
+            [Frozen]DirectoryPath dir,
+            [Frozen]FilePath file,
+            [Frozen]MockFileSystemWatcher mockFileWatcher,
+            [Frozen]MockFileSystem fs)
         {
-            using var temp = TempFolder.FactoryByPath(Path.Combine(Utility.TempFolderPath, nameof(WatchFolder_ATypicalSeparator)));
-            FilePath fileA = Path.Combine(temp.Dir.Path, "SomeFolder", "FileA");
-            Directory.CreateDirectory(Path.GetDirectoryName(fileA)!);
-            var live = ObservableExt.WatchFolderContents($"{temp.Dir.Path}/SomeFolder")
+            var live = ObservableExt.WatchFolderContents(dir.Path.Replace('\\', '/'), fileSystem: fs)
                 .RemoveKey();
             var list = live.AsObservableList();
             list.Count.Should().Be(0);
-            File.WriteAllText(fileA, string.Empty);
-            await Task.Delay(2000);
+            fs.File.WriteAllText(file, string.Empty);
+            mockFileWatcher.MarkCreated(file);
             list.Count.Should().Be(1);
-            list.Items.ToExtendedList()[0].Should().Be(fileA);
+            list.Items.ToExtendedList()[0].Should().Be(file);
         }
     }
 }
