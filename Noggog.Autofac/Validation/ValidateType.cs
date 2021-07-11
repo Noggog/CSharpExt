@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 
 namespace Noggog.Autofac.Validation
 {
@@ -12,6 +13,7 @@ namespace Noggog.Autofac.Validation
     public class ValidateType : IValidateType
     {
         private readonly IRegistrations _registrations;
+        private readonly IValidateTracker _tracker;
         private readonly IIsAllowableFunc _allowableFunc;
         private readonly IIsAllowableLazy _allowableLazy;
         private readonly ICheckIsDelegateFactory _isDelegateFactory;
@@ -22,12 +24,14 @@ namespace Noggog.Autofac.Validation
         
         public ValidateType(
             IRegistrations registrations,
+            IValidateTracker tracker,
             IIsAllowableFunc allowableFunc,
             IIsAllowableLazy allowableLazy,
             ICheckIsDelegateFactory isDelegateFactory,
             IIsAllowableEnumerable allowableEnumerable)
         {
             _registrations = registrations;
+            _tracker = tracker;
             _allowableFunc = allowableFunc;
             _allowableLazy = allowableLazy;
             _isDelegateFactory = isDelegateFactory;
@@ -37,6 +41,7 @@ namespace Noggog.Autofac.Validation
         public void Validate(Type type)
         {
             if (!_checkedTypes.Add(type)) return;
+            using var track = _tracker.Track(type);
             if (_isDelegateFactory.Check(type)) return;
             if (_allowableFunc.IsAllowed(type)) return;
             if (_allowableLazy.IsAllowed(type)) return;
@@ -48,7 +53,7 @@ namespace Noggog.Autofac.Validation
             }
             
             throw new AutofacValidationException(
-                $"'{type.FullName}' Could not find registration for type `{type}`");
+                $"'{type.FullName}' Could not find registration for type `{type}`. {_tracker.State()}");
         }
     }
 }
