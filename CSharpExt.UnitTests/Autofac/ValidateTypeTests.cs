@@ -39,6 +39,19 @@ namespace CSharpExt.UnitTests.Autofac
             {
             }
         }
+
+        [Theory, AutoFakeItEasyData]
+        public void OnlyProcessesSameTypeOnce(
+            [Frozen]IShouldSkipType shouldSkip, 
+            ValidateType sut)
+        {
+            A.CallTo(() => shouldSkip.ShouldSkip(A<Type>._)).Returns(true);
+            sut.Check(typeof(ValidClass));
+            sut.Check(typeof(ValidClass));
+            sut.Check(typeof(OptionalClass));
+            A.CallTo(() => shouldSkip.ShouldSkip(A<Type>._))
+                .MustHaveHappened(2, Times.Exactly);
+        }
         
         [Theory, AutoFakeItEasyData]
         public void RespectsShouldSkip([Frozen]IShouldSkipType shouldSkip, ValidateType sut)

@@ -16,7 +16,8 @@ namespace Noggog.Autofac.Validation
         private readonly IShouldSkipType _shouldSkipType;
         private readonly ICheckIsDelegateFactory _isDelegateFactory;
         private readonly IIsAllowableEnumerable _allowableEnumerable;
-
+        private readonly HashSet<Type> _checkedTypes = new();
+        
         public ValidateType(
             IRegistrations registrations,
             IIsAllowableFunc allowableFunc,
@@ -35,6 +36,7 @@ namespace Noggog.Autofac.Validation
         
         public void Check(Type type, HashSet<string>? paramSkip = null)
         {
+            if (!_checkedTypes.Add(type)) return;
             if (_shouldSkipType.ShouldSkip(type)) return;
             var constr = type.GetConstructors();
             if (constr.Length > 1)
