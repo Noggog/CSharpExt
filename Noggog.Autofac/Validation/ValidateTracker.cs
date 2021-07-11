@@ -23,7 +23,7 @@ namespace Noggog.Autofac.Validation
 
         public string State()
         {
-            return string.Join(" -> ", _types.Reverse());
+            return string.Join($" -> {Environment.NewLine}   ", _types.Reverse());
         }
     }
 }
