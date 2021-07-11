@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 
 namespace Noggog.Autofac.Validation
@@ -17,6 +18,8 @@ namespace Noggog.Autofac.Validation
         private readonly IIsAllowableEnumerable _allowableEnumerable;
         private readonly HashSet<Type> _checkedTypes = new();
 
+        public IValidateTypeCtor ValidateCtor { get; set; } = null!;
+        
         public ValidateType(
             IRegistrations registrations,
             IIsAllowableFunc allowableFunc,
@@ -34,11 +37,16 @@ namespace Noggog.Autofac.Validation
         public void Validate(Type type)
         {
             if (!_checkedTypes.Add(type)) return;
-            if (_registrations.Items.ContainsKey(type)) return;
+            if (_isDelegateFactory.Check(type)) return;
             if (_allowableFunc.IsAllowed(type)) return;
             if (_allowableLazy.IsAllowed(type)) return;
             if (_allowableEnumerable.IsAllowed(type)) return;
-            if (_isDelegateFactory.Check(type)) return;
+            if (_registrations.Items.ContainsKey(type))
+            {
+                ValidateCtor.Validate(_registrations.Items[type].First());
+                return;
+            }
+            
             throw new AutofacValidationException(
                 $"'{type.FullName}' Could not find registration for type `{type}`");
         }

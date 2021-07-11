@@ -19,7 +19,7 @@ namespace CSharpExt.UnitTests.Autofac
             sut.IsAllowed(typeof(IEnumerable<string>))
                 .Should().BeTrue();
             
-            A.CallTo(() => validate.Check(typeof(string), null))
+            A.CallTo(() => validate.Validate(typeof(string), null))
                 .MustHaveHappenedOnceExactly();
         }
         

@@ -35,7 +35,7 @@ namespace Noggog.Autofac.Validation
 
                 foreach (var regis in registrations)
                 {
-                    _validateTypeCtor.Check(regis);
+                    _validateTypeCtor.Validate(regis);
                 }
             }
         }

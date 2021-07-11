@@ -16,7 +16,7 @@ namespace CSharpExt.UnitTests.Autofac
         {
             sut.IsAllowed(typeof(Func<string>))
                 .Should().BeTrue();
-            A.CallTo(() => validate.Check(typeof(string), A<HashSet<string>?>._))
+            A.CallTo(() => validate.Validate(typeof(string), A<HashSet<string>?>._))
                 .MustHaveHappenedOnceExactly();
         }
         

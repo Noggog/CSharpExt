@@ -47,7 +47,7 @@ namespace CSharpExt.UnitTests.Autofac
                 { typeof(string), new List<Type>() { typeof(int) } }
             });
             sut.Validate(typeof(string).AsEnumerable());
-            A.CallTo(() => validateTypeCtor.Check(typeof(int), default(HashSet<string>?)))
+            A.CallTo(() => validateTypeCtor.Validate(typeof(int), default(HashSet<string>?)))
                 .MustHaveHappened();
         }
     }

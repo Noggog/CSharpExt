@@ -5,7 +5,7 @@ namespace Noggog.Autofac.Validation
 {
     public interface IValidateTypeCtor
     {
-        void Check(Type type, HashSet<string>? paramSkip = null);
+        void Validate(Type type, HashSet<string>? paramSkip = null);
     }
 
     public class ValidateTypeCtor : IValidateTypeCtor
@@ -22,7 +22,7 @@ namespace Noggog.Autofac.Validation
             _validateType = validateType;
         }
         
-        public void Check(Type type, HashSet<string>? paramSkip = null)
+        public void Validate(Type type, HashSet<string>? paramSkip = null)
         {
             if (!_checkedTypes.Add(type)) return;
             if (_shouldSkipType.ShouldSkip(type)) return;

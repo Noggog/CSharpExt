@@ -45,9 +45,9 @@ namespace CSharpExt.UnitTests.Autofac
             ValidateTypeCtor sut)
         {
             A.CallTo(() => shouldSkip.ShouldSkip(A<Type>._)).Returns(true);
-            sut.Check(typeof(ValidClass));
-            sut.Check(typeof(ValidClass));
-            sut.Check(typeof(OptionalClass));
+            sut.Validate(typeof(ValidClass));
+            sut.Validate(typeof(ValidClass));
+            sut.Validate(typeof(OptionalClass));
             A.CallTo(() => shouldSkip.ShouldSkip(A<Type>._))
                 .MustHaveHappened(2, Times.Exactly);
         }
@@ -56,7 +56,7 @@ namespace CSharpExt.UnitTests.Autofac
         public void RespectsShouldSkip([Frozen]IShouldSkipType shouldSkip, ValidateTypeCtor sut)
         {
             A.CallTo(() => shouldSkip.ShouldSkip(typeof(ValidClass))).Returns(true);
-            sut.Check(typeof(ValidClass));
+            sut.Validate(typeof(ValidClass));
         }
         
         [Theory, AutoFakeItEasyData]
@@ -65,7 +65,7 @@ namespace CSharpExt.UnitTests.Autofac
             A.CallTo(() => shouldSkip.ShouldSkip(A<Type>._)).Returns(false);
             Assert.Throws<AutofacValidationException>(() =>
             {
-                sut.Check(typeof(MultipleCtor));
+                sut.Validate(typeof(MultipleCtor));
             });
         }
         
@@ -73,21 +73,21 @@ namespace CSharpExt.UnitTests.Autofac
         public void NoCtors([Frozen]IShouldSkipType shouldSkip, ValidateTypeCtor sut)
         {
             A.CallTo(() => shouldSkip.ShouldSkip(A<Type>._)).Returns(false);
-            sut.Check(typeof(NoCtor));
+            sut.Validate(typeof(NoCtor));
         }
         
         [Theory, AutoFakeItEasyData]
         public void Optional([Frozen]IShouldSkipType shouldSkip, ValidateTypeCtor sut)
         {
             A.CallTo(() => shouldSkip.ShouldSkip(A<Type>._)).Returns(false);
-            sut.Check(typeof(OptionalClass));
+            sut.Validate(typeof(OptionalClass));
         }
         
         [Theory, AutoFakeItEasyData]
         public void ParamSkipped([Frozen]IShouldSkipType shouldSkip, ValidateTypeCtor sut)
         {
             A.CallTo(() => shouldSkip.ShouldSkip(A<Type>._)).Returns(false);
-            sut.Check(typeof(ValidClass), new HashSet<string>()
+            sut.Validate(typeof(ValidClass), new HashSet<string>()
             {
                 "cl"
             });

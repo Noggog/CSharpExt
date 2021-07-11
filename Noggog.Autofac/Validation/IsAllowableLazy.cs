@@ -18,7 +18,7 @@ namespace Noggog.Autofac.Validation
                 && type.IsGenericType
                 && type.GenericTypeArguments.Length == 1)
             {
-                ValidateTypeCtor.Check(type.GenericTypeArguments[0]);
+                ValidateTypeCtor.Validate(type.GenericTypeArguments[0]);
                 return true;
             }
             return false;
