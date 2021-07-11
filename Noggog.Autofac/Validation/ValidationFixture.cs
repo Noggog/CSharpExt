@@ -14,13 +14,13 @@ namespace Noggog.Autofac.Validation
             _container = builder.Build();
         }
 
-        public IDisposable GetValidator(IContainer container, out IValidate validate)
+        public IDisposable GetValidator(IContainer container, out IValidator validator)
         {
             var scope = _container.BeginLifetimeScope(cfg =>
             {
                 cfg.RegisterInstance(container).As<IContainer>();
             });
-            validate = scope.Resolve<IValidate>();
+            validator = scope.Resolve<IValidator>();
             return scope;
         }
 

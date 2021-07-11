@@ -17,7 +17,7 @@ namespace CSharpExt.UnitTests.Autofac.Integration
                 builder.RegisterInstance(ValidationMixIn.Container).As<IContainer>();
                 cfg.RegisterInstance(builder.Build()).As<IContainer>();
             });
-            scope.Resolve<IValidate>().ValidateRegistrations(true);
+            scope.Resolve<IValidator>().Validate(typeof(IValidator));
         } 
     }
 }

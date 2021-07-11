@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using AutoFixture.Xunit2;
 using FakeItEasy;
+using Noggog;
 using Noggog.Autofac.Validation;
 using Noggog.Testing.AutoFixture;
 using Xunit;
@@ -13,77 +15,39 @@ namespace CSharpExt.UnitTests.Autofac
         [Theory, AutoFakeItEasyData]
         public void Empty(
             [Frozen]IRegistrations registrations,
-            [Frozen]ICircularReferenceChecker circular,
-            ValidateAllRegistrations sut)
+            ValidateTypes sut)
         {
             A.CallTo(() => registrations.Items).Returns(new Dictionary<Type, IReadOnlyList<Type>>());
-            A.CallTo(() => circular.Check()).DoesNothing();
-            
-            sut.Check(null);
-        }
-        
-        [Theory, AutoFakeItEasyData(ConfigureMembers: true)]
-        public void RespectsShouldSkip(
-            Dictionary<Type, IReadOnlyList<Type>> items,
-            [Frozen]IRegistrations registrations,
-            [Frozen]IShouldSkipType shouldSkipType,
-            [Frozen]ICircularReferenceChecker circular,
-            ValidateAllRegistrations sut)
-        {
-            A.CallTo(() => registrations.Items).Returns(items);
-            A.CallTo(() => shouldSkipType.ShouldSkip(A<Type>._)).Returns(true);
-            A.CallTo(() => circular.Check()).DoesNothing();
-            sut.Check(null);
-        }
-        
-        [Theory, AutoFakeItEasyData(false, ConfigureMembers: true)]
-        public void NotInUsages(
-            [Frozen]IShouldSkipType shouldSkipType,
-            ValidateAllRegistrations sut)
-        {
-            A.CallTo(() => shouldSkipType.ShouldSkip(A<Type>._)).Returns(false);
-            sut.Check(new HashSet<Type>());
-        }
-        
-        [Theory, AutoFakeItEasyData(false, ConfigureMembers: true)]
-        public void InUsages(
-            [Frozen]IShouldSkipType shouldSkipType,
-            [Frozen]IRegistrations registrations,
-            [Frozen]IValidateType validateType,
-            ValidateAllRegistrations sut)
-        {
-            A.CallTo(() => shouldSkipType.ShouldSkip(A<Type>._)).Returns(false);
-            sut.Check(new HashSet<Type>(registrations.Items.Keys));
-            A.CallTo(() => validateType.Check(A<Type>._, default(HashSet<string>?)))
-                .MustHaveHappened();
+            sut.Validate(Enumerable.Empty<Type>());
         }
         
         [Theory, AutoFakeItEasyData(false, ConfigureMembers: true)]
         public void NoImplementation(
-            [Frozen]IShouldSkipType shouldSkipType,
             [Frozen]IRegistrations registrations,
-            ValidateAllRegistrations sut)
+            ValidateTypes sut)
         {
             A.CallTo(() => registrations.Items).Returns(new Dictionary<Type, IReadOnlyList<Type>>()
             {
                 { typeof(string), new List<Type>() }
             });
-            A.CallTo(() => shouldSkipType.ShouldSkip(A<Type>._)).Returns(false);
             Assert.Throws<AutofacValidationException>(() =>
             {
-                sut.Check(null);
+                sut.Validate(typeof(string).AsEnumerable());
             });
         }
         
         [Theory, AutoFakeItEasyData(false, ConfigureMembers: true)]
         public void TypicalValidate(
-            [Frozen]IShouldSkipType shouldSkipType,
+            [Frozen]IRegistrations registrations,
             [Frozen]IValidateType validateType,
-            ValidateAllRegistrations sut)
+            ValidateTypes sut)
         {
-            A.CallTo(() => shouldSkipType.ShouldSkip(A<Type>._)).Returns(false);
-            sut.Check(null);
-            A.CallTo(() => validateType.Check(A<Type>._, default(HashSet<string>?)))
+            A.CallTo(() => registrations.Items).Returns(new Dictionary<Type, IReadOnlyList<Type>>()
+            {
+                { typeof(string), new List<Type>() { typeof(int) } }
+            });
+            sut.Validate(typeof(string).AsEnumerable());
+            A.CallTo(() => validateType.Check(typeof(int), default(HashSet<string>?)))
                 .MustHaveHappened();
         }
     }

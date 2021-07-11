@@ -15,19 +15,24 @@ namespace Noggog.Autofac
             Container = builder.Build();
         }
         
-        public static void ValidateRegistrations(this IContainer container, params Type[] extraUsages)
-        {
-            ValidateRegistrations(container, true, extraUsages);
-        }
-
-        public static void ValidateRegistrations(this IContainer container, bool evaluateUsages, params Type[] extraUsages)
+        public static void ValidateEverything(this IContainer container)
         {
             using var scope = Container.BeginLifetimeScope(cfg =>
             {
                 cfg.RegisterInstance(container).As<IContainer>();
             });
-            scope.Resolve<IValidate>()
-                .ValidateRegistrations(evaluateUsages: evaluateUsages, extraUsages);
+            scope.Resolve<IValidator>()
+                .ValidateEverything();
+        }
+
+        public static void Validate(this IContainer container, Type drivingType, params Type[] otherDrivingTypes)
+        {
+            using var scope = Container.BeginLifetimeScope(cfg =>
+            {
+                cfg.RegisterInstance(container).As<IContainer>();
+            });
+            scope.Resolve<IValidator>()
+                .Validate(drivingType, otherDrivingTypes);
         }
     }
 }

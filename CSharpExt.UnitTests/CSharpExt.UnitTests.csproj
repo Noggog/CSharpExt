@@ -35,12 +35,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="Autofac\ValidateTests.cs">
+    <Compile Update="Autofac\ValidatorTests.cs">
       <CodeLanguage>cs</CodeLanguage>
       <DefaultPackFolder>content</DefaultPackFolder>
       <BuildAction>Compile</BuildAction>
     </Compile>
-    <Compile Update="Autofac\Integration\ValidateIntegration.cs">
+    <Compile Update="Autofac\Integration\Circular.cs">
       <CodeLanguage>cs</CodeLanguage>
       <DefaultPackFolder>content</DefaultPackFolder>
       <BuildAction>Compile</BuildAction>

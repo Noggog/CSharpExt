@@ -1,7 +1,4 @@
-﻿using System;
-using System.ComponentModel;
-using Autofac;
-using Noggog.Autofac;
+﻿using Autofac;
 using Noggog.Autofac.Validation;
 using Xunit;
 
@@ -29,7 +26,7 @@ namespace CSharpExt.UnitTests.Autofac.Integration
             Assert.Throws<AutofacValidationException>(() =>
             {
                 using var disp = _validationFixture.GetValidator(cont, out var validate);
-                validate.ValidateRegistrations(true);
+                validate.Validate(typeof(ClassA), typeof(ClassB));
             });
         }
         
@@ -47,7 +44,7 @@ namespace CSharpExt.UnitTests.Autofac.Integration
             Assert.Throws<AutofacValidationException>(() =>
             {
                 using var disp = _validationFixture.GetValidator(cont, out var validate);
-                validate.ValidateRegistrations(true);
+                validate.Validate(typeof(ClassD), typeof(IInterface));
             });
         }
     }
