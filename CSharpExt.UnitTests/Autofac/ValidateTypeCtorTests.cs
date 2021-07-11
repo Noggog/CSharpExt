@@ -40,16 +40,14 @@ namespace CSharpExt.UnitTests.Autofac
         }
 
         [Theory, AutoFakeItEasyData]
-        public void OnlyProcessesSameTypeOnce(
-            [Frozen]IShouldSkipType shouldSkip, 
-            ValidateTypeCtor sut)
+        public void NoShortCircuit([Frozen]IShouldSkipType shouldSkip, ValidateTypeCtor sut)
         {
             A.CallTo(() => shouldSkip.ShouldSkip(A<Type>._)).Returns(true);
             sut.Validate(typeof(ValidClass));
-            sut.Validate(typeof(ValidClass));
-            sut.Validate(typeof(OptionalClass));
+            sut.Validate(typeof(ValidClass), new HashSet<string>() { "test" });
+            sut.Validate(typeof(ValidClass), new HashSet<string>() { "test2" });
             A.CallTo(() => shouldSkip.ShouldSkip(A<Type>._))
-                .MustHaveHappened(2, Times.Exactly);
+                .MustHaveHappened(3, Times.Exactly);
         }
         
         [Theory, AutoFakeItEasyData]

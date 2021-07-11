@@ -12,7 +12,6 @@ namespace Noggog.Autofac.Validation
     {
         private readonly IShouldSkipType _shouldSkipType;
         private readonly IValidateType _validateType;
-        private readonly HashSet<Type> _checkedTypes = new();
         
         public ValidateTypeCtor(
             IShouldSkipType shouldSkipType,
@@ -24,7 +23,6 @@ namespace Noggog.Autofac.Validation
         
         public void Validate(Type type, HashSet<string>? paramSkip = null)
         {
-            if (!_checkedTypes.Add(type)) return;
             if (_shouldSkipType.ShouldSkip(type)) return;
             var constr = type.GetConstructors();
             if (constr.Length > 1)
