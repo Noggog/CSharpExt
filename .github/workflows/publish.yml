@@ -39,5 +39,19 @@ jobs:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
         tag: ${{ github.event.release.tag_name }}
         file_glob: "true"
+    - name: Publish Testing to Github
+      uses: svenstaro/upload-release-action@v2
+      with:
+        file: Noggog.Testing/bin/Release/Noggog.Testing.*.nupkg
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        tag: ${{ github.event.release.tag_name }}
+        file_glob: "true"
+    - name: Publish Autofac to Github
+      uses: svenstaro/upload-release-action@v2
+      with:
+        file: Noggog.Autofac/bin/Release/Noggog.Autofac.*.nupkg
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        tag: ${{ github.event.release.tag_name }}
+        file_glob: "true"
     - name: Publish to Nuget.org
       run: dotnet nuget push **/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --no-symbols true
