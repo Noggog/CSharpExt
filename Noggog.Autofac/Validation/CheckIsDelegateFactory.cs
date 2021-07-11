@@ -21,7 +21,7 @@ namespace Noggog.Autofac.Validation
             var invoke = type.GetMethod("Invoke");
             if (invoke == null) return false;
             if (invoke.ReturnType == typeof(void)) return false;
-            ValidateType.Validate(invoke.ReturnType);
+            ValidateType.Validate(invoke.ReturnType, validateCtor: false);
             var parameterNames = new HashSet<string>(invoke.GetParameters().Select(p => p.Name).NotNull());
             ValidateTypeCtor.Validate(invoke.ReturnType, parameterNames);
             return true;

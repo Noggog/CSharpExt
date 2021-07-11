@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Linq;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 
 namespace Noggog.Autofac.Validation
 {
     public interface IValidateType
     {
-        void Validate(Type type);
+        void Validate(Type type, bool validateCtor = true);
     }
 
     public class ValidateType : IValidateType
@@ -38,7 +37,7 @@ namespace Noggog.Autofac.Validation
             _allowableEnumerable = allowableEnumerable;
         }
         
-        public void Validate(Type type)
+        public void Validate(Type type, bool validateCtor = true)
         {
             if (!_checkedTypes.Add(type)) return;
             using var track = _tracker.Track(type);
@@ -48,7 +47,10 @@ namespace Noggog.Autofac.Validation
             if (_allowableEnumerable.IsAllowed(type)) return;
             if (_registrations.Items.ContainsKey(type))
             {
-                ValidateCtor.Validate(_registrations.Items[type].First());
+                if (validateCtor)
+                {
+                    ValidateCtor.Validate(_registrations.Items[type].First());
+                }
                 return;
             }
             

@@ -28,7 +28,7 @@ namespace CSharpExt.UnitTests.Autofac
             CheckIsDelegateFactory sut)
         {
             A.CallTo(() => validateCtor.Validate(A<Type>._, A<HashSet<string>>._)).DoesNothing();
-            A.CallTo(() => validate.Validate(A<Type>._)).DoesNothing();
+            A.CallTo(() => validate.Validate(A<Type>._, false)).DoesNothing();
             sut.Check(typeof(ClassWithFactory.Factory))
                 .Should().BeTrue();
             var set = new HashSet<string>()
@@ -38,7 +38,7 @@ namespace CSharpExt.UnitTests.Autofac
             };
             A.CallTo(() => validateCtor.Validate(typeof(ClassWithFactory), A<HashSet<string>>.That.SetEquals("str", "i")))
                 .MustHaveHappenedOnceExactly(); 
-            A.CallTo(() => validate.Validate(typeof(ClassWithFactory)))
+            A.CallTo(() => validate.Validate(typeof(ClassWithFactory), false))
                 .MustHaveHappenedOnceExactly(); 
         }
         
