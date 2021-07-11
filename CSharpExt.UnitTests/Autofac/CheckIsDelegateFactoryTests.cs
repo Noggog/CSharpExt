@@ -22,9 +22,13 @@ namespace CSharpExt.UnitTests.Autofac
         }
         
         [Theory, AutoFakeItEasyData]
-        public void Typical([Frozen]IValidateTypeCtor validate, CheckIsDelegateFactory sut)
+        public void Typical(
+            [Frozen]IValidateTypeCtor validateCtor, 
+            [Frozen]IValidateType validate, 
+            CheckIsDelegateFactory sut)
         {
-            A.CallTo(() => validate.Check(A<Type>._, A<HashSet<string>>._)).DoesNothing();
+            A.CallTo(() => validateCtor.Check(A<Type>._, A<HashSet<string>>._)).DoesNothing();
+            A.CallTo(() => validate.Validate(A<Type>._)).DoesNothing();
             sut.Check(typeof(ClassWithFactory.Factory))
                 .Should().BeTrue();
             var set = new HashSet<string>()
@@ -32,7 +36,9 @@ namespace CSharpExt.UnitTests.Autofac
                 "str",
                 "i"
             };
-            A.CallTo(() => validate.Check(typeof(ClassWithFactory), A<HashSet<string>>.That.SetEquals("str", "i")))
+            A.CallTo(() => validateCtor.Check(typeof(ClassWithFactory), A<HashSet<string>>.That.SetEquals("str", "i")))
+                .MustHaveHappenedOnceExactly(); 
+            A.CallTo(() => validate.Validate(typeof(ClassWithFactory)))
                 .MustHaveHappenedOnceExactly(); 
         }
         

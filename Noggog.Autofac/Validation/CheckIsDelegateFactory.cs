@@ -13,6 +13,7 @@ namespace Noggog.Autofac.Validation
     public class CheckIsDelegateFactory : ICheckIsDelegateFactory
     {
         public IValidateTypeCtor ValidateTypeCtor { get; set; } = null!;
+        public IValidateType ValidateType { get; set; } = null!;
 
         public bool Check(Type type)
         {
@@ -20,6 +21,7 @@ namespace Noggog.Autofac.Validation
             var invoke = type.GetMethod("Invoke");
             if (invoke == null) return false;
             if (invoke.ReturnType == typeof(void)) return false;
+            ValidateType.Validate(invoke.ReturnType);
             var parameterNames = new HashSet<string>(invoke.GetParameters().Select(p => p.Name).NotNull());
             ValidateTypeCtor.Check(invoke.ReturnType, parameterNames);
             return true;
