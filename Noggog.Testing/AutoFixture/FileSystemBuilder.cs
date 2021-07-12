@@ -2,28 +2,23 @@
 using System.Collections.Generic;
 using System.IO.Abstractions;
 using System.IO.Abstractions.TestingHelpers;
-using System.Reflection;
 using AutoFixture;
 using AutoFixture.Kernel;
 using Noggog.Testing.FileSystem;
 
 namespace Noggog.Testing.AutoFixture
 {
-    public class FileSystemCustomization : ICustomization
-    {
-        public void Customize(IFixture fixture)
-        {
-            fixture.Customizations.Add(new FileSystemSpecimenBuilder());
-        }
-    }
-
-    public class FileSystemSpecimenBuilder : ISpecimenBuilder
+    public class FileSystemBuilder : ISpecimenBuilder
     {
         public object Create(object request, ISpecimenContext context)
         {
             if (request is not Type t) return new NoSpecimen();
-            if (t == typeof(MockFileSystem)
-                || t == typeof(IFileSystem))
+            
+            if (t == typeof(IFileSystem))
+            {
+                return context.Create<MockFileSystem>();
+            }
+            else if (t == typeof(MockFileSystem))
             {
                 var ret = new MockFileSystem(new Dictionary<string, MockFileData>())
                 {
@@ -32,8 +27,11 @@ namespace Noggog.Testing.AutoFixture
                 ret.Directory.CreateDirectory("C:\\ExistingDirectory");
                 return ret;
             }
-            else if (t == typeof(Noggog.Testing.FileSystem.MockFileSystemWatcherFactory)
-                || t == typeof(IFileSystemWatcherFactory))
+            else if (t == typeof(IFileSystemWatcherFactory))
+            {
+                return context.Create<Noggog.Testing.FileSystem.MockFileSystemWatcherFactory>();
+            }
+            else if (t == typeof(Noggog.Testing.FileSystem.MockFileSystemWatcherFactory))
             {
                 return new Noggog.Testing.FileSystem.MockFileSystemWatcherFactory(
                     context.Create<MockFileSystemWatcher>());

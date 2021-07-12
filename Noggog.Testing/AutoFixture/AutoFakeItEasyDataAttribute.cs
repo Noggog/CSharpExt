@@ -18,9 +18,11 @@ namespace Noggog.Testing.AutoFixture
                 {
                     customization.Relay = new FakeItEasyStrictRelay();
                 }
+
                 return new Fixture()
                     .Customize(customization)
-                    .Customize(new FileSystemCustomization());
+                    .Customize(new FileSystemBuilder().ToCustomization())
+                    .Customize(new SchedulerBuilder().ToCustomization());
             })
         {
         }
