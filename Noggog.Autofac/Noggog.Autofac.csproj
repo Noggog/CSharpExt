@@ -27,39 +27,6 @@
       <ProjectReference Include="..\Noggog.CSharpExt\Noggog.CSharpExt.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Compile Update="Validation\GetUsages.cs">
-        <CodeLanguage>cs</CodeLanguage>
-        <DefaultPackFolder>content</DefaultPackFolder>
-        <BuildAction>Compile</BuildAction>
-      </Compile>
-      <Compile Update="Validation\IsAllowableEnumerable.cs">
-        <CodeLanguage>cs</CodeLanguage>
-        <DefaultPackFolder>content</DefaultPackFolder>
-        <BuildAction>Compile</BuildAction>
-      </Compile>
-      <Compile Update="Validation\Registrations.cs">
-        <CodeLanguage>cs</CodeLanguage>
-        <DefaultPackFolder>content</DefaultPackFolder>
-        <BuildAction>Compile</BuildAction>
-      </Compile>
-      <Compile Update="Validation\ValidateTypeCtor.cs">
-        <CodeLanguage>cs</CodeLanguage>
-        <DefaultPackFolder>content</DefaultPackFolder>
-        <BuildAction>Compile</BuildAction>
-      </Compile>
-      <Compile Update="RegistrationBuilderExt.cs">
-        <CodeLanguage>cs</CodeLanguage>
-        <DefaultPackFolder>content</DefaultPackFolder>
-        <BuildAction>Compile</BuildAction>
-      </Compile>
-      <Compile Update="ValidationMixIn.cs">
-        <CodeLanguage>cs</CodeLanguage>
-        <DefaultPackFolder>content</DefaultPackFolder>
-        <BuildAction>Compile</BuildAction>
-      </Compile>
-    </ItemGroup>
-
     <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
         <Exec Command="RD /S /Q &quot;%25USERPROFILE%25\.nuget\packages\noggog.autofac&quot;" />
     </Target>

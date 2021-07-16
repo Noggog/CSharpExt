@@ -6,9 +6,7 @@
 
   <ItemGroup>
     <PackageReference Include="AutoFixture" Version="4.17.0" />
-    <PackageReference Include="AutoFixture.AutoFakeItEasy" Version="4.17.0" />
     <PackageReference Include="AutoFixture.Xunit2" Version="4.17.0" />
-    <PackageReference Include="FakeItEasy" Version="7.1.0" />
     <PackageReference Include="FluentAssertions" Version="5.10.3" />
     <PackageReference Include="GitInfo" Version="2.1.2">
       <PrivateAssets>all</PrivateAssets>
@@ -22,6 +20,7 @@
     <PackageReference Include="ReactiveUI.Testing" Version="13.3.2" />
     <PackageReference Include="System.IO.Abstractions.TestingHelpers" Version="13.2.38" />
     <PackageReference Include="xunit" Version="2.4.1" />
+    <PackageReference Include="NSubstitute" Version="4.2.2" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.3">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -41,6 +40,11 @@
       <BuildAction>Compile</BuildAction>
     </Compile>
     <Compile Update="Autofac\Integration\Circular.cs">
+      <CodeLanguage>cs</CodeLanguage>
+      <DefaultPackFolder>content</DefaultPackFolder>
+      <BuildAction>Compile</BuildAction>
+    </Compile>
+    <Compile Update="TestDataAttribute.cs">
       <CodeLanguage>cs</CodeLanguage>
       <DefaultPackFolder>content</DefaultPackFolder>
       <BuildAction>Compile</BuildAction>

@@ -1,21 +1,14 @@
 ﻿using Autofac;
-using FakeItEasy;
+using NSubstitute;
 
 namespace Noggog
 {
     public static class RegistrationBuilderExt
     {
-        public static void RegisterMock<T>(this ContainerBuilder builder, bool strict = false)
+        public static void RegisterMock<T>(this ContainerBuilder builder)
             where T : class
         {
-            if (strict)
-            {
-                builder.RegisterInstance(A.Fake<T>(x => x.Strict())).As<T>();
-            }
-            else
-            {
-                builder.RegisterInstance(A.Fake<T>()).As<T>();
-            }
+            builder.RegisterInstance(Substitute.For<T>()).As<T>();
         }
     }
 }

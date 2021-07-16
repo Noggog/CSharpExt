@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using AutoFixture.Xunit2;
-using FakeItEasy;
+using FluentAssertions;
 using Noggog.Autofac.Validation;
 using Noggog.Testing.AutoFixture;
+using NSubstitute;
 using Xunit;
 
 namespace CSharpExt.UnitTests.Autofac
 {
-    public class ValidateTypeCtorTests : TypicalTest
+    public class ValidateTypeCtorTests
     {
         class NoCtor
         {
@@ -39,52 +39,53 @@ namespace CSharpExt.UnitTests.Autofac
             }
         }
 
-        [Theory, AutoFakeItEasyData]
-        public void NoShortCircuit([Frozen]IShouldSkipType shouldSkip, ValidateTypeCtor sut)
+        [Theory, TestData]
+        public void NoShortCircuit(ValidateTypeCtor sut)
         {
-            A.CallTo(() => shouldSkip.ShouldSkip(A<Type>._)).Returns(true);
+            sut.ShouldSkip.ShouldSkip(Arg.Any<Type>()).Returns(true);
+            
             sut.Validate(typeof(ValidClass));
             sut.Validate(typeof(ValidClass), new HashSet<string>() { "test" });
             sut.Validate(typeof(ValidClass), new HashSet<string>() { "test2" });
-            A.CallTo(() => shouldSkip.ShouldSkip(A<Type>._))
-                .MustHaveHappened(3, Times.Exactly);
+
+            sut.ShouldSkip.ReceivedWithAnyArgs(3).ShouldSkip(default!);
         }
         
-        [Theory, AutoFakeItEasyData]
-        public void RespectsShouldSkip([Frozen]IShouldSkipType shouldSkip, ValidateTypeCtor sut)
+        [Theory, TestData]
+        public void RespectsShouldSkip(ValidateTypeCtor sut)
         {
-            A.CallTo(() => shouldSkip.ShouldSkip(typeof(ValidClass))).Returns(true);
+            sut.ShouldSkip.ShouldSkip(Arg.Any<Type>()).Returns(true);
             sut.Validate(typeof(ValidClass));
         }
         
-        [Theory, AutoFakeItEasyData]
-        public void MultipleCtors([Frozen]IShouldSkipType shouldSkip, ValidateTypeCtor sut)
+        [Theory, TestData]
+        public void MultipleCtors(ValidateTypeCtor sut)
         {
-            A.CallTo(() => shouldSkip.ShouldSkip(A<Type>._)).Returns(false);
+            sut.ShouldSkip.ShouldSkip(Arg.Any<Type>()).Returns(false);
             Assert.Throws<AutofacValidationException>(() =>
             {
                 sut.Validate(typeof(MultipleCtor));
             });
         }
         
-        [Theory, AutoFakeItEasyData]
-        public void NoCtors([Frozen]IShouldSkipType shouldSkip, ValidateTypeCtor sut)
+        [Theory, TestData]
+        public void NoCtors(ValidateTypeCtor sut)
         {
-            A.CallTo(() => shouldSkip.ShouldSkip(A<Type>._)).Returns(false);
+            sut.ShouldSkip.ShouldSkip(Arg.Any<Type>()).Returns(false);
             sut.Validate(typeof(NoCtor));
         }
         
-        [Theory, AutoFakeItEasyData]
-        public void Optional([Frozen]IShouldSkipType shouldSkip, ValidateTypeCtor sut)
+        [Theory, TestData]
+        public void Optional(ValidateTypeCtor sut)
         {
-            A.CallTo(() => shouldSkip.ShouldSkip(A<Type>._)).Returns(false);
+            sut.ShouldSkip.ShouldSkip(Arg.Any<Type>()).Returns(false);
             sut.Validate(typeof(OptionalClass));
         }
         
-        [Theory, AutoFakeItEasyData]
-        public void ParamSkipped([Frozen]IShouldSkipType shouldSkip, ValidateTypeCtor sut)
+        [Theory, TestData]
+        public void ParamSkipped(ValidateTypeCtor sut)
         {
-            A.CallTo(() => shouldSkip.ShouldSkip(A<Type>._)).Returns(false);
+            sut.ShouldSkip.ShouldSkip(Arg.Any<Type>()).Returns(false);
             sut.Validate(typeof(ValidClass), new HashSet<string>()
             {
                 "cl"

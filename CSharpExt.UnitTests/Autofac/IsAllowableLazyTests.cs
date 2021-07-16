@@ -1,26 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
-using AutoFixture.Xunit2;
-using FakeItEasy;
 using FluentAssertions;
 using Noggog.Autofac.Validation;
 using Noggog.Testing.AutoFixture;
+using NSubstitute;
 using Xunit;
 
 namespace CSharpExt.UnitTests.Autofac
 {
     public class IsAllowableLazyTests
     {
-        [Theory, AutoFakeItEasyData(false)]
-        public void Typical([Frozen]IValidateTypeCtor validate, IsAllowableLazy sut)
+        [Theory, TestData]
+        public void Typical(IsAllowableLazy sut)
         {
             sut.IsAllowed(typeof(Lazy<string>))
                 .Should().BeTrue();
-            A.CallTo(() => validate.Validate(typeof(string), A<HashSet<string>?>._))
-                .MustHaveHappenedOnceExactly();
+            sut.ValidateTypeCtor.Received(1).Validate(typeof(string), Arg.Any<HashSet<string>>());
         }
         
-        [Theory, AutoFakeItEasyData]
+        [Theory, TestData]
         public void NotLazy(IsAllowableLazy sut)
         {
             sut.IsAllowed(typeof(string))

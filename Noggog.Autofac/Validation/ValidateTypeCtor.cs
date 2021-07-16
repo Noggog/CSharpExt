@@ -10,20 +10,20 @@ namespace Noggog.Autofac.Validation
 
     public class ValidateTypeCtor : IValidateTypeCtor
     {
-        private readonly IShouldSkipType _shouldSkipType;
-        private readonly IValidateType _validateType;
-        
+        public IShouldSkipType ShouldSkip { get; }
+        public IValidateType ValidateType1 { get; }
+
         public ValidateTypeCtor(
-            IShouldSkipType shouldSkipType,
+            IShouldSkipType shouldShouldSkip,
             IValidateType validateType)
         {
-            _shouldSkipType = shouldSkipType;
-            _validateType = validateType;
+            ShouldSkip = shouldShouldSkip;
+            ValidateType1 = validateType;
         }
         
         public void Validate(Type type, HashSet<string>? paramSkip = null)
         {
-            if (_shouldSkipType.ShouldSkip(type)) return;
+            if (ShouldSkip.ShouldSkip(type)) return;
             var constr = type.GetConstructors();
             if (constr.Length > 1)
             {
@@ -37,7 +37,7 @@ namespace Noggog.Autofac.Validation
             {
                 if (param.IsOptional) continue;
                 if (param.Name != null && (paramSkip?.Contains(param.Name) ?? false)) continue;
-                _validateType.Validate(param.ParameterType);
+                ValidateType1.Validate(param.ParameterType);
             }
         }
     }

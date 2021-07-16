@@ -28,5 +28,10 @@ namespace Noggog
                 set.Remove(item);
             }
         }
+ 
+        public static bool SetEquals<T>(this HashSet<T> set, params T[] rhs) 
+        { 
+            return set.SetEquals((IEnumerable<T>)rhs); 
+        }
     }
 }

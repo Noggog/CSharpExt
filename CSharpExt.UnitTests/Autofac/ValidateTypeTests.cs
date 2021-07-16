@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using AutoFixture.Xunit2;
-using FakeItEasy;
 using Noggog.Autofac.Validation;
 using Noggog.Testing.AutoFixture;
+using NSubstitute;
 using Xunit;
 
 namespace CSharpExt.UnitTests.Autofac
@@ -14,91 +14,72 @@ namespace CSharpExt.UnitTests.Autofac
         {
         }
 
-        [Theory, AutoFakeItEasyData(false)]
-        public void OnlyProcessesSameTypeOnce(
-            [Frozen]IIsAllowableEnumerable allowable,
-            ValidateType sut)
+        [Theory, TestData]
+        public void OnlyProcessesSameTypeOnce(ValidateType sut)
         {
-            A.CallTo(() => allowable.IsAllowed(typeof(Class))).Returns(true);
+            sut.AllowableEnumerable.IsAllowed(typeof(Class)).Returns(true);
+            
             sut.Validate(typeof(Class));
             sut.Validate(typeof(Class));
-            A.CallTo(() => allowable.IsAllowed(typeof(Class)))
-                .MustHaveHappenedOnceExactly();
+            
+            sut.AllowableEnumerable.Received(1).IsAllowed(typeof(Class));
         }
         
-        [Theory, AutoFakeItEasyData(false)]
-        public void CheckIfFuncAllowed(
-            [Frozen]IValidateTypeCtor validateCtor,
-            [Frozen]IRegistrations registrations,
-            [Frozen]IIsAllowableFunc allowable,
-            ValidateType sut)
+        [Theory, TestData]
+        public void CheckIfFuncAllowed(ValidateType sut)
         {
-            A.CallTo(() => allowable.IsAllowed(typeof(Class))).Returns(true);
+            sut.AllowableFunc.IsAllowed(typeof(Class)).Returns(true);
+            
             sut.Validate(typeof(Class));
-            A.CallTo(() => registrations.Items.ContainsKey(A<Type>._))
-                .MustNotHaveHappened();
-            A.CallTo(() => validateCtor.Validate(A<Type>._, A<HashSet<string>?>._))
-                .MustNotHaveHappened();
+
+            sut.Registrations.Items.DidNotReceiveWithAnyArgs().ContainsKey(default!);
+            sut.ValidateCtor.DidNotReceiveWithAnyArgs().Validate(default!);
         }
         
-        [Theory, AutoFakeItEasyData(false)]
-        public void CheckIfLazyAllowed(
-            [Frozen]IValidateTypeCtor validateCtor,
-            [Frozen]IRegistrations registrations,
-            [Frozen]IIsAllowableLazy allowable,
-            ValidateType sut)
+        [Theory, TestData]
+        public void CheckIfLazyAllowed(ValidateType sut)
         {
-            A.CallTo(() => allowable.IsAllowed(typeof(Class))).Returns(true);
+            sut.AllowableLazy.IsAllowed(typeof(Class)).Returns(true);
+            
             sut.Validate(typeof(Class));
-            A.CallTo(() => registrations.Items.ContainsKey(A<Type>._))
-                .MustNotHaveHappened();
-            A.CallTo(() => validateCtor.Validate(A<Type>._, A<HashSet<string>?>._))
-                .MustNotHaveHappened();
+            
+            sut.Registrations.Items.DidNotReceiveWithAnyArgs().ContainsKey(default!);
+            sut.ValidateCtor.DidNotReceiveWithAnyArgs().Validate(default!);
         }
         
-        [Theory, AutoFakeItEasyData(false)]
-        public void CheckIfEnumerableAllowed(
-            [Frozen]IValidateTypeCtor validateCtor,
-            [Frozen]IRegistrations registrations,
-            [Frozen]IIsAllowableEnumerable allowable,
-            ValidateType sut)
+        [Theory, TestData]
+        public void CheckIfEnumerableAllowed(ValidateType sut)
         {
-            A.CallTo(() => allowable.IsAllowed(typeof(Class))).Returns(true);
+            sut.AllowableEnumerable.IsAllowed(typeof(Class)).Returns(true);
+            
             sut.Validate(typeof(Class));
-            A.CallTo(() => registrations.Items.ContainsKey(A<Type>._))
-                .MustNotHaveHappened();
-            A.CallTo(() => validateCtor.Validate(A<Type>._, A<HashSet<string>?>._))
-                .MustNotHaveHappened();
+            
+            sut.Registrations.Items.DidNotReceiveWithAnyArgs().ContainsKey(default!);
+            sut.ValidateCtor.DidNotReceiveWithAnyArgs().Validate(default!);
         }
         
-        [Theory, AutoFakeItEasyData(false)]
-        public void CheckIfRegistered(
-            [Frozen]IValidateTypeCtor validateCtor,
-            [Frozen]IRegistrations registrations,
-            ValidateType sut)
+        [Theory, TestData]
+        public void CheckIfRegistered(ValidateType sut)
         {
-            A.CallTo(() => registrations.Items).Returns(new Dictionary<Type, IReadOnlyList<Type>>()
+            sut.Registrations.Items.Returns(new Dictionary<Type, IReadOnlyList<Type>>()
             {
                 { typeof (Class), new []{ typeof(string) } },
             });
+            
             sut.Validate(typeof(Class));
-            A.CallTo(() => validateCtor.Validate(typeof(string), null))
-                .MustHaveHappenedOnceExactly();
+
+            sut.ValidateCtor.Received(1).Validate(typeof(string));
         }
         
-        [Theory, AutoFakeItEasyData(false)]
-        public void CheckIfDelegateFactory(
-            [Frozen]IValidateTypeCtor validateCtor,
-            [Frozen]IRegistrations registrations,
-            [Frozen]ICheckIsDelegateFactory deleg,
-            ValidateType sut)
+        [Theory, TestData]
+        public void CheckIfDelegateFactory(ValidateType sut)
         {
-            A.CallTo(() => deleg.Check(typeof(Class))).Returns(true);
+            sut.IsDelegateFactory.Check(typeof(Class)).Returns(true);
+            
             sut.Validate(typeof(Class));
-            A.CallTo(() => registrations.Items.ContainsKey(A<Type>._))
-                .MustNotHaveHappened();
-            A.CallTo(() => validateCtor.Validate(A<Type>._, A<HashSet<string>?>._))
-                .MustNotHaveHappened();
+            
+            sut.Registrations.Items.DidNotReceiveWithAnyArgs().ContainsKey(default!);
+            sut.ValidateCtor.DidNotReceiveWithAnyArgs().Validate(default!);
         }
     }
 }

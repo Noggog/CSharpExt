@@ -1,12 +1,10 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
-using AutoFixture.Xunit2;
-using FakeItEasy;
-using FluentAssertions;
 using Noggog;
 using Noggog.Autofac.Validation;
 using Noggog.Testing.AutoFixture;
-using Noggog.Testing.FakeItEasy;
+using NSubstitute;
 using Xunit;
 
 namespace CSharpExt.UnitTests.Autofac
@@ -14,64 +12,52 @@ namespace CSharpExt.UnitTests.Autofac
     public class ValidatorTests
     {
         [Theory]
-        [AutoFakeItEasyData(false)]
-        public void ValidateEverything(
-            [Frozen]ICircularReferenceChecker circularReferenceChecker,
-            [Frozen]IRegistrations registrations,
-            [Frozen]IShouldSkipType shouldSkipType,
-            [Frozen]IValidateTypes validateTypes,
-            Validator sut)
+        [TestData]
+        public void ValidateEverything(Validator sut)
         {
-            A.CallTo(() => registrations.Items).Returns(new Dictionary<Type, IReadOnlyList<Type>>()
+            sut.Registrations.Items.Returns(new Dictionary<Type, IReadOnlyList<Type>>()
             {
                 { typeof(string), new List<Type>() { typeof(int) } },
             });
-            A.CallTo(() => shouldSkipType.ShouldSkip(A<Type>._)).Returns(false);
+            sut.ShouldSkip.ShouldSkip(Arg.Any<Type>()).Returns(false);
+            
             sut.ValidateEverything();
-            A.CallTo(() => validateTypes.Validate(A<IEnumerable<Type>>.That.IsSameSequenceAs(typeof(string))))
-                .MustHaveHappenedOnceExactly();
-            A.CallTo(() => circularReferenceChecker.Check()).MustHaveHappenedOnceExactly();
+            
+            sut.ValidateTypes.Received(1).Validate(Arg.Is<IEnumerable<Type>>(x => x.SequenceEqual(typeof(string))));
+            sut.ReferenceChecker.Received(1).Check();
         }
         
         [Theory]
-        [AutoFakeItEasyData(false)]
-        public void ValidateEverythingRespectsSkip(
-            [Frozen]ICircularReferenceChecker circularReferenceChecker,
-            [Frozen]IRegistrations registrations,
-            [Frozen]IShouldSkipType shouldSkipType,
-            [Frozen]IValidateTypes validateTypes,
-            Validator sut)
+        [TestData]
+        public void ValidateEverythingRespectsSkip(Validator sut)
         {
-            A.CallTo(() => registrations.Items).Returns(new Dictionary<Type, IReadOnlyList<Type>>()
+            sut.Registrations.Items.Returns(new Dictionary<Type, IReadOnlyList<Type>>()
             {
                 { typeof(string), new List<Type>() { typeof(int) } },
                 { typeof(double), new List<Type>() { typeof(float) } },
             });
-            A.CallTo(() => shouldSkipType.ShouldSkip(A<Type>._)).Returns(false);
-            A.CallTo(() => shouldSkipType.ShouldSkip(typeof(double))).Returns(true);
+            sut.ShouldSkip.ShouldSkip(Arg.Any<Type>()).Returns(false);
+            sut.ShouldSkip.ShouldSkip(typeof(double)).Returns(true);
+            
             sut.ValidateEverything();
-            A.CallTo(() => validateTypes.Validate(A<IEnumerable<Type>>.That.IsSameSequenceAs(typeof(string))))
-                .MustHaveHappenedOnceExactly();
-            A.CallTo(() => circularReferenceChecker.Check()).MustHaveHappenedOnceExactly();
+            
+            sut.ValidateTypes.Received(1).Validate(Arg.Is<IEnumerable<Type>>(x => x.SequenceEqual(typeof(string))));
+            sut.ReferenceChecker.Received(1).Check();
         }
         
-        [Theory, AutoFakeItEasyData(false, ConfigureMembers: true)]
-        public void Validate(
-            [Frozen]ICircularReferenceChecker circularReferenceChecker,
-            [Frozen]IRegistrations registrations,
-            [Frozen]IShouldSkipType shouldSkipType,
-            [Frozen]IValidateTypes validateTypes,
-            Validator sut)
+        [Theory, TestData(ConfigureMembers: true)]
+        public void Validate(Validator sut)
         {
-            A.CallTo(() => registrations.Items).Returns(new Dictionary<Type, IReadOnlyList<Type>>()
+            sut.Registrations.Items.Returns(new Dictionary<Type, IReadOnlyList<Type>>()
             {
                 { typeof(string), new List<Type>() { typeof(int) } },
             });
+            
             sut.Validate(typeof(double), typeof(float));
-            A.CallTo(() => validateTypes.Validate(A<IEnumerable<Type>>.That.IsSameSequenceAs(typeof(double), typeof(float))))
-                .MustHaveHappenedOnceExactly();
-            A.CallTo(() => shouldSkipType.ShouldSkip(A<Type>._)).MustNotHaveHappened();
-            A.CallTo(() => circularReferenceChecker.Check()).MustHaveHappenedOnceExactly();
+            
+            sut.ValidateTypes.Received(1).Validate(Arg.Is<IEnumerable<Type>>(x => x.SequenceEqual(typeof(double), typeof(float))));
+            sut.ShouldSkip.DidNotReceiveWithAnyArgs().ShouldSkip(default!);
+            sut.ReferenceChecker.Received(1).Check();
         }
     }
 }

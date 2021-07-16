@@ -2,31 +2,27 @@
 using System.Collections.Generic;
 using System.Linq;
 using AutoFixture.Xunit2;
-using FakeItEasy;
 using Noggog;
 using Noggog.Autofac.Validation;
 using Noggog.Testing.AutoFixture;
+using NSubstitute;
 using Xunit;
 
 namespace CSharpExt.UnitTests.Autofac
 {
     public class ValidateAllRegistrationsTests
     {
-        [Theory, AutoFakeItEasyData]
-        public void Empty(
-            [Frozen]IRegistrations registrations,
-            ValidateTypes sut)
+        [Theory, TestData]
+        public void Empty(ValidateTypes sut)
         {
-            A.CallTo(() => registrations.Items).Returns(new Dictionary<Type, IReadOnlyList<Type>>());
+            sut.Registrations.Items.Returns(new Dictionary<Type, IReadOnlyList<Type>>());
             sut.Validate(Enumerable.Empty<Type>());
         }
         
-        [Theory, AutoFakeItEasyData(false, ConfigureMembers: true)]
-        public void NoImplementation(
-            [Frozen]IRegistrations registrations,
-            ValidateTypes sut)
+        [Theory, TestData(ConfigureMembers: true)]
+        public void NoImplementation(ValidateTypes sut)
         {
-            A.CallTo(() => registrations.Items).Returns(new Dictionary<Type, IReadOnlyList<Type>>()
+            sut.Registrations.Items.Returns(new Dictionary<Type, IReadOnlyList<Type>>()
             {
                 { typeof(string), new List<Type>() }
             });
@@ -36,19 +32,15 @@ namespace CSharpExt.UnitTests.Autofac
             });
         }
         
-        [Theory, AutoFakeItEasyData(false, ConfigureMembers: true)]
-        public void TypicalValidate(
-            [Frozen]IRegistrations registrations,
-            [Frozen]IValidateTypeCtor validateTypeCtor,
-            ValidateTypes sut)
+        [Theory, TestData(ConfigureMembers: true)]
+        public void TypicalValidate(ValidateTypes sut)
         {
-            A.CallTo(() => registrations.Items).Returns(new Dictionary<Type, IReadOnlyList<Type>>()
+            sut.Registrations.Items.Returns(new Dictionary<Type, IReadOnlyList<Type>>()
             {
                 { typeof(string), new List<Type>() { typeof(int) } }
             });
             sut.Validate(typeof(string).AsEnumerable());
-            A.CallTo(() => validateTypeCtor.Validate(typeof(int), default(HashSet<string>?)))
-                .MustHaveHappened();
+            sut.TypeCtor.Received(1).Validate(typeof(int), default(HashSet<string>?));
         }
     }
 }

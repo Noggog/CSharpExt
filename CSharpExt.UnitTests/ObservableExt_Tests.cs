@@ -66,7 +66,7 @@ namespace CSharpExt.UnitTests
             results.Should().ContainInOrder(secondWait);
         });
 
-        [Theory, AutoFakeItEasyData]
+        [Theory, TestData]
         public void WatchFile_Typical(
             [Frozen]FilePath path,
             [Frozen]MockFileSystemWatcher mockFileWatcher,
@@ -81,7 +81,7 @@ namespace CSharpExt.UnitTests
             count.Should().Be(1);
         }
 
-        [Theory, AutoFakeItEasyData]
+        [Theory, TestData]
         public void WatchFile_AtypicalPathSeparators(
             [Frozen]FilePath path,
             [Frozen]MockFileSystemWatcher mockFileWatcher,
@@ -96,7 +96,7 @@ namespace CSharpExt.UnitTests
             count.Should().Be(1);
         }
 
-        [Theory, AutoFakeItEasyData]
+        [Theory, TestData]
         public void WatchFolder_Typical(
             [Frozen]DirectoryPath dir,
             [Frozen]MockFileSystemWatcher mockFileWatcher,
@@ -123,7 +123,7 @@ namespace CSharpExt.UnitTests
             list.Items.ToExtendedList()[0].Should().Be(fileB);
         }
 
-        [Theory, AutoFakeItEasyData]
+        [Theory, TestData]
         public void WatchFolder_OnlySubfolder(
             [Frozen]DirectoryPath dir,
             [Frozen]MockFileSystemWatcher mockFileWatcher,
@@ -145,7 +145,7 @@ namespace CSharpExt.UnitTests
             list.Items.ToExtendedList()[0].Should().Be(fileA);
         }
 
-        [Theory, AutoFakeItEasyData]
+        [Theory, TestData]
         public void WatchFolder_ATypicalSeparator(
             [Frozen]DirectoryPath dir,
             [Frozen]FilePath file,

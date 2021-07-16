@@ -2,9 +2,7 @@
 using System.Reactive.Concurrency;
 using AutoFixture;
 using AutoFixture.Kernel;
-using FakeItEasy;
 using Microsoft.Reactive.Testing;
-using Noggog.Reactive;
 
 namespace Noggog.Testing.AutoFixture
 {

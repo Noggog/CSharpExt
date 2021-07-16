@@ -11,12 +11,13 @@ namespace Noggog.Autofac.Validation
 
     public class ValidateType : IValidateType
     {
-        private readonly IRegistrations _registrations;
+        public IRegistrations Registrations { get; }
         private readonly IValidateTracker _tracker;
-        private readonly IIsAllowableFunc _allowableFunc;
-        private readonly IIsAllowableLazy _allowableLazy;
-        private readonly ICheckIsDelegateFactory _isDelegateFactory;
-        private readonly IIsAllowableEnumerable _allowableEnumerable;
+        public IIsAllowableFunc AllowableFunc { get; }
+        public IIsAllowableLazy AllowableLazy { get; }
+        public ICheckIsDelegateFactory IsDelegateFactory { get; }
+        public IIsAllowableEnumerable AllowableEnumerable { get; }
+        
         private readonly HashSet<Type> _checkedTypes = new();
 
         public IValidateTypeCtor ValidateCtor { get; set; } = null!;
@@ -29,27 +30,27 @@ namespace Noggog.Autofac.Validation
             ICheckIsDelegateFactory isDelegateFactory,
             IIsAllowableEnumerable allowableEnumerable)
         {
-            _registrations = registrations;
+            Registrations = registrations;
             _tracker = tracker;
-            _allowableFunc = allowableFunc;
-            _allowableLazy = allowableLazy;
-            _isDelegateFactory = isDelegateFactory;
-            _allowableEnumerable = allowableEnumerable;
+            AllowableFunc = allowableFunc;
+            AllowableLazy = allowableLazy;
+            IsDelegateFactory = isDelegateFactory;
+            AllowableEnumerable = allowableEnumerable;
         }
         
         public void Validate(Type type, bool validateCtor = true)
         {
             if (!_checkedTypes.Add(type)) return;
             using var track = _tracker.Track(type);
-            if (_isDelegateFactory.Check(type)) return;
-            if (_allowableFunc.IsAllowed(type)) return;
-            if (_allowableLazy.IsAllowed(type)) return;
-            if (_allowableEnumerable.IsAllowed(type)) return;
-            if (_registrations.Items.ContainsKey(type))
+            if (IsDelegateFactory.Check(type)) return;
+            if (AllowableFunc.IsAllowed(type)) return;
+            if (AllowableLazy.IsAllowed(type)) return;
+            if (AllowableEnumerable.IsAllowed(type)) return;
+            if (Registrations.Items.ContainsKey(type))
             {
                 if (validateCtor)
                 {
-                    ValidateCtor.Validate(_registrations.Items[type].First());
+                    ValidateCtor.Validate(Registrations.Items[type].First());
                 }
                 return;
             }

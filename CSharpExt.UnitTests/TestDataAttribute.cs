@@ -1,23 +1,19 @@
 ﻿using AutoFixture;
-using AutoFixture.AutoFakeItEasy;
+using AutoFixture.AutoNSubstitute;
 using AutoFixture.Xunit2;
 
 namespace Noggog.Testing.AutoFixture
 {
-    public class AutoFakeItEasyDataAttribute : AutoDataAttribute
+    public class TestDataAttribute : AutoDataAttribute
     {
-        public AutoFakeItEasyDataAttribute(bool Strict = true, bool ConfigureMembers = false)
+        public TestDataAttribute(bool ConfigureMembers = false)
             : base(() =>
             {
-                var customization = new AutoFakeItEasyCustomization()
+                var customization = new AutoNSubstituteCustomization()
                 {
                     ConfigureMembers = ConfigureMembers,
                     GenerateDelegates = true
                 };
-                if (Strict)
-                {
-                    customization.Relay = new FakeItEasyStrictRelay();
-                }
 
                 return new Fixture()
                     .Customize(customization)

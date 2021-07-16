@@ -11,25 +11,25 @@ namespace Noggog.Autofac.Validation
 
     public class ValidateTypes : IValidateTypes
     {
-        private readonly IRegistrations _registrations;
-        private readonly IValidateTracker _tracker;
-        private readonly IValidateTypeCtor _validateTypeCtor;
+        public IRegistrations Registrations { get; }
+        public IValidateTracker Tracker { get; }
+        public IValidateTypeCtor TypeCtor { get; }
 
         public ValidateTypes(
             IRegistrations registrations,
             IValidateTracker tracker,
             IValidateTypeCtor validateTypeCtor)
         {
-            _registrations = registrations;
-            _tracker = tracker;
-            _validateTypeCtor = validateTypeCtor;
+            Registrations = registrations;
+            Tracker = tracker;
+            TypeCtor = validateTypeCtor;
         }
         
         public void Validate(IEnumerable<Type> types)
         {
             foreach (var type in types)
             {
-                var registrations = _registrations.Items[type];
+                var registrations = Registrations.Items[type];
                 if (registrations.Count == 0)
                 {
                     throw new AutofacValidationException(
@@ -38,8 +38,8 @@ namespace Noggog.Autofac.Validation
 
                 foreach (var regis in registrations)
                 {
-                    using var tracker = _tracker.Track(regis);
-                    _validateTypeCtor.Validate(regis);
+                    using var tracker = Tracker.Track(regis);
+                    TypeCtor.Validate(regis);
                 }
             }
         }

@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using AutoFixture.Xunit2;
-using FakeItEasy;
+﻿using System.Collections.Generic;
 using FluentAssertions;
+using Noggog;
 using Noggog.Autofac.Validation;
 using Noggog.Testing.AutoFixture;
-using Noggog.Testing.FakeItEasy;
+using NSubstitute;
 using Xunit;
 
 namespace CSharpExt.UnitTests.Autofac
@@ -21,14 +19,9 @@ namespace CSharpExt.UnitTests.Autofac
             }
         }
         
-        [Theory, AutoFakeItEasyData]
-        public void Typical(
-            [Frozen]IValidateTypeCtor validateCtor, 
-            [Frozen]IValidateType validate, 
-            CheckIsDelegateFactory sut)
+        [Theory, TestData]
+        public void Typical(CheckIsDelegateFactory sut)
         {
-            A.CallTo(() => validateCtor.Validate(A<Type>._, A<HashSet<string>>._)).DoesNothing();
-            A.CallTo(() => validate.Validate(A<Type>._, false)).DoesNothing();
             sut.Check(typeof(ClassWithFactory.Factory))
                 .Should().BeTrue();
             var set = new HashSet<string>()
@@ -36,13 +29,12 @@ namespace CSharpExt.UnitTests.Autofac
                 "str",
                 "i"
             };
-            A.CallTo(() => validateCtor.Validate(typeof(ClassWithFactory), A<HashSet<string>>.That.SetEquals("str", "i")))
-                .MustHaveHappenedOnceExactly(); 
-            A.CallTo(() => validate.Validate(typeof(ClassWithFactory), false))
-                .MustHaveHappenedOnceExactly(); 
+            sut.ValidateTypeCtor.Received(1).Validate(typeof(ClassWithFactory),
+                Arg.Is<HashSet<string>>(x => x.SetEquals("str", "i")));
+            sut.ValidateType.Received(1).Validate(typeof(ClassWithFactory), false);
         }
         
-        [Theory, AutoFakeItEasyData]
+        [Theory, TestData]
         public void RandomType(CheckIsDelegateFactory sut)
         {
             sut.Check(typeof(string))

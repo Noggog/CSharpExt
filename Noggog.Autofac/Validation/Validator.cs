@@ -13,33 +13,33 @@ namespace Noggog.Autofac.Validation
 
     public class Validator : IValidator
     {
-        private readonly IRegistrations _registrations;
-        private readonly IValidateTypes _validateTypes;
-        private readonly IShouldSkipType _shouldSkipType;
-        private readonly ICircularReferenceChecker _circularReferenceChecker;
+        public IRegistrations Registrations { get; }
+        public IValidateTypes ValidateTypes { get; }
+        public IShouldSkipType ShouldSkip { get; }
+        public ICircularReferenceChecker ReferenceChecker { get; }
 
         public Validator(
             IRegistrations registrations,
             IValidateTypes validateTypes,
-            IShouldSkipType shouldSkipType,
+            IShouldSkipType shouldShouldSkip,
             ICircularReferenceChecker circularReferenceChecker)
         {
-            _registrations = registrations;
-            _validateTypes = validateTypes;
-            _shouldSkipType = shouldSkipType;
-            _circularReferenceChecker = circularReferenceChecker;
+            Registrations = registrations;
+            ValidateTypes = validateTypes;
+            ShouldSkip = shouldShouldSkip;
+            ReferenceChecker = circularReferenceChecker;
         }
         
         private void InternalValidate(IEnumerable<Type> types)
         {
-            _circularReferenceChecker.Check();
-            _validateTypes.Validate(types);
+            ReferenceChecker.Check();
+            ValidateTypes.Validate(types);
         }
 
         public void ValidateEverything()
         {
-            InternalValidate(_registrations.Items.Keys
-                .Where(type => !_shouldSkipType.ShouldSkip(type)));
+            InternalValidate(Registrations.Items.Keys
+                .Where(type => !ShouldSkip.ShouldSkip(type)));
         }
 
         public void Validate(Type drivingType, params Type[] otherdrivingTypes)
