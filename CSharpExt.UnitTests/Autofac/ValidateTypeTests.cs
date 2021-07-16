@@ -61,9 +61,9 @@ namespace CSharpExt.UnitTests.Autofac
         [Theory, TestData]
         public void CheckIfRegistered(ValidateType sut)
         {
-            sut.Registrations.Items.Returns(new Dictionary<Type, IReadOnlyList<Type>>()
+            sut.Registrations.Items.Returns(new Dictionary<Type, IReadOnlyList<Registration>>()
             {
-                { typeof (Class), new []{ typeof(string) } },
+                { typeof (Class), new []{ new Registration(typeof(string), true) } },
             });
             
             sut.Validate(typeof(Class));

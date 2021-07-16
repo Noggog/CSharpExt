@@ -15,9 +15,9 @@ namespace CSharpExt.UnitTests.Autofac
         [TestData]
         public void ValidateEverything(Validator sut)
         {
-            sut.Registrations.Items.Returns(new Dictionary<Type, IReadOnlyList<Type>>()
+            sut.Registrations.Items.Returns(new Dictionary<Type, IReadOnlyList<Registration>>()
             {
-                { typeof(string), new List<Type>() { typeof(int) } },
+                { typeof(string), new List<Registration>() { new Registration(typeof(int), false) } },
             });
             sut.ShouldSkip.ShouldSkip(Arg.Any<Type>()).Returns(false);
             
@@ -31,10 +31,10 @@ namespace CSharpExt.UnitTests.Autofac
         [TestData]
         public void ValidateEverythingRespectsSkip(Validator sut)
         {
-            sut.Registrations.Items.Returns(new Dictionary<Type, IReadOnlyList<Type>>()
+            sut.Registrations.Items.Returns(new Dictionary<Type, IReadOnlyList<Registration>>()
             {
-                { typeof(string), new List<Type>() { typeof(int) } },
-                { typeof(double), new List<Type>() { typeof(float) } },
+                { typeof(string), new List<Registration>() { new Registration(typeof(int), false) } },
+                { typeof(double), new List<Registration>() { new Registration(typeof(float), false) } },
             });
             sut.ShouldSkip.ShouldSkip(Arg.Any<Type>()).Returns(false);
             sut.ShouldSkip.ShouldSkip(typeof(double)).Returns(true);
@@ -48,9 +48,9 @@ namespace CSharpExt.UnitTests.Autofac
         [Theory, TestData(ConfigureMembers: true)]
         public void Validate(Validator sut)
         {
-            sut.Registrations.Items.Returns(new Dictionary<Type, IReadOnlyList<Type>>()
+            sut.Registrations.Items.Returns(new Dictionary<Type, IReadOnlyList<Registration>>()
             {
-                { typeof(string), new List<Type>() { typeof(int) } },
+                { typeof(string), new List<Registration>() { new Registration(typeof(int), true) } },
             });
             
             sut.Validate(typeof(double), typeof(float));

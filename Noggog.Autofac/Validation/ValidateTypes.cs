@@ -38,8 +38,8 @@ namespace Noggog.Autofac.Validation
 
                 foreach (var regis in registrations)
                 {
-                    using var tracker = Tracker.Track(regis);
-                    TypeCtor.Validate(regis);
+                    using var tracker = Tracker.Track(regis.Type);
+                    TypeCtor.Validate(regis.Type);
                 }
             }
         }

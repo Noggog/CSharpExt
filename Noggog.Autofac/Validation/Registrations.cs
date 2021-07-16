@@ -3,24 +3,27 @@ using System.Collections.Generic;
 using System.Linq;
 using Autofac;
 using Autofac.Core;
+using Autofac.Core.Activators.Reflection;
 
 namespace Noggog.Autofac.Validation
 {
+    public record Registration(Type Type, bool NeedsValidation);
+    
     public interface IRegistrations
     {
-        IReadOnlyDictionary<Type, IReadOnlyList<Type>> Items { get; }
+        IReadOnlyDictionary<Type, IReadOnlyList<Registration>> Items { get; }
     }
 
     public class Registrations : IRegistrations
     {
-        private Lazy<IReadOnlyDictionary<Type, IReadOnlyList<Type>>> _items;
-        public IReadOnlyDictionary<Type, IReadOnlyList<Type>> Items => _items.Value;
+        private Lazy<IReadOnlyDictionary<Type, IReadOnlyList<Registration>>> _items;
+        public IReadOnlyDictionary<Type, IReadOnlyList<Registration>> Items => _items.Value;
 
         public Registrations(IContainer container)
         {
-            _items = new Lazy<IReadOnlyDictionary<Type, IReadOnlyList<Type>>>(() =>
+            _items = new Lazy<IReadOnlyDictionary<Type, IReadOnlyList<Registration>>>(() =>
             {
-                var registrations = new Dictionary<Type, List<Type>>();
+                var registrations = new Dictionary<Type, List<Registration>>();
 
                 foreach (var registration in container.ComponentRegistry.Registrations)
                 {
@@ -28,11 +31,13 @@ namespace Noggog.Autofac.Validation
                     {
                         if (!registrations.TryGetValue(service.ServiceType, out var implementations))
                         {
-                            implementations = new List<Type>();
+                            implementations = new List<Registration>();
                             registrations[service.ServiceType] = implementations;
                         }
 
-                        implementations.Add(registration.Activator.LimitType);
+                        implementations.Add(new Registration(
+                            registration.Activator.LimitType,
+                            registration.Activator is ReflectionActivator));
                     }
                 }
 
@@ -41,7 +46,7 @@ namespace Noggog.Autofac.Validation
                     throw new AutofacValidationException("No registrations to validate");
                 }
 
-                return registrations.ToDictionary<KeyValuePair<Type, List<Type>>, Type, IReadOnlyList<Type>>(
+                return registrations.ToDictionary<KeyValuePair<Type, List<Registration>>, Type, IReadOnlyList<Registration>>(
                     x => x.Key,
                     x => x.Value);
             });

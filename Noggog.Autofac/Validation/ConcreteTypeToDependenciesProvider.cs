@@ -25,13 +25,13 @@ namespace Noggog.Autofac.Validation
                 foreach (var mapping in typeToDependenciesProvider.DirectTypeMapping)
                 {
                     if (!registrations.Items.TryGetValue(mapping.Key, out var keyRegis)) continue;
-                    var set = dict.GetOrAdd(keyRegis.First());
+                    var set = dict.GetOrAdd(keyRegis.First().Type);
                     foreach (var dep in mapping.Value)
                     {
                         if (!registrations.Items.TryGetValue(dep, out var regis)) continue;
                         var first = regis.FirstOrDefault();
                         if (first == null) continue;
-                        set.Add(first);
+                        set.Add(first.Type);
                     }
                 }
 

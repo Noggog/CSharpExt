@@ -23,7 +23,7 @@ namespace Noggog.Autofac.Validation
                 foreach (var concrete in registrations.Items)
                 {
                     var set = dict.GetOrAdd(concrete.Key);
-                    foreach (var constructor in concrete.Value.First().GetConstructors())
+                    foreach (var constructor in concrete.Value.First().Type.GetConstructors())
                     {
                         foreach (var param in constructor.GetParameters())
                         {

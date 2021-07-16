@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using AutoFixture.Xunit2;
 using Noggog;
 using Noggog.Autofac.Validation;
 using Noggog.Testing.AutoFixture;
@@ -15,16 +14,16 @@ namespace CSharpExt.UnitTests.Autofac
         [Theory, TestData]
         public void Empty(ValidateTypes sut)
         {
-            sut.Registrations.Items.Returns(new Dictionary<Type, IReadOnlyList<Type>>());
+            sut.Registrations.Items.Returns(new Dictionary<Type, IReadOnlyList<Registration>>());
             sut.Validate(Enumerable.Empty<Type>());
         }
         
         [Theory, TestData(ConfigureMembers: true)]
         public void NoImplementation(ValidateTypes sut)
         {
-            sut.Registrations.Items.Returns(new Dictionary<Type, IReadOnlyList<Type>>()
+            sut.Registrations.Items.Returns(new Dictionary<Type, IReadOnlyList<Registration>>()
             {
-                { typeof(string), new List<Type>() }
+                { typeof(string), new List<Registration>() }
             });
             Assert.Throws<AutofacValidationException>(() =>
             {
@@ -35,9 +34,9 @@ namespace CSharpExt.UnitTests.Autofac
         [Theory, TestData(ConfigureMembers: true)]
         public void TypicalValidate(ValidateTypes sut)
         {
-            sut.Registrations.Items.Returns(new Dictionary<Type, IReadOnlyList<Type>>()
+            sut.Registrations.Items.Returns(new Dictionary<Type, IReadOnlyList<Registration>>()
             {
-                { typeof(string), new List<Type>() { typeof(int) } }
+                { typeof(string), new List<Registration>() { new Registration(typeof(int), false) } }
             });
             sut.Validate(typeof(string).AsEnumerable());
             sut.TypeCtor.Received(1).Validate(typeof(int), default(HashSet<string>?));
