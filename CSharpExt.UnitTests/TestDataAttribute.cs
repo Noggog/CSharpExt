@@ -17,8 +17,7 @@ namespace Noggog.Testing.AutoFixture
 
                 return new Fixture()
                     .Customize(customization)
-                    .Customize(new FileSystemBuilder().ToCustomization())
-                    .Customize(new SchedulerBuilder().ToCustomization());
+                    .Customize(new DefaultCustomization());
             })
         {
         }

@@ -1,22 +1,42 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO.Abstractions;
 using System.IO.Abstractions.TestingHelpers;
 using AutoFixture;
 using AutoFixture.Kernel;
 using Noggog.Testing.FileSystem;
+using NSubstitute;
 
 namespace Noggog.Testing.AutoFixture
 {
     public class FileSystemBuilder : ISpecimenBuilder
     {
+        private readonly bool _useMockFileSystem;
+
+        public FileSystemBuilder(bool useMockFileSystem = true)
+        {
+            _useMockFileSystem = useMockFileSystem;
+        }
+
         public object Create(object request, ISpecimenContext context)
         {
+            if (request is SeededRequest seed)
+            {
+                request = seed.Request;
+            }
+
             if (request is not Type t) return new NoSpecimen();
             
             if (t == typeof(IFileSystem))
             {
-                return context.Create<MockFileSystem>();
+                if (_useMockFileSystem)
+                {
+                    return context.Create<MockFileSystem>();
+                }
+                else
+                {
+                    return Substitute.For<IFileSystem>();
+                }
             }
             else if (t == typeof(MockFileSystem))
             {
@@ -39,14 +59,6 @@ namespace Noggog.Testing.AutoFixture
             else if (t == typeof(MockFileSystemWatcher))
             {
                 return new MockFileSystemWatcher();
-            }
-            else if (t == typeof(FilePath))
-            {
-                return new FilePath("C:\\ExistingDirectory\\File");
-            }
-            else if (t == typeof(DirectoryPath))
-            {
-                return new DirectoryPath("C:\\ExistingDirectory");
             }
             return new NoSpecimen();
         }
