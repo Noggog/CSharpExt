@@ -8,5 +8,10 @@ namespace Noggog.Autofac.Validation
             : base(message)
         {
         }
+        
+        public AutofacValidationException(string message, Exception inner)
+            : base(message, inner)
+        {
+        }
     }
 }

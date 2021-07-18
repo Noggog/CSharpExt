@@ -12,21 +12,35 @@ namespace CSharpExt.UnitTests.Autofac.Integration
         {
             _validationFixture = validationFixture;
         }
-
-        public class OtherClass
+        
+        public interface ISubClass
         {
-            public delegate OtherClass Factory(int i);
+        }
+        
+        public class SubClass : ISubClass
+        {
+        }
 
-            public OtherClass(int i)
+        public interface IFactoryClass
+        {
+        }
+
+        public class FactoryClass : IFactoryClass
+        {
+            public delegate FactoryClass Factory(int i);
+            public delegate IFactoryClass InterfaceFactory(int i);
+
+            public FactoryClass(int i, ISubClass subClass)
             {
-                
             }
         }
 
-        record TopLevel(OtherClass.Factory service);
+        record TopLevel(FactoryClass.Factory service);
+
+        record InterfaceFactoryTopLevel(FactoryClass.InterfaceFactory service);
 
         [Fact]
-        public void Test()
+        public void FactoryTargetNotRegistered()
         {
             var builder = new ContainerBuilder();
             builder.RegisterType<TopLevel>().AsSelf();
@@ -35,6 +49,32 @@ namespace CSharpExt.UnitTests.Autofac.Integration
             {
                 using var disp = _validationFixture.GetValidator(cont, out var validate);
                 validate.Validate(typeof(TopLevel));
+            });
+        }
+        
+        [Fact]
+        public void FactoryReturnsInstance()
+        {
+            var builder = new ContainerBuilder();
+            builder.RegisterType<InterfaceFactoryTopLevel>().AsSelf();
+            builder.RegisterType<FactoryClass>().As<IFactoryClass>();
+            builder.RegisterType<SubClass>().As<ISubClass>();
+            var cont = builder.Build();
+            using var disp = _validationFixture.GetValidator(cont, out var validate);
+            validate.Validate(typeof(InterfaceFactoryTopLevel));
+        }
+        
+        [Fact]
+        public void FactoryReturnsInstanceAndValidates()
+        {
+            var builder = new ContainerBuilder();
+            builder.RegisterType<InterfaceFactoryTopLevel>().AsSelf();
+            builder.RegisterType<FactoryClass>().As<IFactoryClass>();
+            var cont = builder.Build();
+            Assert.Throws<AutofacValidationException>(() =>
+            {
+                using var disp = _validationFixture.GetValidator(cont, out var validate);
+                validate.Validate(typeof(InterfaceFactoryTopLevel));
             });
         }
     }

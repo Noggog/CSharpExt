@@ -29,17 +29,25 @@ namespace Noggog.Autofac.Validation
         {
             foreach (var type in types)
             {
-                var registrations = Registrations.Items[type];
-                if (registrations.Count == 0)
+                try
+                {
+                    var registrations = Registrations.Items[type];
+                    if (registrations.Count == 0)
+                    {
+                        throw new AutofacValidationException(
+                            $"'{type.FullName}' does not have an implementation");
+                    }
+
+                    foreach (var regis in registrations)
+                    {
+                        using var tracker = Tracker.Track(regis.Type);
+                        TypeCtor.Validate(regis.Type);
+                    }
+                }
+                catch (Exception e)
                 {
                     throw new AutofacValidationException(
-                        $"'{type.FullName}' does not have an implementation");
-                }
-
-                foreach (var regis in registrations)
-                {
-                    using var tracker = Tracker.Track(regis.Type);
-                    TypeCtor.Validate(regis.Type);
+                        $"'{type.FullName}' had a validation problem.", e);
                 }
             }
         }
