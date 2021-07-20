@@ -1,9 +1,6 @@
 using ReactiveUI;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Reactive.Disposables;
 using System.Runtime.CompilerServices;
 using System.Collections;
@@ -91,5 +88,10 @@ namespace Noggog.WPF
         }
 
         public static implicit operator CompositeDisposable(ViewModel vm) => vm.CompositeDisposable;
+
+        public override string ToString()
+        {
+            return this.GetType().Name;
+        }
     }
 }
