@@ -3,6 +3,7 @@ using System.Reactive.Concurrency;
 using AutoFixture;
 using AutoFixture.Kernel;
 using Microsoft.Reactive.Testing;
+using Noggog.Reactive;
 
 namespace Noggog.Testing.AutoFixture
 {
@@ -23,7 +24,17 @@ namespace Noggog.Testing.AutoFixture
                 _queriedForTestScheduler = true;
                 return new TestScheduler();
             }
+            else if (t == typeof(ISchedulerProvider))
+            {
+                return new SchedulerProviderCurrentThread();
+            }
             return new NoSpecimen();
         }
+    }
+
+    public class SchedulerProviderCurrentThread : ISchedulerProvider
+    {
+        public IScheduler MainThread => Scheduler.CurrentThread;
+        public IScheduler TaskPool => Scheduler.CurrentThread;
     }
 }
