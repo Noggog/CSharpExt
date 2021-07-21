@@ -15,6 +15,14 @@ namespace Noggog.Autofac
             return registration.Where(t => ns.Any(t.IsInNamespace));
         }
         
+        public static Builder NotInNamespacesOf(
+            this Builder registration,
+            params Type[] types)
+        {
+            var ns = types.Select(x => x.Namespace!).ToArray();
+            return registration.Where(t => !ns.Any(t.IsInNamespace));
+        }
+        
         public static Builder NotInjection(this Builder registration)
         {
             return registration
