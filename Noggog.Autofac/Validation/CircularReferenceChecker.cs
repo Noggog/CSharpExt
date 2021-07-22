@@ -33,7 +33,8 @@ namespace Noggog.Autofac.Validation
         {
             if (passed.Contains(type))
             {
-                throw new AutofacValidationException($"Circular dependency detected.  {string.Join(" --> ", passed.Select(x => x.Name))}");
+                throw new AutofacValidationException(
+                    $"Circular dependency detected.  {string.Join(" --> ", passed.SkipWhile(x => x != type).And(type).Select(x => x.Name))}");
             }
             
             if (!_concreteTypeToDependenciesProvider.ConcreteTypeMapping.TryGetValue(type, out var deps)) return;
