@@ -9,32 +9,45 @@ namespace Noggog.Testing.AutoFixture
 {
     public class SchedulerBuilder : ISpecimenBuilder
     {
-        private bool _queriedForTestScheduler = false;
+        private TestScheduler? _testScheduler;
 
         public object Create(object request, ISpecimenContext context)
         {
             if (request is not Type t) return new NoSpecimen();
             if (t == typeof(IScheduler))
             {
-                if (_queriedForTestScheduler) return context.Create<TestScheduler>();
+                if (_testScheduler != null) return _testScheduler;
                 return Scheduler.CurrentThread;
             }
             else if (t == typeof(TestScheduler))
             {
-                _queriedForTestScheduler = true;
-                return new TestScheduler();
+                if (_testScheduler == null)
+                {
+                    _testScheduler = new TestScheduler();
+                }
+                return _testScheduler;
             }
             else if (t == typeof(ISchedulerProvider))
             {
-                return new SchedulerProviderCurrentThread();
+                if (_testScheduler != null)
+                {
+                    return new SchedulerProviderInjection(_testScheduler);
+                }
+                return new SchedulerProviderInjection(Scheduler.CurrentThread);
             }
             return new NoSpecimen();
         }
     }
 
-    public class SchedulerProviderCurrentThread : ISchedulerProvider
+    public class SchedulerProviderInjection : ISchedulerProvider
     {
-        public IScheduler MainThread => Scheduler.CurrentThread;
-        public IScheduler TaskPool => Scheduler.CurrentThread;
+        private readonly IScheduler _scheduler;
+        public IScheduler MainThread => _scheduler;
+        public IScheduler TaskPool => _scheduler;
+
+        public SchedulerProviderInjection(IScheduler scheduler)
+        {
+            _scheduler = scheduler;
+        }
     }
 }
