@@ -57,6 +57,11 @@ namespace Noggog
                 Path);
         }
 
+        public bool IsUnderneath(DirectoryPath dir)
+        {
+            return Path.StartsWith(dir.Path);
+        }
+
         public void Delete()
         {
             if (File.Exists(Path))
