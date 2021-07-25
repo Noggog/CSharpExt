@@ -9,6 +9,7 @@ namespace Noggog.Testing.AutoFixture
             fixture.Customizations.Add(new FileSystemBuilder());
             fixture.Customizations.Add(new SchedulerBuilder());
             fixture.Customizations.Add(new PathBuilder());
+            fixture.Customizations.Add(new ProcessBuilder());
             fixture.Behaviors.Add(new ObservableEmptyBehavior());
         }
     }

@@ -98,26 +98,26 @@ namespace CSharpExt.UnitTests
 
         [Theory, TestData]
         public void WatchFolder_Typical(
-            [Frozen]DirectoryPath dir,
+            DirectoryPath existingDir,
+            FilePath existingFile,
             [Frozen]MockFileSystemWatcher mockFileWatcher,
             [Frozen]MockFileSystem fs)
         {
-            FilePath fileA = Path.Combine(dir.Path, "FileA");
-            FilePath fileB = Path.Combine(dir.Path, "FileB");
-            fs.File.WriteAllText(fileA, string.Empty);
-            var live = ObservableExt.WatchFolderContents(dir.Path, fileSystem: fs)
+            FilePath fileB = Path.Combine(existingDir.Path, "FileB");
+            fs.File.WriteAllText(existingFile, string.Empty);
+            var live = ObservableExt.WatchFolderContents(existingDir.Path, fileSystem: fs)
                 .RemoveKey();
             var list = live.AsObservableList();
             list.Count.Should().Be(1);
-            list.Items.ToExtendedList()[0].Should().Be(fileA);
+            list.Items.ToExtendedList()[0].Should().Be(existingFile);
             fs.File.WriteAllText(fileB, string.Empty);
             mockFileWatcher.MarkCreated(fileB);
             list = live.AsObservableList();
             list.Count.Should().Be(2);
-            list.Items.ToExtendedList()[0].Should().Be(fileA);
+            list.Items.ToExtendedList()[0].Should().Be(existingFile);
             list.Items.ToExtendedList()[1].Should().Be(fileB);
-            fs.File.Delete(fileA);
-            mockFileWatcher.MarkDeleted(fileA);
+            fs.File.Delete(existingFile);
+            mockFileWatcher.MarkDeleted(existingFile);
             list = live.AsObservableList();
             list.Count.Should().Be(1);
             list.Items.ToExtendedList()[0].Should().Be(fileB);
@@ -125,15 +125,15 @@ namespace CSharpExt.UnitTests
 
         [Theory, TestData]
         public void WatchFolder_OnlySubfolder(
-            [Frozen]DirectoryPath dir,
+            [Frozen]DirectoryPath existingDir,
             [Frozen]MockFileSystemWatcher mockFileWatcher,
             [Frozen]MockFileSystem fs)
         {
-            FilePath fileA = Path.Combine(dir.Path, "SomeFolder", "FileA");
-            FilePath fileB = Path.Combine(dir.Path, "FileB");
+            FilePath fileA = Path.Combine(existingDir.Path, "SomeFolder", "FileA");
+            FilePath fileB = Path.Combine(existingDir.Path, "FileB");
             fs.Directory.CreateDirectory(Path.GetDirectoryName(fileA)!);
             fs.File.WriteAllText(fileA, string.Empty);
-            var live = ObservableExt.WatchFolderContents(Path.Combine(dir.Path, "SomeFolder"), fileSystem: fs)
+            var live = ObservableExt.WatchFolderContents(Path.Combine(existingDir.Path, "SomeFolder"), fileSystem: fs)
                 .RemoveKey();
             var list = live.AsObservableList();
             list.Count.Should().Be(1);
@@ -147,12 +147,12 @@ namespace CSharpExt.UnitTests
 
         [Theory, TestData]
         public void WatchFolder_ATypicalSeparator(
-            [Frozen]DirectoryPath dir,
+            DirectoryPath existingDirectory,
             [Frozen]FilePath file,
             [Frozen]MockFileSystemWatcher mockFileWatcher,
             [Frozen]MockFileSystem fs)
         {
-            var live = ObservableExt.WatchFolderContents(dir.Path.Replace('\\', '/'), fileSystem: fs)
+            var live = ObservableExt.WatchFolderContents(existingDirectory.Path.Replace('\\', '/'), fileSystem: fs)
                 .RemoveKey();
             var list = live.AsObservableList();
             list.Count.Should().Be(0);
