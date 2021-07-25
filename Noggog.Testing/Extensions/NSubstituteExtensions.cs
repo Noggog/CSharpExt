@@ -11,5 +11,11 @@ namespace Noggog.NSubstitute
         {
             return obs.Returns(Observable.Empty<T>());
         }
+
+        public static T ArgIsSame<T>(this T item)
+            where T : class
+        {
+            return Arg.Is<T>(x => object.ReferenceEquals(x, item));
+        }
     }
 }
