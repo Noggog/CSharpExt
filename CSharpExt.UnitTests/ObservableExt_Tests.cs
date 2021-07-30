@@ -147,12 +147,13 @@ namespace CSharpExt.UnitTests
 
         [Theory, TestData]
         public void WatchFolder_ATypicalSeparator(
-            DirectoryPath existingDirectory,
+            DirectoryPath someDirectory,
             [Frozen]FilePath file,
             [Frozen]MockFileSystemWatcher mockFileWatcher,
             [Frozen]MockFileSystem fs)
         {
-            var live = ObservableExt.WatchFolderContents(existingDirectory.Path.Replace('\\', '/'), fileSystem: fs)
+            fs.Directory.CreateDirectory(someDirectory);
+            var live = ObservableExt.WatchFolderContents(someDirectory.Path.Replace('\\', '/'), fileSystem: fs)
                 .RemoveKey();
             var list = live.AsObservableList();
             list.Count.Should().Be(0);

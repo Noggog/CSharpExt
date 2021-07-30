@@ -45,6 +45,7 @@ namespace Noggog.Testing.AutoFixture
                     FileSystemWatcher = context.Create<IFileSystemWatcherFactory>()
                 };
                 ret.Directory.CreateDirectory(PathBuilder.ExistingDirectory);
+                ret.File.Create(PathBuilder.ExistingFile);
                 return ret;
             }
             else if (t == typeof(IFileSystemWatcherFactory))
