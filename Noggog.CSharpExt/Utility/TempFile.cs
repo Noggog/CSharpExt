@@ -1,43 +1,69 @@
 using System;
 using System.IO;
+using System.IO.Abstractions;
 
 namespace Noggog.Utility
 {
-    public class TempFile : IDisposable
+    public interface ITempFile : IDisposable
     {
+        FilePath File { get; set; }
+    }
+
+    public class TempFile : ITempFile
+    {
+        private readonly IFileSystem _fileSystem;
+        
         public FilePath File { get; set; }
         public bool DeleteAfter = true;
 
-        public TempFile(string? extraDirectoryPaths = null, bool deleteAfter = true, bool createFolder = true, string? suffix = null)
+        public TempFile(
+            string? extraDirectoryPaths = null,
+            bool deleteAfter = true, 
+            bool createFolder = true, 
+            string? suffix = null,
+            IFileSystem? fileSystem = null)
         {
+            _fileSystem = fileSystem ?? IFileSystemExt.DefaultFilesystem;
+            
             var path = $"{Path.GetRandomFileName()}{suffix}";
             if (extraDirectoryPaths != null)
             {
                 path = Path.Combine(extraDirectoryPaths, path);
             }
             File = new FilePath(Path.Combine(Path.GetTempPath(), path));
-            if (createFolder && File.Directory != null && !File.Directory.Value.Exists)
+            DeleteAfter = deleteAfter;
+            
+            if (createFolder 
+                && File.Directory != null 
+                && !_fileSystem.Directory.Exists(File.Directory.Value))
             {
-                File.Directory.Value.Create();
+                _fileSystem.Directory.CreateDirectory(File.Directory.Value);
             }
-            this.DeleteAfter = deleteAfter;
         }
 
-        public TempFile(FilePath file, bool deleteAfter = true, bool createFolder = true)
+        public TempFile(
+            FilePath file, 
+            bool deleteAfter = true, 
+            bool createFolder = true,
+            IFileSystem? fileSystem = null)
         {
-            this.File = file;
-            if (createFolder && file.Directory != null && !file.Directory.Value.Exists)
+            _fileSystem = fileSystem ?? IFileSystemExt.DefaultFilesystem;
+            File = file;
+            DeleteAfter = deleteAfter;
+            
+            if (createFolder 
+                && file.Directory != null 
+                && !_fileSystem.Directory.Exists(file.Directory.Value))
             {
                 file.Directory.Value.Create();
             }
-            this.DeleteAfter = deleteAfter;
         }
 
         public void Dispose()
         {
             if (DeleteAfter)
             {
-                this.File.Delete();
+                _fileSystem.File.Delete(File);
             }
         }
     }
