@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Abstractions;
@@ -10,11 +10,11 @@ namespace Noggog
     {
         public static readonly IFileSystem DefaultFilesystem = new FileSystem();
         
-        public static bool TryDeleteEntireFolder(this IDirectory system, DirectoryPath dir, bool disableReadonly = true, bool deleteFolderItself = true)
+        public static bool TryDeleteEntireFolder(this IDirectory system, DirectoryPath dir, bool disableReadOnly = true, bool deleteFolderItself = true)
         {
             try
             {
-                DeleteEntireFolder(system, dir, disableReadonly, deleteFolderItself);
+                DeleteEntireFolder(system, dir, disableReadOnly, deleteFolderItself);
                 return true;
             }
             catch (Exception)
@@ -23,18 +23,24 @@ namespace Noggog
             }
         }
 
-        public static void DeleteEntireFolder(this IDirectory system, DirectoryPath path, bool disableReadonly = true, bool deleteFolderItself = true)
+        public static void DeleteEntireFolder(
+            this IDirectory system, 
+            DirectoryPath path, 
+            bool disableReadOnly = true,
+            bool deleteFolderItself = true)
         {
             if (!system.Exists(path)) return;
             string[] files = system.GetFiles(path);
-            List<Exception> exceptions = new List<Exception>();
+            var exceptions = new List<Exception>();
             foreach (string f in files)
             {
                 var fi = system.FileSystem.FileInfo.FromFileName(f);
-                if (fi.IsReadOnly)
+                if (disableReadOnly)
                 {
-                    if (!disableReadonly) continue;
-                    fi.IsReadOnly = false;
+                    if (fi.IsReadOnly)
+                    {
+                        fi.IsReadOnly = false;
+                    }
                 }
                 try
                 {
@@ -47,7 +53,7 @@ namespace Noggog
             }
             foreach (string subDir in system.GetDirectories(path))
             {
-                system.DeleteEntireFolder(subDir, disableReadonly);
+                system.DeleteEntireFolder(subDir, disableReadOnly);
             }
             if (deleteFolderItself)
             {

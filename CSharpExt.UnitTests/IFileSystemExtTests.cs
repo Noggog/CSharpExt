@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.IO.Abstractions;
 using System.IO.Abstractions.TestingHelpers;
@@ -40,7 +41,7 @@ namespace CSharpExt.UnitTests
         public void DeleteEntireFolder_Typical()
         {
             var fileSystem = TypicalFileSystem();
-            fileSystem.Directory.DeleteEntireFolder(DirPath, disableReadonly: true, deleteFolderItself: true);
+            fileSystem.Directory.DeleteEntireFolder(DirPath, disableReadOnly: true, deleteFolderItself: true);
             fileSystem.File.Exists(SomeFile).Should().BeFalse();
             fileSystem.File.Exists(SomeSubFile).Should().BeFalse();
             fileSystem.Directory.Exists(DirPath).Should().BeFalse();
@@ -51,7 +52,7 @@ namespace CSharpExt.UnitTests
         public void DeleteEntireFolder_DontDeleteSelf()
         {
             var fileSystem = TypicalFileSystem();
-            fileSystem.Directory.DeleteEntireFolder(DirPath, disableReadonly: true, deleteFolderItself: false);
+            fileSystem.Directory.DeleteEntireFolder(DirPath, disableReadOnly: true, deleteFolderItself: false);
             fileSystem.File.Exists(SomeFile).Should().BeFalse();
             fileSystem.File.Exists(SomeSubFile).Should().BeFalse();
             fileSystem.Directory.Exists(DirPath).Should().BeTrue();
@@ -67,7 +68,7 @@ namespace CSharpExt.UnitTests
             });
             var file = fileSystem.FileInfo.FromFileName(SomeFile);
             file.IsReadOnly = true;
-            fileSystem.Directory.DeleteEntireFolder(DirPath, disableReadonly: true, deleteFolderItself: true);
+            fileSystem.Directory.DeleteEntireFolder(DirPath, disableReadOnly: true, deleteFolderItself: true);
             fileSystem.File.Exists(SomeFile).Should().BeFalse();
             fileSystem.Directory.Exists(DirPath).Should().BeFalse();
         }
@@ -78,7 +79,23 @@ namespace CSharpExt.UnitTests
             var fileSystem = TypicalFileSystem();
             var file = fileSystem.FileInfo.FromFileName(SomeFile);
             file.IsReadOnly = true;
-            fileSystem.Directory.DeleteEntireFolder(DirPath, disableReadonly: false, deleteFolderItself: true);
+            Assert.Throws<UnauthorizedAccessException>(() =>
+            {
+                fileSystem.Directory.DeleteEntireFolder(DirPath, disableReadOnly: false, deleteFolderItself: true);
+            });
+            fileSystem.File.Exists(SomeFile).Should().BeTrue();
+            fileSystem.File.Exists(SomeSubFile).Should().BeFalse();
+            fileSystem.Directory.Exists(DirPath).Should().BeTrue();
+            fileSystem.Directory.Exists(SomeSubDir).Should().BeFalse();
+        }
+        
+        [Fact]
+        public void TryDeleteEntireFolder_ReadOnlyBlocks()
+        {
+            var fileSystem = TypicalFileSystem();
+            var file = fileSystem.FileInfo.FromFileName(SomeFile);
+            file.IsReadOnly = true;
+            fileSystem.Directory.TryDeleteEntireFolder(DirPath, disableReadOnly: false, deleteFolderItself: true);
             fileSystem.File.Exists(SomeFile).Should().BeTrue();
             fileSystem.File.Exists(SomeSubFile).Should().BeFalse();
             fileSystem.Directory.Exists(DirPath).Should().BeTrue();
