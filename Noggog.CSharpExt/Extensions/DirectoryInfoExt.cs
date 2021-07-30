@@ -8,11 +8,11 @@ namespace Noggog
 {
     public static class DirectoryInfoExt
     {
-        public static bool TryDeleteEntireFolder(this DirectoryInfo dir, bool disableReadonly = true, bool deleteFolderItself = true)
+        public static bool TryDeleteEntireFolder(this DirectoryInfo dir, bool disableReadOnly = true, bool deleteFolderItself = true)
         {
             try
             {
-                DeleteEntireFolder(dir, disableReadonly, deleteFolderItself);
+                DeleteEntireFolder(dir, disableReadOnly, deleteFolderItself);
                 return true;
             }
             catch (Exception)
@@ -21,53 +21,15 @@ namespace Noggog
             }
         }
 
-        public static void DeleteEntireFolder(this DirectoryInfo dir, bool disableReadonly = true, bool deleteFolderItself = true)
+        public static void DeleteEntireFolder(
+            this DirectoryInfo dir, 
+            bool disableReadOnly = true,
+            bool deleteFolderItself = true)
         {
-            if (!dir.Exists()) return;
-            FileInfo[] files = dir.GetFiles();
-            List<Exception> exceptions = new List<Exception>();
-            foreach (FileInfo fi in files)
-            {
-                if (fi.IsReadOnly)
-                {
-                    if (!disableReadonly) continue;
-                    fi.IsReadOnly = false;
-                }
-                try
-                {
-                    fi.Delete();
-                }
-                catch (Exception ex)
-                {
-                    exceptions.Add(ex);
-                }
-            }
-            foreach (DirectoryInfo subDir in dir.GetDirectories())
-            {
-                subDir.DeleteEntireFolder(disableReadonly);
-            }
-            if (deleteFolderItself)
-            {
-                dir.Refresh();
-                if (dir.GetFiles().Length == 0
-                    && dir.GetDirectories().Length == 0)
-                {
-                    try
-                    {
-                        dir.Delete();
-                        dir.Refresh();
-                    }
-                    catch (Exception ex)
-                    {
-                        exceptions.Add(ex);
-                    }
-                }
-            }
-            if (exceptions.Count == 1) throw exceptions[0];
-            if (exceptions.Count > 1)
-            {
-                throw new AggregateException(exceptions);
-            }
+            var dirPath = new DirectoryPath(dir.FullName);
+            dirPath.DeleteEntireFolder(
+                disableReadOnly: disableReadOnly,
+                deleteFolderItself: deleteFolderItself);
         }
 
         public static bool Exists(this DirectoryInfo source)
@@ -76,6 +38,7 @@ namespace Noggog
             return source.Exists;
         }
 
+        [Obsolete("Use DeleteEntireFolder instead")]
         public static void DeleteContainedFiles(this DirectoryInfo dir, bool recursive)
         {
             if (dir.Exists)

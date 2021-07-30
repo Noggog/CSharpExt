@@ -2,6 +2,7 @@ using Noggog.Extensions;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Abstractions;
 using System.Linq;
 
 namespace Noggog
@@ -19,13 +20,14 @@ namespace Noggog
                 return new DirectoryPath(dirPath);
             }
         }
-        public bool Exists => System.IO.Directory.Exists(Path);
+
+        public bool Exists => CheckExists();
+        public bool CheckExists(IFileSystem? fs = null) => fs.GetOrDefault().Directory.Exists(Path);
         public string Path => _fullPath ?? string.Empty;
         public string RelativePath => _originalPath ?? string.Empty;
         public FileName Name => System.IO.Path.GetFileName(Path);
-        public bool Empty => !System.IO.Directory.EnumerateFiles(Path).Any()
-            && !System.IO.Directory.EnumerateDirectories(Path).Any();
-
+        public bool Empty => CheckEmpty();
+        
         public DirectoryPath(string path)
         {
 #if NETSTANDARD2_0
@@ -33,17 +35,7 @@ namespace Noggog
 #else 
             path = System.IO.Path.TrimEndingDirectorySeparator(path);
 #endif
-            this._originalPath = path;
-            this._fullPath = path == string.Empty ? string.Empty : System.IO.Path.GetFullPath(path);
-        }
-
-        public DirectoryPath(string path, string referencePath)
-        {
-            if (path.StartsWith(".."))
-            {
-                path = System.IO.Path.Combine(referencePath, path);
-            }
-            this._originalPath = path;
+            this._originalPath = path.Replace('/', '\\');;
             this._fullPath = path == string.Empty ? string.Empty : System.IO.Path.GetFullPath(path);
         }
 
@@ -74,12 +66,14 @@ namespace Noggog
             return new FilePath(System.IO.Path.Combine(this.Path, filePath));
         }
 
+        // ToDo
+        // Can maybe be improved to not check full path on each level
         public bool IsSubfolderOf(DirectoryPath potentialParent)
         {
             var parent = System.IO.Directory.GetParent(Path);
             while (parent != null)
             {
-                if (parent.FullName.Equals(potentialParent.Name))
+                if (parent.FullName.Equals(potentialParent.Path, StringComparison.OrdinalIgnoreCase))
                 {
                     return true;
                 }
@@ -88,11 +82,14 @@ namespace Noggog
             return false;
         }
 
-        public bool TryDeleteEntireFolder(bool disableReadOnly = true, bool deleteFolderItself = true)
+        public bool TryDeleteEntireFolder(
+            bool disableReadOnly = true,
+            bool deleteFolderItself = true,
+            IFileSystem? fileSystem = null)
         {
             try
             {
-                DeleteEntireFolder(disableReadOnly, deleteFolderItself);
+                DeleteEntireFolder(disableReadOnly, deleteFolderItself, fileSystem);
                 return true;
             }
             catch (Exception)
@@ -101,58 +98,69 @@ namespace Noggog
             }
         }
 
-        public void DeleteEntireFolder(bool disableReadOnly = true, bool deleteFolderItself = true)
+        public void DeleteEntireFolder(
+            bool disableReadOnly = true,
+            bool deleteFolderItself = true,
+            IFileSystem? fileSystem = null)
         {
-            if (!Exists) return;
-            var dirInfo = new DirectoryInfo(Path);
-            dirInfo.DeleteEntireFolder(disableReadOnly, deleteFolderItself);
+            fileSystem.GetOrDefault().Directory
+                .DeleteEntireFolder(
+                    Path,
+                    disableReadOnly: disableReadOnly,
+                    deleteFolderItself: deleteFolderItself);
         }
 
-        public void DeleteContainedFiles(bool recursive)
+        public void Create(IFileSystem? fileSystem = null)
         {
-            if (!Exists) return;
-            var dirInfo = new DirectoryInfo(Path);
-            dirInfo.DeleteContainedFiles(recursive);
+            fileSystem.GetOrDefault().Directory.CreateDirectory(Path);
         }
 
-        public void Create()
+        public void Delete(IFileSystem? fileSystem = null)
         {
-            System.IO.Directory.CreateDirectory(Path);
+            fileSystem.GetOrDefault().Directory.Delete(Path);
         }
 
+        public bool CheckEmpty(IFileSystem? fs = null)
+        {
+            fs = fs.GetOrDefault();
+            return !fs.Directory.EnumerateFiles(Path).Any()
+                && !fs.Directory.EnumerateDirectories(Path).Any();
+        }
+        
         public string GetRelativePathTo(DirectoryPath relativeTo)
         {
             return PathExt.MakeRelativePath(
                 relativeTo.Path + "\\",
-                Path + "\\");
+                Path);
+        }
+        
+        public string GetRelativePathTo(FilePath relativeTo)
+        {
+            return PathExt.MakeRelativePath(
+                relativeTo.Path,
+                Path);
         }
 
-        public IEnumerable<FilePath> EnumerateFiles(bool recursive = false, string? searchPattern = null)
+        public IEnumerable<FilePath> EnumerateFiles(
+            bool recursive = false, 
+            string? searchPattern = null,
+            IFileSystem? fileSystem = null)
         {
-            var ret = (searchPattern == null ? System.IO.Directory.EnumerateFiles(Path) : System.IO.Directory.EnumerateFiles(Path, searchPattern))
-                .Select(x => new FilePath(x));
-            if (!recursive) return ret;
-            return ret.Concat(EnumerateDirectories(includeSelf: false, recursive: true)
-                .SelectMany(d => d.EnumerateFiles(recursive: false, searchPattern: searchPattern)));
+            return fileSystem.GetOrDefault().Directory.EnumerateFilePaths(
+                Path,
+                searchPattern: searchPattern,
+                recursive: recursive);
         }
 
-        public IEnumerable<DirectoryPath> EnumerateDirectories(bool includeSelf, bool recursive)
+        public IEnumerable<DirectoryPath> EnumerateDirectories(
+            bool includeSelf, 
+            bool recursive,
+            IFileSystem? fileSystem = null)
         {
-            if (!Exists) return EnumerableExt<DirectoryPath>.Empty;
-            var ret = System.IO.Directory.EnumerateDirectories(Path)
-                .Select(x => new DirectoryPath(x));
-            if (recursive)
-            {
-                ret = ret
-                    .Concat(System.IO.Directory.EnumerateDirectories(Path)
-                    .Select(x => new DirectoryPath(x))
-                    .SelectMany(d => d.EnumerateDirectories(includeSelf: false, recursive: true)));
-            }
-            if (includeSelf)
-            {
-                ret = this.AsEnumerable().Concat(ret);
-            }
-            return ret;
+            return fileSystem.GetOrDefault().Directory.EnumerateDirectoryPaths(
+                Path,
+                includeSelf: includeSelf,
+                recursive: recursive);
         }
 
         public static implicit operator DirectoryPath(DirectoryInfo info)
@@ -167,14 +175,14 @@ namespace Noggog
 
         public static implicit operator string(DirectoryPath dir)
         {
-            return dir.Path;
+            return dir.RelativePath;
         }
         
 #if NETSTANDARD2_0 
 #else 
         public static implicit operator ReadOnlySpan<char>(DirectoryPath dir)
         {
-            return dir.Path;
+            return dir.RelativePath;
         }
 #endif
     }

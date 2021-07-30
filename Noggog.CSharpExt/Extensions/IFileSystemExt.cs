@@ -77,18 +77,38 @@ namespace Noggog
             }
         }
 
-        public static IEnumerable<FilePath> EnumerateFilePaths(this IDirectory system, DirectoryPath path, string? searchPattern = null)
+        public static IEnumerable<FilePath> EnumerateFilePaths(
+            this IDirectory system, 
+            DirectoryPath path,
+            string? searchPattern = null,
+            bool recursive = false)
         {
-            return system.EnumerateFiles(path.Path, searchPattern: searchPattern)
-                .Select(x => new FilePath(x));
-        }
-
-        public static IEnumerable<FilePath> EnumerateFilesRecursive(this IDirectory system, DirectoryPath path, string? searchPattern = null)
-        {
-            return (searchPattern == null ? system.EnumerateFiles(path) : system.EnumerateFiles(path, searchPattern))
-                .Select(x => new FilePath(x))
-                .Concat(system.EnumerateDirectories(path)
-                    .SelectMany(d => system.EnumerateFilesRecursive(d, searchPattern: searchPattern)));
+            if (recursive)
+            {
+                if (searchPattern == null)
+                {
+                    return system.EnumerateFiles(path, "*", SearchOption.AllDirectories)
+                        .Select(x => new FilePath(x));
+                }
+                else
+                {
+                    return system.EnumerateFiles(path, searchPattern, SearchOption.AllDirectories)
+                        .Select(x => new FilePath(x));
+                }
+            }
+            else
+            {
+                if (searchPattern == null)
+                {
+                    return system.EnumerateFiles(path.Path)
+                        .Select(x => new FilePath(x));
+                }
+                else
+                {
+                    return system.EnumerateFiles(path.Path, searchPattern: searchPattern)
+                        .Select(x => new FilePath(x));
+                }
+            }
         }
 
         /// <summary>
@@ -99,7 +119,11 @@ namespace Noggog
         /// <param name="includeSelf">Whether to include the starting directory in the return enumeration</param>
         /// <param name="recursive">Whether to recursively enumerate subdirectories</param>
         /// <returns>Enumerable of contained directories</returns>
-        public static IEnumerable<DirectoryPath> EnumerateDirectories(this IDirectory system, DirectoryPath path, bool includeSelf, bool recursive)
+        public static IEnumerable<DirectoryPath> EnumerateDirectoryPaths(
+            this IDirectory system, 
+            DirectoryPath path, 
+            bool includeSelf,
+            bool recursive)
         {
             if (!system.Exists(path)) return EnumerableExt<DirectoryPath>.Empty;
             var ret = system.EnumerateDirectories(path)
@@ -108,7 +132,7 @@ namespace Noggog
             {
                 ret = ret
                     .Concat(system.EnumerateDirectories(path)
-                    .SelectMany(d => system.EnumerateDirectories(d, includeSelf: false, recursive: true)));
+                    .SelectMany(d => system.EnumerateDirectoryPaths(d, includeSelf: false, recursive: true)));
             }
             if (includeSelf)
             {

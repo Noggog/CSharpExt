@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.IO.Abstractions;
 using System.Linq;
 
 namespace Noggog.Utility
@@ -20,9 +21,9 @@ namespace Noggog.Utility
 
             int iterations = (int)Math.Ceiling((double)firstInfo.Length / BYTES_TO_READ);
 
-            using (FileStream fs1 = first.OpenRead())
+            using (var fs1 = first.OpenRead())
             {
-                using (FileStream fs2 = second.OpenRead())
+                using (var fs2 = second.OpenRead())
                 {
                     return fs1.ContentsEqual(fs2);
                 }

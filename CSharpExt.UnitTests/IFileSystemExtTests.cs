@@ -13,16 +13,20 @@ namespace CSharpExt.UnitTests
     public class IFileSystemExtTests
     {
         public readonly static DirectoryPath DirPath = "C:/SomeDir";
-        public readonly static FilePath SomeFile = Path.Combine(DirPath, "SomeFile.txt");
+        public readonly static FilePath SomeFile = Path.Combine(DirPath, "SomeFile");
+        public readonly static FilePath SomeFileTxt = Path.Combine(DirPath, "SomeFile.txt");
         public readonly static DirectoryPath SomeSubDir = Path.Combine(DirPath, "SubDir");
         public readonly static FilePath SomeSubFile = Path.Combine(DirPath, "SubDir", "SubFile");
+        public readonly static FilePath SomeSubFileTxt = Path.Combine(DirPath, "SubDir", "SubFile.txt");
 
         private static MockFileSystem TypicalFileSystem()
         {
             return new MockFileSystem(new Dictionary<string, MockFileData>
             {
                 { SomeFile, new MockFileData("Boop") },
+                { SomeFileTxt, new MockFileData("Noop") },
                 { SomeSubFile, new MockFileData("Doop") },
+                { SomeSubFileTxt, new MockFileData("Zoop") },
             });
         }
         
@@ -107,22 +111,44 @@ namespace CSharpExt.UnitTests
         #region EnumerateFilesRecursive
 
         [Fact]
+        public void EnumerateFiles()
+        {
+            var fileSystem = TypicalFileSystem();
+            fileSystem.Directory.EnumerateFilePaths(DirPath)
+                .Should().BeEquivalentTo(
+                    SomeFile,
+                    SomeFileTxt);
+        }
+
+        [Fact]
+        public void EnumerateFiles_SearchPattern()
+        {
+            var fileSystem = TypicalFileSystem();
+            fileSystem.Directory.EnumerateFilePaths(DirPath, "*.txt")
+                .Should().BeEquivalentTo(
+                    SomeFileTxt);
+        }
+        
+        [Fact]
         public void EnumerateFilesRecursive()
         {
             var fileSystem = TypicalFileSystem();
-            fileSystem.Directory.EnumerateFilesRecursive(DirPath)
+            fileSystem.Directory.EnumerateFilePaths(DirPath, recursive: true)
                 .Should().BeEquivalentTo(
                     SomeFile,
-                    SomeSubFile);
+                    SomeFileTxt,
+                    SomeSubFile,
+                    SomeSubFileTxt);
         }
 
         [Fact]
         public void EnumerateFilesRecursive_SearchPattern()
         {
             var fileSystem = TypicalFileSystem();
-            fileSystem.Directory.EnumerateFilesRecursive(DirPath, "*.txt")
+            fileSystem.Directory.EnumerateFilePaths(DirPath, "*.txt", recursive: true)
                 .Should().BeEquivalentTo(
-                    SomeFile);
+                    SomeFileTxt,
+                    SomeSubFileTxt);
         }
 
         #endregion
@@ -139,7 +165,7 @@ namespace CSharpExt.UnitTests
                 { SomeSubFile, new MockFileData("Doop") },
                 { subSubDir, new MockFileData("Doop") },
             });
-            fileSystem.Directory.EnumerateDirectories(DirPath, includeSelf: true, recursive: true)
+            fileSystem.Directory.EnumerateDirectoryPaths(DirPath, includeSelf: true, recursive: true)
                 .Should().BeEquivalentTo(
                     DirPath,
                     SomeSubDir);
@@ -149,7 +175,7 @@ namespace CSharpExt.UnitTests
         public void EnumerateDirectories_NoSelf()
         {
             var fileSystem = TypicalFileSystem();
-            fileSystem.Directory.EnumerateDirectories(DirPath, includeSelf: false, recursive: true)
+            fileSystem.Directory.EnumerateDirectoryPaths(DirPath, includeSelf: false, recursive: true)
                 .Should().BeEquivalentTo(
                     SomeSubDir);
         }
@@ -163,7 +189,7 @@ namespace CSharpExt.UnitTests
                 { SomeSubFile, new MockFileData("Doop") },
                 { Path.Combine(SomeSubDir, "SubSubDir"), new MockFileData("Doop") },
             });
-            fileSystem.Directory.EnumerateDirectories(DirPath, includeSelf: true, recursive: false)
+            fileSystem.Directory.EnumerateDirectoryPaths(DirPath, includeSelf: true, recursive: false)
                 .Should().BeEquivalentTo(
                     DirPath,
                     SomeSubDir);

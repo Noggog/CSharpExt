@@ -1,6 +1,7 @@
 using Noggog.Extensions;
 using System;
 using System.IO;
+using System.IO.Abstractions;
 
 namespace Noggog
 {
@@ -13,7 +14,7 @@ namespace Noggog
         {
             get
             {
-                var dirPath = System.IO.Path.GetDirectoryName(_originalPath);
+                var dirPath = System.IO.Path.GetDirectoryName(_fullPath);
                 if (dirPath.IsNullOrWhitespace()) return null;
                 return new DirectoryPath(dirPath);
             }
@@ -24,11 +25,12 @@ namespace Noggog
         public FileName Name => System.IO.Path.GetFileName(Path);
         public string Extension => System.IO.Path.GetExtension(Path);
         public string NameWithoutExtension => System.IO.Path.GetFileNameWithoutExtension(Path);
-        public bool Exists => System.IO.File.Exists(_fullPath);
+        public bool Exists => CheckExists();
+        public bool CheckExists(IFileSystem? fs = null) => fs.GetOrDefault().File.Exists(_fullPath);
 
         public FilePath(string path)
         {
-            this._originalPath = path;
+            this._originalPath = path.Replace('/', '\\');
             this._fullPath = path == string.Empty ? string.Empty : System.IO.Path.GetFullPath(path);
         }
 
@@ -59,14 +61,15 @@ namespace Noggog
 
         public bool IsUnderneath(DirectoryPath dir)
         {
-            return Path.StartsWith(dir.Path);
+            return Path.StartsWith(dir.Path, StringComparison.OrdinalIgnoreCase);
         }
 
-        public void Delete()
+        public void Delete(IFileSystem? fileSystem = null)
         {
-            if (File.Exists(Path))
+            fileSystem = fileSystem.GetOrDefault();
+            if (fileSystem.File.Exists(Path))
             {
-                File.Delete(Path);
+                fileSystem.File.Delete(Path);
             }
         }
 
@@ -81,9 +84,9 @@ namespace Noggog
 
         public override string ToString() => Path;
 
-        public FileStream OpenRead()
+        public Stream OpenRead(IFileSystem? fileSystem = null)
         {
-            return File.OpenRead(Path);
+            return fileSystem.GetOrDefault().FileStream.Create(Path, FileMode.Open, FileAccess.Read, FileShare.Read);
         }
 
         public static implicit operator FilePath(FileInfo info)
