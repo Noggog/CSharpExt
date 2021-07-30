@@ -9,7 +9,7 @@ namespace Noggog
     public struct ErrorResponse : IEquatable<ErrorResponse>
     {
         public readonly static ErrorResponse Success = Succeed();
-        public readonly static ErrorResponse Failure = new ErrorResponse();
+        public readonly static ErrorResponse Failure = new ErrorResponse(succeeded: false);
 
         private readonly bool _failed;
         public readonly bool Succeeded => !_failed;
