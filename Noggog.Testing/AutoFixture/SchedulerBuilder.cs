@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Reactive.Concurrency;
-using AutoFixture;
 using AutoFixture.Kernel;
 using Microsoft.Reactive.Testing;
 using Noggog.Reactive;

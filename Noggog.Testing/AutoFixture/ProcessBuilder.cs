@@ -13,14 +13,17 @@ namespace Noggog.Testing.AutoFixture
             if (request is ParameterInfo p)
             {
                 if (p.Name == null) return new NoSpecimen();
-                if (p.Name.ContainsInsensitive("existing"))
+                if (p.ParameterType == typeof(ProcessStartInfo))
                 {
-                    return new ProcessStartInfo(
-                        PathBuilder.ExistingFile,
-                        context.Create<string>())
+                    if (p.Name.ContainsInsensitive("existing"))
                     {
-                        WorkingDirectory = PathBuilder.ExistingDirectory
-                    };
+                        return new ProcessStartInfo(
+                            PathBuilder.ExistingFile,
+                            context.Create<string>())
+                        {
+                            WorkingDirectory = PathBuilder.ExistingDirectory
+                        };
+                    }
                 }
             }
             else if (request is Type t)
