@@ -35,7 +35,7 @@ namespace Noggog.Testing.AutoFixture
 
                 if (p.ParameterType == typeof(ErrorResponse))
                 {
-                    if (IsFail(p.ParameterType.Name))
+                    if (IsFail(p.Name))
                     {
                         return ErrorResponse.Failure;
                     }
