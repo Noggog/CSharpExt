@@ -4,9 +4,16 @@ namespace Noggog.Testing.AutoFixture
 {
     public class DefaultCustomization : ICustomization
     {
+        private readonly bool _useMockFileSystem;
+
+        public DefaultCustomization(bool useMockFileSystem = false)
+        {
+            _useMockFileSystem = useMockFileSystem;
+        }
+        
         public void Customize(IFixture fixture)
         {
-            fixture.Customizations.Add(new FileSystemBuilder());
+            fixture.Customizations.Add(new FileSystemBuilder(_useMockFileSystem));
             fixture.Customizations.Add(new SchedulerBuilder());
             fixture.Customizations.Add(new PathBuilder());
             fixture.Customizations.Add(new CancellationBuilder());
