@@ -117,9 +117,9 @@ namespace Noggog
             return new ErrorResponse(false);
         }
 
-        public static ErrorResponse Create(bool successful, string reason = "")
+        public static ErrorResponse Create(bool successful, string reason = "", Exception? ex = null)
         {
-            return new ErrorResponse(successful, reason);
+            return new ErrorResponse(successful, reason, ex);
         }
         #endregion
     }
