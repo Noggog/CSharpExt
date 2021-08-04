@@ -37,10 +37,10 @@ namespace Noggog.Testing.AutoFixture
                 {
                     if (IsFail(p.Name))
                     {
-                        return ErrorResponse.Failure;
+                        return ErrorResponse.Create(successful: false, context.Create<string>(), context.Create<Exception>());
                     }
                     
-                    return ErrorResponse.Success;
+                    return ErrorResponse.Create(successful: true, context.Create<string>());
                 }
             }
 
@@ -64,7 +64,8 @@ namespace Noggog.Testing.AutoFixture
         {
             return GetResponse<T>.Create(
                 successful: successful,
-                successful ? context.Create<T>() : default(T));
+                successful ? context.Create<T>() : default(T),
+                context.Create<string>());
         }
     }
 }

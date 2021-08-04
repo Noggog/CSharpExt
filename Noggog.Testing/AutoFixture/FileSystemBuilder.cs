@@ -12,6 +12,8 @@ namespace Noggog.Testing.AutoFixture
     public class FileSystemBuilder : ISpecimenBuilder
     {
         private readonly bool _useMockFileSystem;
+        private MockFileSystem? _mockFileSystem;
+        private MockFileSystemWatcher? _fileSystemWatcher;
 
         public FileSystemBuilder(bool useMockFileSystem = true)
         {
@@ -40,13 +42,16 @@ namespace Noggog.Testing.AutoFixture
             }
             else if (t == typeof(MockFileSystem))
             {
-                var ret = new MockFileSystem(new Dictionary<string, MockFileData>())
+                if (_mockFileSystem == null)
                 {
-                    FileSystemWatcher = context.Create<IFileSystemWatcherFactory>()
-                };
-                ret.Directory.CreateDirectory(PathBuilder.ExistingDirectory);
-                ret.File.Create(PathBuilder.ExistingFile);
-                return ret;
+                    _mockFileSystem = new MockFileSystem(new Dictionary<string, MockFileData>())
+                    {
+                        FileSystemWatcher = context.Create<IFileSystemWatcherFactory>()
+                    };
+                    _mockFileSystem.Directory.CreateDirectory(PathBuilder.ExistingDirectory);
+                    _mockFileSystem.File.Create(PathBuilder.ExistingFile);
+                }
+                return _mockFileSystem;
             }
             else if (t == typeof(IFileSystemWatcherFactory))
             {
@@ -59,7 +64,12 @@ namespace Noggog.Testing.AutoFixture
             }
             else if (t == typeof(MockFileSystemWatcher))
             {
-                return new MockFileSystemWatcher();
+                if (_fileSystemWatcher == null)
+                {
+                    _fileSystemWatcher = new MockFileSystemWatcher();
+                }
+
+                return _fileSystemWatcher;
             }
             return new NoSpecimen();
         }
