@@ -66,9 +66,12 @@ namespace Noggog
             return new FilePath(System.IO.Path.Combine(this.Path, filePath));
         }
 
+        [Obsolete("Use IsUnderneath instead")]
+        public bool IsSubfolderOf(DirectoryPath potentialParent) => IsUnderneath(potentialParent);
+        
         // ToDo
         // Can maybe be improved to not check full path on each level
-        public bool IsSubfolderOf(DirectoryPath potentialParent)
+        public bool IsUnderneath(DirectoryPath potentialParent)
         {
             var parent = System.IO.Directory.GetParent(Path);
             while (parent != null)
