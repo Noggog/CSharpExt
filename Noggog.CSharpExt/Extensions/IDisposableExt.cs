@@ -16,5 +16,12 @@ namespace Noggog
             {
             }
         }
+
+        public static T DisposeWith<T>(this T disposable, IDisposableDropoff compositeDisposable)
+            where T : IDisposable
+        {
+            compositeDisposable.Add(disposable);
+            return disposable;
+        }
     }
 }

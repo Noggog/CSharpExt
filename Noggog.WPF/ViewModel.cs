@@ -7,16 +7,15 @@ using System.Collections;
 
 namespace Noggog.WPF
 {
-    public class ViewModel : ReactiveObject, IDisposable
+    public class ViewModel : ReactiveObject, IDisposableDropoff
     {
-        private readonly Lazy<CompositeDisposable> _CompositeDisposable = new Lazy<CompositeDisposable>();
-        public CompositeDisposable CompositeDisposable => _CompositeDisposable.Value;
+        private readonly Lazy<CompositeDisposable> _compositeDisposable = new();
 
         public virtual void Dispose()
         {
-            if (_CompositeDisposable.IsValueCreated)
+            if (_compositeDisposable.IsValueCreated)
             {
-                _CompositeDisposable.Value.Dispose();
+                _compositeDisposable.Value.Dispose();
             }
         }
         
@@ -87,11 +86,14 @@ namespace Noggog.WPF
             this.RaisePropertyChanged(name);
         }
 
-        public static implicit operator CompositeDisposable(ViewModel vm) => vm.CompositeDisposable;
-
         public override string ToString()
         {
             return this.GetType().Name;
+        }
+
+        public void Add(IDisposable disposable)
+        {
+            _compositeDisposable.Value.Add(disposable);
         }
     }
 }

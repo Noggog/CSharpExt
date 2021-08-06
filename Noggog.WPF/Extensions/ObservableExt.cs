@@ -15,13 +15,6 @@ namespace Noggog.WPF
 {
     public static class ObservableExt
     {
-        public static T DisposeWith<T>(this T item, ViewModel vm)
-            where T : IDisposable
-        {
-            item.DisposeWith(vm.CompositeDisposable);
-            return item;
-        }
-
         public static ObservableAsPropertyHelper<TRet> ToGuiProperty<TRet>(
             this IObservable<TRet> source,
             ViewModel vm,
@@ -31,7 +24,7 @@ namespace Noggog.WPF
         {
             return source
                 .ToProperty(vm, property, initialValue, deferSubscription: deferSubscription, scheduler: RxApp.MainThreadScheduler)
-                .DisposeWith(vm.CompositeDisposable);
+                .DisposeWith(vm);
         }
 
         public static ObservableAsPropertyHelper<TRet> ToGuiProperty<TRet>(
@@ -43,7 +36,7 @@ namespace Noggog.WPF
         {
             return source
                 .ToProperty(vm, property, initialValue: default!, deferSubscription, RxApp.MainThreadScheduler)
-                .DisposeWith(vm.CompositeDisposable);
+                .DisposeWith(vm);
         }
 
         public static void ToGuiProperty<TRet>(
@@ -62,7 +55,7 @@ namespace Noggog.WPF
                 result: out result, 
                 deferSubscription: deferSubscription,
                 scheduler: RxApp.MainThreadScheduler)
-                .DisposeWith(vm.CompositeDisposable);
+                .DisposeWith(vm);
         }
 
         public static void ToGuiProperty<TRet>(
@@ -74,7 +67,7 @@ namespace Noggog.WPF
             bool deferSubscription = false)
         {
             source.ToProperty(source: vm, property: property, result: out result, getInitialValue: getInitialValue, deferSubscription: deferSubscription, scheduler: RxApp.MainThreadScheduler)
-                .DisposeWith(vm.CompositeDisposable);
+                .DisposeWith(vm);
         }
 
         public static void ToGuiProperty<TRet>(
@@ -86,7 +79,7 @@ namespace Noggog.WPF
             where TRet : struct
         {
             source.ToProperty(vm, property, out result, getInitialValue: () => default, deferSubscription, RxApp.MainThreadScheduler)
-                .DisposeWith(vm.CompositeDisposable);
+                .DisposeWith(vm);
         }
 
         public static IObservable<T> ObserveOnGui<T>(this IObservable<T> obs)
@@ -106,7 +99,7 @@ namespace Noggog.WPF
             return source.Bind(obsCol, resetThreshold);
         }
 
-        public static IObservableCollection<TObj> ToObservableCollection<TObj>(this IObservable<IChangeSet<TObj>> changeSet, CompositeDisposable disposable)
+        public static IObservableCollection<TObj> ToObservableCollection<TObj>(this IObservable<IChangeSet<TObj>> changeSet, IDisposableDropoff disposable)
         {
             changeSet
                 .ObserveOnGui()
@@ -116,7 +109,7 @@ namespace Noggog.WPF
             return display;
         }
 
-        public static IObservableCollection<TObj> ToObservableCollection<TObj, TKey>(this IObservable<IChangeSet<TObj, TKey>> changeSet, CompositeDisposable disposable)
+        public static IObservableCollection<TObj> ToObservableCollection<TObj, TKey>(this IObservable<IChangeSet<TObj, TKey>> changeSet, IDisposableDropoff disposable)
             where TKey : notnull
         {
             ObservableCollectionExtended<TObj> display = new ObservableCollectionExtended<TObj>();
@@ -213,7 +206,7 @@ namespace Noggog.WPF
         public static IObservable<TSource> TakeUntilDisposed<TSource>(this IObservable<TSource> obs,
             ViewModel vm)
         {
-            return obs.TakeUntilDisposed(vm.CompositeDisposable);
+            return obs.TakeUntilDisposed(vm);
         }
     }
 }

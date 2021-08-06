@@ -1,17 +1,11 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reactive.Disposables;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Controls;
 
 namespace Noggog.WPF
 {
     public class NoggogControl : Control
     {
-        protected readonly CompositeDisposable _unloadDisposable = new CompositeDisposable();
-        protected readonly CompositeDisposable _templateDisposable = new CompositeDisposable();
+        protected readonly IDisposableBucket _unloadDisposable = new DisposableBucket();
+        protected readonly IDisposableBucket _templateDisposable = new DisposableBucket();
 
         public NoggogControl()
         {
