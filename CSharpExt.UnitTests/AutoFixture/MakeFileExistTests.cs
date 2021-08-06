@@ -18,7 +18,7 @@ namespace CSharpExt.UnitTests.AutoFixture
         {
             context.MockToReturn<MockFileSystem>();
             sut.MakeExist(path, context);
-            context.AssertWasCreated<MockFileSystem>();
+            context.ShouldHaveCreated<MockFileSystem>();
         }
         
         [Theory, BasicAutoData]

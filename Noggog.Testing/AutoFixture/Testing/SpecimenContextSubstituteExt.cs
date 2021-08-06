@@ -7,7 +7,7 @@ namespace Noggog.Testing.AutoFixture.Testing
 {
     public static class SpecimenContextSubstituteExt
     {
-        public static void AssertWasCreated<T>(this ISpecimenContext context)
+        public static void ShouldHaveCreated<T>(this ISpecimenContext context)
         {
             context.Received(1).Resolve(Arg.Is<SeededRequest>(o => (Type) o.Request == typeof(T)));
         }

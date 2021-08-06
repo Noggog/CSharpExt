@@ -18,6 +18,9 @@ namespace Noggog.Testing.AutoFixture
             fixture.Customizations.Add(new PathBuilder());
             fixture.Customizations.Add(new CancellationBuilder());
             fixture.Customizations.Add(new ErrorResponseBuilder());
+            fixture.Customizations.Add(new ErrorResponseParameterBuilder());
+            fixture.Customizations.Add(new GetResponseBuilder());
+            fixture.Customizations.Add(new GetResponseParameterBuilder());
             fixture.Customizations.Add(new ProcessBuilder());
             fixture.Behaviors.Add(new ObservableEmptyBehavior());
         }
