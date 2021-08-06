@@ -48,7 +48,7 @@ namespace Noggog.Autofac.Validation
             if (AllowableEnumerable.IsAllowed(type)) return;
             if (Registrations.Items.ContainsKey(type))
             {
-                var regis = Registrations.Items[type].First();
+                var regis = Registrations.Items[type][^1];
                 if (validateCtor && regis.NeedsValidation)
                 {
                     ValidateCtor.Validate(regis.Type);

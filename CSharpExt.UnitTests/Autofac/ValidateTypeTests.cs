@@ -72,6 +72,23 @@ namespace CSharpExt.UnitTests.Autofac
         }
         
         [Theory, TestData]
+        public void ChecksLastRegistration(ValidateType sut)
+        {
+            sut.Registrations.Items.Returns(new Dictionary<Type, IReadOnlyList<Registration>>()
+            {
+                { typeof (Class), new []
+                {
+                    new Registration(typeof(string), true),
+                    new Registration(typeof(int), true),
+                } },
+            });
+            
+            sut.Validate(typeof(Class));
+
+            sut.ValidateCtor.Received(1).Validate(typeof(int));
+        }
+        
+        [Theory, TestData]
         public void CheckIfDelegateFactory(ValidateType sut)
         {
             sut.IsDelegateFactory.Check(typeof(Class)).Returns(true);
