@@ -32,17 +32,17 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="MahApps.Metro" Version="2.4.6" />
+    <PackageReference Include="MahApps.Metro" Version="2.4.7" />
     <PackageReference Include="MahApps.Metro.IconPacks" Version="4.8.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-    <PackageReference Include="NuGetizer" Version="0.7.0">
+    <PackageReference Include="NuGetizer" Version="0.7.4">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="ReactiveUI" Version="13.3.2" />
-    <PackageReference Include="ReactiveUI.Events.WPF" Version="13.3.2" />
-    <PackageReference Include="ReactiveUI.Fody" Version="13.3.2" />
-    <PackageReference Include="ReactiveUI.WPF" Version="13.3.2" />
+    <PackageReference Include="ReactiveUI" Version="14.2.1" />
+    <PackageReference Include="ReactiveUI.Events.WPF" Version="14.2.1" />
+    <PackageReference Include="ReactiveUI.Fody" Version="14.2.1" />
+    <PackageReference Include="ReactiveUI.WPF" Version="14.2.1" />
     <PackageReference Include="System.Reactive" Version="5.0.0" />
     <PackageReference Include="WindowsAPICodePack-Shell" Version="1.1.1" />
   </ItemGroup>
@@ -59,10 +59,7 @@
     <GitInfoReportImportance Condition="$(Configuration) == 'Release'">high</GitInfoReportImportance>
   </PropertyGroup>
 
-  <Target Name="SetVersion"
-		  BeforeTargets="GetAssemblyVersion;GetPackageVersion"
-		  DependsOnTargets="GitVersion"
-		  Returns="$(PackageVersion)">
+  <Target Name="SetVersion" BeforeTargets="GetAssemblyVersion;GetPackageVersion" DependsOnTargets="GitVersion" Returns="$(PackageVersion)">
     <PropertyGroup>
       <DevLabel Condition="$(GitCommits) != '0'">.1-dev</DevLabel>
       <AssemblyDevLabel Condition="$(GitCommits) != '0'">.1</AssemblyDevLabel>
