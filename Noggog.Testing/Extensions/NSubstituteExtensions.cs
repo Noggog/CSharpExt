@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Reactive.Linq;
 using NSubstitute;
 using NSubstitute.Core;
@@ -16,6 +17,20 @@ namespace Noggog.NSubstitute
             where T : class
         {
             return Arg.Is<T>(x => object.ReferenceEquals(x, item));
+        }
+
+        public static ConfiguredCall ReturnsSerially<T>(
+            this T value,
+            params T[] returnThese)
+        {
+            return value.Returns(returnThese[0], returnThese.Skip(1).ToArray());
+        }
+
+        public static ConfiguredCall ReturnsSeriallyForAnyArgs<T>(
+            this T value,
+            params T[] returnThese)
+        {
+            return value.ReturnsForAnyArgs(returnThese[0], returnThese.Skip(1).ToArray());
         }
     }
 }
