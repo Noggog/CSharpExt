@@ -268,5 +268,28 @@ namespace CSharpExt.UnitTests.Structs.FileSystems
             string str = fp;
             str.Should().Be(fp.RelativePath);
         }
+
+        [Theory, BasicAutoData]
+        public void EqualOperatorOverload(
+            FilePath file)
+        {
+            FilePath other = new FilePath(file.Path);
+            Assert.True(file == other);
+        }
+
+        [Theory, BasicAutoData]
+        public void NotEqualOperatorOverload(
+            FilePath file,
+            FilePath file2)
+        {
+            Assert.True(file != file2);
+        }
+
+        [Theory, BasicAutoData]
+        public void NotEqualOperatorToDefault(
+            FilePath file)
+        {
+            Assert.True(file != default);
+        }
     }
 }

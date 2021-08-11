@@ -34,6 +34,16 @@ namespace Noggog
             this._fullPath = path == string.Empty ? string.Empty : System.IO.Path.GetFullPath(path);
         }
 
+        public static bool operator ==(FilePath lhs, FilePath rhs)
+        {
+            return lhs.Equals(rhs);
+        }
+
+        public static bool operator !=(FilePath lhs, FilePath rhs)
+        {
+            return !lhs.Equals(rhs);
+        }
+
         public bool Equals(FilePath other)
         {
             return string.Equals(Path, other.Path, StringComparison.OrdinalIgnoreCase);

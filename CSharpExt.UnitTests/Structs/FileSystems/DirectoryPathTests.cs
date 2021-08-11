@@ -550,5 +550,28 @@ namespace CSharpExt.UnitTests.Structs.FileSystems
                 .GetRelativePathTo(new FilePath(to))
                 .Should().Be(expected);
         }
+
+        [Theory, BasicAutoData]
+        public void EqualOperatorOverload(
+            DirectoryPath dir)
+        {
+            DirectoryPath other = new DirectoryPath(dir.Path);
+            Assert.True(dir == other);
+        }
+
+        [Theory, BasicAutoData]
+        public void NotEqualOperatorOverload(
+            DirectoryPath dir,
+            DirectoryPath dir2)
+        {
+            Assert.True(dir != dir2);
+        }
+
+        [Theory, BasicAutoData]
+        public void NotEqualOperatorToDefault(
+            DirectoryPath dir)
+        {
+            Assert.True(dir != default);
+        }
     }
 }
