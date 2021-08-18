@@ -115,7 +115,7 @@ namespace CSharpExt.UnitTests
         {
             var fileSystem = TypicalFileSystem();
             fileSystem.Directory.EnumerateFilePaths(DirPath)
-                .Should().BeEquivalentTo(
+                .Should().Equal(
                     SomeFile,
                     SomeFileTxt);
         }
@@ -125,7 +125,7 @@ namespace CSharpExt.UnitTests
         {
             var fileSystem = TypicalFileSystem();
             fileSystem.Directory.EnumerateFilePaths(DirPath, "*.txt")
-                .Should().BeEquivalentTo(
+                .Should().Equal(
                     SomeFileTxt);
         }
         
@@ -134,7 +134,7 @@ namespace CSharpExt.UnitTests
         {
             var fileSystem = TypicalFileSystem();
             fileSystem.Directory.EnumerateFilePaths(DirPath, recursive: true)
-                .Should().BeEquivalentTo(
+                .Should().Equal(
                     SomeFile,
                     SomeFileTxt,
                     SomeSubFile,
@@ -146,7 +146,7 @@ namespace CSharpExt.UnitTests
         {
             var fileSystem = TypicalFileSystem();
             fileSystem.Directory.EnumerateFilePaths(DirPath, "*.txt", recursive: true)
-                .Should().BeEquivalentTo(
+                .Should().Equal(
                     SomeFileTxt,
                     SomeSubFileTxt);
         }
@@ -166,7 +166,7 @@ namespace CSharpExt.UnitTests
                 { subSubDir, new MockFileData("Doop") },
             });
             fileSystem.Directory.EnumerateDirectoryPaths(DirPath, includeSelf: true, recursive: true)
-                .Should().BeEquivalentTo(
+                .Should().Equal(
                     DirPath,
                     SomeSubDir);
         }
@@ -176,7 +176,7 @@ namespace CSharpExt.UnitTests
         {
             var fileSystem = TypicalFileSystem();
             fileSystem.Directory.EnumerateDirectoryPaths(DirPath, includeSelf: false, recursive: true)
-                .Should().BeEquivalentTo(
+                .Should().Equal(
                     SomeSubDir);
         }
 
@@ -190,7 +190,7 @@ namespace CSharpExt.UnitTests
                 { Path.Combine(SomeSubDir, "SubSubDir"), new MockFileData("Doop") },
             });
             fileSystem.Directory.EnumerateDirectoryPaths(DirPath, includeSelf: true, recursive: false)
-                .Should().BeEquivalentTo(
+                .Should().Equal(
                     DirPath,
                     SomeSubDir);
         }

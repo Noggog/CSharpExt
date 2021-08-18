@@ -53,7 +53,7 @@ namespace CSharpExt.UnitTests.Autofac
         {
             new GetUsages().Get(
                     typeof(SomeParams))
-                .Should().BeEquivalentTo(
+                .Should().Equal(
                     typeof(NoCtorClass),
                     typeof(SubClass));
         }
