@@ -13,8 +13,17 @@ namespace Noggog.WPF
             where TObj : DependencyObject
         {
             DependencyObject? item = obj;
-            while (item != null && !(item is TObj))
-                item = VisualTreeHelper.GetParent(item);
+            while (item is not null && item is not TObj)
+            {
+                try
+                {
+                    item = VisualTreeHelper.GetParent(item);
+                }
+                catch (InvalidOperationException e)
+                {
+                    break;
+                }
+            }
             foundObj = item as TObj;
             return foundObj != null;
         }
