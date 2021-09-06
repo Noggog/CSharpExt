@@ -9,6 +9,8 @@ using DynamicData.Binding;
 using System.Windows.Input;
 using System.Reactive;
 using System.Windows.Controls;
+using Noggog.WPF.Interfaces;
+
 #nullable enable
 
 namespace Noggog.WPF
@@ -207,6 +209,26 @@ namespace Noggog.WPF
             ViewModel vm)
         {
             return obs.TakeUntilDisposed(vm);
+        }
+
+        public static IDisposable WireSelectionTracking<TItem>(this IObservable<TItem?> obs)
+            where TItem : class, ISelectable
+        {
+            return obs
+                .StartWith(default(TItem))
+                .Pairwise()
+                .Subscribe(x =>
+                {
+                    if (x.Previous != null)
+                    {
+                        x.Previous.IsSelected = false;
+                    }
+
+                    if (x.Current != null)
+                    {
+                        x.Current.IsSelected = true;
+                    }
+                });
         }
     }
 }
