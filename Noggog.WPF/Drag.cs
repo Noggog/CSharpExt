@@ -21,11 +21,13 @@ namespace Noggog.WPF
         public const string IsRelatedKey = "NoggogRelatedDrag";
         public const string SourceVmKey = "SourceVM";
         public const string SourceListControlKey = "SourceListControl";
+        public const string SourceListIndexKey = "SourceListIndex";
 
         public record DragEventParams<TViewModel>(DragEventArgs RawArgs)
         {
             public TViewModel? Vm { get; set; }
             public ListBox? SourceListBox { get; set; }
+            public int SourceListIndex { get; set; }
         }
 
         public static IObservable<(ListBoxItem?, Point?)> ConstructStartPoint(this Control control)
@@ -137,6 +139,13 @@ namespace Noggog.WPF
                             SourceListBox = e.Data.GetData(SourceListControlKey) as ListBox
                         };
                     }
+                    if (e.Data.GetDataPresent(SourceListIndexKey))
+                    {
+                        ret = ret with
+                        {
+                            SourceListIndex = (int)e.Data.GetData(SourceListIndexKey)
+                        };
+                    }
                     return ret;
                 });
         }
@@ -156,19 +165,19 @@ namespace Noggog.WPF
                     if (e.Vm == null) return;
                     if (e.RawArgs.OriginalSource is not DependencyObject dep) return;
                     if (!dep.TryGetAncestor<ListBoxItem>(out var targetItem)) return;
-                    if (targetItem.DataContext is not TType vm) return;
+                    if (!targetItem.TryGetAncestor<ListBox>(out var listBox)) return;
                     var list = vmListGetter();
                     if (list == null) return;
-                    var index = list.IndexOf(vm);
 
+                    var index = listBox.IndexOf(targetItem);
+
+                    list.RemoveAt(e.SourceListIndex);
                     if (index >= 0)
                     {
-                        list.Remove(e.Vm);
                         list.Insert(index, e.Vm);
                     }
                     else
                     {
-                        list.Remove(e.Vm);
                         list.Add(e.Vm);
                     }
                 });
@@ -189,19 +198,19 @@ namespace Noggog.WPF
                     if (e.Vm == null) return;
                     if (e.RawArgs.OriginalSource is not DependencyObject dep) return;
                     if (!dep.TryGetAncestor<ListBoxItem>(out var targetItem)) return;
-                    if (targetItem.DataContext is not TType vm) return;
+                    if (!targetItem.TryGetAncestor<ListBox>(out var listBox)) return;
                     var list = vmListGetter();
                     if (list == null) return;
-                    var index = list.Items.IndexOf(vm);
 
+                    var index = listBox.IndexOf(targetItem);
+
+                    list.RemoveAt(e.SourceListIndex);
                     if (index >= 0)
                     {
-                        list.Remove(e.Vm);
                         list.Insert(index, e.Vm);
                     }
                     else
                     {
-                        list.Remove(e.Vm);
                         list.Add(e.Vm);
                     }
                 });
@@ -222,19 +231,20 @@ namespace Noggog.WPF
                     if (e.Vm == null) return;
                     if (e.RawArgs.OriginalSource is not DependencyObject dep) return;
                     if (!dep.TryGetAncestor<ListBoxItem>(out var targetItem)) return;
+                    if (!targetItem.TryGetAncestor<ListBox>(out var listBox)) return;
                     if (targetItem.DataContext is not TType vm) return;
                     var list = vmListGetter();
                     if (list == null) return;
-                    var index = list.IndexOf(vm);
 
-                    if (index >= 0)
+                    var targetIndex = listBox.IndexOf(targetItem);
+
+                    list.RemoveAt(e.SourceListIndex);
+                    if (targetIndex >= 0)
                     {
-                        list.Remove(e.Vm);
-                        list.Insert(index, e.Vm);
+                        list.Insert(targetIndex, e.Vm);
                     }
                     else
                     {
-                        list.Remove(e.Vm);
                         list.Add(e.Vm);
                     }
                 });
@@ -251,19 +261,19 @@ namespace Noggog.WPF
                     if (e.Vm == null) return;
                     if (e.RawArgs.OriginalSource is not DependencyObject dep) return;
                     if (!dep.TryGetAncestor<ListBoxItem>(out var targetItem)) return;
-                    if (targetItem.DataContext is not TType vm) return;
+                    if (!targetItem.TryGetAncestor<ListBox>(out var listBox)) return;
                     var list = vmListGetter();
                     if (list == null) return;
-                    var index = list.IndexOf(vm);
+                    
+                    var index = listBox.IndexOf(targetItem);
 
+                    list.RemoveAt(e.SourceListIndex);
                     if (index >= 0)
                     {
-                        list.Remove(e.Vm);
                         list.Insert(index, e.Vm);
                     }
                     else
                     {
-                        list.Remove(e.Vm);
                         list.Add(e.Vm);
                     }
                 });
@@ -280,19 +290,19 @@ namespace Noggog.WPF
                     if (e.Vm == null) return;
                     if (e.RawArgs.OriginalSource is not DependencyObject dep) return;
                     if (!dep.TryGetAncestor<ListBoxItem>(out var targetItem)) return;
-                    if (targetItem.DataContext is not TType vm) return;
+                    if (!targetItem.TryGetAncestor<ListBox>(out var listBox)) return;
                     var list = vmListGetter();
                     if (list == null) return;
-                    var index = list.Items.IndexOf(vm);
+                    
+                    var index = listBox.IndexOf(targetItem);
 
+                    list.RemoveAt(e.SourceListIndex);
                     if (index >= 0)
                     {
-                        list.Remove(e.Vm);
                         list.Insert(index, e.Vm);
                     }
                     else
                     {
-                        list.Remove(e.Vm);
                         list.Add(e.Vm);
                     }
                 });
@@ -309,19 +319,19 @@ namespace Noggog.WPF
                     if (e.Vm == null) return;
                     if (e.RawArgs.OriginalSource is not DependencyObject dep) return;
                     if (!dep.TryGetAncestor<ListBoxItem>(out var targetItem)) return;
-                    if (targetItem.DataContext is not TType vm) return;
+                    if (!targetItem.TryGetAncestor<ListBox>(out var listBox)) return;
                     var list = vmListGetter();
                     if (list == null) return;
-                    var index = list.IndexOf(vm);
+                    
+                    var index = listBox.IndexOf(targetItem);
 
+                    list.RemoveAt(e.SourceListIndex);
                     if (index >= 0)
                     {
-                        list.Remove(e.Vm);
                         list.Insert(index, e.Vm);
                     }
                     else
                     {
-                        list.Remove(e.Vm);
                         list.Add(e.Vm);
                     }
                 });
@@ -374,6 +384,7 @@ namespace Noggog.WPF
             DataObject data = new DataObject(SourceVmKey, listBoxItem.DataContext);
             data.SetData(IsRelatedKey, _relatedObj);
             data.SetData(SourceListControlKey, listBox);
+            data.SetData(SourceListIndexKey, listBox.IndexOf(listBoxItem));
             DragDropEffects de = DragDrop.DoDragDrop(listBox, data, DragDropEffects.Move);
 
             //cleanup
