@@ -57,5 +57,18 @@ namespace Noggog.WPF
             }
             return null;
         }
+        
+        public static IEnumerable<T> GetChildrenOfType<T>(this DependencyObject depObj) where T : DependencyObject
+        {
+            for (int i = 0; i < VisualTreeHelper.GetChildrenCount(depObj); ++i)
+            {
+                DependencyObject? child = VisualTreeHelper.GetChild(depObj, i);
+                if (child is T t)
+                    yield return t;
+                foreach (T visualChild in child.GetChildrenOfType<T>())
+                    yield return visualChild;
+                child = null;
+            }
+        }
     }
 }
