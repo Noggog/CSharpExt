@@ -82,6 +82,38 @@ namespace CSharpExt.UnitTests
         }
 
         [Theory, TestData]
+        public void WatchFile_MovedOut(
+            FilePath path,
+            FileName name,
+            [Frozen]MockFileSystemWatcher mockFileWatcher,
+            [Frozen]MockFileSystem fs)
+        {
+            int count = 0;
+            using var sub = ObservableExt.WatchFile(path, fileWatcherFactory: fs.FileSystemWatcher)
+                .Subscribe(x => count++);
+            count.Should().Be(0);
+            fs.File.WriteAllText(path, string.Empty);
+            mockFileWatcher.MarkRenamed(path, name);
+            count.Should().Be(1);
+        }
+
+        [Theory, TestData]
+        public void WatchFile_MovedIn(
+            FilePath path,
+            FileName name,
+            [Frozen]MockFileSystemWatcher mockFileWatcher,
+            [Frozen]MockFileSystem fs)
+        {
+            int count = 0;
+            using var sub = ObservableExt.WatchFile(Path.Combine(path.Directory!.Value, name.String), fileWatcherFactory: fs.FileSystemWatcher)
+                .Subscribe(x => count++);
+            fs.File.WriteAllText(path, string.Empty);
+            count.Should().Be(0);
+            mockFileWatcher.MarkRenamed(path, name);
+            count.Should().Be(1);
+        }
+
+        [Theory, TestData]
         public void WatchFile_AtypicalPathSeparators(
             [Frozen]FilePath path,
             [Frozen]MockFileSystemWatcher mockFileWatcher,

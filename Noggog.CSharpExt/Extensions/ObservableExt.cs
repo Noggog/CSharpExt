@@ -472,7 +472,12 @@ namespace Noggog
                             Observable.FromEventPattern<FileSystemEventHandler, FileSystemEventArgs>(h => watcher.Value.Created += h, h => watcher.Value.Created -= h),
                             Observable.FromEventPattern<FileSystemEventHandler, FileSystemEventArgs>(h => watcher.Value.Deleted += h, h => watcher.Value.Deleted -= h))
                         .Where(x => x.EventArgs.FullPath.Equals(path.Path, StringComparison.OrdinalIgnoreCase))
-                        .Unit();
+                        .Unit()
+                        .Merge(
+                            Observable.FromEventPattern<RenamedEventHandler, RenamedEventArgs>(h => watcher.Value.Renamed += h, h => watcher.Value.Renamed -= h)
+                                .Where(x => x.EventArgs.FullPath.Equals(path.Path, StringComparison.OrdinalIgnoreCase)
+                                    || x.EventArgs.OldFullPath.Equals(path.Path, StringComparison.OrdinalIgnoreCase))
+                                .Unit());
                 })
                 .Replay(1)
                 .RefCount();

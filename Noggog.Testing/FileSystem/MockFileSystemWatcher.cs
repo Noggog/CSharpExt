@@ -66,7 +66,7 @@ namespace Noggog.Testing.FileSystem
         public event ErrorEventHandler? Error;
         public event RenamedEventHandler? Renamed;
 
-        public void MarkCreated(string path)
+        public void MarkCreated(FilePath path)
         {
             if (Created == null) return;
             Created(this, new FileSystemEventArgs(
@@ -75,7 +75,17 @@ namespace Noggog.Testing.FileSystem
                 System.IO.Path.GetFileName(path)));
         }
 
-        public void MarkDeleted(string path)
+        public void MarkRenamed(FilePath from, FileName to)
+        {
+            if (Renamed == null) return;
+            Renamed(this, new RenamedEventArgs(
+                WatcherChangeTypes.Renamed,
+                from.Directory!.Value.Path,
+                to.String,
+                from.Name.String));
+        }
+
+        public void MarkDeleted(FilePath path)
         {
             Deleted?.Invoke(this, new FileSystemEventArgs(
                 WatcherChangeTypes.Deleted,
@@ -83,7 +93,7 @@ namespace Noggog.Testing.FileSystem
                 System.IO.Path.GetFileName(path)));
         }
 
-        public void MarkChanged(string path)
+        public void MarkChanged(FilePath path)
         {
             Changed?.Invoke(this, new FileSystemEventArgs(
                 WatcherChangeTypes.Changed,
