@@ -1,9 +1,5 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Noggog
 {
@@ -28,8 +24,8 @@ namespace Noggog
 
             for (int i = 0; i < iterations; i++)
             {
-                first.Read(one, 0, BYTES_TO_READ);
-                second.Read(two, 0, BYTES_TO_READ);
+                if (0 == first.Read(one, 0, BYTES_TO_READ)) return false;
+                if (0 == second.Read(two, 0, BYTES_TO_READ)) return false;
 
                 if (BitConverter.ToInt64(one, 0) != BitConverter.ToInt64(two, 0))
                     return false;
