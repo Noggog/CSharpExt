@@ -28,22 +28,16 @@ namespace Noggog
         public static IDisposable Subscribe<T>(this IObservable<T> source, Func<Task> action)
         {
             return source
-                .SelectMany(async i =>
-                {
-                    await action().ConfigureAwait(false);
-                    return System.Reactive.Unit.Default;
-                })
+                .Select(_ => Observable.FromAsync(action))
+                .Concat()
                 .Subscribe();
         }
 
         public static IDisposable Subscribe<T>(this IObservable<T> source, Func<T, Task> action)
         {
             return source
-                .SelectMany(async i =>
-                {
-                    await action(i).ConfigureAwait(false);
-                    return System.Reactive.Unit.Default;
-                })
+                .Select(l => Observable.FromAsync(() => action(l)))
+                .Concat()
                 .Subscribe();
         }
 
@@ -75,36 +69,29 @@ namespace Noggog
         public static IObservable<Unit> SelectTask<T>(this IObservable<T> source, Func<T, Task> task)
         {
             return source
-                .SelectMany(async i =>
-                {
-                    await task(i).ConfigureAwait(false);
-                    return System.Reactive.Unit.Default;
-                });
+                .Select(x => Observable.FromAsync(() => task(x)))
+                .Concat();
         }
 
         public static IObservable<Unit> SelectTask<T>(this IObservable<T> source, Func<Task> task)
         {
             return source
-                .SelectMany(async _ =>
-                {
-                    await task().ConfigureAwait(false);
-                    return System.Reactive.Unit.Default;
-                });
+                .Select(_ => Observable.FromAsync(task))
+                .Concat();
         }
 
         public static IObservable<R> SelectTask<T, R>(this IObservable<T> source, Func<Task<R>> task)
         {
             return source
-                .SelectMany(_ => task());
+                .Select(_ => Observable.FromAsync(task))
+                .Concat();
         }
 
         public static IObservable<R> SelectTask<T, R>(this IObservable<T> source, Func<T, Task<R>> task)
         {
             return source
-                .SelectMany(async i =>
-                {
-                    return await task(i).ConfigureAwait(false);
-                });
+                .Select(x => Observable.FromAsync(() => task(x)))
+                .Concat();
         }
 
         public static IObservable<T> FilterSwitch<T>(this IObservable<T> source, IObservable<bool> filterSwitch)
