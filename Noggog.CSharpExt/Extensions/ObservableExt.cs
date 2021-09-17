@@ -66,6 +66,12 @@ namespace Noggog
                 .NotNull();
         }
 
+        /// <summary>
+        /// Selects an item from an async task.  The lambda will have at most one called at any given time, and will be
+        /// passed downstream when complete.<br /><br/>
+        /// Note that if upstream is cold, it will continuously pull new events in and
+        /// put them on a queue to be processed.  If this is an infinite source, this will cause the program to crash.
+        /// </summary>
         public static IObservable<Unit> SelectTask<T>(this IObservable<T> source, Func<T, Task> task)
         {
             return source
@@ -73,6 +79,12 @@ namespace Noggog
                 .Concat();
         }
 
+        /// <summary>
+        /// Selects an item from an async task.  The lambda will have at most one called at any given time, and will be
+        /// passed downstream when complete.<br /><br/>
+        /// Note that if upstream is cold, it will continuously pull new events in and
+        /// put them on a queue to be processed.  If this is an infinite source, this will cause the program to crash.
+        /// </summary>
         public static IObservable<Unit> SelectTask<T>(this IObservable<T> source, Func<Task> task)
         {
             return source
@@ -80,6 +92,12 @@ namespace Noggog
                 .Concat();
         }
 
+        /// <summary>
+        /// Selects an item from an async task.  The lambda will have at most one called at any given time, and will be
+        /// passed downstream when complete.<br /><br/>
+        /// Note that if upstream is cold, it will continuously pull new events in and
+        /// put them on a queue to be processed.  If this is an infinite source, this will cause the program to crash.
+        /// </summary>
         public static IObservable<R> SelectTask<T, R>(this IObservable<T> source, Func<Task<R>> task)
         {
             return source
@@ -87,6 +105,12 @@ namespace Noggog
                 .Concat();
         }
 
+        /// <summary>
+        /// Selects an item from an async task.  The lambda will have at most one called at any given time, and will be
+        /// passed downstream when complete.<br /><br/>
+        /// Note that if upstream is cold, it will continuously pull new events in and
+        /// put them on a queue to be processed.  If this is an infinite source, this will cause the program to crash.
+        /// </summary>
         public static IObservable<R> SelectTask<T, R>(this IObservable<T> source, Func<T, Task<R>> task)
         {
             return source
