@@ -1,5 +1,6 @@
 ﻿using Autofac;
 using Noggog.IO;
+using Noggog.Time;
 using Noggog.Utility;
 
 namespace Noggog.Autofac.Modules
@@ -15,7 +16,9 @@ namespace Noggog.Autofac.Modules
             builder.RegisterType<ProcessFactory>().As<IProcessFactory>()
                 .SingleInstance();
             builder.RegisterAssemblyTypes(typeof(IDeepCopyDirectory).Assembly)
-                .InNamespaceOf<IDeleteEntireDirectory>()
+                .InNamespacesOf(
+                    typeof(IDeleteEntireDirectory),
+                    typeof(INowProvider))
                 .AsImplementedInterfaces()
                 .SingleInstance();
         }
