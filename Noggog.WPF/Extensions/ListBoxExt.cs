@@ -24,6 +24,9 @@ namespace Noggog.WPF
         
         public static int IndexOf(this ListBox listBox, ListBoxItem listBoxItem)
         {
+            var depth = listBox.GetChildDepth<ListBoxItem>();
+            if (depth == -1) return -1;
+
             foreach (var potential in listBox.GetChildrenOfType<ListBoxItem>()
                 .WithIndex())
             {

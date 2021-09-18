@@ -58,17 +58,42 @@ namespace Noggog.WPF
             return null;
         }
         
-        public static IEnumerable<T> GetChildrenOfType<T>(this DependencyObject depObj) where T : DependencyObject
+        public static IEnumerable<T> GetChildrenOfType<T>(this DependencyObject depObj, int? maxDepth = null)
+            where T : DependencyObject
         {
+            if (maxDepth == 0) yield break;
             for (int i = 0; i < VisualTreeHelper.GetChildrenCount(depObj); ++i)
             {
                 DependencyObject? child = VisualTreeHelper.GetChild(depObj, i);
                 if (child is T t)
                     yield return t;
-                foreach (T visualChild in child.GetChildrenOfType<T>())
+                foreach (T visualChild in child.GetChildrenOfType<T>(maxDepth == null ? null : maxDepth.Value - 1))
                     yield return visualChild;
-                child = null;
             }
+        }
+        
+        public static int GetChildDepth<T>(this DependencyObject depObj)
+            where T : DependencyObject
+        {
+            return GetChildDepth<T>(depObj, startDepth: 1);
+        }
+        
+        private static int GetChildDepth<T>(DependencyObject depObj, int startDepth)
+            where T : DependencyObject
+        {
+            for (int i = 0; i < VisualTreeHelper.GetChildrenCount(depObj); ++i)
+            {
+                DependencyObject? child = VisualTreeHelper.GetChild(depObj, i);
+                if (child is T t)
+                    return startDepth;
+                var childDepth = GetChildDepth<T>(child, startDepth + 1);
+                if (childDepth != -1)
+                {
+                    return childDepth;
+                }
+            }
+
+            return -1;
         }
     }
 }
