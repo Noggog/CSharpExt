@@ -12,6 +12,7 @@ using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
+using Noggog.WPF.Containers;
 
 namespace Noggog.WPF
 {
@@ -150,15 +151,54 @@ namespace Noggog.WPF
                 });
         }
 
-        public static IDisposable ListBoxDragDrop<TType>(
+        public static IDisposable ListBoxDragDropAgainstSourceListUiFunnel<TType>(
             ListBox control,
-            Func<IList<TType>?> vmListGetter,
             bool onlyWithinSameBox = true,
             Func<object, DragEventArgs, bool>? filter = null)
         {
             return ListBoxDrops<TType>(
+                    control,
+                    onlyWithinSameBox: onlyWithinSameBox,
+                    filter: filter)
+                .Subscribe(e =>
+                {
+                    if (e.Vm == null) return;
+                    if (e.RawArgs.OriginalSource is not DependencyObject dep) return;
+                    if (!dep.TryGetAncestor<ListBoxItem>(out var targetItem)) return;
+                    if (!targetItem.TryGetAncestor<ListBox>(out var listBox)) return;
+
+                    if (e.SourceListBox == null) return;
+                    
+                    var originatingList = e.SourceListBox.ItemsSource as ISourceListUiFunnel<TType>;
+                    if (originatingList == null) return;
+                    
+                    var targetList = listBox.ItemsSource as ISourceListUiFunnel<TType>;
+                    if (targetList == null) return;
+
+                    var index = listBox.IndexOf(targetItem);
+
+                    if (index >= targetList.SourceList.Count) return;
+                    
+                    originatingList.SourceList.RemoveAt(e.SourceListIndex);
+                    if (index >= 0)
+                    {
+                        targetList.SourceList.Insert(index, e.Vm);
+                    }
+                    else
+                    {
+                        targetList.SourceList.Add(e.Vm);
+                    }
+                });
+        }
+
+        public static IDisposable ListBoxDragDrop<TType>(
+            ListBox control,
+            Func<IList<TType>?> vmListGetter,
+            Func<object, DragEventArgs, bool>? filter = null)
+        {
+            return ListBoxDrops<TType>(
                 control,
-                onlyWithinSameBox: onlyWithinSameBox,
+                onlyWithinSameBox: false,
                 filter: filter)
                 .Subscribe(e =>
                 {
@@ -186,12 +226,11 @@ namespace Noggog.WPF
         public static IDisposable ListBoxDragDrop<TType>(
             ListBox control,
             Func<ISourceList<TType>?> vmListGetter,
-            bool onlyWithinSameBox = true,
             Func<object, DragEventArgs, bool>? filter = null)
         {
             return ListBoxDrops<TType>(
                 control,
-                onlyWithinSameBox: onlyWithinSameBox,
+                onlyWithinSameBox: false,
                 filter: filter)
                 .Subscribe(e =>
                 {
@@ -219,12 +258,11 @@ namespace Noggog.WPF
         public static IDisposable ListBoxDragDrop<TType>(
             ListBox control,
             Func<ObservableCollection<TType>?> vmListGetter,
-            bool onlyWithinSameBox = true,
             Func<object, DragEventArgs, bool>? filter = null)
         {
             return ListBoxDrops<TType>(
                 control,
-                onlyWithinSameBox: onlyWithinSameBox,
+                onlyWithinSameBox: false,
                 filter: filter)
                 .Subscribe(e =>
                 {
