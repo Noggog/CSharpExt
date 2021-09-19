@@ -100,7 +100,7 @@ namespace Noggog.WPF
                         .Merge(control.Events().DragOver)
                         .Subscribe(e => CanDropCheck(e.Source, e, onlyWithinSameBox, filter))
                         .DisposeWith(disp);
-                    ConstructParamExtraction<TType>(ConstructBeginDrag(control, (item, startPt) => TypicalBeginDrag(control, item, startPt, onlyWithinSameBox, filter)))
+                    ConstructParamExtraction<TType>(ConstructBeginDrag(control, (item, startPt) => TypicalBeginDrag(control, item, startPt)))
                         .Subscribe(o => obs.OnNext(o))
                         .DisposeWith(disp);
                     return disp;
@@ -404,9 +404,7 @@ namespace Noggog.WPF
         public static void TypicalBeginDrag(
             ListBox listBox,
             ListBoxItem listBoxItem,
-            Point startPoint,
-            bool onlyWithinSameBox,
-            Func<object, DragEventArgs, bool>? filter = null)
+            Point startPoint)
         {
             //setup the drag adorner.
             var adorner = InitialiseAdorner(listBoxItem, listBox);

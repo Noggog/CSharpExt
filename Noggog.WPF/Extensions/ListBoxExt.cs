@@ -27,7 +27,7 @@ namespace Noggog.WPF
             var depth = listBox.GetChildDepth<ListBoxItem>();
             if (depth == -1) return -1;
 
-            foreach (var potential in listBox.GetChildrenOfType<ListBoxItem>()
+            foreach (var potential in listBox.GetChildrenOfType<ListBoxItem>(maxDepth: depth)
                 .WithIndex())
             {
                 if (ReferenceEquals(potential.Item, listBoxItem))
