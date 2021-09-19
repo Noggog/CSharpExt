@@ -1124,10 +1124,11 @@
             </Trigger>
         </Style.Triggers>
     </Style>
-    
-    <Style x:Key="Noggog.Styles.ErroredTextBox" 
-           BasedOn="{StaticResource Noggog.Styles.TextBox}"
-           TargetType="local:ErroredTextBox" >
+
+    <Style
+        x:Key="Noggog.Styles.ErroredTextBox"
+        BasedOn="{StaticResource Noggog.Styles.TextBox}"
+        TargetType="local:ErroredTextBox">
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="local:ErroredTextBox">
@@ -1225,10 +1226,10 @@
                                 Width="5"
                                 Margin="3,1,0,1"
                                 HorizontalAlignment="Right"
-                                Visibility="Hidden"
                                 Background="{DynamicResource Noggog.Brushes.Warning.Foreground}"
                                 CornerRadius="2"
-                                ToolTip="{Binding ErrorText, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}" />
+                                ToolTip="{Binding ErrorText, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}"
+                                Visibility="Hidden" />
                             <Border
                                 x:Name="PART_RightSideErrorBlockShadow"
                                 Width="10"
@@ -1386,7 +1387,18 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
-        </Style>
+    </Style>
+
+    <Style
+        x:Key="Noggog.Styles.TransparentErroredTextBox"
+        BasedOn="{StaticResource Noggog.Styles.ErroredTextBox}"
+        TargetType="local:ErroredTextBox">
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding InError, RelativeSource={RelativeSource Self}}" Value="False">
+                <Setter Property="Background" Value="Transparent" />
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
 
     <Style
         x:Key="Noggog.Styles.ListBox"
