@@ -1,23 +1,18 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Reactive.Disposables;
 
 namespace Noggog
 {
     public static class IDisposableExt
     {
-        public static readonly IDisposable Nothing = new IDisposableNothing();
-
-        class IDisposableNothing : IDisposable
+        public static T DisposeWith<T>(this T disposable, IDisposableDropoff compositeDisposable)
+            where T : IDisposable
         {
-            public void Dispose()
-            {
-            }
+            compositeDisposable.Add(disposable);
+            return disposable;
         }
 
-        public static T DisposeWith<T>(this T disposable, IDisposableDropoff compositeDisposable)
+        public static T DisposeWithComposite<T>(this T disposable, CompositeDisposable compositeDisposable)
             where T : IDisposable
         {
             compositeDisposable.Add(disposable);
