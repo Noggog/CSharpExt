@@ -58,7 +58,7 @@ namespace Noggog.WPF
                 .RefCount();
 
             return control.Events().MouseMove
-                .FilterSwitch(startPt.Select(p => p.Item1 != null && p.Item2 != null))
+                .FlowSwitch(startPt.Select(p => p.Item1 != null && p.Item2 != null))
                 .Where(x => x.LeftButton == MouseButtonState.Pressed)
                 .WithLatestFrom(
                     startPt,

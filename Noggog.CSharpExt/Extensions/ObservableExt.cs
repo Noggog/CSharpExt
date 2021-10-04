@@ -118,9 +118,9 @@ namespace Noggog
                 .Concat();
         }
 
-        public static IObservable<T> FilterSwitch<T>(this IObservable<T> source, IObservable<bool> filterSwitch)
+        public static IObservable<T> FlowSwitch<T>(this IObservable<T> source, IObservable<bool> flowSwitch)
         {
-            return filterSwitch
+            return flowSwitch
                 .Select(on =>
                 {
                     if (on)
@@ -135,9 +135,9 @@ namespace Noggog
                 .Switch();
         }
 
-        public static IObservable<T> FilterSwitch<T>(this IObservable<T> source, IObservable<bool> filterSwitch, T fallback)
+        public static IObservable<T> FlowSwitch<T>(this IObservable<T> source, IObservable<bool> flowSwitch, T fallback)
         {
-            return filterSwitch
+            return flowSwitch
                 .Select(on =>
                 {
                     if (on)
