@@ -329,18 +329,26 @@ namespace Noggog
                 obs.Delay(span).Select(f => false));
         }
 
-        // ToDo
-        // Have T implement IDisposable once resulting nullability errors can be dealt with
         public static IObservable<T> DisposePrevious<T>(this IObservable<T> obs)
+            where T : IDisposable?
+        {
+            return obs
+                .StartWith(default(T?)!)
+                .Pairwise()
+                .Do(x => x.Previous?.Dispose())
+                .Select(x => x.Current);
+        }
+        
+        public static IObservable<T> DisposePrevious<T>(this IObservable<T> obs, Func<T, IDisposable?> getter)
         {
             return obs
                 .StartWith(default(T)!)
                 .Pairwise()
                 .Do(x =>
                 {
-                    if (x.Previous is IDisposable disp)
+                    if (x.Previous != null)
                     {
-                        disp.Dispose();
+                        getter(x.Previous)?.Dispose();
                     }
                 })
                 .Select(x => x.Current);
