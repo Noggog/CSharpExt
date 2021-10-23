@@ -24,7 +24,7 @@ namespace Noggog.Utility
         public Task<int> Complete => WatchComplete();
         private Process _process = null!;
         public ProcessStartInfo StartInfo => _process.StartInfo;
-        private IDisposable? _dispose = null!;
+        private IDisposable? _dispose;
         private bool _hookingOutput;
 
         private ProcessWrapper()
@@ -66,7 +66,7 @@ namespace Noggog.Utility
 
             Subject<string>? _output = null;
             Subject<string>? _error = null;
-            TaskCompletionSource<int> completeTask = new TaskCompletionSource<int>();
+            var completeTask = new TaskCompletionSource<int>();
             var wrapper = new ProcessWrapper()
             {
                 _process = process,
@@ -127,7 +127,7 @@ namespace Noggog.Utility
 
         private async Task<int> WatchComplete()
         {
-            var ret = await _complete;
+            var ret = await _complete.ConfigureAwait(false);
             if (_hookingOutput)
             {
                 await Output.LastOrDefaultAsync();
@@ -145,7 +145,7 @@ namespace Noggog.Utility
                 _process.BeginErrorReadLine();
                 _process.BeginOutputReadLine();
             }
-            return await WatchComplete();
+            return await WatchComplete().ConfigureAwait(false);
         }
     }
 }
