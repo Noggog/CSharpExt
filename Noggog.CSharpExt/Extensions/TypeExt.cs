@@ -146,12 +146,12 @@ namespace Noggog
 
         public static List<string>? FailedAssemblyLoads;
 
-        public static IEnumerable<Type> GetInheritingFromInterface<I>(bool loadAssemblies = true)
+        public static IEnumerable<Type> GetInheritingFromInterface<I>(bool loadAssemblies = true, Func<Assembly, bool>? filter = null)
         {
-            return GetInheritingFromInterface(typeof(I), loadAssemblies);
+            return GetInheritingFromInterface(typeof(I), loadAssemblies, filter);
         }
 
-        public static IEnumerable<KeyValuePair<Type, Type>> GetInheritingFromGenericInterface(this Type targetType, bool loadAssemblies = true)
+        public static IEnumerable<KeyValuePair<Type, Type>> GetInheritingFromGenericInterface(this Type targetType, bool loadAssemblies = true, Func<Assembly, bool>? filter = null)
         {
             if (loadAssemblies)
             {
@@ -159,6 +159,7 @@ namespace Noggog
             }
             foreach (Assembly assemb in AppDomain.CurrentDomain.GetAssemblies())
             {
+                if (filter != null && !filter(assemb)) continue;
                 IEnumerable<Type> types;
                 try
                 {
@@ -184,7 +185,7 @@ namespace Noggog
             }
         }
 
-        public static IEnumerable<Type> GetInheritingFromInterface(this Type targetType, bool loadAssemblies = true)
+        public static IEnumerable<Type> GetInheritingFromInterface(this Type targetType, bool loadAssemblies = true, Func<Assembly, bool>? filter = null)
         {
             if (loadAssemblies)
             {
@@ -192,6 +193,7 @@ namespace Noggog
             }
             foreach (Assembly assemb in AppDomain.CurrentDomain.GetAssemblies())
             {
+                if (filter != null && !filter(assemb)) continue;
                 Type[] types;
                 try
                 {
