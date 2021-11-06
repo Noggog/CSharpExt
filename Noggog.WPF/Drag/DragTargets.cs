@@ -42,7 +42,7 @@ namespace Noggog.WPF
     {
         interface IDragDropTarget<T>
         {
-            void InsertAtTarget(object target, T item);
+            void InsertAtTarget(object target, T item, bool before);
         }
 
         class ListDragDropTarget<T> : IDragDropTarget<T>
@@ -54,7 +54,7 @@ namespace Noggog.WPF
                 _list = list;
             }
 
-            public void InsertAtTarget(object target, T item)
+            public void InsertAtTarget(object target, T item, bool before)
             {
                 if (target is not T targetItem) return;
                 var targetIndex = _list.IndexOf(targetItem);
@@ -62,6 +62,10 @@ namespace Noggog.WPF
 
                 if (targetIndex >= 0)
                 {
+                    if (!before)
+                    {
+                        targetIndex++;
+                    }
                     _list.Insert(targetIndex, item);
                 }
                 else
@@ -80,7 +84,7 @@ namespace Noggog.WPF
                 _sourceList = sourceList;
             }
 
-            public void InsertAtTarget(object target, T item)
+            public void InsertAtTarget(object target, T item, bool before)
             {
                 if (target is not T targetItem) return;
                 var targetIndex = _sourceList.Items.IndexOf(targetItem);
@@ -88,6 +92,10 @@ namespace Noggog.WPF
 
                 if (targetIndex >= 0)
                 {
+                    if (!before)
+                    {
+                        targetIndex++;
+                    }
                     _sourceList.Insert(targetIndex, item);
                 }
                 else
@@ -106,7 +114,7 @@ namespace Noggog.WPF
                 _list = list;
             }
 
-            public void InsertAtTarget(object target, T item)
+            public void InsertAtTarget(object target, T item, bool before)
             {
                 if (target is not ISelectedItem<T> selTarget) return;
                 if (_list.OriginalList == null) return;
@@ -116,6 +124,10 @@ namespace Noggog.WPF
 
                 if (targetIndex >= 0)
                 {
+                    if (!before)
+                    {
+                        targetIndex++;
+                    }
                     _list.OriginalList.Insert(targetIndex, item);
                 }
                 else

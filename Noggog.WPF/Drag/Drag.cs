@@ -173,7 +173,10 @@ namespace Noggog.WPF
                 originatingSource.Remove(e.Vm);
             }
 
-            targetSource.InsertAtTarget(listBoxItem.DataContext, e.Vm);
+            var hoverPt = e.RawArgs.GetPosition(listBoxItem);
+            var before = hoverPt.Y < listBoxItem.ActualHeight / 2;
+            
+            targetSource.InsertAtTarget(listBoxItem.DataContext, e.Vm, before);
         }
 
         public static IDisposable ListBoxDragDrop<TViewModel, TType>(
@@ -289,17 +292,19 @@ namespace Noggog.WPF
             DataObject data = new DataObject(SourceVmKey, listBoxItem.DataContext);
             data.SetData(IsRelatedKey, _relatedObj);
             data.SetData(SourceListControlKey, listBox);
+            
             if (listBoxItem.DataContext is ISelected sel
-                && listBox.ItemsSource is IReadOnlyList<ISelected> seletableList)
+                && listBox.ItemsSource is IReadOnlyList<ISelected> selectableList)
             {
-                data.SetData(SourceListIndexKey, seletableList.IndexOf(sel));
+                data.SetData(SourceListIndexKey, selectableList.IndexOf(sel));
             }
+            
             DragDropEffects de = DragDrop.DoDragDrop(listBox, data, DragDropEffects.Move);
-
+            
             //cleanup
             listBox.PreviewDragOver -= previewDrag;
 
-            AdornerLayer.GetAdornerLayer(listBox).Remove(adorner);
+            AdornerLayer.GetAdornerLayer(listBox)?.Remove(adorner);
         }
 
         public static DragAdorner InitialiseAdorner(ListBoxItem listBoxItem, Control control)
