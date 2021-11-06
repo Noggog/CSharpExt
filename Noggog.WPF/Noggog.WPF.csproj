@@ -39,16 +39,24 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="ReactiveUI" Version="16.2.6" />
+    <PackageReference Include="ReactiveUI" Version="16.3.10" />
     <PackageReference Include="ReactiveUI.Events.WPF" Version="15.1.1" />
-    <PackageReference Include="ReactiveUI.Fody" Version="16.2.6" />
-    <PackageReference Include="ReactiveUI.WPF" Version="16.2.6" />
+    <PackageReference Include="ReactiveUI.Fody" Version="16.3.10" />
+    <PackageReference Include="ReactiveUI.WPF" Version="16.3.10" />
     <PackageReference Include="System.Reactive" Version="5.0.0" />
     <PackageReference Include="WindowsAPICodePack-Shell" Version="1.1.1" />
   </ItemGroup>
    
   <ItemGroup>
     <ProjectReference Include="..\Noggog.CSharpExt\Noggog.CSharpExt.csproj" />
+  </ItemGroup>
+   
+  <ItemGroup>
+    <Compile Update="Drag\Drag.cs">
+      <CodeLanguage>cs</CodeLanguage>
+      <DefaultPackFolder>content</DefaultPackFolder>
+      <BuildAction>Compile</BuildAction>
+    </Compile>
   </ItemGroup>
    
   <Target Name="PreBuild" BeforeTargets="PreBuildEvent">

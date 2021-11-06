@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using ReactiveUI;
 using System.Reactive.Linq;
 using DynamicData;
@@ -7,6 +8,7 @@ using DynamicData.Binding;
 using System.Windows.Input;
 using System.Reactive;
 using System.Windows.Controls;
+using Noggog.WPF.Containers;
 
 #nullable enable
 
@@ -202,12 +204,6 @@ namespace Noggog.WPF
         }
         #endregion
 
-        public static IObservable<TSource> TakeUntilDisposed<TSource>(this IObservable<TSource> obs,
-            ViewModel vm)
-        {
-            return obs.TakeUntilDisposed(vm);
-        }
-
         public static IDisposable WireSelectionTracking<TItem>(this IObservable<TItem?> obs)
             where TItem : class, ISelectable
         {
@@ -226,6 +222,44 @@ namespace Noggog.WPF
                         x.Current.IsSelected = true;
                     }
                 });
+        }
+
+        public static IObservable<IChangeSet<SelectedVm<T>>> WrapInSelectedCollection<T>(
+            this IObservable<IList<T>?> list,
+            out ReadOnlyObservableCollection<SelectedVm<T>> selectedList)
+        {
+            return list.Select(x =>
+                {
+                    if (x is ObservableCollection<T> obsCollection)
+                    {
+                        return obsCollection.ToObservableChangeSet();
+                    }
+
+                    if (x is IObservableCollection<T> obsCollInterf)
+                    {
+                        return obsCollInterf.ToObservableChangeSet<IObservableCollection<T>, T>();
+                    }
+
+                    return Observable.Empty<IChangeSet<T>>();
+                })
+                .Switch()
+                .Transform(x => new SelectedVm<T>(x))
+                .Bind(out selectedList);
+        }
+
+        public static IDisposable WrapInDerivativeSelectedCollection<T>(
+            this IObservable<IList<T>?> list,
+            out IDerivativeSelectedCollection<T> selectedList)
+        {
+            var derivativeList = new DerivativeSelectedCollection<T>();
+            selectedList = derivativeList;
+            var ret = WrapInSelectedCollection(
+                    list
+                        .Do(x => derivativeList.OriginalList = x), 
+                    out var readOnlyList)
+                .Subscribe();
+            derivativeList.DerivativeList = readOnlyList;
+            return ret;
         }
     }
 }

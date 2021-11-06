@@ -1,35 +1,24 @@
 using DynamicData;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using Noggog.WPF.Containers;
+using System.Linq.Expressions;
 
 namespace Noggog.WPF
 {
-    public static class Drag
+    public static partial class Drag
     {
-        private readonly static object _relatedObj = new object();
+        private static readonly object _relatedObj = new();
         public const string IsRelatedKey = "NoggogRelatedDrag";
         public const string SourceVmKey = "SourceVM";
         public const string SourceListControlKey = "SourceListControl";
         public const string SourceListIndexKey = "SourceListIndex";
-
-        public record DragEventParams<TViewModel>(DragEventArgs RawArgs)
-        {
-            public TViewModel? Vm { get; set; }
-            public ListBox? SourceListBox { get; set; }
-            public int SourceListIndex { get; set; }
-        }
 
         public static IObservable<(ListBoxItem?, Point?)> ConstructStartPoint(this Control control)
         {
@@ -120,13 +109,13 @@ namespace Noggog.WPF
                         TType? vmTarget;
                         var rawData = e.Data.GetData(SourceVmKey);
                         // Keep as is, to support non-objects
-                        if (rawData is TType)
+                        if (rawData is TType ttype)
                         {
-                            vmTarget = (TType)rawData;
+                            vmTarget = ttype;
                         }
-                        else if (rawData is ISelectedItem<TType> sel)
+                        else if (rawData is ISelectedItem<TType> selectedItem)
                         {
-                            vmTarget = sel.Item;
+                            vmTarget = selectedItem.Item;
                         }
                         else
                         {
@@ -162,188 +151,97 @@ namespace Noggog.WPF
                 });
         }
 
-        public static IDisposable ListBoxDragDrop<TType>(
+        private static void HandleDragDropEvent<TType>(DragEventParams<TType> e)
+        {
+            if (e.Vm == null) return;
+            if (e.RawArgs.OriginalSource is not DependencyObject dep) return;
+            if (!dep.TryGetAncestor<ListBoxItem>(out var listBoxItem)) return;
+            
+            if (!listBoxItem.TryGetAncestor<ListBox>(out var listBox)) return;
+
+            if (e.SourceListBox == null) return;
+
+            if (!TryGetAsDragDropSource<TType>(e.SourceListBox.ItemsSource, out var originatingSource)) return;
+            if (!TryGetAsDragDropTarget<TType>(listBox.ItemsSource, out var targetSource)) return;
+
+            if (e.SourceListIndex != -1)
+            {
+                originatingSource.RemoveAt(e.SourceListIndex);
+            }
+            else
+            {
+                originatingSource.Remove(e.Vm);
+            }
+
+            targetSource.InsertAtTarget(listBoxItem.DataContext, e.Vm);
+        }
+
+        public static IDisposable ListBoxDragDrop<TViewModel, TType>(
             ListBox control,
-            Func<ISourceListUiFunnel<TType>?> vmListGetter,
+            TViewModel vm,
+            Expression<Func<TViewModel, IList<TType>?>> vmProperty,
+            bool onlyWithinSameBox = true,
             Func<object, DragEventArgs, bool>? filter = null)
         {
-            return ListBoxDragDrop(
+            return ListBoxDrops<TType>(
                     control,
-                    vmListGetter: () => vmListGetter()?.SourceList,
-                    filter: filter);
+                    onlyWithinSameBox: onlyWithinSameBox,
+                    filter: filter)
+                .Subscribe(HandleDragDropEvent);
         }
 
-        public static IDisposable ListBoxDragDrop<TType>(
+        public static IDisposable ListBoxDragDrop<TViewModel, TType>(
             ListBox control,
-            Func<IList<TType>?> vmListGetter,
+            TViewModel vm,
+            Expression<Func<TViewModel, ISourceList<TType>?>> vmProperty,
+            bool onlyWithinSameBox = true,
             Func<object, DragEventArgs, bool>? filter = null)
         {
             return ListBoxDrops<TType>(
-                control,
-                onlyWithinSameBox: false,
-                filter: filter)
-                .Subscribe(e =>
-                {
-                    if (e.Vm == null) return;
-                    if (e.RawArgs.OriginalSource is not DependencyObject dep) return;
-                    if (!dep.TryGetAncestor<ListBoxItem>(out var targetItem)) return;
-                    var list = vmListGetter();
-                    if (list == null) return;
-                    if (targetItem.DataContext is TType vm)
-                    {
-                        var index = list.IndexOf(vm);
-
-                        if (index >= 0)
-                        {
-                            list.Remove(e.Vm);
-                            list.Insert(index, e.Vm);
-                        }
-                        else
-                        {
-                            list.Remove(e.Vm);
-                            list.Add(e.Vm);
-                        }
-                    }
-                    else if (targetItem.DataContext is ISelectedItem<TType> sel)
-                    {
-                        if (!dep.TryGetAncestor<ListBox>(out var listBox)) return;
-                        if (listBox.ItemsSource is not IReadOnlyList<ISelectedItem<TType>> selectedItemsList) return;
-                        var index = selectedItemsList.IndexOf(sel);
-                        if (index == -1) return;
-                        list.RemoveAt(e.SourceListIndex);
-                        list.Insert(index, e.Vm);
-                    }
-                });
+                    control,
+                    onlyWithinSameBox: onlyWithinSameBox,
+                    filter: filter)
+                .Subscribe(HandleDragDropEvent);
         }
 
         public static IDisposable ListBoxDragDrop<TType>(
             ListBox control,
-            Func<ISourceList<TType>?> vmListGetter,
+            bool onlyWithinSameBox = true,
             Func<object, DragEventArgs, bool>? filter = null)
         {
             return ListBoxDrops<TType>(
-                control,
-                onlyWithinSameBox: false,
-                filter: filter)
-                .Subscribe(e =>
-                {
-                    if (e.Vm == null) return;
-                    if (e.RawArgs.OriginalSource is not DependencyObject dep) return;
-                    if (!dep.TryGetAncestor<ListBoxItem>(out var targetItem)) return;
-                    if (targetItem.DataContext is not TType vm) return;
-                    var list = vmListGetter();
-                    if (list == null) return;
-                    var index = list.Items.IndexOf(vm);
-
-                    if (index >= 0)
-                    {
-                        list.Remove(e.Vm);
-                        list.Insert(index, e.Vm);
-                    }
-                    else
-                    {
-                        list.Remove(e.Vm);
-                        list.Add(e.Vm);
-                    }
-                });
+                    control,
+                    onlyWithinSameBox: onlyWithinSameBox,
+                    filter: filter)
+                .Subscribe(HandleDragDropEvent);
         }
 
-        public static IDisposable ListBoxDragDrop<TType>(
+        public static IDisposable ListBoxDragDrop<TViewModel, TType>(
             ListBox control,
-            Func<ObservableCollection<TType>?> vmListGetter,
-            Func<object, DragEventArgs, bool>? filter = null)
-        {
-            return ListBoxDragDrop(
-                control,
-                vmListGetter: () => (IList<TType>?)vmListGetter(),
-                filter: filter);
-        }
-
-        public static IDisposable ListBoxDragDrop<TType>(
-            ListBox control,
-            Func<IList<TType>?> vmListGetter,
+            TViewModel vm,
+            Expression<Func<TViewModel, IList<TType>?>> vmProperty,
             Action<ListBoxItem, Point> dragBegin)
         {
             return ListBoxDrops<TType>(control, dragBegin)
-                .Subscribe(e =>
-                {
-                    if (e.Vm == null) return;
-                    if (e.RawArgs.OriginalSource is not DependencyObject dep) return;
-                    if (!dep.TryGetAncestor<ListBoxItem>(out var targetItem)) return;
-                    if (targetItem.DataContext is not TType vm) return;
-                    var list = vmListGetter();
-                    if (list == null) return;
-                    var index = list.IndexOf(vm);
+                .Subscribe(HandleDragDropEvent);
+        }
 
-                    if (index >= 0)
-                    {
-                        list.Remove(e.Vm);
-                        list.Insert(index, e.Vm);
-                    }
-                    else
-                    {
-                        list.Remove(e.Vm);
-                        list.Add(e.Vm);
-                    }
-                });
+        public static IDisposable ListBoxDragDrop<TViewModel, TType>(
+            ListBox control,
+            TViewModel vm,
+            Expression<Func<TViewModel, ISourceList<TType>?>> vmProperty,
+            Action<ListBoxItem, Point> dragBegin)
+        {
+            return ListBoxDrops<TType>(control, dragBegin)
+                .Subscribe(HandleDragDropEvent);
         }
 
         public static IDisposable ListBoxDragDrop<TType>(
             ListBox control,
-            Func<ISourceList<TType>?> vmListGetter,
             Action<ListBoxItem, Point> dragBegin)
         {
             return ListBoxDrops<TType>(control, dragBegin)
-                .Subscribe(e =>
-                {
-                    if (e.Vm == null) return;
-                    if (e.RawArgs.OriginalSource is not DependencyObject dep) return;
-                    if (!dep.TryGetAncestor<ListBoxItem>(out var targetItem)) return;
-                    if (targetItem.DataContext is not TType vm) return;
-                    var list = vmListGetter();
-                    if (list == null) return;
-                    var index = list.Items.IndexOf(vm);
-
-                    if (index >= 0)
-                    {
-                        list.Remove(e.Vm);
-                        list.Insert(index, e.Vm);
-                    }
-                    else
-                    {
-                        list.Remove(e.Vm);
-                        list.Add(e.Vm);
-                    }
-                });
-        }
-
-        public static IDisposable ListBoxDragDrop<TType>(
-            ListBox control,
-            Func<ObservableCollection<TType>?> vmListGetter,
-            Action<ListBoxItem, Point> dragBegin)
-        {
-            return ListBoxDrops<TType>(control, dragBegin)
-                .Subscribe(e =>
-                {
-                    if (e.Vm == null) return;
-                    if (e.RawArgs.OriginalSource is not DependencyObject dep) return;
-                    if (!dep.TryGetAncestor<ListBoxItem>(out var targetItem)) return;
-                    if (targetItem.DataContext is not TType vm) return;
-                    var list = vmListGetter();
-                    if (list == null) return;
-                    var index = list.IndexOf(vm);
-
-                    if (index >= 0)
-                    {
-                        list.Remove(e.Vm);
-                        list.Insert(index, e.Vm);
-                    }
-                    else
-                    {
-                        list.Remove(e.Vm);
-                        list.Add(e.Vm);
-                    }
-                });
+                .Subscribe(HandleDragDropEvent);
         }
 
         private static void CanDropCheck(
