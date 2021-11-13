@@ -6,28 +6,28 @@ using System.Text;
 
 namespace Noggog
 {
-    public struct MemorySlice<T> : IEnumerable<T>
+    public readonly struct MemorySlice<T> : IEnumerable<T>
     {
-        private T[] _arr;
-        private int _startPos;
-        private int _length;
+        private readonly T[] _arr;
+        private readonly int _startPos;
+        private readonly int _length;
         public int Length => _length;
         public int StartPosition => _startPos;
 
         [DebuggerStepThrough]
         public MemorySlice(T[] arr)
         {
-            this._arr = arr;
-            this._startPos = 0;
-            this._length = arr.Length;
+            _arr = arr;
+            _startPos = 0;
+            _length = arr.Length;
         }
 
         [DebuggerStepThrough]
         public MemorySlice(T[] arr, int startPos, int length)
         {
-            this._arr = arr;
-            this._startPos = startPos;
-            this._length = length;
+            _arr = arr;
+            _startPos = startPos;
+            _length = length;
         }
 
         public Span<T> Span => _arr.AsSpan(start: _startPos, length: _length);
@@ -46,12 +46,8 @@ namespace Noggog
             {
                 throw new ArgumentOutOfRangeException();
             }
-            return new MemorySlice<T>()
-            {
-                _arr = _arr,
-                _startPos = startPos,
-                _length = _length - start
-            };
+
+            return new MemorySlice<T>(_arr, startPos, _length - start);
         }
 
         [DebuggerStepThrough]
@@ -66,23 +62,19 @@ namespace Noggog
             {
                 throw new ArgumentOutOfRangeException();
             }
-            return new MemorySlice<T>()
-            {
-                _arr = _arr,
-                _startPos = startPos,
-                _length = length
-            };
+
+            return new MemorySlice<T>(_arr, startPos, length);
         }
 
         public IEnumerator<T> GetEnumerator()
         {
             for (int i = 0; i < _length; i++)
             {
-                yield return this._arr[i + _startPos];
+                yield return _arr[i + _startPos];
             }
         }
 
-        IEnumerator IEnumerable.GetEnumerator() => this.GetEnumerator();
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
         public static implicit operator ReadOnlyMemorySlice<T>(MemorySlice<T> mem)
         {
@@ -114,28 +106,28 @@ namespace Noggog
         }
     }
 
-    public struct ReadOnlyMemorySlice<T> : IEnumerable<T>
+    public readonly struct ReadOnlyMemorySlice<T> : IEnumerable<T>
     {
-        private T[] _arr;
-        private int _startPos;
-        private int _length;
+        private readonly T[] _arr;
+        private readonly int _startPos;
+        private readonly int _length;
         public int Length => _length;
         public int StartPosition => _startPos;
 
         [DebuggerStepThrough]
         public ReadOnlyMemorySlice(T[] arr)
         {
-            this._arr = arr;
-            this._startPos = 0;
-            this._length = arr.Length;
+            _arr = arr;
+            _startPos = 0;
+            _length = arr.Length;
         }
 
         [DebuggerStepThrough]
         public ReadOnlyMemorySlice(T[] arr, int startPos, int length)
         {
-            this._arr = arr;
-            this._startPos = startPos;
-            this._length = length;
+            _arr = arr;
+            _startPos = startPos;
+            _length = length;
         }
 
         public ReadOnlySpan<T> Span => _arr.AsSpan(start: _startPos, length: _length);
@@ -150,12 +142,8 @@ namespace Noggog
             {
                 throw new ArgumentOutOfRangeException();
             }
-            return new ReadOnlyMemorySlice<T>()
-            {
-                _arr = _arr,
-                _startPos = _startPos + start,
-                _length = _length - start
-            };
+
+            return new ReadOnlyMemorySlice<T>(_arr, _startPos + start, _length - start);
         }
 
         [DebuggerStepThrough]
@@ -170,23 +158,19 @@ namespace Noggog
             {
                 throw new ArgumentOutOfRangeException();
             }
-            return new ReadOnlyMemorySlice<T>()
-            {
-                _arr = _arr,
-                _startPos = _startPos + start,
-                _length = length
-            };
+
+            return new ReadOnlyMemorySlice<T>(_arr, _startPos + start, length);
         }
 
         public IEnumerator<T> GetEnumerator()
         {
             for (int i = 0; i < _length; i++)
             {
-                yield return this._arr[i + _startPos];
+                yield return _arr[i + _startPos];
             }
         }
 
-        IEnumerator IEnumerable.GetEnumerator() => this.GetEnumerator();
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
         public static implicit operator ReadOnlySpan<T>(ReadOnlyMemorySlice<T> mem)
         {
