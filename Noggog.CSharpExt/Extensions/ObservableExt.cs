@@ -253,10 +253,10 @@ namespace Noggog
                     {
                         if (!throttling)
                         {
-                            // Fire initial value
-                            o.OnNext(x);
                             // Mark that we're throttling
                             throttling = true;
+                            // Fire initial value
+                            o.OnNext(x);
                             // Register for callback when throttle is complete
                             dueTimeDisposable.Disposable = scheduler.Schedule(interval, internalCallback);
                         }
