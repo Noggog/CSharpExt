@@ -38,6 +38,11 @@ namespace Noggog.Utility
             bool hookOntoOutput = true,
             bool killWithParent = true)
         {
+            if (!killWithParent)
+            {
+                throw new NotImplementedException();
+            }
+            
             var process = new Process();
             if (hideWindow)
             {
