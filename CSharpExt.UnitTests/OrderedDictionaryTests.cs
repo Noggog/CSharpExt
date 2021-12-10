@@ -207,7 +207,7 @@ namespace CSharpExt.UnitTests
         public void RemoveKey()
         {
             var dict = TypicalDict();
-            dict.RemoveKey("World");
+            dict.RemoveKey("World").Should().BeTrue();
             dict.Count.Should().Be(1);
             dict.GetAtIndex(0).Should().Be(new KeyValuePair<string, int>("Hello", 2));
         }
@@ -216,10 +216,7 @@ namespace CSharpExt.UnitTests
         public void RemoveMissingKeyThrows()
         {
             var dict = TypicalDict();
-            Assert.Throws<KeyNotFoundException>(() =>
-            {
-                dict.RemoveKey("Missing");
-            });
+            dict.RemoveKey("Missing").Should().BeFalse();
         }
     }
 }
