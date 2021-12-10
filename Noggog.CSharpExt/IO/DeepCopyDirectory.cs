@@ -4,7 +4,7 @@ namespace Noggog.IO
 {
     public interface IDeepCopyDirectory
     {
-        void DeepCopy(DirectoryPath dir, DirectoryPath rhs);
+        void DeepCopy(DirectoryPath dir, DirectoryPath rhs, bool overwrite = false);
     }
 
     public class DeepCopyDirectory : IDeepCopyDirectory
@@ -16,9 +16,9 @@ namespace Noggog.IO
             _fileSystem = fileSystem;
         }
         
-        public void DeepCopy(DirectoryPath dir, DirectoryPath rhs)
+        public void DeepCopy(DirectoryPath dir, DirectoryPath rhs, bool overwrite = false)
         {
-            _fileSystem.Directory.DeepCopy(dir, rhs);
+            _fileSystem.Directory.DeepCopy(dir, rhs, overwrite: overwrite);
         }
     }
 }

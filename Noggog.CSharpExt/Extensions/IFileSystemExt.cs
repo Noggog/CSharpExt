@@ -155,7 +155,7 @@ namespace Noggog
             return false;
         }
 
-        public static void DeepCopy(this IDirectory system, DirectoryPath from, DirectoryPath to)
+        public static void DeepCopy(this IDirectory system, DirectoryPath from, DirectoryPath to, bool overwrite = false)
         {
             if (!system.Exists(to.Path))
             {
@@ -166,12 +166,12 @@ namespace Noggog
             {
                 var fi = system.FileSystem.FileInfo.FromFileName(file);
                 var rhs = Path.Combine(to.Path, Path.GetFileName(file));
-                fi.CopyTo(rhs);
+                fi.CopyTo(rhs, overwrite);
             }
 
             foreach (var dir in system.GetDirectories(from))
             {
-                system.DeepCopy(dir, Path.Combine(to.Path, Path.GetFileName(dir)));
+                system.DeepCopy(dir, Path.Combine(to.Path, Path.GetFileName(dir)), overwrite: overwrite);
             }
         }
 
