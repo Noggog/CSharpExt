@@ -237,9 +237,10 @@ namespace Noggog
                         // We have another value that came in to fire.
                         // Reregister for callback
                         dueTimeDisposable.Disposable = scheduler.Schedule(interval, internalCallback);
-                        o.OnNext(value!);
+                        var toFire = value;
                         value = default;
                         hasValue = false;
+                        o.OnNext(toFire!);
                     }
                     else
                     {
