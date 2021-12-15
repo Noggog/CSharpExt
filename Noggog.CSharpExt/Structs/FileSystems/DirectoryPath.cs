@@ -135,6 +135,7 @@ namespace Noggog
 
         public bool CheckEmpty(IFileSystem? fs = null)
         {
+            if (!Exists) return true;
             fs = fs.GetOrDefault();
             return !fs.Directory.EnumerateFiles(Path).Any()
                 && !fs.Directory.EnumerateDirectories(Path).Any();
