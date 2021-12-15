@@ -144,7 +144,7 @@ namespace Noggog
         public string GetRelativePathTo(DirectoryPath relativeTo)
         {
             return PathExt.MakeRelativePath(
-                relativeTo.Path + "\\",
+                relativeTo.Path + System.IO.Path.PathSeparator,
                 Path);
         }
         
