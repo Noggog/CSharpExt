@@ -1,0 +1,52 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFrameworks>net5.0;net6.0;netstandard2.0</TargetFrameworks>
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <TargetPlatformIdentifier>Windows</TargetPlatformIdentifier>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <AssemblyName>Noggog.CSharpExt.Windows</AssemblyName>
+        <RootNamespace>Noggog</RootNamespace>
+		<Authors>Noggog</Authors>
+		<Company>Noggog</Company>
+        <Nullable>enable</Nullable>
+        <LangVersion>preview</LangVersion>
+		<IsPackable>true</IsPackable>
+		<Description>Generic reusable classes and extension methods that apply to no specific project and flavored to taste</Description>
+    </PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+		<DocumentationFile>Noggog.CSharpExt.xml</DocumentationFile>
+		<DebugType>embedded</DebugType>
+		<DebugSymbols>true</DebugSymbols>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+		<DocumentationFile>Noggog.CSharpExt.xml</DocumentationFile>
+		<DebugType>embedded</DebugType>
+		<DebugSymbols>true</DebugSymbols>
+	</PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Noggog.CSharpExt\Noggog.CSharpExt.csproj" />
+    </ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="GitInfo" Version="2.2.0">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="Microsoft.Win32.Registry" Version="5.0.0" />
+		<PackageReference Include="NuGetizer" Version="0.7.5">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+	</ItemGroup>
+
+    <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
+        <Exec Command="RD /S /Q &quot;%25USERPROFILE%25\.nuget\packages\noggog.csharpext.windows&quot;" />
+    </Target>
+
+</Project>

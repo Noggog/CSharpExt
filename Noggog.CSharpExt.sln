@@ -21,6 +21,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Noggog.Testing", "Noggog.Te
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Noggog.Autofac", "Noggog.Autofac\Noggog.Autofac.csproj", "{4ECE7195-0030-4EB4-8217-AD95C098F254}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Noggog.CSharpExt.Windows", "Noggog.CSharpExt.Windows\Noggog.CSharpExt.Windows.csproj", "{1EF481BC-01C6-4E78-93EA-DB224FD89615}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,10 @@ Global
 		{4ECE7195-0030-4EB4-8217-AD95C098F254}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4ECE7195-0030-4EB4-8217-AD95C098F254}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4ECE7195-0030-4EB4-8217-AD95C098F254}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1EF481BC-01C6-4E78-93EA-DB224FD89615}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1EF481BC-01C6-4E78-93EA-DB224FD89615}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1EF481BC-01C6-4E78-93EA-DB224FD89615}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1EF481BC-01C6-4E78-93EA-DB224FD89615}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
