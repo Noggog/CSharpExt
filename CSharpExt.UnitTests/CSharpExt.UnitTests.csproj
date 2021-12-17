@@ -29,6 +29,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Noggog.Autofac\Noggog.Autofac.csproj" />
+    <ProjectReference Include="..\Noggog.CSharpExt.Windows\Noggog.CSharpExt.Windows.csproj" />
     <ProjectReference Include="..\Noggog.CSharpExt\Noggog.CSharpExt.csproj" />
     <ProjectReference Include="..\Noggog.Testing\Noggog.Testing.csproj" />
   </ItemGroup>
