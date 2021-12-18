@@ -2,6 +2,7 @@ using Noggog.Extensions;
 using System;
 using System.IO;
 using System.IO.Abstractions;
+using System.Runtime.Serialization;
 
 namespace Noggog
 {
@@ -10,6 +11,7 @@ namespace Noggog
         private readonly string? _fullPath;
         private readonly string? _originalPath;
 
+        [IgnoreDataMember]
         public DirectoryPath? Directory
         {
             get
@@ -19,20 +21,31 @@ namespace Noggog
                 return new DirectoryPath(dirPath);
             }
         }
-
+        
+        [IgnoreDataMember]
         public string Path => _fullPath ?? string.Empty;
+        
         public string RelativePath => _originalPath ?? string.Empty;
+
+        [IgnoreDataMember] 
         public FileName Name => System.IO.Path.GetFileName(Path);
+            
+        [IgnoreDataMember]
         public string Extension => System.IO.Path.GetExtension(Path);
+        
+        [IgnoreDataMember]
         public string NameWithoutExtension => System.IO.Path.GetFileNameWithoutExtension(Path);
+        
+        [IgnoreDataMember]
         public bool Exists => CheckExists();
-        public bool CheckExists(IFileSystem? fs = null) => fs.GetOrDefault().File.Exists(_fullPath);
 
         public FilePath(string path)
         {
             this._originalPath = path.Replace('/', '\\');
             this._fullPath = path == string.Empty ? string.Empty : System.IO.Path.GetFullPath(path);
         }
+        
+        public bool CheckExists(IFileSystem? fs = null) => fs.GetOrDefault().File.Exists(_fullPath);
 
         public static bool operator ==(FilePath lhs, FilePath rhs)
         {
