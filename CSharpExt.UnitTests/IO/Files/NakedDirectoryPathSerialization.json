@@ -1,36 +1,5 @@
 {
   "MyDirectory": {
-    "Directory": {
-      "Directory": {
-        "Directory": null,
-        "Exists": true,
-        "Path": "C:\\",
-        "RelativePath": "C:\\",
-        "Name": {
-          "Extension": "",
-          "NameWithoutExtension": "",
-          "String": ""
-        },
-        "Empty": false
-      },
-      "Exists": false,
-      "Path": "C:\\SomeDir",
-      "RelativePath": "C:\\SomeDir",
-      "Name": {
-        "Extension": "",
-        "NameWithoutExtension": "SomeDir",
-        "String": "SomeDir"
-      },
-      "Empty": true
-    },
-    "Exists": false,
-    "Path": "C:\\SomeDir\\SomePath",
-    "RelativePath": "C:\\SomeDir\\SomePath",
-    "Name": {
-      "Extension": "",
-      "NameWithoutExtension": "SomePath",
-      "String": "SomePath"
-    },
-    "Empty": true
+    "RelativePath": "C:\\SomeDir\\SomePath"
   }
 }

@@ -4,7 +4,7 @@
         <TargetFrameworks>net5.0;net6.0;netstandard2.0</TargetFrameworks>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <ImplicitUsings>enable</ImplicitUsings>
-        <AssemblyName>Noggog.CSharpExt</AssemblyName>
+        <AssemblyName>Noggog.CSharpExt.Json</AssemblyName>
         <RootNamespace>Noggog.Json</RootNamespace>
         <Authors>Noggog</Authors>
         <Company>Noggog</Company>
@@ -16,14 +16,14 @@
 
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-        <DocumentationFile>Noggog.CSharpExt.xml</DocumentationFile>
+        <DocumentationFile>Noggog.CSharpExt.Json.xml</DocumentationFile>
         <DebugType>embedded</DebugType>
         <DebugSymbols>true</DebugSymbols>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-        <DocumentationFile>Noggog.CSharpExt.xml</DocumentationFile>
+        <DocumentationFile>Noggog.CSharpExt.Json.xml</DocumentationFile>
         <DebugType>embedded</DebugType>
         <DebugSymbols>true</DebugSymbols>
     </PropertyGroup>

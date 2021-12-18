@@ -37,15 +37,15 @@ namespace Noggog
         [IgnoreDataMember]
         public bool Empty => CheckEmpty();
         
-        public DirectoryPath(string path)
+        public DirectoryPath(string relativePath)
         {
 #if NETSTANDARD2_0
-            path = path.TrimEnd('/').TrimEnd('\\');
+            relativePath = relativePath.TrimEnd('/').TrimEnd('\\');
 #else 
-            path = System.IO.Path.TrimEndingDirectorySeparator(path);
+            relativePath = System.IO.Path.TrimEndingDirectorySeparator(relativePath);
 #endif
-            this._originalPath = path.Replace('/', '\\');;
-            this._fullPath = path == string.Empty ? string.Empty : System.IO.Path.GetFullPath(path);
+            this._originalPath = relativePath.Replace('/', '\\');;
+            this._fullPath = relativePath == string.Empty ? string.Empty : System.IO.Path.GetFullPath(relativePath);
         }
         
         public bool CheckExists(IFileSystem? fs = null) => fs.GetOrDefault().Directory.Exists(Path);

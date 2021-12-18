@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 
 namespace Noggog.Json.IO;
 
@@ -18,7 +18,11 @@ public class FilePathJsonConverter : JsonConverter
     public override object? ReadJson(JsonReader reader, Type objectType, object? existingValue,
         JsonSerializer serializer)
     {
-        if (existingValue == null) return null;
-        return new FilePath(existingValue.ToString());
+        if (reader.ValueType == typeof(string))
+        {
+            return new FilePath((string)reader.Value!);
+        }
+
+        return JsonSerializer.Create().Deserialize<FilePath>(reader);
     }
 }

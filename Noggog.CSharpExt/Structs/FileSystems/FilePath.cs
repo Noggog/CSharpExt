@@ -39,10 +39,10 @@ namespace Noggog
         [IgnoreDataMember]
         public bool Exists => CheckExists();
 
-        public FilePath(string path)
+        public FilePath(string relativePath)
         {
-            this._originalPath = path.Replace('/', '\\');
-            this._fullPath = path == string.Empty ? string.Empty : System.IO.Path.GetFullPath(path);
+            this._originalPath = relativePath.Replace('/', '\\');
+            this._fullPath = relativePath == string.Empty ? string.Empty : System.IO.Path.GetFullPath(relativePath);
         }
         
         public bool CheckExists(IFileSystem? fs = null) => fs.GetOrDefault().File.Exists(_fullPath);

@@ -30,16 +30,37 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Noggog.Autofac\Noggog.Autofac.csproj" />
+    <ProjectReference Include="..\Noggog.CSharpExt.Json\Noggog.CSharpExt.Json.csproj" />
     <ProjectReference Include="..\Noggog.CSharpExt.Windows\Noggog.CSharpExt.Windows.csproj" />
     <ProjectReference Include="..\Noggog.CSharpExt\Noggog.CSharpExt.csproj" />
     <ProjectReference Include="..\Noggog.Testing\Noggog.Testing.csproj" />
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="IO\Files\OldDirectoryPathSerialization.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="IO\Files\OldFilePathSerialization.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="IO\Files\NakedDirectoryPathSerialization.json">
+      <DefaultPackFolder>none</DefaultPackFolder>
+      <BuildAction>None</BuildAction>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="IO\Files\NakedFilePathSerialization.json">
+      <DefaultPackFolder>none</DefaultPackFolder>
+      <BuildAction>None</BuildAction>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="IO\Files\ConverterFilePathSerialization.json">
+      <DefaultPackFolder>none</DefaultPackFolder>
+      <BuildAction>None</BuildAction>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="IO\Files\ConverterDirectoryPathSerialization.json">
+      <DefaultPackFolder>none</DefaultPackFolder>
+      <BuildAction>None</BuildAction>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
