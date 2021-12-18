@@ -13,6 +13,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.0.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="NuGetizer" Version="0.7.5">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -32,6 +33,15 @@
     <ProjectReference Include="..\Noggog.CSharpExt.Windows\Noggog.CSharpExt.Windows.csproj" />
     <ProjectReference Include="..\Noggog.CSharpExt\Noggog.CSharpExt.csproj" />
     <ProjectReference Include="..\Noggog.Testing\Noggog.Testing.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="IO\Files\NakedDirectoryPathSerialization.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="IO\Files\NakedFilePathSerialization.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>
