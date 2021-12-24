@@ -518,6 +518,21 @@ namespace CSharpExt.UnitTests.Structs.FileSystems
         }
 
         [Fact]
+        public void CheckEmptyOnFileThrows()
+        {
+            var fs = new MockFileSystem();
+            var someDir = "C:/SomeDir";
+            fs.Directory.CreateDirectory("C:/SomeDir");
+            var filePath = Path.Combine(someDir, "SomeFile");
+            fs.File.Create(filePath);
+            Assert.Throws<IOException>(() =>
+            {
+                new DirectoryPath(filePath)
+                    .CheckEmpty(fs);
+            });
+        }
+
+        [Fact]
         public void CheckEmptyWithDirectoryReturnsFalse()
         {
             var fs = new MockFileSystem();

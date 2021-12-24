@@ -144,18 +144,26 @@ namespace Noggog
             fileSystem.GetOrDefault().Directory.Delete(Path);
         }
 
-        public bool CheckEmpty(IFileSystem? fs = null)
+        public bool CheckEmpty(IFileSystem? fileSystem = null)
         {
-            if (!Exists) return true;
-            fs = fs.GetOrDefault();
-            return !fs.Directory.EnumerateFiles(Path).Any()
-                && !fs.Directory.EnumerateDirectories(Path).Any();
+            if (!CheckExists(fileSystem))
+            {
+                fileSystem = fileSystem.GetOrDefault();
+                if (fileSystem.File.Exists(Path))
+                {
+                    throw new IOException($"Tried to check if directory was empty on a file path: {Path}");
+                }
+                return true;
+            }
+            fileSystem = fileSystem.GetOrDefault();
+            return !fileSystem.Directory.EnumerateFiles(Path).Any()
+                && !fileSystem.Directory.EnumerateDirectories(Path).Any();
         }
         
         public string GetRelativePathTo(DirectoryPath relativeTo)
         {
             return PathExt.MakeRelativePath(
-                relativeTo.Path + System.IO.Path.PathSeparator,
+                relativeTo.Path + System.IO.Path.DirectorySeparatorChar,
                 Path);
         }
         
