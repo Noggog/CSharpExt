@@ -21,30 +21,30 @@ namespace Noggog
                 return new DirectoryPath(dirPath);
             }
         }
-        
+
         [IgnoreDataMember]
         public string Path => _fullPath ?? string.Empty;
-        
+
         public string RelativePath => _originalPath ?? string.Empty;
 
-        [IgnoreDataMember] 
+        [IgnoreDataMember]
         public FileName Name => System.IO.Path.GetFileName(Path);
-            
+
         [IgnoreDataMember]
         public string Extension => System.IO.Path.GetExtension(Path);
-        
+
         [IgnoreDataMember]
         public string NameWithoutExtension => System.IO.Path.GetFileNameWithoutExtension(Path);
-        
+
         [IgnoreDataMember]
         public bool Exists => CheckExists();
 
         public FilePath(string relativePath)
         {
-            this._originalPath = relativePath.Replace('/', '\\');
+            this._originalPath = relativePath.Replace('/', System.IO.Path.DirectorySeparatorChar);
             this._fullPath = relativePath == string.Empty ? string.Empty : System.IO.Path.GetFullPath(relativePath);
         }
-        
+
         public bool CheckExists(IFileSystem? fs = null) => fs.GetOrDefault().File.Exists(_fullPath);
 
         public static bool operator ==(FilePath lhs, FilePath rhs)
@@ -71,7 +71,7 @@ namespace Noggog
         public string GetRelativePathTo(DirectoryPath relativeTo)
         {
             return PathExt.MakeRelativePath(
-                relativeTo.Path + "\\",
+                relativeTo.Path + System.IO.Path.DirectorySeparatorChar,
                 Path);
         }
 

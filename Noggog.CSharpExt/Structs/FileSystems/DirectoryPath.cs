@@ -11,7 +11,7 @@ namespace Noggog
     {
         private readonly string? _fullPath;
         private readonly string? _originalPath;
-        
+
         [IgnoreDataMember]
         public DirectoryPath? Directory
         {
@@ -25,18 +25,18 @@ namespace Noggog
 
         [IgnoreDataMember]
         public bool Exists => CheckExists();
-        
+
         [IgnoreDataMember]
         public string Path => _fullPath ?? string.Empty;
-        
+
         public string RelativePath => _originalPath ?? string.Empty;
-        
+
         [IgnoreDataMember]
         public FileName Name => System.IO.Path.GetFileName(Path);
-        
+
         [IgnoreDataMember]
         public bool Empty => CheckEmpty();
-        
+
         public DirectoryPath(string relativePath)
         {
 #if NETSTANDARD2_0
@@ -44,10 +44,10 @@ namespace Noggog
 #else 
             relativePath = System.IO.Path.TrimEndingDirectorySeparator(relativePath);
 #endif
-            this._originalPath = relativePath.Replace('/', '\\');;
+            this._originalPath = relativePath.Replace('/', System.IO.Path.DirectorySeparatorChar);
             this._fullPath = relativePath == string.Empty ? string.Empty : System.IO.Path.GetFullPath(relativePath);
         }
-        
+
         public bool CheckExists(IFileSystem? fs = null) => fs.GetOrDefault().Directory.Exists(Path);
 
         public static bool operator ==(DirectoryPath lhs, DirectoryPath rhs)
@@ -89,7 +89,7 @@ namespace Noggog
 
         [Obsolete("Use IsUnderneath instead")]
         public bool IsSubfolderOf(DirectoryPath potentialParent) => IsUnderneath(potentialParent);
-        
+
         // ToDo
         // Can maybe be improved to not check full path on each level
         public bool IsUnderneath(DirectoryPath potentialParent)
@@ -159,14 +159,14 @@ namespace Noggog
             return !fileSystem.Directory.EnumerateFiles(Path).Any()
                 && !fileSystem.Directory.EnumerateDirectories(Path).Any();
         }
-        
+
         public string GetRelativePathTo(DirectoryPath relativeTo)
         {
             return PathExt.MakeRelativePath(
                 relativeTo.Path + System.IO.Path.DirectorySeparatorChar,
                 Path);
         }
-        
+
         public string GetRelativePathTo(FilePath relativeTo)
         {
             return PathExt.MakeRelativePath(
@@ -175,7 +175,7 @@ namespace Noggog
         }
 
         public IEnumerable<FilePath> EnumerateFiles(
-            bool recursive = false, 
+            bool recursive = false,
             string? searchPattern = null,
             IFileSystem? fileSystem = null)
         {
@@ -186,7 +186,7 @@ namespace Noggog
         }
 
         public IEnumerable<DirectoryPath> EnumerateDirectories(
-            bool includeSelf, 
+            bool includeSelf,
             bool recursive,
             IFileSystem? fileSystem = null)
         {
@@ -210,9 +210,9 @@ namespace Noggog
         {
             return dir.RelativePath;
         }
-        
-#if NETSTANDARD2_0 
-#else 
+
+#if NETSTANDARD2_0
+#else
         public static implicit operator ReadOnlySpan<char>(DirectoryPath dir)
         {
             return dir.RelativePath;
