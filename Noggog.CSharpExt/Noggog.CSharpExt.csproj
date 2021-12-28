@@ -49,7 +49,7 @@
   </ItemGroup>
 
   <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
-    <Exec Command="RD /S /Q &quot;%25USERPROFILE%25\.nuget\packages\noggog.csharpext&quot;" />
+    <Exec Command="RD /S /Q &quot;%25USERPROFILE%25\.nuget\packages\noggog.csharpext&quot;" Condition="!$([MSBuild]::IsOSUnixLike())" />
   </Target>
 
 </Project>
