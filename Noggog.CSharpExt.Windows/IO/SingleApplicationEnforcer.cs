@@ -7,13 +7,13 @@ namespace Noggog.IO;
 
 public interface IWatchSingleAppArguments
 {
-    IObservable<IReadOnlyList<string>> WatchMemoryMappedFile();
+    IObservable<IReadOnlyList<string>> WatchArgs();
 }
 
 /// <summary>
 /// This class allows restricting the number of executables in execution to one.
 /// </summary>
-public class SingletonApplicationEnforcer : IDisposable
+public class SingletonApplicationEnforcer : IDisposable, IWatchSingleAppArguments
 {
     private readonly string _applicationId;
     private readonly Lazy<WaitHandle> _handle;
