@@ -11,17 +11,6 @@ namespace CSharpExt.UnitTests.AutoFixture
     public class MakeFileExistTests
     {
         [Theory, BasicAutoData]
-        public void CreatesMockFileSystem(
-            FilePath path,
-            ISpecimenContext context,
-            MakeFileExist sut)
-        {
-            context.MockToReturn<MockFileSystem>();
-            sut.MakeExist(path, context);
-            context.ShouldHaveCreated<MockFileSystem>();
-        }
-        
-        [Theory, BasicAutoData]
         public void FileMadeInFileSystem(
             FilePath path,
             MockFileSystem mockFileSystem,

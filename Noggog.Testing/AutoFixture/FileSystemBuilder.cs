@@ -44,10 +44,9 @@ namespace Noggog.Testing.AutoFixture
             {
                 if (_mockFileSystem == null)
                 {
-                    _mockFileSystem = new MockFileSystem(new Dictionary<string, MockFileData>())
-                    {
-                        FileSystemWatcher = context.Create<IFileSystemWatcherFactory>()
-                    };
+                    _mockFileSystem = new NoggogMockFileSystem(
+                        new Dictionary<string, MockFileData>(),
+                        fileSystemWatcher: context.Create<IFileSystemWatcherFactory>());
                     _mockFileSystem.Directory.CreateDirectory(PathBuilder.ExistingDirectory);
                     _mockFileSystem.File.Create(PathBuilder.ExistingFile);
                 }

@@ -57,7 +57,7 @@ namespace CSharpExt.UnitTests
             scheduler.AdvanceBy(longInitialWait / 2);
             waitSubject.OnNext(secondWait);
             waitSubject.OnCompleted();
-            throwCount.Should().Equals(1);
+            throwCount.Should().Be(1);
             scheduler.AdvanceBy(secondWait - 10);
             results.Should().HaveCount(0);
             scheduler.AdvanceBy(20);
