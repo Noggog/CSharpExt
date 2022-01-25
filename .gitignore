@@ -280,3 +280,5 @@ Noggog.WPF/Noggog.WPF.xml
 Noggog.CSharpExt.Windows/Noggog.CSharpExt.xml
 
 Noggog.CSharpExt.Json/Noggog.CSharpExt.Json.xml
+
+*wpftmp.csproj
