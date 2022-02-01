@@ -320,6 +320,80 @@ namespace Noggog
         { 
             return e.SequenceEqual((IEnumerable<T>)rhs); 
         }
+
+        public static IEnumerable<T> StartWith<T>(this IEnumerable<T> e, T item)
+        {
+            yield return item;
+            foreach (var followupItem in e)
+            {
+                yield return followupItem;
+            }
+        }
+
+        public static IEnumerable<T> StartWith<T>(this IEnumerable<T> e, T item, params T[] items)
+        {
+            yield return item;
+            foreach (var followupItem in items)
+            {
+                yield return followupItem;
+            }
+            foreach (var followupItem in e)
+            {
+                yield return followupItem;
+            }
+        }
+
+        public static IEnumerable<T> StartWith<T>(this IEnumerable<T> e, IEnumerable<T> items)
+        {
+            foreach (var item in items)
+            {
+                yield return item;
+            }
+            foreach (var followupItem in e)
+            {
+                yield return followupItem;
+            }
+        }
+
+        public static int Max(this IEnumerable<int> e, int seedValue)
+        {
+            return e.StartWith(seedValue).Max();
+        }
+
+        public static uint Max(this IEnumerable<uint> e, uint seedValue)
+        {
+            return e.StartWith(seedValue).Max();
+        }
+
+        public static short Max(this IEnumerable<short> e, short seedValue)
+        {
+            return e.StartWith(seedValue).Max();
+        }
+
+        public static ushort Max(this IEnumerable<ushort> e, ushort seedValue)
+        {
+            return e.StartWith(seedValue).Max();
+        }
+
+        public static long Max(this IEnumerable<long> e, long seedValue)
+        {
+            return e.StartWith(seedValue).Max();
+        }
+
+        public static ulong Max(this IEnumerable<ulong> e, ulong seedValue)
+        {
+            return e.StartWith(seedValue).Max();
+        }
+
+        public static byte Max(this IEnumerable<byte> e, byte seedValue)
+        {
+            return e.StartWith(seedValue).Max();
+        }
+
+        public static sbyte Max(this IEnumerable<sbyte> e, sbyte seedValue)
+        {
+            return e.StartWith(seedValue).Max();
+        }
     }
 
     public static class EnumerableExt<T>
