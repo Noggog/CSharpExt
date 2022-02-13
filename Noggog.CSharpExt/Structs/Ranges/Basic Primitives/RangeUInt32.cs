@@ -36,7 +36,7 @@ namespace Noggog
         {
         }
 
-        public static RangeUInt32 FactoryFromLength(uint loc, uint length)
+        public static RangeUInt32 FromLength(uint loc, uint length)
         {
             return new RangeUInt32(
                 loc,

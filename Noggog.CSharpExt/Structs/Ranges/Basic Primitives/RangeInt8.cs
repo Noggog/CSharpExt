@@ -36,7 +36,7 @@ namespace Noggog
         {
         }
 
-        public static RangeInt8 FactoryFromLength(sbyte loc, sbyte length)
+        public static RangeInt8 FromLength(sbyte loc, sbyte length)
         {
             return new RangeInt8(
                 loc,
