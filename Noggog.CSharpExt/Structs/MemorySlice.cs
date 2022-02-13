@@ -76,6 +76,13 @@ namespace Noggog
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
+        public byte[] ToArray()
+        {
+            var ret = new byte[_length];
+            Array.Copy(_arr, _startPos, ret, 0, _length);
+            return ret;
+        }
+
         public static implicit operator ReadOnlyMemorySlice<T>(MemorySlice<T> mem)
         {
             return new ReadOnlyMemorySlice<T>(
@@ -171,6 +178,13 @@ namespace Noggog
         }
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
+        public byte[] ToArray()
+        {
+            var ret = new byte[_length];
+            Array.Copy(_arr, _startPos, ret, 0, _length);
+            return ret;
+        }
 
         public static implicit operator ReadOnlySpan<T>(ReadOnlyMemorySlice<T> mem)
         {
