@@ -19,6 +19,7 @@ namespace Noggog.Autofac.Modules
                 .InNamespacesOf(
                     typeof(IDeleteEntireDirectory),
                     typeof(INowProvider))
+                .NotInjection()
                 .AsImplementedInterfaces()
                 .SingleInstance();
         }

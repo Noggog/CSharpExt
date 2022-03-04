@@ -11,4 +11,14 @@ namespace Noggog.IO
     {
         public DirectoryPath CurrentDirectory => Environment.CurrentDirectory;
     }
+
+    public class CurrentDirectoryInjection : ICurrentDirectoryProvider
+    {
+        public CurrentDirectoryInjection(DirectoryPath currentDirectory)
+        {
+            CurrentDirectory = currentDirectory;
+        }
+
+        public DirectoryPath CurrentDirectory { get; }
+    }
 }

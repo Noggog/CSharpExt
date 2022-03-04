@@ -16,6 +16,7 @@ namespace Noggog.Testing.AutoFixture
             fixture.Customizations.Add(new FileSystemBuilder(_useMockFileSystem));
             fixture.Customizations.Add(new SchedulerBuilder());
             fixture.Customizations.Add(new PathBuilder());
+            fixture.Customizations.Add(new CurrentDirectoryPathProviderBuilder());
             fixture.Customizations.Add(new CancellationBuilder());
             fixture.Customizations.Add(new ErrorResponseBuilder());
             fixture.Customizations.Add(new ErrorResponseParameterBuilder());
