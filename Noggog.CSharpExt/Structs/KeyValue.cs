@@ -1,18 +1,13 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
+namespace Noggog;
 
-namespace Noggog
+public readonly struct KeyValue<TKey, TValue> : IKeyValue<TKey, TValue>
 {
-    public class KeyValue<TValue, TKey> : IKeyValue<TValue, TKey>
-    {
-        public TKey Key { get; set; }
-        public TValue Value { get; set; }
+    public TKey Key { get; }
+    public TValue Value { get; }
 
-        public KeyValue(TKey key, TValue value)
-        {
-            this.Key = key;
-            this.Value = value;
-        }
+    public KeyValue(TKey key, TValue value)
+    {
+        this.Key = key;
+        this.Value = value;
     }
 }

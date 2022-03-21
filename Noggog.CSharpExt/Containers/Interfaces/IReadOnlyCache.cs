@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Noggog
 {
-    public interface IReadOnlyCache<out TValue, TKey> : IReadOnlyCollection<IKeyValue<TValue, TKey>>
+    public interface IReadOnlyCache<out TValue, TKey> : IReadOnlyCollection<IKeyValue<TKey, TValue>>
     {
         /// <summary>
         /// Gets the element that has the specified key in the read-only dictionary.

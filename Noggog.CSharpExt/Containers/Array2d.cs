@@ -90,5 +90,14 @@ public class Array2d<T> : IArray2d<T>, IShallowCloneable<Array2d<T>>
 
     object IShallowCloneable.ShallowClone() => this.ShallowClone();
 
-    IArray2d<T> IShallowCloneable<IArray2d<T>>.ShallowClone() => this.ShallowClone();
+    IEnumerator<IKeyValue<P2Int, T>> IEnumerable<IKeyValue<P2Int, T>>.GetEnumerator()
+    {
+        for (int y = 0; y < Height; y++)
+        {
+            for (int x = 0; x < Width; x++)
+            {
+                yield return new KeyValue<P2Int, T>(new P2Int(x, y), _arr[x, y]);
+            }
+        }
+    }
 }
