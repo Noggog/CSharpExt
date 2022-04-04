@@ -8,7 +8,7 @@ namespace Noggog
 {
     public static class DictionaryExt
     {
-        public static void Set<K, V>(this IDictionary<K, V> dict, IEnumerable<KeyValuePair<K, V>> items)
+        public static void Set<TKey, TValue>(this IDictionary<TKey, TValue> dict, IEnumerable<KeyValuePair<TKey, TValue>> items)
         {
             foreach (var item in items)
             {
@@ -16,23 +16,23 @@ namespace Noggog
             }
         }
 
-        public static void Set<K, V>(this IDictionary<K, V> dict, K key, V value)
+        public static void Set<TKey, TValue>(this IDictionary<TKey, TValue> dict, TKey key, TValue value)
         {
             dict[key] = value;
         }
 
-        public static V GetOrAdd<K, V>(this IDictionary<K, V> dict, K key)
-            where V : new()
+        public static TValue GetOrAdd<TKey, TValue>(this IDictionary<TKey, TValue> dict, TKey key)
+            where TValue : new()
         {
             if (!dict.TryGetValue(key, out var ret))
             {
-                ret = new V();
+                ret = new TValue();
                 dict[key] = ret;
             }
             return ret;
         }
 
-        public static V GetOrAdd<K, V>(this IDictionary<K, V> dict, K key, Func<V> getNew)
+        public static TValue GetOrAdd<TKey, TValue>(this IDictionary<TKey, TValue> dict, TKey key, Func<TValue> getNew)
         {
             if (!dict.TryGetValue(key, out var ret))
             {
@@ -42,8 +42,22 @@ namespace Noggog
             return ret;
         }
 
-        [return: MaybeNull()]
-        public static V GetOrDefault<K, V>(this IDictionary<K, V> dict, K key)
+        public static TValue UpdateOrAdd<TKey, TValue>(this IDictionary<TKey, TValue> dict, TKey key, Func<TValue?, TValue> getNew)
+        {
+            if (dict.TryGetValue(key, out var ret))
+            {
+                ret = getNew(ret);
+                dict[key] = ret;
+            }
+            else
+            {
+                ret = getNew(default);
+                dict[key] = ret;
+            }
+            return ret;
+        }
+
+        public static TValue? GetOrDefault<TKey, TValue>(this IDictionary<TKey, TValue> dict, TKey key)
         {
             if (!dict.TryGetValue(key, out var ret))
             {
@@ -52,13 +66,13 @@ namespace Noggog
             return ret;
         }
 
-        public static IEnumerable<KeyValuePair<K, R>> SelectAgainst<K, V, R>(
-            this IReadOnlyDictionary<K, V> lhs, 
-            IReadOnlyDictionary<K, V> rhs, 
-            Func<K, V, V, R> selector, 
+        public static IEnumerable<KeyValuePair<TKey, TRet>> SelectAgainst<TKey, TValue, TRet>(
+            this IReadOnlyDictionary<TKey, TValue> lhs, 
+            IReadOnlyDictionary<TKey, TValue> rhs, 
+            Func<TKey, TValue, TValue, TRet> selector, 
             out bool equal)
         {
-            List<KeyValuePair<K, R>> ret = new List<KeyValuePair<K, R>>();
+            List<KeyValuePair<TKey, TRet>> ret = new List<KeyValuePair<TKey, TRet>>();
             equal = lhs.Count == rhs.Count;
             foreach (var item in lhs)
             {
@@ -68,14 +82,14 @@ namespace Noggog
                     continue;
                 }
                 ret.Add(
-                    new KeyValuePair<K, R>(
+                    new KeyValuePair<TKey, TRet>(
                         item.Key,
                         selector(item.Key, item.Value, rhsItem)));
             }
             return ret;
         }
 
-        public static void Remove<K, V>(this IDictionary<K, V> dict, IEnumerable<K> keys)
+        public static void Remove<TKey, TValue>(this IDictionary<TKey, TValue> dict, IEnumerable<TKey> keys)
         {
             foreach (var key in keys)
             {
@@ -83,7 +97,7 @@ namespace Noggog
             }
         }
 
-        public static void SetTo<K, V>(this IDictionary<K, V> dict, IEnumerable<KeyValuePair<K, V>> items, SetTo setTo = Noggog.SetTo.Whitewash)
+        public static void SetTo<TKey, TValue>(this IDictionary<TKey, TValue> dict, IEnumerable<KeyValuePair<TKey, TValue>> items, SetTo setTo = Noggog.SetTo.Whitewash)
         {
             if (setTo == Noggog.SetTo.Whitewash)
             {
@@ -91,7 +105,7 @@ namespace Noggog
                 dict.Set(items);
                 return;
             }
-            var toRemove = new HashSet<K>(dict.Keys);
+            var toRemove = new HashSet<TKey>(dict.Keys);
             switch (setTo)
             {
                 case Noggog.SetTo.SkipExisting:
@@ -118,10 +132,10 @@ namespace Noggog
             }
         }
 
-        public static IReadOnlyDictionary<K, V> Empty<K, V>()
-            where K : notnull
+        public static IReadOnlyDictionary<TKey, TValue> Empty<TKey, TValue>()
+            where TKey : notnull
         {
-            return DictEmptyExt<K, V>.Empty;
+            return DictEmptyExt<TKey, TValue>.Empty;
         }
 
 #if NETSTANDARD2_0
@@ -133,10 +147,10 @@ namespace Noggog
         }
 #endif
 
-        private static class DictEmptyExt<K, V>
-            where K : notnull
+        private static class DictEmptyExt<TKey, TValue>
+            where TKey : notnull
         {
-            public static Dictionary<K, V> Empty = new Dictionary<K, V>();
+            public static Dictionary<TKey, TValue> Empty = new Dictionary<TKey, TValue>();
         }
 
         public static Dictionary<TKey, TValue> ToDictionary<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> keyValuePairs)
