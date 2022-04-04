@@ -386,6 +386,17 @@ namespace Noggog
             return dynamicMethod.Compile();
         }
 
+        private static readonly Lazy<Func<T, long>> _convertFrom = new Lazy<Func<T, long>>(GenerateFromConverter);
+        public static Func<T, long> ConvertFrom => _convertFrom.Value;
+        static Func<T, long> GenerateFromConverter()
+        {
+            var parameter = Expression.Parameter(typeof(T));
+            var dynamicMethod = Expression.Lambda<Func<T, long>>(
+                Expression.Convert(parameter, typeof(long)),
+                parameter);
+            return dynamicMethod.Compile();
+        }
+
         public static readonly int Bits = Marshal.SizeOf(Enum.GetUnderlyingType(typeof(T))) * 8;
         public static readonly uint MaxSize = (uint)(Math.Pow(2, Bits) - 1);
         public static IEnumerable<T> EnumerateContainedFlags(T flags, bool includeUndefined = true)
