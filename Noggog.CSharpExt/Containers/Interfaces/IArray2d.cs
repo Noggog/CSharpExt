@@ -25,7 +25,7 @@ public interface IArray2d<T> : IReadOnlyArray2d<T>, IEnumerable<KeyValuePair<P2I
 
 public static class IReadOnlyArray2d
 {
-    public static Array2d<T> ShallowClone<T>(IReadOnlyArray2d<T> arr)
+    public static Array2d<T> ShallowClone<T>(this IReadOnlyArray2d<T> arr)
     {
         if (arr is Array2d<T> direct)
         {
