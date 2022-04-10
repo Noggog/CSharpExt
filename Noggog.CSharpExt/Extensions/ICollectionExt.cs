@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Noggog
 {
@@ -87,6 +88,22 @@ namespace Noggog
         public static ICollectionGetter<T> ToGetter<T>(this ICollection<T> coll)
         {
             return new CollectionGetterWrapper<T>(coll);
+        }
+
+        public static bool SequenceEqual<T>(this IReadOnlyCollection<T> lhs, IReadOnlyCollection<T> rhs, Func<T, T, bool> equality)
+        {
+            if (ReferenceEquals(lhs, rhs)) return true;
+            if (lhs.Count != rhs.Count) return false;
+            return lhs
+                .Zip(rhs, equality)
+                .All(x => x);
+        }
+
+        public static bool SequenceEqualNullable<T>(this IReadOnlyCollection<T>? lhs, IReadOnlyCollection<T>? rhs, Func<T, T, bool> equality)
+        {
+            if (lhs == null && rhs == null) return true;
+            if (lhs == null || rhs == null) return false;
+            return SequenceEqual(lhs, rhs, equality);
         }
     }
 }
