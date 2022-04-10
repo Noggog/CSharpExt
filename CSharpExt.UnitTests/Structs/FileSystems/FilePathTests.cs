@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Abstractions;
 using System.Linq;
+using System.Runtime.InteropServices;
 using FluentAssertions;
 using Noggog;
 using NSubstitute;
@@ -12,25 +13,86 @@ namespace CSharpExt.UnitTests.Structs.FileSystems
 {
     public class FilePathTests
     {
-        private static string AbsoluteTextPath = "C:\\Directory\\Test.txt";
-        private static string RelativeTextPath = "Directory\\Test.txt";
-        private static string JustFileName = "Test.txt";
-        private static string RelativeFileWithNoExtension = "Directory\\Test";
+        static bool isWindows = RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
+        static string absPrefix = isWindows ? "C:\\" : "/";
 
         class TestData : IEnumerable<object[]>
         {
-            public IEnumerator<object[]> GetEnumerator() => Data().Select(x => new object[] {x}).GetEnumerator();
+            public IEnumerator<object[]> GetEnumerator() => Data().Select(x => new object[] { x }).GetEnumerator();
 
             private IEnumerable<string> Data()
             {
-                yield return AbsoluteTextPath;
-                yield return RelativeTextPath;
-                yield return JustFileName;
-                yield return RelativeFileWithNoExtension;
+                yield return Path.Combine(absPrefix, "Directory", "Test.txt"); // Absolute path
+                yield return Path.Combine("Directory", "Test.txt"); // Relative path
+                yield return "Test.txt"; // Just file name
+                yield return Path.Combine("Directory", "Test"); // Relative file with no extension
             }
 
             IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
         }
+
+        class RelPathDirData : IEnumerable<object[]>
+        {
+            public IEnumerator<object[]> GetEnumerator() => Data().GetEnumerator();
+
+            private IEnumerable<string[]> Data()
+            {
+                string from = Path.Combine(absPrefix, "Directory", "Text.txt");
+
+                yield return new string[] {from, Path.Combine(absPrefix, "OtherDirectory"),
+                    Path.Combine("..", "Directory", "Text.txt")};
+                yield return new string[] { from, Path.Combine(absPrefix, "Directory"), "Text.txt" };
+                if (isWindows)
+                {
+                    yield return new string[] { from, "D:\\Directory", "C:\\Directory\\Text.txt" };
+                }
+            }
+
+            IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+        }
+
+        class RelPathFileData : IEnumerable<object[]>
+        {
+            public IEnumerator<object[]> GetEnumerator() => Data().GetEnumerator();
+
+            private IEnumerable<object[]> Data()
+            {
+                string from = Path.Combine(absPrefix, "Directory", "Text.txt");
+                yield return new object[] {from ,
+                    Path.Combine(absPrefix, "OtherDirectory", "SomeFile.txt"),
+                    Path.Combine("..", "Directory", "Text.txt")};
+                yield return new object[] { from, Path.Combine(absPrefix, "Directory", "SomeFile.txt"), "Text.txt" };
+                if (isWindows)
+                {
+                    yield return new object[] { from, "D:\\Directory\\SomeFile.txt", "C:\\Directory\\Text.txt" };
+                }
+            }
+
+            IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+        }
+
+        class UnderneathData : IEnumerable<object[]>
+        {
+            public IEnumerator<object[]> GetEnumerator() => Data().GetEnumerator();
+
+            private IEnumerable<object[]> Data()
+            {
+                string from = Path.Combine(absPrefix, "Directory", "Text.txt");
+                string from2 = Path.Combine(absPrefix, "Directory", "SubDir", "Text.txt");
+                yield return new object[] { from, Path.Combine(absPrefix, "OtherDirectory"), false };
+                yield return new object[] { from2, Path.Combine(absPrefix, "Directory"), true };
+                yield return new object[] { from2, Path.Combine(absPrefix, "Directory", "SubDir"), true };
+                yield return new object[] { from, Path.Combine(absPrefix, "Directory"), true };
+                if (isWindows)
+                {
+                    yield return new object[] { from, "D:\\Directory", false };
+                    yield return new object[] { "C:\\DIRECTORY\\Text.txt", "C:\\Directory", true };
+                }
+            }
+
+            IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+        }
+
 
         [Theory]
         [ClassData(typeof(TestData))]
@@ -39,7 +101,7 @@ namespace CSharpExt.UnitTests.Structs.FileSystems
         {
             new FilePath(path);
         }
-        
+
         [Theory]
         [ClassData(typeof(TestData))]
         public void PathExposesAbsolutePath(string path)
@@ -47,14 +109,14 @@ namespace CSharpExt.UnitTests.Structs.FileSystems
             new FilePath(path)
                 .Path.Should().Be(Path.GetFullPath(path));
         }
-        
+
         [Fact]
         public void EmptyPathExposesEmptyPath()
         {
             new FilePath()
                 .Path.Should().Be(string.Empty);
         }
-        
+
         [Theory]
         [ClassData(typeof(TestData))]
         [InlineData("")]
@@ -63,7 +125,7 @@ namespace CSharpExt.UnitTests.Structs.FileSystems
             new FilePath(path)
                 .RelativePath.Should().Be(path);
         }
-        
+
         [Theory]
         [ClassData(typeof(TestData))]
         [InlineData("")]
@@ -72,7 +134,7 @@ namespace CSharpExt.UnitTests.Structs.FileSystems
             new FilePath(path)
                 .Name.Should().Be(new FileName(Path.GetFileName(path)));
         }
-        
+
         [Theory]
         [ClassData(typeof(TestData))]
         [InlineData("")]
@@ -81,7 +143,7 @@ namespace CSharpExt.UnitTests.Structs.FileSystems
             new FilePath(path)
                 .Extension.Should().Be(Path.GetExtension(path));
         }
-        
+
         [Theory]
         [ClassData(typeof(TestData))]
         [InlineData("")]
@@ -90,7 +152,7 @@ namespace CSharpExt.UnitTests.Structs.FileSystems
             new FilePath(path)
                 .NameWithoutExtension.Should().Be(Path.GetFileNameWithoutExtension(path));
         }
-        
+
         [Theory]
         [ClassData(typeof(TestData))]
         public void DirectorySameAsSystem(string path)
@@ -99,7 +161,7 @@ namespace CSharpExt.UnitTests.Structs.FileSystems
                 .Directory.Should().Be(
                     new DirectoryPath(Path.GetDirectoryName(Path.GetFullPath(path))!));
         }
-        
+
         [Theory]
         [InlineData("")]
         public void EmptyDirectoryNull(string path)
@@ -119,7 +181,7 @@ namespace CSharpExt.UnitTests.Structs.FileSystems
         [InlineData(false)]
         public void CheckExists(bool shouldExist)
         {
-            var path = "C:\\SomeFile";
+            var path = Path.Combine(absPrefix, "SomeFile");
             var fs = Substitute.For<IFileSystem>();
             fs.File.Exists(path).Returns(shouldExist);
             new FilePath(path).CheckExists(fs).Should().Be(shouldExist);
@@ -128,15 +190,21 @@ namespace CSharpExt.UnitTests.Structs.FileSystems
         [Fact]
         public void PathAdjustsForwardSlashes()
         {
-            new FilePath("C:/SomeFile")
-                .Path.Should().Be("C:\\SomeFile");
+            if (isWindows)
+            {
+                new FilePath("C:/SomeFile")
+                    .Path.Should().Be("C:\\SomeFile");
+            }
         }
 
         [Fact]
         public void RelativePathAdjustsForwardSlashes()
         {
-            new FilePath("SomeDir/SomeFile")
-                .RelativePath.Should().Be("SomeDir\\SomeFile");
+            if (isWindows)
+            {
+                new FilePath("SomeDir/SomeFile")
+                    .RelativePath.Should().Be("SomeDir\\SomeFile");
+            }
         }
 
         [Theory]
@@ -196,9 +264,7 @@ namespace CSharpExt.UnitTests.Structs.FileSystems
         }
 
         [Theory]
-        [InlineData("C:\\Directory\\Text.txt", "C:\\OtherDirectory", "..\\Directory\\Text.txt")]
-        [InlineData("C:\\Directory\\Text.txt", "C:\\Directory", "Text.txt")]
-        [InlineData("C:\\Directory\\Text.txt", "D:\\Directory", "C:\\Directory\\Text.txt")]
+        [ClassData(typeof(RelPathDirData))]
         public void GetRelativePathToDirectory(string from, string to, string expected)
         {
             new FilePath(from)
@@ -207,9 +273,7 @@ namespace CSharpExt.UnitTests.Structs.FileSystems
         }
 
         [Theory]
-        [InlineData("C:\\Directory\\Text.txt", "C:\\OtherDirectory\\SomeFile.txt", "..\\Directory\\Text.txt")]
-        [InlineData("C:\\Directory\\Text.txt", "C:\\Directory\\SomeFile.txt", "Text.txt")]
-        [InlineData("C:\\Directory\\Text.txt", "D:\\Directory\\SomeFile.txt", "C:\\Directory\\Text.txt")]
+        [ClassData(typeof(RelPathFileData))]
         public void GetRelativePathToFile(string from, string to, string expected)
         {
             new FilePath(from)
@@ -218,12 +282,7 @@ namespace CSharpExt.UnitTests.Structs.FileSystems
         }
 
         [Theory]
-        [InlineData("C:\\Directory\\Text.txt", "C:\\OtherDirectory", false)]
-        [InlineData("C:\\Directory\\SubDir\\Text.txt", "C:\\Directory", true)]
-        [InlineData("C:\\Directory\\SubDir\\Text.txt", "C:\\Directory\\SubDir", true)]
-        [InlineData("C:\\Directory\\Text.txt", "D:\\Directory", false)]
-        [InlineData("C:\\Directory\\Text.txt", "C:\\Directory", true)]
-        [InlineData("C:\\DIRECTORY\\Text.txt", "C:\\Directory", true)]
+        [ClassData(typeof(UnderneathData))]
         public void IsUnderneath(string from, string to, bool expected)
         {
             new FilePath(from)
