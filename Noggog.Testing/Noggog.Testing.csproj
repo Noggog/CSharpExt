@@ -22,10 +22,10 @@
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="FluentAssertions" Version="6.5.1" />
+        <PackageReference Include="FluentAssertions" Version="6.6.0" />
         <PackageReference Include="Microsoft.Reactive.Testing" Version="5.0.0" />
         <PackageReference Include="AutoFixture.Xunit2" Version="4.17.0" />
-        <PackageReference Include="System.IO.Abstractions.TestingHelpers" Version="16.1.16" />
+        <PackageReference Include="System.IO.Abstractions.TestingHelpers" Version="16.1.25" />
     </ItemGroup>
 
     <ItemGroup>
