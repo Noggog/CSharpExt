@@ -12,7 +12,7 @@ namespace CSharpExt.UnitTests
 {
     public class IFileSystemExtTests
     {
-        public readonly static DirectoryPath DirPath = "C:/SomeDir";
+        public readonly static DirectoryPath DirPath = $"{Utility.DrivePrefix}SomeDir";
         public readonly static FilePath SomeFile = Path.Combine(DirPath, "SomeFile");
         public readonly static FilePath SomeFileTxt = Path.Combine(DirPath, "SomeFile.txt");
         public readonly static DirectoryPath SomeSubDir = Path.Combine(DirPath, "SubDir");

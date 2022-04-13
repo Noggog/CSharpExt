@@ -1,9 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Runtime.InteropServices;
 using FluentAssertions;
 using Newtonsoft.Json;
 using Noggog;
 using Noggog.Json.IO;
+using Noggog.Utility;
 using Xunit;
 
 namespace CSharpExt.UnitTests.IO;
@@ -91,8 +93,11 @@ public class FilePathJsonConverterTests
     private string GetTestFile(string path)
     {
         var ret = File.ReadAllText(path);
-        ret = ret.Replace("\\\\", $"{System.IO.Path.DirectorySeparatorChar}");
-        ret = IFileSystemExt.CleanDirectorySeparators(ret);
+        if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        {
+            ret = ret.Replace("\\\\", $"{System.IO.Path.DirectorySeparatorChar}");
+            ret = IFileSystemExt.CleanDirectorySeparators(ret);
+        }
         return ret;
     }
 }
