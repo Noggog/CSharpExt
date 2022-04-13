@@ -179,5 +179,16 @@ namespace Noggog
         {
             return system ?? DefaultFilesystem;
         }
+
+        public static string CleanDirectorySeparators(string str)
+        {
+            return CleanDirectorySeparators(CleanDirectorySeparators(str, '\\'), '/');
+        }
+
+        private static string CleanDirectorySeparators(string str, char separator)
+        {
+            if (separator == System.IO.Path.DirectorySeparatorChar) return str;
+            return str.Replace(separator, System.IO.Path.DirectorySeparatorChar);
+        }
     }
 }

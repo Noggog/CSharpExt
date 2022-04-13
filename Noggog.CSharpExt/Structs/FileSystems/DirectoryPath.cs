@@ -39,13 +39,14 @@ namespace Noggog
 
         public DirectoryPath(string relativePath)
         {
+            relativePath = IFileSystemExt.CleanDirectorySeparators(relativePath);
 #if NETSTANDARD2_0
             relativePath = relativePath.TrimEnd('/').TrimEnd('\\');
 #else 
             relativePath = System.IO.Path.TrimEndingDirectorySeparator(relativePath);
 #endif
-            this._originalPath = relativePath.Replace('/', System.IO.Path.DirectorySeparatorChar);
-            this._fullPath = relativePath == string.Empty ? string.Empty : System.IO.Path.GetFullPath(relativePath);
+            _originalPath = relativePath;
+            _fullPath = relativePath == string.Empty ? string.Empty : System.IO.Path.GetFullPath(relativePath);
         }
 
         public bool CheckExists(IFileSystem? fs = null) => fs.GetOrDefault().Directory.Exists(Path);

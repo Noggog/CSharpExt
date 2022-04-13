@@ -41,8 +41,9 @@ namespace Noggog
 
         public FilePath(string relativePath)
         {
-            this._originalPath = relativePath.Replace('/', System.IO.Path.DirectorySeparatorChar);
-            this._fullPath = relativePath == string.Empty ? string.Empty : System.IO.Path.GetFullPath(relativePath);
+            relativePath = IFileSystemExt.CleanDirectorySeparators(relativePath);
+            _originalPath = relativePath;
+            _fullPath = relativePath == string.Empty ? string.Empty : System.IO.Path.GetFullPath(relativePath);
         }
 
         public bool CheckExists(IFileSystem? fs = null) => fs.GetOrDefault().File.Exists(_fullPath);
