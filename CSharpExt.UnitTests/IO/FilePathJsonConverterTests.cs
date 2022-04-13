@@ -96,6 +96,7 @@ public class FilePathJsonConverterTests
         var ret = File.ReadAllText(path);
         if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
         {
+            ret = ret.Replace("C:", string.Empty);
             ret = ret.Replace("\\\\", $"{System.IO.Path.DirectorySeparatorChar}");
             ret = IFileSystemExt.CleanDirectorySeparators(ret);
         }
