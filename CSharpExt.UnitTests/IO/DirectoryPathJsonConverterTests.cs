@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Runtime.InteropServices;
 using FluentAssertions;
 using Newtonsoft.Json;
 using Noggog;
@@ -27,7 +28,7 @@ public class DirectoryPathJsonConverterTests
     [Fact]
     public void OldDeserialization()
     {
-        var str = File.ReadAllText(Path.Combine("IO", "Files", "OldDirectoryPathSerialization.json"));
+        var str = GetTestFile(Path.Combine("IO", "Files", "OldDirectoryPathSerialization.json"));
         var converted = JsonConvert.DeserializeObject<Dto>(str)!;
         converted.MyDirectory.RelativePath.Should().Be(Path.Combine("C:","SomeDir", "SomePath"));
     }
@@ -35,7 +36,7 @@ public class DirectoryPathJsonConverterTests
     [Fact]
     public void NakedDeserialization()
     {
-        var str = File.ReadAllText(Path.Combine("IO", "Files", "NakedDirectoryPathSerialization.json"));
+        var str = GetTestFile(Path.Combine("IO", "Files", "NakedDirectoryPathSerialization.json"));
         var converted = JsonConvert.DeserializeObject<Dto>(str)!;
         converted.MyDirectory.RelativePath.Should().Be(Path.Combine("C:", "SomeDir", "SomePath"));
     }
@@ -49,13 +50,13 @@ public class DirectoryPathJsonConverterTests
         };
         var str = JsonConvert.SerializeObject(dto, Formatting.Indented);
         str.Should().Be(
-            File.ReadAllText(Path.Combine("IO", "Files", "NakedDirectoryPathSerialization.json")));
+            GetTestFile(Path.Combine("IO", "Files", "NakedDirectoryPathSerialization.json")));
     }
 
     [Fact]
     public void ConverterDeserialization()
     {
-        var str = File.ReadAllText(Path.Combine("IO", "Files", "ConverterDirectoryPathSerialization.json"));
+        var str = GetTestFile(Path.Combine("IO", "Files", "ConverterDirectoryPathSerialization.json"));
         var converted = JsonConvert.DeserializeObject<Dto>(str, ConverterSettings)!;
         converted.MyDirectory.RelativePath.Should().Be(Path.Combine("C:", "SomeDir", "SomePath"));
     }
@@ -63,7 +64,7 @@ public class DirectoryPathJsonConverterTests
     [Fact]
     public void OldToConverterDeserialization()
     {
-        var str = File.ReadAllText(Path.Combine("IO", "Files", "OldDirectoryPathSerialization.json"));
+        var str = GetTestFile(Path.Combine("IO", "Files", "OldDirectoryPathSerialization.json"));
         var converted = JsonConvert.DeserializeObject<Dto>(str, ConverterSettings)!;
         converted.MyDirectory.RelativePath.Should().Be(Path.Combine("C:", "SomeDir", "SomePath"));
     }
@@ -71,7 +72,7 @@ public class DirectoryPathJsonConverterTests
     [Fact]
     public void NakedToConverterDeserialization()
     {
-        var str = File.ReadAllText(Path.Combine("IO", "Files", "NakedDirectoryPathSerialization.json"));
+        var str = GetTestFile(Path.Combine("IO", "Files", "NakedDirectoryPathSerialization.json"));
         var converted = JsonConvert.DeserializeObject<Dto>(str, ConverterSettings)!;
         converted.MyDirectory.RelativePath.Should().Be(Path.Combine("C:", "SomeDir", "SomePath"));
     }
@@ -83,8 +84,19 @@ public class DirectoryPathJsonConverterTests
         {
             MyDirectory = new DirectoryPath("C:\\SomeDir\\SomePath")
         };
-        var str = File.ReadAllText(Path.Combine("IO", "Files", "ConverterDirectoryPathSerialization.json"));
+        var str = GetTestFile(Path.Combine("IO", "Files", "ConverterDirectoryPathSerialization.json"));
         var converted = JsonConvert.SerializeObject(dto, ConverterSettings);
         str.Should().Be(converted);
+    }
+
+    private string GetTestFile(string path)
+    {
+        var ret = File.ReadAllText(path);
+        if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        {
+            ret = ret.Replace("\\\\", $"{System.IO.Path.DirectorySeparatorChar}");
+            ret = IFileSystemExt.CleanDirectorySeparators(ret);
+        }
+        return ret;
     }
 }
