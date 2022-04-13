@@ -91,6 +91,8 @@ public class FilePathJsonConverterTests
     private string GetTestFile(string path)
     {
         var ret = File.ReadAllText(path);
-        return IFileSystemExt.CleanDirectorySeparators(ret);
+        ret = ret.Replace("\\\\", $"{System.IO.Path.DirectorySeparatorChar}");
+        ret = IFileSystemExt.CleanDirectorySeparators(ret);
+        return ret;
     }
 }
