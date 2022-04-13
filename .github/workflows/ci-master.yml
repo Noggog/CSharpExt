@@ -11,8 +11,26 @@ jobs:
     runs-on: ${{ matrix.os }}
     
     strategy:
+      fail-fast: false
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
+        project:
+          - CSharpExt.UnitTests
+          - Noggog.Autofac
+          - Noggog.CSharpExt
+          - Noggog.CSharpExt.Json
+          - Noggog.CSharpExt.Windows
+          - Noggog.Testing
+          - Noggog.WPF
+        exclude:
+          - os: ubuntu-latest
+            project: Noggog.WPF
+          - os: macos-latest
+            project: Noggog.WPF
+          - os: ubuntu-latest
+            project: Noggog.CSharpExt.Windows
+          - os: macos-latest
+            project: Noggog.CSharpExt.Windows
           
     steps:
     - uses: actions/checkout@v2
