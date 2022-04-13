@@ -5,15 +5,8 @@ on:
     types: [published]
     
 jobs:
-  build:
-    
-    name: Test (${{ matrix.os }})
-    runs-on: ${{ matrix.os }}
-
-    strategy:
-      matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
-
+  release:
+    runs-on: windows-latest
     steps:
     - uses: actions/checkout@v2
     - name: Setup .NET Core
@@ -28,9 +21,6 @@ jobs:
       run: dotnet build --no-restore -c Release /p:Version=${{ github.event.release.tag_name }} -p:PackageReleaseNotes="See https://github.com/Noggog/CSharpExt/releases/tag/${{ github.event.release.tag_name }}"
     - name: Test
       run: dotnet test -c Release --no-build
-      
-  publish:
-    runs-on: windows-latest
     - name: Publish CSharpExt to Github
       uses: svenstaro/upload-release-action@v2
       with:
