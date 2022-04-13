@@ -5,6 +5,7 @@ using System.IO.Abstractions;
 using System.IO.Abstractions.TestingHelpers;
 using FluentAssertions;
 using Noggog;
+using Noggog.Testing.IO;
 using NSubstitute;
 using Xunit;
 
@@ -12,7 +13,7 @@ namespace CSharpExt.UnitTests
 {
     public class IFileSystemExtTests
     {
-        public readonly static DirectoryPath DirPath = $"{Utility.DrivePrefix}SomeDir";
+        public readonly static DirectoryPath DirPath = $"{PathingUtil.DrivePrefix}SomeDir";
         public readonly static FilePath SomeFile = Path.Combine(DirPath, "SomeFile");
         public readonly static FilePath SomeFileTxt = Path.Combine(DirPath, "SomeFile.txt");
         public readonly static DirectoryPath SomeSubDir = Path.Combine(DirPath, "SubDir");

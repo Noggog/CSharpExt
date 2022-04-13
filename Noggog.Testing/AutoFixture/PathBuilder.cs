@@ -2,13 +2,14 @@
 using System.IO;
 using System.Reflection;
 using AutoFixture.Kernel;
+using Noggog.Testing.IO;
 
 namespace Noggog.Testing.AutoFixture
 {
     public class PathBuilder : ISpecimenBuilder
     {
-        public static string ExistingDirectory = "C:\\ExistingDirectory";
-        public static string ExistingFile = "C:\\ExistingDirectory\\File";
+        public static string ExistingDirectory = $"{PathingUtil.DrivePrefix}ExistingDirectory";
+        public static string ExistingFile = $"{PathingUtil.DrivePrefix}{Path.Combine("ExistingDirectory", "File")}";
         
         public object Create(object request, ISpecimenContext context)
         { 
@@ -19,11 +20,11 @@ namespace Noggog.Testing.AutoFixture
                 {
                     if (p.ParameterType == typeof(FilePath))
                     {
-                        return new FilePath("C:\\MissingFile");
+                        return new FilePath($"{PathingUtil.DrivePrefix}MissingFile");
                     }
                     else if (p.ParameterType == typeof(DirectoryPath))
                     {
-                        return new DirectoryPath("C:\\MissingDirectory");
+                        return new DirectoryPath($"{PathingUtil.DrivePrefix}MissingDirectory");
                     }
                 }
                 else if (p.Name.ContainsInsensitive("existing"))
@@ -44,7 +45,7 @@ namespace Noggog.Testing.AutoFixture
                 }
                 else if (p.ParameterType == typeof(DirectoryPath))
                 {
-                    return new DirectoryPath($"C:\\{p.Name}{Path.GetRandomFileName()}");
+                    return new DirectoryPath($"{PathingUtil.DrivePrefix}{p.Name}{Path.GetRandomFileName()}");
                 }
             }
             else if (request is Type t)
@@ -55,7 +56,7 @@ namespace Noggog.Testing.AutoFixture
                 }
                 else if (t == typeof(DirectoryPath))
                 {
-                    return new DirectoryPath($"C:\\{Path.GetRandomFileName()}");
+                    return new DirectoryPath($"{PathingUtil.DrivePrefix}{Path.GetRandomFileName()}");
                 }
             }
 
