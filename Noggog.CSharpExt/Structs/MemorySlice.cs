@@ -76,9 +76,9 @@ namespace Noggog
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
-        public byte[] ToArray()
+        public T[] ToArray()
         {
-            var ret = new byte[_length];
+            var ret = new T[_length];
             Array.Copy(_arr, _startPos, ret, 0, _length);
             return ret;
         }
@@ -179,9 +179,9 @@ namespace Noggog
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
-        public byte[] ToArray()
+        public T[] ToArray()
         {
-            var ret = new byte[_length];
+            var ret = new T[_length];
             Array.Copy(_arr, _startPos, ret, 0, _length);
             return ret;
         }
