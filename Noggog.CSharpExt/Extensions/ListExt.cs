@@ -220,6 +220,52 @@ namespace Noggog
             list.RemoveToCount(i);
         }
 
+        public static void SetTo<T>(this IList<T> list, ReadOnlySpan<T> items, bool checkEquality = false)
+        {
+            int i = 0;
+            foreach (var item in items)
+            {
+                if (i >= list.Count)
+                {
+                    list.Add(item);
+                }
+                else if (checkEquality)
+                {
+                    if (!EqualityComparer<T>.Default.Equals(list[i], item))
+                    {
+                        list[i] = item;
+                    }
+                }
+                else
+                {
+                    list[i] = item;
+                }
+                i++;
+            }
+
+            list.RemoveToCount(i);
+        }
+
+        public static void SetTo<T>(this IList<T> list, IReadOnlyList<T> items, bool checkEquality = false)
+        {
+            SetTo(list, (IEnumerable<T>)items, checkEquality);
+        }
+
+        public static void SetTo<T>(this IList<T> list, MemorySlice<T> items, bool checkEquality = false)
+        {
+            SetTo(list, (IEnumerable<T>)items, checkEquality);
+        }
+
+        public static void SetTo<T>(this IList<T> list, ReadOnlyMemorySlice<T> items, bool checkEquality = false)
+        {
+            SetTo(list, (IEnumerable<T>)items, checkEquality);
+        }
+
+        public static void SetTo<T>(this IList<T> list, T[] items, bool checkEquality = false)
+        {
+            SetTo(list, (IEnumerable<T>)items, checkEquality);
+        }
+
         public static void SetTo<T, R>(this IList<T> list, IEnumerable<R> items, Func<R, T> converter)
         {
             int i = 0;
@@ -237,6 +283,45 @@ namespace Noggog
             }
 
             list.RemoveToCount(i);
+        }
+
+        public static void SetTo<T, R>(this IList<T> list, ReadOnlySpan<R> items, Func<R, T> converter)
+        {
+            int i = 0;
+            foreach (var item in items)
+            {
+                if (i >= list.Count)
+                {
+                    list.Add(converter(item));
+                }
+                else
+                {
+                    list[i] = converter(item);
+                }
+                i++;
+            }
+
+            list.RemoveToCount(i);
+        }
+
+        public static void SetTo<T, R>(this IList<T> list, IReadOnlyList<R> items, Func<R, T> converter)
+        {
+            SetTo<T, R>(list, (IEnumerable<R>)items, converter);
+        }
+
+        public static void SetTo<T, R>(this IList<T> list, MemorySlice<R> items, Func<R, T> converter)
+        {
+            SetTo<T, R>(list, (IEnumerable<R>)items, converter);
+        }
+
+        public static void SetTo<T, R>(this IList<T> list, ReadOnlyMemorySlice<R> items, Func<R, T> converter)
+        {
+            SetTo<T, R>(list, (IEnumerable<R>)items, converter);
+        }
+
+        public static void SetTo<T, R>(this IList<T> list, R[] items, Func<R, T> converter)
+        {
+            SetTo<T, R>(list, (IEnumerable<R>)items, converter);
         }
 
         public static void SetTo<T>(this IList<T> list, T item)
