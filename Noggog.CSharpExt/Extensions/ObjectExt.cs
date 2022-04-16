@@ -104,5 +104,12 @@ namespace Noggog
             if (a == null && b == null) return true;
             return a != null && b != null;
         }
+
+        public static bool NullSame<T>(Nullable<T> a, Nullable<T> b)
+            where T : struct
+        {
+            if (a == null && b == null) return true;
+            return a != null && b != null;
+        }
     }
 }
