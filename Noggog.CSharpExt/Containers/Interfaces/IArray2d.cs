@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 namespace Noggog;
 
 public interface IReadOnlyArray2d<out T> : IEnumerable<IKeyValue<P2Int, T>>

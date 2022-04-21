@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using System.IO.Abstractions;
 using System.IO.Abstractions.TestingHelpers;
 using AutoFixture;
@@ -7,70 +5,69 @@ using AutoFixture.Kernel;
 using Noggog.Testing.FileSystem;
 using NSubstitute;
 
-namespace Noggog.Testing.AutoFixture
+namespace Noggog.Testing.AutoFixture;
+
+public class FileSystemBuilder : ISpecimenBuilder
 {
-    public class FileSystemBuilder : ISpecimenBuilder
+    private readonly bool _useMockFileSystem;
+    private MockFileSystem? _mockFileSystem;
+    private MockFileSystemWatcher? _fileSystemWatcher;
+
+    public FileSystemBuilder(bool useMockFileSystem = true)
     {
-        private readonly bool _useMockFileSystem;
-        private MockFileSystem? _mockFileSystem;
-        private MockFileSystemWatcher? _fileSystemWatcher;
+        _useMockFileSystem = useMockFileSystem;
+    }
 
-        public FileSystemBuilder(bool useMockFileSystem = true)
+    public object Create(object request, ISpecimenContext context)
+    {
+        if (request is SeededRequest seed)
         {
-            _useMockFileSystem = useMockFileSystem;
+            request = seed.Request;
         }
 
-        public object Create(object request, ISpecimenContext context)
-        {
-            if (request is SeededRequest seed)
-            {
-                request = seed.Request;
-            }
-
-            if (request is not Type t) return new NoSpecimen();
+        if (request is not Type t) return new NoSpecimen();
             
-            if (t == typeof(IFileSystem))
+        if (t == typeof(IFileSystem))
+        {
+            if (_useMockFileSystem)
             {
-                if (_useMockFileSystem)
-                {
-                    return context.Create<MockFileSystem>();
-                }
-                else
-                {
-                    return Substitute.For<IFileSystem>();
-                }
+                return context.Create<MockFileSystem>();
             }
-            else if (t == typeof(MockFileSystem))
+            else
             {
-                if (_mockFileSystem == null)
-                {
-                    _mockFileSystem = new NoggogMockFileSystem(
-                        new Dictionary<string, MockFileData>(),
-                        fileSystemWatcher: context.Create<IFileSystemWatcherFactory>());
-                    _mockFileSystem.Directory.CreateDirectory(PathBuilder.ExistingDirectory);
-                    _mockFileSystem.File.Create(PathBuilder.ExistingFile);
-                }
-                return _mockFileSystem;
+                return Substitute.For<IFileSystem>();
             }
-            else if (t == typeof(IFileSystemWatcherFactory))
-            {
-                return context.Create<Noggog.Testing.FileSystem.MockFileSystemWatcherFactory>();
-            }
-            else if (t == typeof(Noggog.Testing.FileSystem.MockFileSystemWatcherFactory))
-            {
-                return new Noggog.Testing.FileSystem.MockFileSystemWatcherFactory(
-                    context.Create<MockFileSystemWatcher>());
-            }
-            else if (t == typeof(MockFileSystemWatcher))
-            {
-                if (_fileSystemWatcher == null)
-                {
-                    _fileSystemWatcher = new MockFileSystemWatcher();
-                }
-
-                return _fileSystemWatcher;
-            }
-            return new NoSpecimen();
         }
+        else if (t == typeof(MockFileSystem))
+        {
+            if (_mockFileSystem == null)
+            {
+                _mockFileSystem = new NoggogMockFileSystem(
+                    new Dictionary<string, MockFileData>(),
+                    fileSystemWatcher: context.Create<IFileSystemWatcherFactory>());
+                _mockFileSystem.Directory.CreateDirectory(PathBuilder.ExistingDirectory);
+                _mockFileSystem.File.Create(PathBuilder.ExistingFile);
+            }
+            return _mockFileSystem;
+        }
+        else if (t == typeof(IFileSystemWatcherFactory))
+        {
+            return context.Create<FileSystem.MockFileSystemWatcherFactory>();
+        }
+        else if (t == typeof(FileSystem.MockFileSystemWatcherFactory))
+        {
+            return new FileSystem.MockFileSystemWatcherFactory(
+                context.Create<MockFileSystemWatcher>());
+        }
+        else if (t == typeof(MockFileSystemWatcher))
+        {
+            if (_fileSystemWatcher == null)
+            {
+                _fileSystemWatcher = new MockFileSystemWatcher();
+            }
+
+            return _fileSystemWatcher;
+        }
+        return new NoSpecimen();
     }
 }

@@ -1,36 +1,34 @@
-using System;
 using Noggog;
 using Xunit;
 
-namespace CSharpExt.UnitTests
+namespace CSharpExt.UnitTests;
+
+public class FileName_Tests
 {
-    public class FileName_Tests
+    [Fact]
+    public static void FileNameTypical()
     {
-        [Fact]
-        public static void FileNameTypical()
-        {
-            new FileName("Test.txt");
-        }
+        new FileName("Test.txt");
+    }
 
-        [Fact]
-        public static void FileNameNoExtension()
-        {
-            new FileName("Test");
-        }
+    [Fact]
+    public static void FileNameNoExtension()
+    {
+        new FileName("Test");
+    }
 
-        [Fact]
-        public static void FileNameHasDirectory()
+    [Fact]
+    public static void FileNameHasDirectory()
+    {
+        Assert.Throws<ArgumentException>(() =>
         {
-            Assert.Throws<ArgumentException>(() =>
-            {
-                new FileName("Directory/Test.txt");
-            });
-        }
+            new FileName("Directory/Test.txt");
+        });
+    }
 
-        [Fact]
-        public static void FileNameEmpty()
-        {
-            new FileName(string.Empty);
-        }
+    [Fact]
+    public static void FileNameEmpty()
+    {
+        new FileName(string.Empty);
     }
 }

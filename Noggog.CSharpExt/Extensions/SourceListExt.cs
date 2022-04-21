@@ -1,50 +1,47 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using DynamicData;
+﻿using DynamicData;
 
-namespace Noggog
+namespace Noggog;
+
+public static class SourceListExt
 {
-    public static class SourceListExt
+    public static void SetTo<T>(this ISourceList<T> list, IEnumerable<T> items, bool checkEquality = false)
     {
-        public static void SetTo<T>(this ISourceList<T> list, IEnumerable<T> items, bool checkEquality = false)
+        list.Edit(l =>
         {
-            list.Edit(l =>
+            int i = 0;
+            foreach (var item in items)
             {
-                int i = 0;
-                foreach (var item in items)
+                if (i >= l.Count)
                 {
-                    if (i >= l.Count)
-                    {
-                        l.Add(item);
-                    }
-                    else if (checkEquality)
-                    {
-                        if (!EqualityComparer<T>.Default.Equals(l[i], item))
-                        {
-                            l[i] = item;
-                        }
-                    }
-                    else
+                    l.Add(item);
+                }
+                else if (checkEquality)
+                {
+                    if (!EqualityComparer<T>.Default.Equals(l[i], item))
                     {
                         l[i] = item;
                     }
-                    i++;
                 }
-
-                l.RemoveToCount(i);
-            });
-        }
-
-        public static void RemoveToCount<T>(this ISourceList<T> list, int count)
-        {
-            list.Edit(l =>
-            {
-                var toRemove = l.Count - count;
-                for (; toRemove > 0; toRemove--)
+                else
                 {
-                    l.RemoveAt(l.Count - 1);
+                    l[i] = item;
                 }
-            });
-        }
+                i++;
+            }
+
+            l.RemoveToCount(i);
+        });
+    }
+
+    public static void RemoveToCount<T>(this ISourceList<T> list, int count)
+    {
+        list.Edit(l =>
+        {
+            var toRemove = l.Count - count;
+            for (; toRemove > 0; toRemove--)
+            {
+                l.RemoveAt(l.Count - 1);
+            }
+        });
     }
 }

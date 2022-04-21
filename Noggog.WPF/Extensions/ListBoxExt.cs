@@ -1,10 +1,5 @@
-﻿using System.Collections;
-using System.Linq;
-using System.Windows.Controls;
+﻿namespace Noggog.WPF;
 
-namespace Noggog.WPF
+public static class ListBoxExt
 {
-    public static class ListBoxExt
-    {
-    }
 }

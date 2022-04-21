@@ -1,43 +1,37 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Noggog
+namespace Noggog;
+
+public interface ISortedListGetter<T> : IReadOnlyList<T>
 {
-    public interface ISortedListGetter<T> : IReadOnlyList<T>
-    {
-        bool TryGetIndexInDirection(
-            T item,
-            bool higher,
-            out int result);
+    bool TryGetIndexInDirection(
+        T item,
+        bool higher,
+        out int result);
 
-        bool TryGetValueInDirection(
-            T item,
-            bool higher,
-            [MaybeNullWhen(false)] out T result);
+    bool TryGetValueInDirection(
+        T item,
+        bool higher,
+        [MaybeNullWhen(false)] out T result);
 
-        bool TryGetInDirection(
-            T item,
-            bool higher,
-            out KeyValuePair<int, T> result);
+    bool TryGetInDirection(
+        T item,
+        bool higher,
+        out KeyValuePair<int, T> result);
 
-        bool TryGetEncapsulatedIndices(
-            T lowerKey,
-            T higherKey,
-            out RangeInt32 result);
+    bool TryGetEncapsulatedIndices(
+        T lowerKey,
+        T higherKey,
+        out RangeInt32 result);
 
-        bool TryGetEncapsulatedValues(
-            T lowerKey,
-            T higherKey,
-            [MaybeNullWhen(false)] out IEnumerable<KeyValuePair<int, T>> result);
-    }
+    bool TryGetEncapsulatedValues(
+        T lowerKey,
+        T higherKey,
+        [MaybeNullWhen(false)] out IEnumerable<KeyValuePair<int, T>> result);
+}
 
-    public interface ISortedList<T> : ISortedListGetter<T>, IList<T>, ICollection
-    {
-        bool Add(T item, bool replaceIfMatch);
-    }
+public interface ISortedList<T> : ISortedListGetter<T>, IList<T>, ICollection
+{
+    bool Add(T item, bool replaceIfMatch);
 }

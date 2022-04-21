@@ -1,22 +1,14 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
+namespace Noggog;
 
-namespace Noggog
+public static class CancellationExt
 {
-    public static class CancellationExt
+    public static CancellationToken Combine(this CancellationToken token, CancellationToken other)
     {
-        public static CancellationToken Combine(this CancellationToken token, CancellationToken other)
-        {
-            return CancellationTokenSource.CreateLinkedTokenSource(token, other).Token;
-        }
+        return CancellationTokenSource.CreateLinkedTokenSource(token, other).Token;
+    }
 
-        public static CancellationToken Combine(this CancellationToken token, params CancellationToken[] other)
-        {
-            return CancellationTokenSource.CreateLinkedTokenSource(token.AsEnumerable().And(other).ToArray()).Token;
-        }
+    public static CancellationToken Combine(this CancellationToken token, params CancellationToken[] other)
+    {
+        return CancellationTokenSource.CreateLinkedTokenSource(token.AsEnumerable().And(other).ToArray()).Token;
     }
 }

@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.IO;
-using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
 using FluentAssertions;
 using Newtonsoft.Json;
 using Noggog;
@@ -96,7 +94,7 @@ public class DirectoryPathJsonConverterTests
         if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
         {
             ret = ret.Replace("C:", string.Empty);
-            ret = ret.Replace("\\\\", $"{System.IO.Path.DirectorySeparatorChar}");
+            ret = ret.Replace("\\\\", $"{Path.DirectorySeparatorChar}");
             ret = IFileSystemExt.CleanDirectorySeparators(ret);
         }
         return ret;

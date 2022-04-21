@@ -1,7 +1,6 @@
-namespace CSharpExt.UnitTests
+namespace CSharpExt.UnitTests;
+
+public static class Utility
 {
-    public static class Utility
-    {
-        public static readonly string TempFolderPath = "CSharpExtTests";
-    }
+    public static readonly string TempFolderPath = "CSharpExtTests";
 }

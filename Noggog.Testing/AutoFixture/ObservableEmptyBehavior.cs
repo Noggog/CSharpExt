@@ -1,14 +1,13 @@
 ﻿using AutoFixture.Kernel;
 
-namespace Noggog.Testing.AutoFixture
+namespace Noggog.Testing.AutoFixture;
+
+public class ObservableEmptyBehavior : ISpecimenBuilderTransformation
 {
-    public class ObservableEmptyBehavior : ISpecimenBuilderTransformation
+    public ISpecimenBuilderNode Transform(ISpecimenBuilder builder)
     {
-        public ISpecimenBuilderNode Transform(ISpecimenBuilder builder)
-        {
-            return new Postprocessor(
-                builder,
-                new ObservableSpecimenCommand());
-        }
+        return new Postprocessor(
+            builder,
+            new ObservableSpecimenCommand());
     }
 }

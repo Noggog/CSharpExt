@@ -1,15 +1,14 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 
-namespace Noggog.WPF
+namespace Noggog.WPF;
+
+public static partial class Drag
 {
-    public static partial class Drag
+    public record DragEventParams<TViewModel>(DragEventArgs RawArgs)
     {
-        public record DragEventParams<TViewModel>(DragEventArgs RawArgs)
-        {
-            public TViewModel? Vm { get; set; }
-            public ListBox? SourceListBox { get; set; }
-            public int SourceListIndex { get; set; }
-        }
+        public TViewModel? Vm { get; set; }
+        public ListBox? SourceListBox { get; set; }
+        public int SourceListIndex { get; set; }
     }
 }

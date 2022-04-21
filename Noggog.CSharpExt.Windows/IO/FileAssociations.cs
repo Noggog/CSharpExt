@@ -1,7 +1,5 @@
-﻿using System;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using Microsoft.Win32;
-using Noggog.Utility;
 
 namespace Noggog.IO;
 

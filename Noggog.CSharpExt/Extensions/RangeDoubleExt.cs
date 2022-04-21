@@ -1,18 +1,14 @@
-using Noggog;
-using System;
+namespace Noggog;
 
-namespace Noggog
+public static class RangeDoubleExt
 {
-    public static class RangeDoubleExt
+    public static double Get(this RangeDouble d, RandomSource rand)
     {
-        public static double Get(this RangeDouble d, RandomSource rand)
-        {
-            return rand.NextDouble(d.Max - d.Min) + d.Min;
-        }
+        return rand.NextDouble(d.Max - d.Min) + d.Min;
+    }
 
-        public static double GetNormalDist(this RangeDouble d, RandomSource rand)
-        {
-            return rand.NextNormalDist(d.Min, d.Max);
-        }
+    public static double GetNormalDist(this RangeDouble d, RandomSource rand)
+    {
+        return rand.NextNormalDist(d.Min, d.Max);
     }
 }

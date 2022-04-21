@@ -6,7 +6,7 @@ using Noggog.Utility;
 
 namespace Noggog.Autofac.Modules;
 
-public class NoggogModule : global::Autofac.Module
+public class NoggogModule : Module
 {
     protected override void Load(ContainerBuilder builder)
     {

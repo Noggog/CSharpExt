@@ -1,16 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Threading;
+﻿using System.Reflection;
 using AutoFixture;
 using AutoFixture.Kernel;
 using AutoFixture.Xunit2;
 using Xunit;
 using Xunit.Sdk;
 
-namespace Noggog.Testing.AutoFixture
-{
+namespace Noggog.Testing.AutoFixture;
+
 public class MemberAutoDataImprovedAttribute : DataAttribute
 {
     private readonly Lazy<IFixture> fixture;
@@ -105,5 +101,4 @@ public class MemberAutoDataImprovedAttribute : DataAttribute
             return 0;
         }
     }
-}
 }

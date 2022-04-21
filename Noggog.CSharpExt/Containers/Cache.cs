@@ -1,6 +1,4 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 
 namespace Noggog;
@@ -96,7 +94,7 @@ public class Cache<TObject, TKey> : ICache<TObject, TKey>
         }
     }
 
-    IEnumerator<IKeyValue<TKey, TObject>> IEnumerable<IKeyValue<TKey, TObject>>.GetEnumerator() => this.GetEnumerator();
+    IEnumerator<IKeyValue<TKey, TObject>> IEnumerable<IKeyValue<TKey, TObject>>.GetEnumerator() => GetEnumerator();
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
     public void Set(TObject item) => _dict[_keySelector(item)] = item;

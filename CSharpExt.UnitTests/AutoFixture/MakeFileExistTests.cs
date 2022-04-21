@@ -3,23 +3,21 @@ using AutoFixture.Kernel;
 using Noggog;
 using Noggog.Testing.AutoFixture;
 using Noggog.Testing.AutoFixture.Testing;
-using NSubstitute;
 using Xunit;
 
-namespace CSharpExt.UnitTests.AutoFixture
+namespace CSharpExt.UnitTests.AutoFixture;
+
+public class MakeFileExistTests
 {
-    public class MakeFileExistTests
+    [Theory, BasicAutoData]
+    public void FileMadeInFileSystem(
+        FilePath path,
+        MockFileSystem mockFileSystem,
+        ISpecimenContext context,
+        MakeFileExist sut)
     {
-        [Theory, BasicAutoData]
-        public void FileMadeInFileSystem(
-            FilePath path,
-            MockFileSystem mockFileSystem,
-            ISpecimenContext context,
-            MakeFileExist sut)
-        {
-            context.MockToReturn(mockFileSystem);
-            sut.MakeExist(path, context);
-            mockFileSystem.File.Exists(path);
-        }
+        context.MockToReturn(mockFileSystem);
+        sut.MakeExist(path, context);
+        mockFileSystem.File.Exists(path);
     }
 }

@@ -1,11 +1,7 @@
 #if NETSTANDARD2_0
 #else
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Text;
 
 namespace Noggog
 {
@@ -16,7 +12,7 @@ namespace Noggog
 
         public DictionaryCovariantWrapper(IReadOnlyDictionary<TKey, TSourceValue> dict)
         {
-            this._dict = dict;
+            _dict = dict;
         }
 
         public TTargetValue this[TKey key] => _dict[key];

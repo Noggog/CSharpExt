@@ -2,14 +2,13 @@
 using Autofac.Builder;
 using NSubstitute;
 
-namespace Noggog
+namespace Noggog;
+
+public static class RegistrationBuilderExt
 {
-    public static class RegistrationBuilderExt
+    public static IRegistrationBuilder<T, SimpleActivatorData, SingleRegistrationStyle> RegisterMock<T>(this ContainerBuilder builder)
+        where T : class
     {
-        public static IRegistrationBuilder<T, SimpleActivatorData, SingleRegistrationStyle> RegisterMock<T>(this ContainerBuilder builder)
-            where T : class
-        {
-            return builder.RegisterInstance(Substitute.For<T>()).As<T>();
-        }
+        return builder.RegisterInstance(Substitute.For<T>()).As<T>();
     }
 }

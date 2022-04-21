@@ -1,33 +1,31 @@
 ﻿using System.Diagnostics;
-using System.Threading;
 
-namespace Noggog.Utility
+namespace Noggog.Utility;
+
+public interface IProcessFactory
 {
-    public interface IProcessFactory
-    {
-        IProcessWrapper Create(
-            ProcessStartInfo startInfo,
-            CancellationToken? cancel = null,
-            bool hideWindow = true,
-            bool hookOntoOutput = true,
-            bool killWithParent = true);
-    }
+    IProcessWrapper Create(
+        ProcessStartInfo startInfo,
+        CancellationToken? cancel = null,
+        bool hideWindow = true,
+        bool hookOntoOutput = true,
+        bool killWithParent = true);
+}
 
-    public class ProcessFactory : IProcessFactory
+public class ProcessFactory : IProcessFactory
+{
+    public IProcessWrapper Create(
+        ProcessStartInfo startInfo,
+        CancellationToken? cancel = null,
+        bool hideWindow = true,
+        bool hookOntoOutput = true,
+        bool killWithParent = true)
     {
-        public IProcessWrapper Create(
-            ProcessStartInfo startInfo,
-            CancellationToken? cancel = null,
-            bool hideWindow = true,
-            bool hookOntoOutput = true,
-            bool killWithParent = true)
-        {
-            return ProcessWrapper.Create(
-                startInfo,
-                cancel,
-                hideWindow: hideWindow,
-                hookOntoOutput: hookOntoOutput,
-                killWithParent: killWithParent);
-        }
+        return ProcessWrapper.Create(
+            startInfo,
+            cancel,
+            hideWindow: hideWindow,
+            hookOntoOutput: hookOntoOutput,
+            killWithParent: killWithParent);
     }
 }

@@ -2,24 +2,23 @@
 using AutoFixture.AutoNSubstitute;
 using AutoFixture.Xunit2;
 
-namespace Noggog.Testing.AutoFixture
-{
-    public class TestDataAttribute : AutoDataAttribute
-    {
-        public TestDataAttribute(bool ConfigureMembers = false)
-            : base(() =>
-            {
-                var customization = new AutoNSubstituteCustomization()
-                {
-                    ConfigureMembers = ConfigureMembers,
-                    GenerateDelegates = true
-                };
+namespace Noggog.Testing.AutoFixture;
 
-                return new Fixture()
-                    .Customize(customization)
-                    .Customize(new DefaultCustomization());
-            })
+public class TestDataAttribute : AutoDataAttribute
+{
+    public TestDataAttribute(bool ConfigureMembers = false)
+        : base(() =>
         {
-        }
+            var customization = new AutoNSubstituteCustomization()
+            {
+                ConfigureMembers = ConfigureMembers,
+                GenerateDelegates = true
+            };
+
+            return new Fixture()
+                .Customize(customization)
+                .Customize(new DefaultCustomization());
+        })
+    {
     }
 }

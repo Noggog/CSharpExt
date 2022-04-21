@@ -1,6 +1,4 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
 
 namespace Noggog;
 
@@ -81,14 +79,14 @@ public class Array2d<T> : IArray2d<T>, IShallowCloneable<Array2d<T>>
         }
     }
 
-    IEnumerator IEnumerable.GetEnumerator() => this.GetEnumerator();
+    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
     public Array2d<T> ShallowClone()
     {
         return new Array2d<T>((_arr.Clone() as T[,])!);
     }
 
-    object IShallowCloneable.ShallowClone() => this.ShallowClone();
+    object IShallowCloneable.ShallowClone() => ShallowClone();
 
     IEnumerator<IKeyValue<P2Int, T>> IEnumerable<IKeyValue<P2Int, T>>.GetEnumerator()
     {

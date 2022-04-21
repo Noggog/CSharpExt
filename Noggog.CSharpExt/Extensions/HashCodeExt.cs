@@ -1,16 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿namespace Noggog;
 
-namespace Noggog
+public static class HashCodeExt
 {
-    public static class HashCodeExt
+    public static void AddEnumerable<TValue>(this HashCode hashCode, IEnumerable<TValue> col)
     {
-        public static void AddEnumerable<TValue>(this HashCode hashCode, IEnumerable<TValue> col)
+        foreach (var val in col)
         {
-            foreach (var val in col)
-            {
-                hashCode.Add(val);
-            }
+            hashCode.Add(val);
         }
     }
 }

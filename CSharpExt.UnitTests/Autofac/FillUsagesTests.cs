@@ -1,61 +1,56 @@
-﻿using System;
-using System.Collections.Generic;
-using FluentAssertions;
-using Noggog.Autofac;
+﻿using FluentAssertions;
 using Noggog.Autofac.Validation;
 using Xunit;
-using Xunit.Sdk;
 
-namespace CSharpExt.UnitTests.Autofac
+namespace CSharpExt.UnitTests.Autofac;
+
+public class FillUsagesTests
 {
-    public class FillUsagesTests
+    class NoCtorClass
     {
-        class NoCtorClass
-        {
-        }
+    }
 
-        class EmptyCtorClass
+    class EmptyCtorClass
+    {
+        public EmptyCtorClass()
         {
-            public EmptyCtorClass()
-            {
                 
-            }
         }
+    }
 
-        [Fact]
-        public void EmptyCtors()
+    [Fact]
+    public void EmptyCtors()
+    {
+        new GetUsages().Get(
+                typeof(NoCtorClass),
+                typeof(EmptyCtorClass))
+            .Should().BeEmpty();
+    }
+
+    class SomeParams
+    {
+        public SomeParams(
+            NoCtorClass otherClass,
+            SubClass subClass)
         {
-            new GetUsages().Get(
-                    typeof(NoCtorClass),
-                    typeof(EmptyCtorClass))
-                .Should().BeEmpty();
         }
+    }
 
-        class SomeParams
+    class SubClass
+    {
+        public SubClass(EmptyCtorClass otherClass)
         {
-            public SomeParams(
-                NoCtorClass otherClass,
-                SubClass subClass)
-            {
-            }
-        }
-
-        class SubClass
-        {
-            public SubClass(EmptyCtorClass otherClass)
-            {
                 
-            }
         }
+    }
 
-        [Fact]
-        public void Typical()
-        {
-            new GetUsages().Get(
-                    typeof(SomeParams))
-                .Should().Equal(
-                    typeof(NoCtorClass),
-                    typeof(SubClass));
-        }
+    [Fact]
+    public void Typical()
+    {
+        new GetUsages().Get(
+                typeof(SomeParams))
+            .Should().Equal(
+                typeof(NoCtorClass),
+                typeof(SubClass));
     }
 }

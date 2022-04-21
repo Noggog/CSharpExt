@@ -1,6 +1,3 @@
-using System.Collections.Generic;
-using System.Linq;
-
 namespace Noggog;
 
 public class ExtendedList<T> : List<T>, IExtendedList<T>, IShallowCloneable
@@ -19,15 +16,15 @@ public class ExtendedList<T> : List<T>, IExtendedList<T>, IShallowCloneable
     {
         foreach (var item in collection.Reverse())
         {
-            this.Insert(index, item);
+            Insert(index, item);
         }
     }
 
     public void Move(int original, int destination)
     {
         var item = this[original];
-        this.RemoveAt(original);
-        this.Insert(destination, item);
+        RemoveAt(original);
+        Insert(destination, item);
     }
 
     public object ShallowClone()

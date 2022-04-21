@@ -1,9 +1,6 @@
-using System;
+namespace Noggog;
 
-namespace Noggog
+public static class ActionExt
 {
-    public static class ActionExt
-    {
-        public static readonly Action Nothing = new Action(() => { });
-    }
+    public static readonly Action Nothing = new Action(() => { });
 }

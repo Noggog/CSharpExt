@@ -1,6 +1,3 @@
-using System;
-using System.IO;
-
 namespace Noggog;
 
 public interface IBinaryWriteStream : IDisposable

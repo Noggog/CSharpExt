@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿namespace Noggog;
 
-namespace Noggog
+public static class CollectionExt
 {
-    public static class CollectionExt
+    public static T AddReturn<T>(this ICollection<T> coll, T item)
     {
-        public static T AddReturn<T>(this ICollection<T> coll, T item)
-        {
-            coll.Add(item);
-            return item;
-        }
+        coll.Add(item);
+        return item;
     }
 }

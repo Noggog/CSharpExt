@@ -1,18 +1,14 @@
-﻿using System;
-using System.Reactive.Disposables;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using System.Reactive.Disposables;
 
-namespace Noggog.Utility
+namespace Noggog.Utility;
+
+public class AsyncLock
 {
-    public class AsyncLock
-    {
-        private readonly SemaphoreSlim _lock = new(1, 1);
+    private readonly SemaphoreSlim _lock = new(1, 1);
 
-        public async Task<IDisposable> WaitAsync()
-        {
-            await _lock.WaitAsync();
-            return Disposable.Create(_lock, l => l.Release());
-        }
+    public async Task<IDisposable> WaitAsync()
+    {
+        await _lock.WaitAsync();
+        return Disposable.Create(_lock, l => l.Release());
     }
 }

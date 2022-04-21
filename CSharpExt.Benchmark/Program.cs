@@ -1,14 +1,12 @@
 using BenchmarkDotNet.Running;
-using System;
 
-namespace CSharpExt.Benchmark
+namespace CSharpExt.Benchmark;
+
+class Program
 {
-    class Program
+    static void Main(string[] args)
     {
-        static void Main(string[] args)
-        {
-            BenchmarkRunner.Run<BinaryMemoryReadStream>();
-            BenchmarkRunner.Run<BinaryTests>();
-        }
+        BenchmarkRunner.Run<BinaryMemoryReadStream>();
+        BenchmarkRunner.Run<BinaryTests>();
     }
 }

@@ -1,6 +1,5 @@
 #if NETSTANDARD2_0
 #else
-using System;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.Loader;

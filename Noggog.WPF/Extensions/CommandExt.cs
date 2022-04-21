@@ -1,49 +1,43 @@
 using ReactiveUI;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 
-namespace Noggog.WPF
+namespace Noggog.WPF;
+
+public static class CommandExt
 {
-    public static class CommandExt
+    public static IObservable<Unit> StartingExecution(this IReactiveCommand cmd)
     {
-        public static IObservable<Unit> StartingExecution(this IReactiveCommand cmd)
-        {
-            return cmd.IsExecuting
-                .DistinctUntilChanged()
-                .Where(x => x)
-                .Unit();
-        }
+        return cmd.IsExecuting
+            .DistinctUntilChanged()
+            .Where(x => x)
+            .Unit();
+    }
 
-        public static IObservable<Unit> EndingExecution(this IReactiveCommand cmd)
-        {
-            return cmd.IsExecuting
-                .DistinctUntilChanged()
-                .Pairwise()
-                .Where(x => x.Previous && !x.Current)
-                .Unit();
-        }
+    public static IObservable<Unit> EndingExecution(this IReactiveCommand cmd)
+    {
+        return cmd.IsExecuting
+            .DistinctUntilChanged()
+            .Pairwise()
+            .Where(x => x.Previous && !x.Current)
+            .Unit();
+    }
 
-        public static ReactiveCommand<Unit, Unit> CreateCombinedAny(params ReactiveCommand<Unit, Unit>[] commands)
-        {
+    public static ReactiveCommand<Unit, Unit> CreateCombinedAny(params ReactiveCommand<Unit, Unit>[] commands)
+    {
 
-            return ReactiveCommand.CreateFromTask(
-                execute: () =>
+        return ReactiveCommand.CreateFromTask(
+            execute: () =>
+            {
+                return Task.WhenAll(commands.Select(async c =>
                 {
-                    return Task.WhenAll(commands.Select(async c =>
+                    if (((ICommand)c).CanExecute(Unit.Default))
                     {
-                        if (((ICommand)c).CanExecute(Unit.Default))
-                        {
-                            await c.Execute();
-                        }
-                    }));
-                },
-                canExecute: Noggog.ObservableExt.Any(commands.Select(x => x.CanExecute).ToArray()));
-        }
+                        await c.Execute();
+                    }
+                }));
+            },
+            canExecute: Noggog.ObservableExt.Any(commands.Select(x => x.CanExecute).ToArray()));
     }
 }

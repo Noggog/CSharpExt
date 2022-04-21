@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 using DynamicData;
 using Noggog.WPF.Containers;
 using Noggog.WPF.Internals;
@@ -13,7 +11,7 @@ namespace Noggog.WPF
             object obj,
             [MaybeNullWhen(false)] out IDragDropTarget<T> target)
         {
-            if (obj is DynamicData.ISourceList<T> sourceList)
+            if (obj is ISourceList<T> sourceList)
             {
                 target = new SourceListDragDropTarget<T>(sourceList);
                 return true;
@@ -77,9 +75,9 @@ namespace Noggog.WPF
 
         class SourceListDragDropTarget<T> : IDragDropTarget<T>
         {
-            private readonly DynamicData.ISourceList<T> _sourceList;
+            private readonly ISourceList<T> _sourceList;
 
-            public SourceListDragDropTarget(DynamicData.ISourceList<T> sourceList)
+            public SourceListDragDropTarget(ISourceList<T> sourceList)
             {
                 _sourceList = sourceList;
             }

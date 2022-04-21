@@ -1,28 +1,26 @@
-﻿using System.Collections.Generic;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Noggog.Autofac.Validation;
 using Noggog.Testing.AutoFixture;
 using NSubstitute;
 using Xunit;
 
-namespace CSharpExt.UnitTests.Autofac
-{
-    public class IsAllowableEnumerableTests
-    {
-        [Theory, TestData]
-        public void Typical(IsAllowableEnumerable sut)
-        {
-            sut.IsAllowed(typeof(IEnumerable<string>))
-                .Should().BeTrue();
+namespace CSharpExt.UnitTests.Autofac;
 
-            sut.ValidateTypeCtor.Received(1).Validate(typeof(string), null);
-        }
+public class IsAllowableEnumerableTests
+{
+    [Theory, TestData]
+    public void Typical(IsAllowableEnumerable sut)
+    {
+        sut.IsAllowed(typeof(IEnumerable<string>))
+            .Should().BeTrue();
+
+        sut.ValidateTypeCtor.Received(1).Validate(typeof(string), null);
+    }
         
-        [Theory, TestData]
-        public void NotEnumerable(IsAllowableEnumerable sut)
-        {
-            sut.IsAllowed(typeof(string))
-                .Should().BeFalse();
-        }
+    [Theory, TestData]
+    public void NotEnumerable(IsAllowableEnumerable sut)
+    {
+        sut.IsAllowed(typeof(string))
+            .Should().BeFalse();
     }
 }

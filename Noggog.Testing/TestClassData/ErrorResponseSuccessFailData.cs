@@ -1,18 +1,16 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 
-namespace Noggog.Testing.TestClassData
+namespace Noggog.Testing.TestClassData;
+
+public class ErrorResponseSuccessFailData : IEnumerable<object[]>
 {
-    public class ErrorResponseSuccessFailData : IEnumerable<object[]>
+    public static IEnumerable<object[]> Data { get; } = new[]
     {
-        public static IEnumerable<object[]> Data { get; } = new[]
-        {
-            new object[] {ErrorResponse.Success},
-            new object[] {ErrorResponse.Failure},
-        };
+        new object[] {ErrorResponse.Success},
+        new object[] {ErrorResponse.Failure},
+    };
 
-        public IEnumerator<object[]> GetEnumerator() => Data.GetEnumerator();
+    public IEnumerator<object[]> GetEnumerator() => Data.GetEnumerator();
 
-        IEnumerator IEnumerable.GetEnumerator() => Data.GetEnumerator();
-    }
+    IEnumerator IEnumerable.GetEnumerator() => Data.GetEnumerator();
 }

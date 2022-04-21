@@ -1,107 +1,101 @@
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 
-namespace Noggog.WPF
+namespace Noggog.WPF;
+
+public static class WindowExt
 {
-    public static class WindowExt
+    public static T WireMainVM<T>(this Window window)
+        where T : new()
     {
-        public static T WireMainVM<T>(this Window window)
-            where T : new()
-        {
-            T mainVM = new T();
-            window.DataContext = mainVM;
-            return mainVM;
-        }
+        T mainVM = new T();
+        window.DataContext = mainVM;
+        return mainVM;
+    }
 
-        public static T WireMainVM<T>(
-            this Window window,
-            string settingsPath,
-            Func<string, T> load,
-            Action<string, T> save)
-            where T : IDisposable, new()
+    public static T WireMainVM<T>(
+        this Window window,
+        string settingsPath,
+        Func<string, T> load,
+        Action<string, T> save)
+        where T : IDisposable, new()
+    {
+        T mainVM;
+        if (File.Exists(settingsPath))
         {
-            T mainVM;
-            if (File.Exists(settingsPath))
-            {
-                mainVM = load(settingsPath);
-            }
-            else
-            {
-                mainVM = new T();
-            }
-            window.Closed += (a, b) =>
-            {
-                FilePath filePath = new FilePath(settingsPath);
-                filePath.Directory?.Create();
-                save(settingsPath, mainVM);
-                mainVM.Dispose();
-            };
-            window.DataContext = mainVM;
-            return mainVM;
+            mainVM = load(settingsPath);
         }
+        else
+        {
+            mainVM = new T();
+        }
+        window.Closed += (a, b) =>
+        {
+            FilePath filePath = new FilePath(settingsPath);
+            filePath.Directory?.Create();
+            save(settingsPath, mainVM);
+            mainVM.Dispose();
+        };
+        window.DataContext = mainVM;
+        return mainVM;
+    }
 
-        public static T WireMainVM<T>(
-            this Window window,
-            string settingsPath,
-            JsonSerializerSettings? settings = null)
-            where T : IDisposable, new()
-        {
-            return window.WireMainVM(
-                settingsPath: settingsPath,
-                load: (s) => (T)JsonConvert.DeserializeObject<T>(File.ReadAllText(s), settings)!,
-                save: (s, vm) => File.WriteAllText(s, JsonConvert.SerializeObject(vm, Formatting.Indented, settings)));
-        }
+    public static T WireMainVM<T>(
+        this Window window,
+        string settingsPath,
+        JsonSerializerSettings? settings = null)
+        where T : IDisposable, new()
+    {
+        return window.WireMainVM(
+            settingsPath: settingsPath,
+            load: (s) => (T)JsonConvert.DeserializeObject<T>(File.ReadAllText(s), settings)!,
+            save: (s, vm) => File.WriteAllText(s, JsonConvert.SerializeObject(vm, Formatting.Indented, settings)));
+    }
 
-        public static T WireMainVM<T>(
-            this Window window,
-            string settingsPath,
-            T mainVM,
-            Action<string, T> load,
-            Action<string, T> save)
-            where T : IDisposable
+    public static T WireMainVM<T>(
+        this Window window,
+        string settingsPath,
+        T mainVM,
+        Action<string, T> load,
+        Action<string, T> save)
+        where T : IDisposable
+    {
+        if (File.Exists(settingsPath))
         {
-            if (File.Exists(settingsPath))
-            {
-                load(settingsPath, mainVM);
-            }
-            window.Closed += (a, b) =>
-            {
-                FilePath filePath = new FilePath(settingsPath);
-                filePath.Directory?.Create();
-                save(settingsPath, mainVM);
-                mainVM.Dispose();
-            };
-            window.DataContext = mainVM;
-            return mainVM;
+            load(settingsPath, mainVM);
         }
+        window.Closed += (a, b) =>
+        {
+            FilePath filePath = new FilePath(settingsPath);
+            filePath.Directory?.Create();
+            save(settingsPath, mainVM);
+            mainVM.Dispose();
+        };
+        window.DataContext = mainVM;
+        return mainVM;
+    }
 
-        public static T WireMainVM<T>(
-            this Window window,
-            string settingsPath,
-            Action<string, T> load,
-            Action<string, T> save)
-            where T : IDisposable, new()
+    public static T WireMainVM<T>(
+        this Window window,
+        string settingsPath,
+        Action<string, T> load,
+        Action<string, T> save)
+        where T : IDisposable, new()
+    {
+        var mainVM = new T();
+        if (File.Exists(settingsPath))
         {
-            var mainVM = new T();
-            if (File.Exists(settingsPath))
-            {
-                load(settingsPath, mainVM);
-            }
-            window.Closed += (a, b) =>
-            {
-                FilePath filePath = new FilePath(settingsPath);
-                filePath.Directory?.Create();
-                save(settingsPath, mainVM);
-                mainVM.Dispose();
-            };
-            window.DataContext = mainVM;
-            return mainVM;
+            load(settingsPath, mainVM);
         }
+        window.Closed += (a, b) =>
+        {
+            FilePath filePath = new FilePath(settingsPath);
+            filePath.Directory?.Create();
+            save(settingsPath, mainVM);
+            mainVM.Dispose();
+        };
+        window.DataContext = mainVM;
+        return mainVM;
     }
 }

@@ -1,5 +1,3 @@
-using System;
-
 namespace Noggog;
 
 public interface IShallowCloneable

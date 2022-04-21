@@ -1,5 +1,3 @@
-using Noggog;
-using System;
 using System.Diagnostics;
 
 namespace Noggog
@@ -16,14 +14,14 @@ namespace Noggog
             bool succeeded,
             T? val = default(T))
         {
-            this.Value = val!;
-            this.Succeeded = succeeded;
+            Value = val!;
+            Succeeded = succeeded;
         }
 
         public bool Equals(TryGet<T> other)
         {
-            return this.Succeeded == other.Succeeded
-                && object.Equals(this.Value, other.Value);
+            return Succeeded == other.Succeeded
+                && Equals(Value, other.Value);
         }
 
         public override bool Equals(object? obj)
@@ -52,9 +50,9 @@ namespace Noggog
 
         public T GetOrDefault(T def)
         {
-            if (this.Succeeded)
+            if (Succeeded)
             {
-                return this.Value;
+                return Value;
             }
             return def;
         }

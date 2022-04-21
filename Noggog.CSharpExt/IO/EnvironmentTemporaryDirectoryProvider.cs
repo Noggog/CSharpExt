@@ -1,12 +1,11 @@
-﻿namespace Noggog.IO
-{
-    public interface IEnvironmentTemporaryDirectoryProvider
-    {
-        DirectoryPath Path { get; }
-    }
+﻿namespace Noggog.IO;
 
-    public class EnvironmentTemporaryDirectoryProvider : IEnvironmentTemporaryDirectoryProvider
-    {
-        public DirectoryPath Path => System.IO.Path.GetTempPath();
-    }
+public interface IEnvironmentTemporaryDirectoryProvider
+{
+    DirectoryPath Path { get; }
+}
+
+public class EnvironmentTemporaryDirectoryProvider : IEnvironmentTemporaryDirectoryProvider
+{
+    public DirectoryPath Path => System.IO.Path.GetTempPath();
 }

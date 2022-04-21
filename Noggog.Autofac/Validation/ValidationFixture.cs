@@ -1,32 +1,30 @@
-﻿using System;
-using Autofac;
+﻿using Autofac;
 
-namespace Noggog.Autofac.Validation
+namespace Noggog.Autofac.Validation;
+
+public class ValidationFixture : IDisposable
 {
-    public class ValidationFixture : IDisposable
+    private IContainer _container;
+
+    public ValidationFixture()
     {
-        private IContainer _container;
+        var builder = new ContainerBuilder();
+        builder.RegisterModule<ValidationModule>();
+        _container = builder.Build();
+    }
 
-        public ValidationFixture()
+    public IDisposable GetValidator(IContainer container, out IValidator validator)
+    {
+        var scope = _container.BeginLifetimeScope(cfg =>
         {
-            var builder = new ContainerBuilder();
-            builder.RegisterModule<ValidationModule>();
-            _container = builder.Build();
-        }
+            cfg.RegisterInstance(container).As<IContainer>();
+        });
+        validator = scope.Resolve<IValidator>();
+        return scope;
+    }
 
-        public IDisposable GetValidator(IContainer container, out IValidator validator)
-        {
-            var scope = _container.BeginLifetimeScope(cfg =>
-            {
-                cfg.RegisterInstance(container).As<IContainer>();
-            });
-            validator = scope.Resolve<IValidator>();
-            return scope;
-        }
-
-        public void Dispose()
-        {
-            _container.Dispose();
-        }
+    public void Dispose()
+    {
+        _container.Dispose();
     }
 }

@@ -1,7 +1,4 @@
-using System;
-using System.Threading.Tasks;
-#if NETSTANDARD2_0 
-using TaskCompletionSource = Noggog.TaskCompletionSource;
+#if NETSTANDARD2_0
 #else 
 using TaskCompletionSource = System.Threading.Tasks.TaskCompletionSource;
 #endif

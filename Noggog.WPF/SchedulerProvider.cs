@@ -2,11 +2,10 @@
 using Noggog.Reactive;
 using ReactiveUI;
 
-namespace Noggog.WPF
+namespace Noggog.WPF;
+
+public class SchedulerProvider : ISchedulerProvider
 {
-    public class SchedulerProvider : ISchedulerProvider
-    {
-        public IScheduler MainThread => RxApp.MainThreadScheduler;
-        public IScheduler TaskPool  => RxApp.TaskpoolScheduler;
-    }
+    public IScheduler MainThread => RxApp.MainThreadScheduler;
+    public IScheduler TaskPool  => RxApp.TaskpoolScheduler;
 }

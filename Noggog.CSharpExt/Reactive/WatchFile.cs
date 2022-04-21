@@ -1,26 +1,24 @@
-﻿using System;
-using System.IO.Abstractions;
+﻿using System.IO.Abstractions;
 using System.Reactive;
 
-namespace Noggog.Reactive
+namespace Noggog.Reactive;
+
+public interface IWatchFile
 {
-    public interface IWatchFile
+    IObservable<Unit> Watch(FilePath path, bool throwIfInvalidPath = false);
+}
+
+public class WatchFile : IWatchFile
+{
+    private readonly IFileSystem _FileSystem;
+
+    public WatchFile(IFileSystem fileSystem)
     {
-        IObservable<Unit> Watch(FilePath path, bool throwIfInvalidPath = false);
+        _FileSystem = fileSystem;
     }
-
-    public class WatchFile : IWatchFile
-    {
-        private readonly IFileSystem _FileSystem;
-
-        public WatchFile(IFileSystem fileSystem)
-        {
-            _FileSystem = fileSystem;
-        }
         
-        public IObservable<Unit> Watch(FilePath path, bool throwIfInvalidPath = false)
-        {
-            return ObservableExt.WatchFile(path, throwIfInvalidPath, _FileSystem.FileSystemWatcher);
-        }
+    public IObservable<Unit> Watch(FilePath path, bool throwIfInvalidPath = false)
+    {
+        return ObservableExt.WatchFile(path, throwIfInvalidPath, _FileSystem.FileSystemWatcher);
     }
 }

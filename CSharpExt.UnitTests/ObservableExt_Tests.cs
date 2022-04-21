@@ -1,15 +1,11 @@
 using Microsoft.Reactive.Testing;
 using ReactiveUI.Testing;
-using System;
-using System.Collections.Generic;
 using System.Reactive.Subjects;
 using Xunit;
 using Noggog;
-using System.Threading.Tasks;
 using FluentAssertions;
 using System.Reactive.Linq;
 using System.Reactive.Threading.Tasks;
-using Noggog.Utility;
 using Path = System.IO.Path;
 using System.IO.Abstractions.TestingHelpers;
 using AutoFixture.Xunit2;

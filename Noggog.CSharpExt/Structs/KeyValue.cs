@@ -7,7 +7,7 @@ public readonly struct KeyValue<TKey, TValue> : IKeyValue<TKey, TValue>
 
     public KeyValue(TKey key, TValue value)
     {
-        this.Key = key;
-        this.Value = value;
+        Key = key;
+        Value = value;
     }
 }

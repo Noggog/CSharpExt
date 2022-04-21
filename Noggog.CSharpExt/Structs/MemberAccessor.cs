@@ -1,129 +1,126 @@
-using System;
-using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
 #nullable disable
 
-namespace Noggog
+namespace Noggog;
+
+public struct MemberAccessor<I, T>
 {
-    public struct MemberAccessor<I, T>
+    public readonly Action<I, T> Setter;
+    public readonly Func<I, T> Getter;
+
+    public MemberAccessor(
+        Action<I, T> setter,
+        Func<I, T> getter)
     {
-        public readonly Action<I, T> Setter;
-        public readonly Func<I, T> Getter;
+        Setter = setter;
+        Getter = getter;
+    }
 
-        public MemberAccessor(
-            Action<I, T> setter,
-            Func<I, T> getter)
+    public MemberAccessor(
+        Expression<Func<I, T>> getterExpr,
+        Expression<Action<I, T>> setterExpr)
+    {
+        Func<I, T> get = getterExpr.Compile();
+        Getter = (obj) =>
         {
-            this.Setter = setter;
-            this.Getter = getter;
+            return get((I)obj);
+        };
+        Action<I, T> set = setterExpr.Compile();
+        Setter = (obj, val) =>
+        {
+            set((I)obj, val);
+        };
+    }
+
+    public MemberAccessor(Expression<Func<I, T>> propertyExpression)
+    {
+        if (propertyExpression.Body.NodeType != ExpressionType.Parameter)
+        {
+            Process<T>(propertyExpression.Body, out Func<object, T> tmpGetter, out Action<object, T> tmpSetter, out bool pass);
+            if (!pass)
+            {
+                throw new NotImplementedException("Node type of " + propertyExpression.Body.NodeType + " is not yet implemented for MemberAccessor");
+            }
+            Getter = (i) => tmpGetter(i);
+            Setter = (i, val) => tmpSetter(i, val);
         }
-
-        public MemberAccessor(
-            Expression<Func<I, T>> getterExpr,
-            Expression<Action<I, T>> setterExpr)
+        else
         {
-            Func<I, T> get = getterExpr.Compile();
-            this.Getter = (obj) =>
-            {
-                return get((I)obj);
-            };
-            Action<I, T> set = setterExpr.Compile();
-            this.Setter = (obj, val) =>
-            {
-                set((I)obj, val);
-            };
+            Setter = null;
         }
-
-        public MemberAccessor(Expression<Func<I, T>> propertyExpression)
+        Func<I, T> f = propertyExpression.Compile();
+        Getter = (obj) =>
         {
-            if (propertyExpression.Body.NodeType != ExpressionType.Parameter)
-            {
-                Process<T>(propertyExpression.Body, out Func<object, T> tmpGetter, out Action<object, T> tmpSetter, out bool pass);
-                if (!pass)
+            return f((I)obj);
+        };
+    }
+
+    private static void Process<V>(Expression expr, out Func<object, V> getter, out Action<object, V> setter, out bool pass)
+    {
+        Expression parentExpr;
+        switch (expr.NodeType)
+        {
+            case ExpressionType.MemberAccess:
+                var memberExpr = expr as MemberExpression;
+                var propertyInfo = memberExpr.Member as PropertyInfo;
+                if (propertyInfo != null)
                 {
-                    throw new NotImplementedException("Node type of " + propertyExpression.Body.NodeType + " is not yet implemented for MemberAccessor");
-                }
-                this.Getter = (i) => tmpGetter(i);
-                this.Setter = (i, val) => tmpSetter(i, val);
-            }
-            else
-            {
-                this.Setter = null;
-            }
-            Func<I, T> f = propertyExpression.Compile();
-            this.Getter = (obj) =>
-            {
-                return f((I)obj);
-            };
-        }
-
-        private static void Process<V>(Expression expr, out Func<object, V> getter, out Action<object, V> setter, out bool pass)
-        {
-            Expression parentExpr;
-            switch (expr.NodeType)
-            {
-                case ExpressionType.MemberAccess:
-                    var memberExpr = expr as MemberExpression;
-                    var propertyInfo = memberExpr.Member as PropertyInfo;
-                    if (propertyInfo != null)
+                    List<PropertyInfo> nestedPropertyInfos = new List<PropertyInfo>();
+                    setter = (i, t) =>
                     {
-                        List<PropertyInfo> nestedPropertyInfos = new List<PropertyInfo>();
-                        setter = (i, t) =>
-                        {
-                            propertyInfo.SetValue(i, t, null);
-                        };
-                        getter = (i) =>
-                        {
-                            return (V)propertyInfo.GetValue(i, null);
-                        };
-                    }
-                    else
-                    {
-                        var fieldInfo = memberExpr.Member as FieldInfo;
-                        setter = (i, t) =>
-                        {
-                            fieldInfo.SetValue(i, t);
-                        };
-                        getter = (i) =>
-                        {
-                            return (V)fieldInfo.GetValue(i);
-                        };
-                    }
-
-                    pass = true;
-                    parentExpr = memberExpr.Expression;
-                    break;
-                default:
-                    setter = null;
-                    getter = null;
-                    pass = false;
-                    return;
-            }
-
-            if (parentExpr != null)
-            {
-                Process(parentExpr, out Func<object, object> parentGetter, out Action<object, object> parentSetter, out bool passParent);
-                var tmpSetter = setter;
-                var tmpGetter = getter;
-                if (passParent)
-                {
-                    setter = (obj, item) =>
-                    {
-                        tmpSetter(parentGetter(obj), item);
+                        propertyInfo.SetValue(i, t, null);
                     };
-                    getter = (obj) =>
+                    getter = (i) =>
                     {
-                        return tmpGetter(parentGetter(obj));
+                        return (V)propertyInfo.GetValue(i, null);
                     };
                 }
-            }
-            pass = true;
+                else
+                {
+                    var fieldInfo = memberExpr.Member as FieldInfo;
+                    setter = (i, t) =>
+                    {
+                        fieldInfo.SetValue(i, t);
+                    };
+                    getter = (i) =>
+                    {
+                        return (V)fieldInfo.GetValue(i);
+                    };
+                }
+
+                pass = true;
+                parentExpr = memberExpr.Expression;
+                break;
+            default:
+                setter = null;
+                getter = null;
+                pass = false;
+                return;
         }
 
-        public static implicit operator MemberAccessor<I, T>(Expression<Func<I, T>> expr)
+        if (parentExpr != null)
         {
-            return new MemberAccessor<I, T>(expr);
+            Process(parentExpr, out Func<object, object> parentGetter, out Action<object, object> parentSetter, out bool passParent);
+            var tmpSetter = setter;
+            var tmpGetter = getter;
+            if (passParent)
+            {
+                setter = (obj, item) =>
+                {
+                    tmpSetter(parentGetter(obj), item);
+                };
+                getter = (obj) =>
+                {
+                    return tmpGetter(parentGetter(obj));
+                };
+            }
         }
+        pass = true;
+    }
+
+    public static implicit operator MemberAccessor<I, T>(Expression<Func<I, T>> expr)
+    {
+        return new MemberAccessor<I, T>(expr);
     }
 }

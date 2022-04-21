@@ -1,8 +1,6 @@
 #if NETSTANDARD2_0 
-#else 
-using System;
+#else
 using System.Buffers.Binary;
-using System.IO;
 
 namespace Noggog
 {
@@ -15,7 +13,7 @@ namespace Noggog
 
         public BinaryWriteWrapper(Stream stream, bool dispose = true, bool isLittleEndian = true)
         {
-            this._dispose = dispose;
+            _dispose = dispose;
             IsLittleEndian = isLittleEndian;
             _stream = new BinaryWriter(stream);
         }

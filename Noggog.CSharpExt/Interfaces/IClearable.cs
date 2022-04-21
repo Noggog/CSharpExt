@@ -1,9 +1,6 @@
-using System;
+namespace Noggog;
 
-namespace Noggog
+public interface IClearable
 {
-    public interface IClearable
-    {
-        void Clear();
-    }
+    void Clear();
 }

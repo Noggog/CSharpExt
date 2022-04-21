@@ -1,24 +1,21 @@
-﻿using System;
+﻿namespace Noggog.IO;
 
-namespace Noggog.IO
+public interface ICurrentDirectoryProvider
 {
-    public interface ICurrentDirectoryProvider
+    DirectoryPath CurrentDirectory { get; }
+}
+
+public class CurrentDirectoryProvider : ICurrentDirectoryProvider
+{
+    public DirectoryPath CurrentDirectory => Environment.CurrentDirectory;
+}
+
+public class CurrentDirectoryInjection : ICurrentDirectoryProvider
+{
+    public CurrentDirectoryInjection(DirectoryPath currentDirectory)
     {
-        DirectoryPath CurrentDirectory { get; }
+        CurrentDirectory = currentDirectory;
     }
 
-    public class CurrentDirectoryProvider : ICurrentDirectoryProvider
-    {
-        public DirectoryPath CurrentDirectory => Environment.CurrentDirectory;
-    }
-
-    public class CurrentDirectoryInjection : ICurrentDirectoryProvider
-    {
-        public CurrentDirectoryInjection(DirectoryPath currentDirectory)
-        {
-            CurrentDirectory = currentDirectory;
-        }
-
-        public DirectoryPath CurrentDirectory { get; }
-    }
+    public DirectoryPath CurrentDirectory { get; }
 }

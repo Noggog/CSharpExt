@@ -1,27 +1,23 @@
-﻿using System;
-using System.Reflection;
+﻿namespace Noggog.Autofac.Validation;
 
-namespace Noggog.Autofac.Validation
+public interface IIsAllowableFunc
 {
-    public interface IIsAllowableFunc
-    {
-        bool IsAllowed(Type type);
-    }
+    bool IsAllowed(Type type);
+}
 
-    public class IsAllowableFunc : IIsAllowableFunc
-    {
-        public IValidateTypeCtor ValidateTypeCtor { get; set; } = null!;
+public class IsAllowableFunc : IIsAllowableFunc
+{
+    public IValidateTypeCtor ValidateTypeCtor { get; set; } = null!;
 
-        public bool IsAllowed(Type type)
+    public bool IsAllowed(Type type)
+    {
+        if (type.Name.StartsWith("Func")
+            && type.IsGenericType
+            && type.GenericTypeArguments.Length == 1)
         {
-            if (type.Name.StartsWith("Func")
-                && type.IsGenericType
-                && type.GenericTypeArguments.Length == 1)
-            {
-                ValidateTypeCtor.Validate(type.GenericTypeArguments[0]);
-                return true;
-            }
-            return false;
+            ValidateTypeCtor.Validate(type.GenericTypeArguments[0]);
+            return true;
         }
+        return false;
     }
 }

@@ -1,21 +1,20 @@
 ﻿using System.Runtime.InteropServices;
 
-namespace Noggog.Testing.IO
+namespace Noggog.Testing.IO;
+
+public class PathingUtil
 {
-    public class PathingUtil
+    public static string DrivePrefix
     {
-        public static string DrivePrefix
+        get
         {
-            get
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
-                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-                {
-                    return "C:\\";
-                }
-                else
-                {
-                    return "/";
-                }
+                return "C:\\";
+            }
+            else
+            {
+                return "/";
             }
         }
     }

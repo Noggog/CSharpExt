@@ -1,14 +1,11 @@
-﻿using System;
+﻿namespace Noggog.Time;
 
-namespace Noggog.Time
+public interface INowProvider
 {
-    public interface INowProvider
-    {
-        public DateTime NowLocal { get; }
-    }
+    public DateTime NowLocal { get; }
+}
 
-    public class NowProvider : INowProvider
-    {
-        public DateTime NowLocal => DateTime.Now;
-    }
+public class NowProvider : INowProvider
+{
+    public DateTime NowLocal => DateTime.Now;
 }

@@ -1,79 +1,76 @@
-using System;
-using System.Collections.Generic;
 using System.Text;
 
-namespace Noggog.Printing
+namespace Noggog.Printing;
+
+public class DepthPrinter
 {
-    public class DepthPrinter
+    internal int depth = 0;
+    public string DepthBuffer = "    ";
+    private List<KeyValuePair<int, List<string>>> list = new List<KeyValuePair<int, List<string>>>();
+
+    public void AddLine(params object[] objs)
     {
-        internal int depth = 0;
-        public string DepthBuffer = "    ";
-        private List<KeyValuePair<int, List<string>>> list = new List<KeyValuePair<int, List<string>>>();
-
-        public void AddLine(params object[] objs)
+        List<string> strs = new List<string>(objs.Length);
+        foreach (var o in objs)
         {
-            List<string> strs = new List<string>(objs.Length);
-            foreach (var o in objs)
-            {
-                strs.Add(o.ToString() ?? string.Empty);
-            }
-            list.Add(new KeyValuePair<int, List<string>>(depth, strs));
+            strs.Add(o.ToString() ?? string.Empty);
         }
+        list.Add(new KeyValuePair<int, List<string>>(depth, strs));
+    }
 
-        public void Add(DepthPrinter rhs)
+    public void Add(DepthPrinter rhs)
+    {
+        foreach (var line in rhs.list)
         {
-            foreach (var line in rhs.list)
-            {
-                list.Add(new KeyValuePair<int, List<string>>(line.Key, new List<string>(line.Value)));
-            }
-        }
-
-        public override string ToString()
-        {
-            StringBuilder sb = new StringBuilder();
-            foreach (var line in list)
-            {
-                for (int i = 0; i < line.Key; i++)
-                {
-                    sb.Append(DepthBuffer);
-                }
-                foreach (var s in line.Value)
-                {
-                    sb.Append(s);
-                }
-                sb.Append("\n");
-            }
-            return sb.ToString();
-        }
-
-        public DepthCounter IncrementDepth()
-        {
-            return new DepthCounter(this);
-        }
-
-        public void Shift(int amount)
-        {
-            for (int i = 0; i < list.Count; i++)
-            {
-                var line = list[i];
-                list[i] = new KeyValuePair<int, List<string>>(line.Key + amount, line.Value);
-            }
+            list.Add(new KeyValuePair<int, List<string>>(line.Key, new List<string>(line.Value)));
         }
     }
 
-    public class DepthCounter : IDisposable
+    public override string ToString()
     {
-        DepthPrinter printer;
-
-        internal DepthCounter(DepthPrinter printer)
+        StringBuilder sb = new StringBuilder();
+        foreach (var line in list)
         {
-            printer.depth++;
-            this.printer = printer;
+            for (int i = 0; i < line.Key; i++)
+            {
+                sb.Append(DepthBuffer);
+            }
+            foreach (var s in line.Value)
+            {
+                sb.Append(s);
+            }
+            sb.Append("\n");
         }
+        return sb.ToString();
+    }
 
-        public void Dispose()
+    public DepthCounter IncrementDepth()
+    {
+        return new DepthCounter(this);
+    }
+
+    public void Shift(int amount)
+    {
+        for (int i = 0; i < list.Count; i++)
         {
-            printer.depth--;
+            var line = list[i];
+            list[i] = new KeyValuePair<int, List<string>>(line.Key + amount, line.Value);
         }
+    }
+}
+
+public class DepthCounter : IDisposable
+{
+    DepthPrinter printer;
+
+    internal DepthCounter(DepthPrinter printer)
+    {
+        printer.depth++;
+        this.printer = printer;
+    }
+
+    public void Dispose()
+    {
+        printer.depth--;
     }
 }

@@ -1,26 +1,22 @@
 ﻿using ReactiveUI;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace Noggog.WPF
+namespace Noggog.WPF;
+
+public class NoggogUserControl<TViewModel> : ReactiveUserControl<TViewModel>
+    where TViewModel : class
 {
-    public class NoggogUserControl<TViewModel> : ReactiveUserControl<TViewModel>
-        where TViewModel : class
+    public NoggogUserControl()
     {
-        public NoggogUserControl()
+        DataContextChanged += (o, e) =>
         {
-            this.DataContextChanged += (o, e) =>
+            if (e.NewValue is TViewModel vm)
             {
-                if (e.NewValue is TViewModel vm)
-                {
-                    this.ViewModel = vm;
-                }
-                else
-                {
-                    this.ViewModel = null!;
-                }
-            };
-        }
+                ViewModel = vm;
+            }
+            else
+            {
+                ViewModel = null!;
+            }
+        };
     }
 }

@@ -1,29 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reactive.Disposables;
+﻿using System.Reactive.Disposables;
 
-namespace Noggog.Autofac.Validation
+namespace Noggog.Autofac.Validation;
+
+public interface IValidateTracker
 {
-    public interface IValidateTracker
+    IDisposable Track(Type type);
+    string State();
+}
+
+public class ValidateTracker : IValidateTracker
+{
+    private Stack<Type> _types = new();
+        
+    public IDisposable Track(Type type)
     {
-        IDisposable Track(Type type);
-        string State();
+        _types.Push(type);
+        return Disposable.Create(() => _types.Pop());
     }
 
-    public class ValidateTracker : IValidateTracker
+    public string State()
     {
-        private Stack<Type> _types = new();
-        
-        public IDisposable Track(Type type)
-        {
-            _types.Push(type);
-            return Disposable.Create(() => _types.Pop());
-        }
-
-        public string State()
-        {
-            return string.Join($" -> {Environment.NewLine}   ", _types.Reverse());
-        }
+        return string.Join($" -> {Environment.NewLine}   ", _types.Reverse());
     }
 }
