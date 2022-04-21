@@ -29,29 +29,36 @@ namespace Noggog
         public static P2Int Left => _directions[0];
         public static P2Int Right => _directions[1];
 
-        public readonly static P2Int Origin = new P2Int(0, 0);
-        public readonly static P2Int One = new P2Int(1, 1);
+        public static readonly P2Int Origin = new(0, 0);
+        public static readonly P2Int One = new(1, 1);
 
         [IgnoreDataMember]
-        public bool IsZero => X == 0 && Y == 0;
+        public bool IsZero => _x == 0 && _y == 0;
 
         [IgnoreDataMember]
         P2Int IP2IntGet.Point => this;
 
+        private int _x;
         [DataMember]
-        public readonly int X;
-        [IgnoreDataMember]
-        int IP2IntGet.X => this.X;
+        public int X
+        {
+            get => _x;
+            set => _x = value;
+        }
+        
+        private int _y;
         [DataMember]
-        public readonly int Y;
-        [IgnoreDataMember]
-        int IP2IntGet.Y => this.Y;
+        public int Y
+        {
+            get => _y;
+            set => _y = value;
+        }
 
         #region Ctors
         public P2Int(int x, int y)
         {
-            this.X = x;
-            this.Y = y;
+            _x = x;
+            _y = y;
         }
 
         public P2Int(IP2IntGet rhs)
@@ -63,7 +70,7 @@ namespace Noggog
         #region Shifts
         public P2Int Shift(int x, int y)
         {
-            return new P2Int(this.X + x, this.Y + y);
+            return new P2Int(_x + x, _y + y);
         }
 
         public P2Int Shift(double x, double y)
@@ -78,25 +85,25 @@ namespace Noggog
 
         public P2Int Shift(P2Int p)
         {
-            return Shift(p.X, p.Y);
+            return Shift(p._x, p._y);
         }
 
         public P2Int ShiftToPositive()
         {
             return Shift(
-                this.X < 0 ? -this.X : 0,
-                this.Y < 0 ? -this.Y : 0);
+                _x < 0 ? -_x : 0,
+                _y < 0 ? -_y : 0);
         }
         #endregion Shifts
 
         public P2Int UnitDir()
         {
-            int max = Math.Max(Math.Abs(X), Math.Abs(Y));
+            int max = Math.Max(Math.Abs(_x), Math.Abs(_y));
             if (max != 0)
             {
                 return new P2Int(
-                    (int)Math.Round(((decimal)X) / max),
-                    (int)Math.Round(((decimal)Y) / max));
+                    (int)Math.Round(((decimal)_x) / max),
+                    (int)Math.Round(((decimal)_y) / max));
             }
             else
             {
@@ -106,27 +113,27 @@ namespace Noggog
 
         public int MidPoint()
         {
-            return (Y - X) / 2;
+            return (_y - _x) / 2;
         }
 
         public double Distance(P2Int rhs)
         {
-            return Distance(rhs.X, rhs.Y);
+            return Distance(rhs._x, rhs._y);
         }
 
         public double Distance(int x, int y)
         {
-            return Math.Sqrt(Math.Pow(x - this.X, 2) + Math.Pow(y - this.Y, 2));
+            return Math.Sqrt(Math.Pow(x - _x, 2) + Math.Pow(y - _y, 2));
         }
 
         public P2Int Invert()
         {
-            return new P2Int(-X, -Y);
+            return new P2Int(-_x, -_y);
         }
         
         public override string ToString()
         {
-            return $"({X},{Y})";
+            return $"({_x},{_y})";
         }
 
         public override bool Equals(object? obj)
@@ -137,18 +144,12 @@ namespace Noggog
 
         public bool Equals(P2Int rhs)
         {
-            return this.X == rhs.X
-                && this.Y == rhs.Y;
+            return _x == rhs._x
+                && _y == rhs._y;
         }
 
         public static bool TryParse(string str, out P2Int ret)
         {
-            if (str == null)
-            {
-                ret = default(P2Int);
-                return false;
-            }
-
             string[] split = str.Split(',');
             if (split.Length != 2)
             {
@@ -167,17 +168,17 @@ namespace Noggog
             return true;
         }
 
-        public override int GetHashCode() => HashCode.Combine(X, Y);
+        public override int GetHashCode() => HashCode.Combine(_x, _y);
 
         public bool NextTo(P2Int p)
         {
-            if (p.X == this.X)
+            if (p._x == _x)
             {
-                return p.Y == this.Y + 1 || p.Y == this.Y - 1;
+                return p._y == _y + 1 || p._y == _y - 1;
             }
-            if (p.Y == this.Y)
+            if (p._y == _y)
             {
-                return p.X == this.X + 1 || p.X == this.X - 1;
+                return p._x == _x + 1 || p._x == _x - 1;
             }
             return false;
         }
@@ -199,17 +200,17 @@ namespace Noggog
 
         public static P2Int operator -(P2Int p1, P2Int p2)
         {
-            return new P2Int(p1.X - p2.X, p1.Y - p2.Y);
+            return new P2Int(p1._x - p2._x, p1._y - p2._y);
         }
 
         public static P2Int operator -(P2Int p1)
         {
-            return new P2Int(-p1.X, -p1.Y);
+            return new P2Int(-p1._x, -p1._y);
         }
 
         public static P2Int operator *(P2Int p1, int num)
         {
-            return new P2Int(p1.X * num, p1.Y * num);
+            return new P2Int(p1._x * num, p1._y * num);
         }
     }
 }

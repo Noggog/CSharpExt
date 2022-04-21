@@ -21,42 +21,56 @@ namespace Noggog
     public struct P2IntValue<T> : IP2IntGet, IEquatable<P2IntValue<T>>
     {
         [DataMember]
-        public readonly int X;
+        private int _x;
+        public int X
+        {
+            get => _x;
+            set => _x = value;
+        }
+        
         [DataMember]
-        public readonly int Y;
+        private int _y;
+        public int Y
+        {
+            get => _y;
+            set => _y = value;
+        }
+        
         [DataMember]
-        public readonly T Value;
+        private T _value;
+        public T Value
+        {
+            get => _value;
+            set => _value = value;
+        }
+        
         [IgnoreDataMember]
-        int IP2IntGet.X => this.X;
-        [IgnoreDataMember]
-        int IP2IntGet.Y => this.Y;
-        [IgnoreDataMember]
-        public P2Int Point => new P2Int(this.X, this.Y);
+        public P2Int Point => new P2Int(_x, _y);
 
         public P2IntValue(int x, int y, T val)
         {
-            this.X = x;
-            this.Y = y;
-            this.Value = val;
+            _x = x;
+            _y = y;
+            _value = val;
         }
 
         public P2IntValue(P2Int rhs, T val)
         {
-            this.X = rhs.X;
-            this.Y = rhs.Y;
-            this.Value = val;
+            _x = rhs.X;
+            _y = rhs.Y;
+            _value = val;
         }
 
         public P2IntValue(P2IntValue<T> rhs)
         {
-            this.X = rhs.X;
-            this.Y = rhs.Y;
-            Value = rhs.Value;
+            _x = rhs._x;
+            _y = rhs._y;
+            _value = rhs.Value;
         }
 
         public override string ToString()
         {
-            return $"({this.X}, {this.Y}, {this.Value})";
+            return $"({_x}, {_y}, {Value})";
         }
 
         public override bool Equals(object? obj)
@@ -67,16 +81,16 @@ namespace Noggog
         
         public bool Equals(P2IntValue<T> rhs)
         {
-            return this.X == rhs.X
-                && this.Y == rhs.Y
-                && object.Equals(this.Value, rhs.Value);
+            return _x == rhs._x
+                && _y == rhs._y
+                && object.Equals(Value, rhs.Value);
         }
 
         public override int GetHashCode()
         {
             var hash = new HashCode();
-            hash.Add(X);
-            hash.Add(Y);
+            hash.Add(_x);
+            hash.Add(_y);
             hash.Add(Value);
             return hash.ToHashCode();
         }
@@ -93,7 +107,7 @@ namespace Noggog
 
         public static implicit operator P2Int(P2IntValue<T> p)
         {
-            return new P2Int(p.X, p.Y);
+            return new P2Int(p._x, p._y);
         }
 
         public static implicit operator T(P2IntValue<T> p)

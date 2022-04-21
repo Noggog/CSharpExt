@@ -17,30 +17,41 @@ namespace Noggog;
 
     public struct P3UInt8 : IP3UInt8Get, IEquatable<P3UInt8>
     {
-        public static readonly P3UInt8 Origin = new P3UInt8(0, 0, 0);
-        public static readonly P3UInt8 One = new P3UInt8(1, 1, 1);
+        public static readonly P3UInt8 Origin = new(0, 0, 0);
+        public static readonly P3UInt8 One = new(1, 1, 1);
 
+        private byte _x;
         [DataMember]
-        public readonly byte X;
+        public byte X
+        {
+            get => _x;
+            set => _x = value;
+        }
+        
+        private byte _y;
         [DataMember]
-        public readonly byte Y;
+        public byte Y
+        {
+            get => _y;
+            set => _y = value;
+        }
+        
+        private byte _z;
         [DataMember]
-        public readonly byte Z;
-
-        [IgnoreDataMember]
-        byte IP3UInt8Get.X => this.X;
-        [IgnoreDataMember]
-        byte IP3UInt8Get.Y => this.Y;
-        [IgnoreDataMember]
-        byte IP3UInt8Get.Z => this.Z;
+        public byte Z
+        {
+            get => _z;
+            set => _z = value;
+        }
+        
         [IgnoreDataMember]
         public P3UInt8 Point => this;
 
         public P3UInt8(byte x, byte y, byte z)
         {
-            this.X = x;
-            this.Y = y;
-            this.Z = z;
+            _x = x;
+            _y = y;
+            _z = z;
         }
 
         public static bool TryParse(string str, out P3UInt8 ret)
@@ -72,16 +83,16 @@ namespace Noggog;
 
         public bool Equals(P3UInt8 rhs)
         {
-            return this.X == rhs.X
-                && this.Y == rhs.Y
-                && this.Z == rhs.Z;
+            return _x == rhs._x
+                && _y == rhs._y
+                && _z == rhs._z;
         }
 
-        public override int GetHashCode() => HashCode.Combine(X, Y, Z);
+        public override int GetHashCode() => HashCode.Combine(_x, _y, _z);
 
         public override string ToString()
         {
-            return $"({X},{Y},{Z}";
+            return $"({_x},{_y},{_z}";
         }
 
         public static bool operator ==(P3UInt8 obj1, P3UInt8 obj2)
@@ -96,6 +107,6 @@ namespace Noggog;
 
         public static explicit operator P3Double(P3UInt8 point)
         {
-            return new P3Double(point.X, point.Y, point.Z);
+            return new P3Double(point._x, point._y, point._z);
         }
     }

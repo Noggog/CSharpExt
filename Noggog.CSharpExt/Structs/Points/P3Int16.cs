@@ -17,40 +17,45 @@ namespace Noggog
 
     public struct P3Int16 : IP3Int16Get, IEquatable<P3Int16>
     {
-        public static readonly P3Int16 Origin = new P3Int16(0, 0, 0);
-        public static readonly P3Int16 One = new P3Int16(1, 1, 1);
+        public static readonly P3Int16 Origin = new(0, 0, 0);
+        public static readonly P3Int16 One = new(1, 1, 1);
 
+        private short _x;
         [DataMember]
-        public readonly short X;
+        public short X
+        {
+            get => _x;
+            set => _x = value;
+        }
+        
+        private short _y;
         [DataMember]
-        public readonly short Y;
+        public short Y
+        {
+            get => _y;
+            set => _y = value;
+        }
+        
+        private short _z;
         [DataMember]
-        public readonly short Z;
+        public short Z
+        {
+            get => _z;
+            set => _z = value;
+        }
 
-        [IgnoreDataMember]
-        short IP3Int16Get.X => this.X;
-        [IgnoreDataMember]
-        short IP3Int16Get.Y => this.Y;
-        [IgnoreDataMember]
-        short IP3Int16Get.Z => this.Z;
         [IgnoreDataMember]
         public P3Int16 Point => this;
 
         public P3Int16(short x, short y, short z)
         {
-            this.X = x;
-            this.Y = y;
-            this.Z = z;
+            _x = x;
+            _y = y;
+            _z = z;
         }
 
         public static bool TryParse(string str, out P3Int16 ret)
         {
-            if (str == null)
-            {
-                ret = default(P3Int16);
-                return false;
-            }
-
             string[] split = str.Split(',');
             if (split.Length != 3)
             {
@@ -72,12 +77,12 @@ namespace Noggog
 
         public P3Int16 Shift(short x, short y, short z)
         {
-            return new P3Int16((short)(this.X + x), (short)(this.Y + y), (short)(this.Z + z));
+            return new P3Int16((short)(_x + x), (short)(_y + y), (short)(_z + z));
         }
 
         public P3Int16 Shift(P3Int16 p)
         {
-            return Shift(p.X, p.Y, p.Z);
+            return Shift(p._x, p._y, p._z);
         }
 
         public override bool Equals(object? obj)
@@ -88,16 +93,16 @@ namespace Noggog
 
         public bool Equals(P3Int16 rhs)
         {
-            return this.X == rhs.X
-                && this.Y == rhs.Y
-                && this.Z == rhs.Z;
+            return _x == rhs._x
+                && _y == rhs._y
+                && _z == rhs._z;
         }
 
-        public override int GetHashCode() => HashCode.Combine(X, Y, Z);
+        public override int GetHashCode() => HashCode.Combine(_x, _y, _z);
 
         public override string ToString()
         {
-            return $"({X},{Y},{Z}";
+            return $"({_x},{_y},{_z}";
         }
 
         public static bool operator ==(P3Int16 obj1, P3Int16 obj2)
@@ -117,42 +122,42 @@ namespace Noggog
 
         public static P3Int16 operator +(P3Int16 p1, int p)
         {
-            return new P3Int16((short)(p1.X + p), (short)(p1.Y + p), (short)(p1.Z + p));
+            return new P3Int16((short)(p1._x + p), (short)(p1._y + p), (short)(p1._z + p));
         }
 
         public static P3Int16 operator -(P3Int16 p1, P3Int16 p2)
         {
-            return new P3Int16((short)(p1.X - p2.X), (short)(p1.Y - p2.Y), (short)(p1.Z - p2.Z));
+            return new P3Int16((short)(p1._x - p2._x), (short)(p1._y - p2._y), (short)(p1._z - p2._z));
         }
 
         public static P3Int16 operator -(P3Int16 p1, short p)
         {
-            return new P3Int16((short)(p1.X - p), (short)(p1.Y - p), (short)(p1.Z - p));
+            return new P3Int16((short)(p1._x - p), (short)(p1._y - p), (short)(p1._z - p));
         }
 
         public static P3Int16 operator -(P3Int16 p1)
         {
-            return new P3Int16((short)(-p1.X), (short)(-p1.Y), (short)(-p1.Z));
+            return new P3Int16((short)(-p1._x), (short)(-p1._y), (short)(-p1._z));
         }
 
         public static P3Int16 operator *(P3Int16 p1, short num)
         {
-            return new P3Int16((short)(p1.X * num), (short)(p1.Y * num), (short)(p1.Z * num));
+            return new P3Int16((short)(p1._x * num), (short)(p1._y * num), (short)(p1._z * num));
         }
 
         public static P3Int16 operator *(P3Int16 p1, P3Int16 p2)
         {
-            return new P3Int16((short)(p1.X * p2.X), (short)(p1.Y * p2.Y), (short)(p1.Z * p2.Z));
+            return new P3Int16((short)(p1._x * p2._x), (short)(p1._y * p2._y), (short)(p1._z * p2._z));
         }
 
         public static P3Int16 operator /(P3Int16 p1, short num)
         {
-            return new P3Int16((short)(p1.X / num), (short)(p1.Y / num), (short)(p1.Z / num));
+            return new P3Int16((short)(p1._x / num), (short)(p1._y / num), (short)(p1._z / num));
         }
 
         public static explicit operator P3Double(P3Int16 point)
         {
-            return new P3Double(point.X, point.Y, point.Z);
+            return new P3Double(point._x, point._y, point._z);
         }
     }
 }

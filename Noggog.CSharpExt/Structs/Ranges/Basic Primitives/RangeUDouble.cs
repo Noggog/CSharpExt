@@ -4,10 +4,21 @@ namespace Noggog
 {
     public struct RangeUDouble : IEquatable<RangeUDouble>
     {
-        public readonly UDouble Min;
-        public float FMin => (float)Min;
+        private UDouble _min;
+        public UDouble Min
+        {
+            get => _min;
+            set => _min = value;
+        }
 
-        public readonly UDouble Max;
+        private UDouble _max;
+        public UDouble Max
+        {
+            get => _max;
+            set => _max = value;
+        }
+        
+        public float FMin => (float)Min;
         public float FMax => (float)Max;
         public UDouble Average => ((Max - Min) / 2f) + Min;
 
@@ -15,13 +26,13 @@ namespace Noggog
         {
             if (val1 > val2)
             {
-                this.Max = val1;
-                this.Min = val2;
+                _max = val1;
+                _min = val2;
             }
             else
             {
-                this.Min = val1;
-                this.Max = val2;
+                _min = val1;
+                _max = val2;
             }
         }
 
@@ -46,11 +57,6 @@ namespace Noggog
 
         public static bool TryParse(string str, out RangeUDouble rd)
         {
-            if (str == null)
-            {
-                rd = default(RangeUDouble);
-                return false;
-            }
             string[] split = str.Split('-');
             if (split.Length != 2)
             {
@@ -65,8 +71,8 @@ namespace Noggog
 
         public bool IsInRange(UDouble f)
         {
-            if (f > this.Max) return false;
-            if (f < this.Min) return false;
+            if (f > _max) return false;
+            if (f < _min) return false;
             return true;
         }
 
@@ -74,27 +80,27 @@ namespace Noggog
         {
             if (throwException)
             {
-                if (f < this.Min)
+                if (f < _min)
                 {
-                    throw new ArgumentException($"Min is out of range: {f} < {this.Min}");
+                    throw new ArgumentException($"Min is out of range: {f} < {_min}");
                 }
-                if (f > this.Max)
+                if (f > _max)
                 {
-                    throw new ArgumentException($"Min is out of range: {f} < {this.Max}");
+                    throw new ArgumentException($"Max is out of range: {f} < {_max}");
                 }
             }
             else
             {
-                if (f > this.Max) return this.Max;
-                if (f < this.Min) return this.Min;
+                if (f > _max) return _max;
+                if (f < _min) return _min;
             }
             return f;
         }
 
         public bool IsInRange(RangeUDouble r)
         {
-            if (r.Max > this.Max) return false;
-            if (r.Min < this.Min) return false;
+            if (r._max > _max) return false;
+            if (r._min < _min) return false;
             return true;
         }
 
@@ -102,20 +108,20 @@ namespace Noggog
         {
             if (throwException)
             {
-                if (r.Min < this.Min)
+                if (r._min < _min)
                 {
-                    throw new ArgumentException($"Min is out of range: {r.Min} < {this.Min}");
+                    throw new ArgumentException($"Min is out of range: {r._min} < {_min}");
                 }
-                if (r.Max > this.Max)
+                if (r._max > _max)
                 {
-                    throw new ArgumentException($"Min is out of range: {r.Max} < {this.Max}");
+                    throw new ArgumentException($"Max is out of range: {r._max} < {_max}");
                 }
                 return r;
             }
             else
             {
-                UDouble min = r.Min < this.Min ? this.Min : r.Min;
-                UDouble max = r.Max < this.Max ? this.Max : r.Max;
+                UDouble min = r._min < _min ? _min : r._min;
+                UDouble max = r._max < _max ? _max : r._max;
                 return new RangeUDouble(min, max);
             }
         }
@@ -128,30 +134,30 @@ namespace Noggog
 
         public bool Equals(RangeUDouble other)
         {
-            return this.Min.EqualsWithin(other.Min)
-                && this.Max.EqualsWithin(other.Max);
+            return _min.EqualsWithin(other._min)
+                && _max.EqualsWithin(other._max);
         }
 
-        public override int GetHashCode() => HashCode.Combine(Min, Max);
+        public override int GetHashCode() => HashCode.Combine(_min, _max);
 
         public override string ToString()
         {
-            return Min.EqualsWithin(Max) ? $"({Min.ToString()})" : $"({Min} - {Max})";
+            return _min.EqualsWithin(_max) ? $"({_min})" : $"({_min} - {_max})";
         }
 
         public string ToString(string format)
         {
-            return Min.EqualsWithin(Max) ? $"({Min.ToString(format)})" : $"({Min.ToString(format)} - {Max.ToString(format)})";
+            return _min.EqualsWithin(_max) ? $"({_min.ToString(format)})" : $"({_min.ToString(format)} - {_max.ToString(format)})";
         }
 
         public static RangeUDouble operator -(RangeUDouble r1, RangeUDouble r2)
         {
-            return new RangeUDouble(r1.Min - r2.Min, r1.Max - r2.Max);
+            return new RangeUDouble(r1._min - r2._min, r1._max - r2._max);
         }
 
         public static RangeUDouble operator +(RangeUDouble r1, RangeUDouble r2)
         {
-            return new RangeUDouble(r1.Min + r2.Min, r1.Max + r2.Max);
+            return new RangeUDouble(r1._min + r2._min, r1._max + r2._max);
         }
 
         public static bool operator ==(RangeUDouble c1, RangeUDouble c2)

@@ -20,50 +20,68 @@ namespace Noggog
 
     public struct P3IntValue<T> : IP3IntGet, IEquatable<P3IntValue<T>>
     {
+        private int _x;
         [DataMember]
-        public readonly int X;
+        public int X
+        {
+            get => _x;
+            set => _x = value;
+        }
+        
+        private int _y;
         [DataMember]
-        public readonly int Y;
+        public int Y
+        {
+            get => _y;
+            set => _y = value;
+        }
+        
+        private int _z;
         [DataMember]
-        public readonly int Z;
+        public int Z
+        {
+            get => _z;
+            set => _z = value;
+        }
+        
+        private T _value;
         [DataMember]
-        public readonly T Value;
+        public T Value
+        {
+            get => _value;
+            set => _value = value;
+        }
+        
         [IgnoreDataMember]
-        int IP3IntGet.X => this.X;
-        [IgnoreDataMember]
-        int IP3IntGet.Y => this.Y;
-        [IgnoreDataMember]
-        int IP3IntGet.Z => this.Z;
-        [IgnoreDataMember]
-        P3Int IP3IntGet.Point => new P3Int(this.X, this.Y, this.Z);
+        P3Int IP3IntGet.Point => new(X, Y, Z);
 
         public P3IntValue(int x, int y, int z, T val)
         {
-            this.X = x;
-            this.Y = y;
-            this.Z = z;
-            this.Value = val;
+            _x = x;
+            _y = y;
+            _z = z;
+            _value = val;
         }
 
         public P3IntValue(P3Int rhs, T val)
         {
-            this.X = rhs.X;
-            this.Y = rhs.Y;
-            this.Z = rhs.Z;
-            this.Value = val;
+            _x = rhs.X;
+            _y = rhs.Y;
+            _z = rhs.Z;
+            _value = val;
         }
 
         public P3IntValue(P3IntValue<T> rhs)
         {
-            this.X = rhs.X;
-            this.Y = rhs.Y;
-            this.Z = rhs.Z;
-            this.Value = rhs.Value;
+            _x = rhs._x;
+            _y = rhs._y;
+            _z = rhs._z;
+            _value = rhs.Value;
         }
 
         public override string ToString()
         {
-            return $"({this.X},{this.Y},{this.Z},{this.Value})";
+            return $"({_x},{_y},{_z},{_value})";
         }
 
         public override bool Equals(object? obj)
@@ -74,19 +92,19 @@ namespace Noggog
 
         public bool Equals(P3IntValue<T> rhs)
         {
-            return this.X == rhs.X
-                && this.Y == rhs.Y
-                && this.Z == rhs.Z
-                && object.Equals(Value, rhs.Value);
+            return _x == rhs._x
+                && _y == rhs._y
+                && _z == rhs._z
+                && object.Equals(_value, rhs._value);
         }
 
         public override int GetHashCode()
         {
             var hash = new HashCode();
-            hash.Add(X);
-            hash.Add(Y);
-            hash.Add(Z);
-            hash.Add(Value);
+            hash.Add(_x);
+            hash.Add(_y);
+            hash.Add(_z);
+            hash.Add(_value);
             return hash.ToHashCode();
         }
         
@@ -102,7 +120,7 @@ namespace Noggog
 
         public static implicit operator P3Int(P3IntValue<T> p)
         {
-            return new P3Int(p.X, p.Y, p.Z);
+            return new P3Int(p._x, p._y, p._z);
         }
     }
 }

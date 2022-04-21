@@ -6,106 +6,122 @@ namespace Noggog
     public struct P3Double : IEquatable<P3Double>
     {
         public static readonly P3Double Origin = Zero;
-        public static readonly P3Double Zero = new P3Double(0, 0, 0);
-        public static readonly P3Double One = new P3Double(1, 1, 1);
-        public static readonly P3Double Up = new P3Double(0, 1, 0);
-        public static readonly P3Double Down = new P3Double(0, -1, 0);
-        public static readonly P3Double Back = new P3Double(0, 0, -1);
-        public static readonly P3Double Forward = new P3Double(0, 0, 1);
-        public static readonly P3Double Left = new P3Double(-1, 0, 0);
-        public static readonly P3Double Right = new P3Double(1, 0, 0);
+        public static readonly P3Double Zero = new(0, 0, 0);
+        public static readonly P3Double One = new(1, 1, 1);
+        public static readonly P3Double Up = new(0, 1, 0);
+        public static readonly P3Double Down = new(0, -1, 0);
+        public static readonly P3Double Back = new(0, 0, -1);
+        public static readonly P3Double Forward = new(0, 0, 1);
+        public static readonly P3Double Left = new(-1, 0, 0);
+        public static readonly P3Double Right = new(1, 0, 0);
 
+        private double _x;
         [DataMember]
-        public readonly double X;
+        public double X
+        {
+            get => _x;
+            set => _x = value;
+        }
+        
+        private double _y;
         [DataMember]
-        public readonly double Y;
+        public double Y
+        {
+            get => _y;
+            set => _y = value;
+        }
+        
+        private double _z;
         [DataMember]
-        public readonly double Z;
+        public double Z
+        {
+            get => _z;
+            set => _z = value;
+        }
         
         [IgnoreDataMember]
-        public P3Double XPoint => new P3Double(X, 0, 0);
+        public P3Double XPoint => new(_x, 0, 0);
         [IgnoreDataMember]
-        public P3Double YPoint => new P3Double(0, Y, 0);
+        public P3Double YPoint => new(0, _y, 0);
         [IgnoreDataMember]
-        public P3Double ZPoint => new P3Double(0, 0, Z);
+        public P3Double ZPoint => new(0, 0, _z);
 
         [IgnoreDataMember]
-        public P2Double XY => new P2Double(X, Y);
+        public P2Double XY => new(_x, _y);
         [IgnoreDataMember]
-        public P2Double XZ => new P2Double(X, Z);
+        public P2Double XZ => new(_x, _z);
         [IgnoreDataMember]
-        public P2Double YZ => new P2Double(Y, Z);
+        public P2Double YZ => new(_y, _z);
         [IgnoreDataMember]
-        public P2Double ZY => new P2Double(Z, Y);
+        public P2Double ZY => new(_z, _y);
         [IgnoreDataMember]
-        public P2Double ZX => new P2Double(Z, X);
+        public P2Double ZX => new(_z, _x);
         [IgnoreDataMember]
-        public P2Double YX => new P2Double(Y, X);
+        public P2Double YX => new(_y, _x);
 
         [IgnoreDataMember]
-        public P2Double XX => new P2Double(X, X);
+        public P2Double XX => new(_x, _x);
         [IgnoreDataMember]
-        public P2Double YY => new P2Double(Y, Y);
+        public P2Double YY => new(_y, _y);
         [IgnoreDataMember]
-        public P2Double ZZ => new P2Double(Z, Z);
+        public P2Double ZZ => new(_z, _z);
 
         [IgnoreDataMember]
-        public P3Double XXX => new P3Double(X, X, X);
+        public P3Double XXX => new(_x, _x, _x);
         [IgnoreDataMember]
-        public P3Double XXY => new P3Double(X, X, Y);
+        public P3Double XXY => new(_x, _x, _y);
         [IgnoreDataMember]
-        public P3Double XXZ => new P3Double(X, X, Z);
+        public P3Double XXZ => new(_x, _x, _z);
         [IgnoreDataMember]
-        public P3Double XYX => new P3Double(X, Y, X);
+        public P3Double XYX => new(_x, _y, _x);
         [IgnoreDataMember]
-        public P3Double XYY => new P3Double(X, Y, Y);
+        public P3Double XYY => new(_x, _y, _y);
         [IgnoreDataMember]
-        public P3Double XYZ => new P3Double(X, Y, Z);
+        public P3Double XYZ => new(_x, _y, _z);
         [IgnoreDataMember]
-        public P3Double XZX => new P3Double(X, Z, X);
+        public P3Double XZX => new(_x, _z, _x);
         [IgnoreDataMember]
-        public P3Double XZY => new P3Double(X, Z, Y);
+        public P3Double XZY => new(_x, _z, _y);
         [IgnoreDataMember]
-        public P3Double XZZ => new P3Double(X, Z, Z);
+        public P3Double XZZ => new(_x, _z, _z);
 
         [IgnoreDataMember]
-        public P3Double YXX => new P3Double(Y, X, X);
+        public P3Double YXX => new(_y, _x, _x);
         [IgnoreDataMember]
-        public P3Double YXY => new P3Double(Y, X, Y);
+        public P3Double YXY => new(_y, _x, _y);
         [IgnoreDataMember]
-        public P3Double YXZ => new P3Double(Y, X, Z);
+        public P3Double YXZ => new(_y, _x, _z);
         [IgnoreDataMember]
-        public P3Double YYX => new P3Double(Y, Y, X);
+        public P3Double YYX => new(_y, _y, _x);
         [IgnoreDataMember]
-        public P3Double YYY => new P3Double(Y, Y, Y);
+        public P3Double YYY => new(_y, _y, _y);
         [IgnoreDataMember]
-        public P3Double YYZ => new P3Double(Y, Y, Z);
+        public P3Double YYZ => new(_y, _y, _z);
         [IgnoreDataMember]
-        public P3Double YZX => new P3Double(Y, Z, X);
+        public P3Double YZX => new(_y, _z, _x);
         [IgnoreDataMember]
-        public P3Double YZY => new P3Double(Y, Z, Y);
+        public P3Double YZY => new(_y, _z, _y);
         [IgnoreDataMember]
-        public P3Double YZZ => new P3Double(Y, Z, Z);
+        public P3Double YZZ => new(_y, _z, _z);
 
         [IgnoreDataMember]
-        public P3Double ZXX => new P3Double(Z, X, X);
+        public P3Double ZXX => new(_z, _x, _x);
         [IgnoreDataMember]
-        public P3Double ZXY => new P3Double(Z, X, Y);
+        public P3Double ZXY => new(_z, _x, _y);
         [IgnoreDataMember]
-        public P3Double ZXZ => new P3Double(Z, X, Z);
+        public P3Double ZXZ => new(_z, _x, _z);
         [IgnoreDataMember]
-        public P3Double ZYX => new P3Double(Z, Y, X);
+        public P3Double ZYX => new(_z, _y, _x);
         [IgnoreDataMember]
-        public P3Double ZYY => new P3Double(Z, Y, Y);
+        public P3Double ZYY => new(_z, _y, _y);
         [IgnoreDataMember]
-        public P3Double ZYZ => new P3Double(Z, Y, Z);
+        public P3Double ZYZ => new(_z, _y, _z);
         [IgnoreDataMember]
-        public P3Double ZZX => new P3Double(Z, Z, X);
+        public P3Double ZZX => new(_z, _z, _x);
         [IgnoreDataMember]
-        public P3Double ZZY => new P3Double(Z, Z, Y);
+        public P3Double ZZY => new(_z, _z, _y);
         [IgnoreDataMember]
-        public P3Double ZZZ => new P3Double(Z, Z, Z);
-
+        public P3Double ZZZ => new(_z, _z, _z);
 
         [IgnoreDataMember]
         public P3Double Normalized
@@ -113,52 +129,52 @@ namespace Noggog
             get
             {
                 double length = Length;
-                return new P3Double(X / length, Y / length, Z / length);
+                return new P3Double(_x / length, _y / length, _z / length);
             }
         }
 
         [IgnoreDataMember]
-        public double Length => Math.Sqrt(X * X + Y * Y + Z * Z);
+        public double Length => Math.Sqrt(_x * _x + _y * _y + _z * _z);
 
         [IgnoreDataMember]
         public double Magnitude => Length;
 
         [IgnoreDataMember]
-        public double SqrMagnitude => (X * X + Y * Y + Z * Z);
+        public double SqrMagnitude => (_x * _x + _y * _y + _z * _z);
 
         [IgnoreDataMember]
-        public P3Double Absolute => new P3Double(
-            Math.Abs(X),
-            Math.Abs(Y),
-            Math.Abs(Z));
+        public P3Double Absolute => new(
+            Math.Abs(_x),
+            Math.Abs(_y),
+            Math.Abs(_z));
 
         public P3Double(double x, double y, double z)
         {
-            this.X = x;
-            this.Y = y;
-            this.Z = z;
+            _x = x;
+            _y = y;
+            _z = z;
         }
 
         public P3Double(P3Double p2)
         {
-            this.X = p2.X;
-            this.Y = p2.Y;
-            this.Z = p2.Z;
+            _x = p2._x;
+            _y = p2._y;
+            _z = p2._z;
         }
         
         public P3Double Shift(double x, double y, double z)
         {
-            return new P3Double(X + x, Y + y, Z + z);
+            return new P3Double(_x + x, _y + y, _z + z);
         }
         
         public P3Double Shift(float x, float y, float z)
         {
-            return new P3Double(X + x, Y + y, Z + z);
+            return new P3Double(_x + x, _y + y, _z + z);
         }
         
         public P3Double Shift(P3Double p)
         {
-            return Shift(p.X, p.Y, p.Z);
+            return Shift(p._x, p._y, p._z);
         }
 
         public double Distance(P3Double p2)
@@ -171,44 +187,44 @@ namespace Noggog
             return (p1 - p2).Length;
         }
         
-        public P3Double SetX(double x)
+        public P3Double Set_x(double x)
         {
-            return new P3Double(x, Y, Z);
+            return new P3Double(x, _y, _z);
         }
         
-        public P3Double SetY(double y)
+        public P3Double Set_y(double y)
         {
-            return new P3Double(X, y, Z);
+            return new P3Double(_x, y, _z);
         }
         
-        public P3Double SetZ(double z)
+        public P3Double Set_z(double z)
         {
-            return new P3Double(X, Y, z);
+            return new P3Double(_x, _y, z);
         }
         
-        public P3Double ModifyX(double x)
+        public P3Double Modify_x(double x)
         {
-            return new P3Double(X + x, Y, Z);
+            return new P3Double(_x + x, _y, _z);
         }
         
-        public P3Double ModifyY(double y)
+        public P3Double Modify_y(double y)
         {
-            return new P3Double(X, Y + y, Z);
+            return new P3Double(_x, _y + y, _z);
         }
         
-        public P3Double ModifyZ(double z)
+        public P3Double Modify_z(double z)
         {
-            return new P3Double(X, Y, Z + z);
+            return new P3Double(_x, _y, _z + z);
         }
 
         public bool EqualsWithin(double value, double within = .000000001d)
         {
-            return X.EqualsWithin(value, within) && Y.EqualsWithin(value, within) && Z.EqualsWithin(value, within);
+            return _x.EqualsWithin(value, within) && _y.EqualsWithin(value, within) && _z.EqualsWithin(value, within);
         }
 
         public bool EqualsWithin(P3Double value, double within = .000000001d)
         {
-            return X.EqualsWithin(value.X, within) && Y.EqualsWithin(value.Y, within) && Z.EqualsWithin(value.Z, within);
+            return _x.EqualsWithin(value._x, within) && _y.EqualsWithin(value._y, within) && _z.EqualsWithin(value._z, within);
         }
 
         public static P3Double ProjectOnPlane(P3Double v, P3Double planeNormal)
@@ -219,23 +235,23 @@ namespace Noggog
 
         public static double Dot(P3Double v1, P3Double v2)
         {
-            return v1.X * v2.X + v1.Y * v2.Y + v1.Z * v2.Z;
+            return v1._x * v2._x + v1._y * v2._y + v1._z * v2._z;
         }
 
         public P3Double Process(Func<double, double> conv)
         {
             return new P3Double(
-                conv(X),
-                conv(Y),
-                conv(Z));
+                conv(_x),
+                conv(_y),
+                conv(_z));
         }
 
         public static P3Double Cross(P3Double v1, P3Double v2)
         {
             double x, y, z;
-            x = v1.Y * v2.Z - v2.Y * v1.Z;
-            y = (v1.X * v2.Z - v2.X * v1.Z) * -1;
-            z = v1.X * v2.Y - v2.X * v1.Y;
+            x = v1._y * v2._z - v2._y * v1._z;
+            y = (v1._x * v2._z - v2._x * v1._z) * -1;
+            z = v1._x * v2._y - v2._x * v1._y;
 
             var rtnvector = new P3Double(x, y, z);
             return rtnvector;
@@ -249,22 +265,22 @@ namespace Noggog
 
         public P3Double Max(P3Double p2)
         {
-            return new P3Double(Math.Max(X, p2.X), Math.Max(Y, p2.Y), Math.Max(Z, p2.Z));
+            return new P3Double(Math.Max(_x, p2._x), Math.Max(_y, p2._y), Math.Max(_z, p2._z));
         }
 
         public static P3Double Max(P3Double p1, P3Double p2)
         {
-            return new P3Double(Math.Max(p1.X, p2.X), Math.Max(p1.Y, p2.Y), Math.Max(p1.Z, p2.Z));
+            return new P3Double(Math.Max(p1._x, p2._x), Math.Max(p1._y, p2._y), Math.Max(p1._z, p2._z));
         }
 
         public P3Double Min(P3Double p2)
         {
-            return new P3Double(Math.Min(X, p2.X), Math.Min(Y, p2.Y), Math.Min(Z, p2.Z));
+            return new P3Double(Math.Min(_x, p2._x), Math.Min(_y, p2._y), Math.Min(_z, p2._z));
         }
 
         public static P3Double Min(P3Double p1, P3Double p2)
         {
-            return new P3Double(Math.Min(p1.X, p2.X), Math.Min(p1.Y, p2.Y), Math.Min(p1.Z, p2.Z));
+            return new P3Double(Math.Min(p1._x, p2._x), Math.Min(p1._y, p2._y), Math.Min(p1._z, p2._z));
         }
 
         public static P3Double Abs(P3Double p1)
@@ -308,16 +324,16 @@ namespace Noggog
 
         public bool Equals(P3Double rhs)
         {
-            return this.X.EqualsWithin(rhs.X)
-                && this.Y.EqualsWithin(rhs.Y)
-                && this.Z.EqualsWithin(rhs.Z);
+            return _x.EqualsWithin(rhs._x)
+                && _y.EqualsWithin(rhs._y)
+                && _z.EqualsWithin(rhs._z);
         }
 
-        public override int GetHashCode() => HashCode.Combine(X, Y, Z);
+        public override int GetHashCode() => HashCode.Combine(_x, _y, _z);
 
         public override string ToString()
         {
-            return $"({X}, {Y}, {Z})";
+            return $"({_x}, {_y}, {_z})";
         }
 
         public static bool operator ==(P3Double obj1, P3Double obj2)
@@ -337,52 +353,52 @@ namespace Noggog
 
         public static P3Double operator +(P3Double p1, double num)
         {
-            return new P3Double(p1.X + num, p1.Y + num, p1.Z + num);
+            return new P3Double(p1._x + num, p1._y + num, p1._z + num);
         }
 
         public static P3Double operator -(P3Double p1, P3Double p2)
         {
-            return new P3Double(p1.X - p2.X, p1.Y - p2.Y, p1.Z - p2.Z);
+            return new P3Double(p1._x - p2._x, p1._y - p2._y, p1._z - p2._z);
         }
 
         public static P3Double operator -(P3Double p1, double num)
         {
-            return new P3Double(p1.X - num, p1.Y - num, p1.Z - num);
+            return new P3Double(p1._x - num, p1._y - num, p1._z - num);
         }
 
         public static P3Double operator -(P3Double p1)
         {
-            return new P3Double(-p1.X, -p1.Y, -p1.Z);
+            return new P3Double(-p1._x, -p1._y, -p1._z);
         }
 
         public static P3Double operator *(P3Double p1, int num)
         {
-            return new P3Double(p1.X * num, p1.Y * num, p1.Z * num);
+            return new P3Double(p1._x * num, p1._y * num, p1._z * num);
         }
 
         public static P3Double operator *(P3Double p1, double num)
         {
-            return new P3Double(p1.X * num, p1.Y * num, p1.Z * num);
+            return new P3Double(p1._x * num, p1._y * num, p1._z * num);
         }
 
         public static P3Double operator *(double num, P3Double p1)
         {
-            return new P3Double(p1.X * num, p1.Y * num, p1.Z * num);
+            return new P3Double(p1._x * num, p1._y * num, p1._z * num);
         }
 
         public static P3Double operator /(P3Double p1, double num)
         {
-            return new P3Double(p1.X / num, p1.Y / num, p1.Z / num);
+            return new P3Double(p1._x / num, p1._y / num, p1._z / num);
         }
 
         public static P3Double operator *(P3Double p1, P3Double p2)
         {
-            return new P3Double(p1.X * p2.X, p1.Y * p2.Y, p1.Z * p2.Z);
+            return new P3Double(p1._x * p2._x, p1._y * p2._y, p1._z * p2._z);
         }
         
         public static explicit operator P2Double(P3Double point)
         {
-            return new P2Double(point.X, point.Y);
+            return new P2Double(point._x, point._y);
         }
     }
 }

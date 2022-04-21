@@ -6,24 +6,36 @@ namespace Noggog
 {
     public struct RangeInt32 : IEquatable<RangeInt32>, IEnumerable<int>
     {
-        public readonly int Min;
-        public readonly int Max;
-        public float Average => ((Max - Min) / 2f) + Min;
-        public int Difference => this.Max - this.Min;
-        public int Width => this.Max - this.Min + 1;
-        public int IntWidth => this.Max - this.Min + 1;
+        private int _min;
+        public int Min
+        {
+            get => _min;
+            set => _min = value;
+        }
+
+        private int _max;
+        public int Max
+        {
+            get => _max;
+            set => _max = value;
+        }
+        
+        public float Average => ((_max - _min) / 2f) + _min;
+        public int Difference => _max - _min;
+        public int Width => _max - _min + 1;
+        public int IntWidth => _max - _min + 1;
 
         public RangeInt32(int val1, int val2)
         {
             if (val1 > val2)
             {
-                Max = val1;
-                Min = val2;
+                _max = val1;
+                _min = val2;
             }
             else
             {
-                Min = val1;
-                Max = val2;
+                _min = val1;
+                _max = val2;
             }
         }
 
@@ -55,11 +67,6 @@ namespace Noggog
 
         public static bool TryParse(string str, out RangeInt32 rd)
         {
-            if (str == null)
-            {
-                rd = default(RangeInt32);
-                return false;
-            }
             string[] split = str.Split('-');
             if (split.Length != 2)
             {
@@ -74,8 +81,8 @@ namespace Noggog
 
         public bool IsInRange(int i)
         {
-            if (i > this.Max) return false;
-            if (i < this.Min) return false;
+            if (i > _max) return false;
+            if (i < _min) return false;
             return true;
         }
 
@@ -83,27 +90,27 @@ namespace Noggog
         {
             if (throwException)
             {
-                if (f < this.Min)
+                if (f < _min)
                 {
-                    throw new ArgumentException($"Min is out of range: {f} < {this.Min}");
+                    throw new ArgumentException($"Min is out of range: {f} < {_min}");
                 }
-                if (f > this.Max)
+                if (f > _max)
                 {
-                    throw new ArgumentException($"Min is out of range: {f} < {this.Max}");
+                    throw new ArgumentException($"Max is out of range: {f} < {_max}");
                 }
             }
             else
             {
-                if (f > this.Max) return this.Max;
-                if (f < this.Min) return this.Min;
+                if (f > _max) return _max;
+                if (f < _min) return _min;
             }
             return f;
         }
 
         public bool IsInRange(RangeInt32 r)
         {
-            if (r.Max > this.Max) return false;
-            if (r.Min < this.Min) return false;
+            if (r._max > _max) return false;
+            if (r._min < _min) return false;
             return true;
         }
 
@@ -111,20 +118,20 @@ namespace Noggog
         {
             if (throwException)
             {
-                if (r.Min < this.Min)
+                if (r._min < _min)
                 {
-                    throw new ArgumentException($"Min is out of range: {r.Min} < {this.Min}");
+                    throw new ArgumentException($"Min is out of range: {r._min} < {_min}");
                 }
-                if (r.Max > this.Max)
+                if (r._max > _max)
                 {
-                    throw new ArgumentException($"Min is out of range: {r.Max} < {this.Max}");
+                    throw new ArgumentException($"Max is out of range: {r.Max} < {Max}");
                 }
                 return r;
             }
             else
             {
-                int min = r.Min < this.Min ? this.Min : r.Min;
-                int max = r.Max < this.Max ? this.Max : r.Max;
+                int min = r._min < _min ? _min : r._min;
+                int max = r._max < _max ? _max : r._max;
                 return new RangeInt32(min, max);
             }
         }
@@ -137,15 +144,15 @@ namespace Noggog
 
         public bool Equals(RangeInt32 other)
         {
-            return this.Min == other.Min
-                && this.Max == other.Max;
+            return _min == other._min
+                && _max == other._max;
         }
 
-        public override int GetHashCode() => HashCode.Combine(Min, Max);
+        public override int GetHashCode() => HashCode.Combine(_min, _max);
 
         public override string ToString()
         {
-            return Min == Max ? $"({Min.ToString()})" : $"({Min} - {Max})";
+            return _min == _max ? $"({_min})" : $"({_min} - {_max})";
         }
 
         public string ToString(string format)
@@ -159,12 +166,12 @@ namespace Noggog
             {
                 prefix = string.Empty;
             }
-            return Min == Max ? $"({prefix}{Min.ToString(format)})" : $"({prefix}{Min.ToString(format)} - {prefix}{Max.ToString(format)})";
+            return _min == _max ? $"({prefix}{_min.ToString(format)})" : $"({prefix}{_min.ToString(format)} - {prefix}{_max.ToString(format)})";
         }
 
         public IEnumerator<int> GetEnumerator()
         {
-            for (int i = this.Min; i <= this.Max; i++)
+            for (int i = _min; i <= _max; i++)
             {
                 yield return i;
             }
@@ -172,7 +179,7 @@ namespace Noggog
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return this.GetEnumerator();
+            return GetEnumerator();
         }
 
         public static bool operator ==(RangeInt32 c1, RangeInt32 c2)

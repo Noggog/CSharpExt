@@ -17,40 +17,45 @@ namespace Noggog
 
     public struct P3Int : IP3IntGet, IEquatable<P3Int>
     {
-        public static readonly P3Int Origin = new P3Int(0, 0, 0);
-        public static readonly P3Int One = new P3Int(1, 1, 1);
+        public static readonly P3Int Origin = new(0, 0, 0);
+        public static readonly P3Int One = new(1, 1, 1);
 
+        private int _x;
         [DataMember]
-        public readonly int X;
+        public int X
+        {
+            get => _x;
+            set => _x = value;
+        }
+        
+        private int _y;
         [DataMember]
-        public readonly int Y;
+        public int Y
+        {
+            get => _y;
+            set => _y = value;
+        }
+        
+        private int _z;
         [DataMember]
-        public readonly int Z;
+        public int Z
+        {
+            get => _z;
+            set => _z = value;
+        }
 
-        [IgnoreDataMember]
-        int IP3IntGet.X => this.X;
-        [IgnoreDataMember]
-        int IP3IntGet.Y => this.Y;
-        [IgnoreDataMember]
-        int IP3IntGet.Z => this.Z;
         [IgnoreDataMember]
         public P3Int Point => this;
 
         public P3Int(int x, int y, int z)
         {
-            this.X = x;
-            this.Y = y;
-            this.Z = z;
+            _x = x;
+            _y = y;
+            _z = z;
         }
 
         public static bool TryParse(string str, out P3Int ret)
         {
-            if (str == null)
-            {
-                ret = default(P3Int);
-                return false;
-            }
-
             string[] split = str.Split(',');
             if (split.Length != 3)
             {
@@ -72,12 +77,12 @@ namespace Noggog
 
         public P3Int Shift(int x, int y, int z)
         {
-            return new P3Int(this.X + x, this.Y + y, this.Z + z);
+            return new P3Int(_x + x, _y + y, _z + z);
         }
 
         public P3Int Shift(P3Int p)
         {
-            return Shift(p.X, p.Y, p.Z);
+            return Shift(p._x, p._y, p._z);
         }
 
         public override bool Equals(object? obj)
@@ -88,16 +93,16 @@ namespace Noggog
 
         public bool Equals(P3Int rhs)
         {
-            return this.X == rhs.X
-                && this.Y == rhs.Y
-                && this.Z == rhs.Z;
+            return _x == rhs._x
+                && _y == rhs._y
+                && _z == rhs._z;
         }
 
-        public override int GetHashCode() => HashCode.Combine(X, Y, Z);
+        public override int GetHashCode() => HashCode.Combine(_x, _y, _z);
 
         public override string ToString()
         {
-            return $"({X},{Y},{Z}";
+            return $"({_x},{_y},{_z}";
         }
 
         public static bool operator ==(P3Int obj1, P3Int obj2)
@@ -117,42 +122,42 @@ namespace Noggog
 
         public static P3Int operator +(P3Int p1, int p)
         {
-            return new P3Int(p1.X + p, p1.Y + p, p1.Z + p);
+            return new P3Int(p1._x + p, p1._y + p, p1._z + p);
         }
 
         public static P3Int operator -(P3Int p1, P3Int p2)
         {
-            return new P3Int(p1.X - p2.X, p1.Y - p2.Y, p1.Z - p2.Z);
+            return new P3Int(p1._x - p2._x, p1._y - p2._y, p1._z - p2._z);
         }
 
         public static P3Int operator -(P3Int p1, int p)
         {
-            return new P3Int(p1.X - p, p1.Y - p, p1.Z - p);
+            return new P3Int(p1._x - p, p1._y - p, p1._z - p);
         }
 
         public static P3Int operator -(P3Int p1)
         {
-            return new P3Int(-p1.X, -p1.Y, -p1.Z);
+            return new P3Int(-p1._x, -p1._y, -p1._z);
         }
 
         public static P3Int operator *(P3Int p1, int num)
         {
-            return new P3Int(p1.X * num, p1.Y * num, p1.Z * num);
+            return new P3Int(p1._x * num, p1._y * num, p1._z * num);
         }
 
         public static P3Int operator *(P3Int p1, P3Int p2)
         {
-            return new P3Int(p1.X * p2.X, p1.Y * p2.Y, p1.Z * p2.Z);
+            return new P3Int(p1._x * p2._x, p1._y * p2._y, p1._z * p2._z);
         }
 
         public static P3Int operator /(P3Int p1, int num)
         {
-            return new P3Int(p1.X / num, p1.Y / num, p1.Z / num);
+            return new P3Int(p1._x / num, p1._y / num, p1._z / num);
         }
 
         public static explicit operator P3Double(P3Int point)
         {
-            return new P3Double(point.X, point.Y, point.Z);
+            return new P3Double(point._x, point._y, point._z);
         }
     }
 }

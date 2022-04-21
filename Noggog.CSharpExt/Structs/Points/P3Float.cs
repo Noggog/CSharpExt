@@ -5,18 +5,36 @@ namespace Noggog
 {
     public struct P3Float : IEquatable<P3Float>
     {
+        private float _x;
         [DataMember]
-        public readonly float X;
+        public float X
+        {
+            get => _x;
+            set => _x = value;
+        }
+        
+        private float _y;
         [DataMember]
-        public readonly float Y;
+        public float Y
+        {
+            get => _y;
+            set => _y = value;
+        }
+        
+        private float _z;
         [DataMember]
-        public readonly float Z;
+        public float Z
+        {
+            get => _z;
+            set => _z = value;
+        }
+        
         [IgnoreDataMember]
-        public float Length => (float)Math.Sqrt(X * X + Y * Y + Z * Z);
+        public float Length => (float)Math.Sqrt(_x * _x + _y * _y + _z * _z);
         [IgnoreDataMember]
         public float Magnitude => Length;
         [IgnoreDataMember]
-        public float SqrMagnitude => (X * X + Y * Y);
+        public float SqrMagnitude => (_x * _x + _y * _y);
 
         [IgnoreDataMember]
         public P3Float Normalized
@@ -24,38 +42,38 @@ namespace Noggog
             get
             {
                 float length = Length;
-                return new P3Float(X / length, Y / length, Z / length);
+                return new P3Float(_x / length, _y / length, _z / length);
             }
         }
 
         [IgnoreDataMember]
         public P3Float Absolute => new P3Float(
-            Math.Abs(this.X),
-            Math.Abs(this.Y),
-            Math.Abs(this.Z));
+            Math.Abs(_x),
+            Math.Abs(_y),
+            Math.Abs(_z));
 
         public P3Float(float x, float y, float z)
         {
-            this.X = x;
-            this.Y = y;
-            this.Z = z;
+            _x = x;
+            _y = y;
+            _z = z;
         }
 
         public override string ToString()
         {
-            return $"({X}, {Y}, {Z})";
+            return $"({_x}, {_y}, {_z})";
         }
 
         public P3Float Normalize()
         {
             var length = Length;
             return new P3Float(
-                this.X / length,
-                this.Y / length,
-                this.Z / length);
+                _x / length,
+                _y / length,
+                _z / length);
         }
 
-        public static float Dot(P3Float v1, P3Float v2) => v1.X * v2.X + v1.Y * v2.Y + v1.Z * v2.Z;
+        public static float Dot(P3Float v1, P3Float v2) => v1._x * v2._x + v1._y * v2._y + v1._z * v2._z;
         public float Distance(P3Float p2) => (this - p2).Magnitude;
 
         public static bool TryParse(string str, out P3Float p2)
@@ -94,21 +112,21 @@ namespace Noggog
 
         public bool Equals(P3Float rhs)
         {
-            return this.X.EqualsWithin(rhs.X)
-                && this.Y.EqualsWithin(rhs.Y)
-                && this.Z.EqualsWithin(rhs.Z);
+            return _x.EqualsWithin(rhs._x)
+                && _y.EqualsWithin(rhs._y)
+                && _z.EqualsWithin(rhs._z);
         }
 
-        public override int GetHashCode() => HashCode.Combine(X, Y, Z);
+        public override int GetHashCode() => HashCode.Combine(_x, _y, _z);
 
         public static P3Float Max(P3Float p, P3Float c)
         {
-            return new P3Float(Math.Max(p.X, c.X), Math.Max(p.Y, c.Y), Math.Max(p.Z, c.Z));
+            return new P3Float(Math.Max(p._x, c._x), Math.Max(p._y, c._y), Math.Max(p._z, c._z));
         }
 
         public P3Float Max(float c)
         {
-            return new P3Float(Math.Max(X, c), Math.Max(Y, c), Math.Max(Z, c));
+            return new P3Float(Math.Max(_x, c), Math.Max(_y, c), Math.Max(_z, c));
         }
 
         public static bool operator ==(P3Float obj1, P3Float obj2)
@@ -123,47 +141,47 @@ namespace Noggog
 
         public static P3Float operator -(P3Float c1)
         {
-            return new P3Float(-c1.X, -c1.Y, -c1.Z);
+            return new P3Float(-c1._x, -c1._y, -c1._z);
         }
 
         public static P3Float operator +(P3Float c1, P3Float c2)
         {
-            return new P3Float(c1.X + c2.X, c1.Y + c2.Y, c1.Z + c2.Z);
+            return new P3Float(c1._x + c2._x, c1._y + c2._y, c1._z + c2._z);
         }
 
         public static P3Float operator +(P3Float c1, float f)
         {
-            return new P3Float(c1.X + f, c1.Y + f, c1.Y + f);
+            return new P3Float(c1._x + f, c1._y + f, c1._y + f);
         }
 
         public static P3Float operator -(P3Float c1, P3Float c2)
         {
-            return new P3Float(c1.X - c2.X, c1.Y - c2.Y, c1.Z - c2.Z);
+            return new P3Float(c1._x - c2._x, c1._y - c2._y, c1._z - c2._z);
         }
 
         public static P3Float operator -(P3Float c1, float f)
         {
-            return new P3Float(c1.X - f, c1.Y - f, c1.Z - f);
+            return new P3Float(c1._x - f, c1._y - f, c1._z - f);
         }
 
         public static P3Float operator *(P3Float c1, P3Float c2)
         {
-            return new P3Float(c1.X * c2.X, c1.Y * c2.Y, c1.Z * c2.Z);
+            return new P3Float(c1._x * c2._x, c1._y * c2._y, c1._z * c2._z);
         }
 
         public static P3Float operator *(P3Float c1, float f)
         {
-            return new P3Float(c1.X * f, c1.Y * f, c1.Z * f);
+            return new P3Float(c1._x * f, c1._y * f, c1._z * f);
         }
 
         public static P3Float operator /(P3Float c1, P3Float c2)
         {
-            return new P3Float(c1.X / c2.X, c1.Y / c2.Y, c1.Z / c2.Z);
+            return new P3Float(c1._x / c2._x, c1._y / c2._y, c1._z / c2._z);
         }
 
         public static P3Float operator /(P3Float c1, float f)
         {
-            return new P3Float(c1.X / f, c1.Y / f, c1.Z / f);
+            return new P3Float(c1._x / f, c1._y / f, c1._z / f);
         }
 
         public static implicit operator P3Float(P3Int point)

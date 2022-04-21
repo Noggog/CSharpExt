@@ -17,30 +17,41 @@ namespace Noggog
 
     public struct P3UInt16 : IP3UInt16Get, IEquatable<P3UInt16>
     {
-        public static readonly P3UInt16 Origin = new P3UInt16(0, 0, 0);
-        public static readonly P3UInt16 One = new P3UInt16(1, 1, 1);
+        public static readonly P3UInt16 Origin = new(0, 0, 0);
+        public static readonly P3UInt16 One = new(1, 1, 1);
 
+        private ushort _x;
         [DataMember]
-        public readonly ushort X;
+        public ushort X
+        {
+            get => _x;
+            set => _x = value;
+        }
+        
+        private ushort _y;
         [DataMember]
-        public readonly ushort Y;
+        public ushort Y
+        {
+            get => _y;
+            set => _y = value;
+        }
+        
+        private ushort _z;
         [DataMember]
-        public readonly ushort Z;
+        public ushort Z
+        {
+            get => _z;
+            set => _z = value;
+        }
 
-        [IgnoreDataMember]
-        ushort IP3UInt16Get.X => this.X;
-        [IgnoreDataMember]
-        ushort IP3UInt16Get.Y => this.Y;
-        [IgnoreDataMember]
-        ushort IP3UInt16Get.Z => this.Z;
         [IgnoreDataMember]
         public P3UInt16 Point => this;
 
         public P3UInt16(ushort x, ushort y, ushort z)
         {
-            this.X = x;
-            this.Y = y;
-            this.Z = z;
+            _x = x;
+            _y = y;
+            _z = z;
         }
 
         public static bool TryParse(string str, out P3UInt16 ret)
@@ -72,12 +83,12 @@ namespace Noggog
 
         public P3UInt16 Shift(ushort x, ushort y, ushort z)
         {
-            return new P3UInt16((ushort)(this.X + x), (ushort)(this.Y + y), (ushort)(this.Z + z));
+            return new P3UInt16((ushort)(_x + x), (ushort)(_y + y), (ushort)(_z + z));
         }
 
         public P3UInt16 Shift(P3UInt16 p)
         {
-            return Shift(p.X, p.Y, p.Z);
+            return Shift(p._x, p._y, p._z);
         }
 
         public override bool Equals(object? obj)
@@ -88,16 +99,16 @@ namespace Noggog
 
         public bool Equals(P3UInt16 rhs)
         {
-            return this.X == rhs.X
-                && this.Y == rhs.Y
-                && this.Z == rhs.Z;
+            return _x == rhs._x
+                && _y == rhs._y
+                && _z == rhs._z;
         }
 
-        public override int GetHashCode() => HashCode.Combine(X, Y, Z);
+        public override int GetHashCode() => HashCode.Combine(_x, _y, _z);
 
         public override string ToString()
         {
-            return $"({X},{Y},{Z}";
+            return $"({_x},{_y},{_z}";
         }
 
         public static bool operator ==(P3UInt16 obj1, P3UInt16 obj2)
@@ -117,42 +128,42 @@ namespace Noggog
 
         public static P3UInt16 operator +(P3UInt16 p1, int p)
         {
-            return new P3UInt16((ushort)(p1.X + p), (ushort)(p1.Y + p), (ushort)(p1.Z + p));
+            return new P3UInt16((ushort)(p1._x + p), (ushort)(p1._y + p), (ushort)(p1._z + p));
         }
 
         public static P3UInt16 operator -(P3UInt16 p1, P3UInt16 p2)
         {
-            return new P3UInt16((ushort)(p1.X - p2.X), (ushort)(p1.Y - p2.Y), (ushort)(p1.Z - p2.Z));
+            return new P3UInt16((ushort)(p1._x - p2._x), (ushort)(p1._y - p2._y), (ushort)(p1._z - p2._z));
         }
 
         public static P3UInt16 operator -(P3UInt16 p1, ushort p)
         {
-            return new P3UInt16((ushort)(p1.X - p), (ushort)(p1.Y - p), (ushort)(p1.Z - p));
+            return new P3UInt16((ushort)(p1._x - p), (ushort)(p1._y - p), (ushort)(p1._z - p));
         }
 
         public static P3UInt16 operator -(P3UInt16 p1)
         {
-            return new P3UInt16((ushort)(-p1.X), (ushort)(-p1.Y), (ushort)(-p1.Z));
+            return new P3UInt16((ushort)(-p1._x), (ushort)(-p1._y), (ushort)(-p1._z));
         }
 
         public static P3UInt16 operator *(P3UInt16 p1, ushort num)
         {
-            return new P3UInt16((ushort)(p1.X * num), (ushort)(p1.Y * num), (ushort)(p1.Z * num));
+            return new P3UInt16((ushort)(p1._x * num), (ushort)(p1._y * num), (ushort)(p1._z * num));
         }
 
         public static P3UInt16 operator *(P3UInt16 p1, P3UInt16 p2)
         {
-            return new P3UInt16((ushort)(p1.X * p2.X), (ushort)(p1.Y * p2.Y), (ushort)(p1.Z * p2.Z));
+            return new P3UInt16((ushort)(p1._x * p2._x), (ushort)(p1._y * p2._y), (ushort)(p1._z * p2._z));
         }
 
         public static P3UInt16 operator /(P3UInt16 p1, ushort num)
         {
-            return new P3UInt16((ushort)(p1.X / num), (ushort)(p1.Y / num), (ushort)(p1.Z / num));
+            return new P3UInt16((ushort)(p1._x / num), (ushort)(p1._y / num), (ushort)(p1._z / num));
         }
 
         public static explicit operator P3Double(P3UInt16 point)
         {
-            return new P3Double(point.X, point.Y, point.Z);
+            return new P3Double(point._x, point._y, point._z);
         }
     }
 }

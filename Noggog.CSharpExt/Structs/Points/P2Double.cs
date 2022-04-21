@@ -5,17 +5,28 @@ namespace Noggog
 {
     public struct P2Double : IEquatable<P2Double>
     {
+        private double _x;
         [DataMember]
-        public readonly double X;
+        public double X
+        {
+            get => _x;
+            set => _x = value;
+        }
+        
+        private double _y;
         [DataMember]
-        public readonly double Y;
+        public double Y
+        {
+            get => _y;
+            set => _y = value;
+        }
 
         [IgnoreDataMember]
-        public double Length => Math.Sqrt(X * X + Y * Y);
+        public double Length => Math.Sqrt(_x * _x + _y * _y);
         [IgnoreDataMember]
         public double Magnitude => Length;
         [IgnoreDataMember]
-        public double SqrMagnitude => (X * X + Y * Y);
+        public double SqrMagnitude => (_x * _x + _y * _y);
 
         [IgnoreDataMember]
         public P2Double Normalized
@@ -23,35 +34,35 @@ namespace Noggog
             get
             {
                 double length = Length;
-                return new P2Double(X / length, Y / length);
+                return new P2Double(_x / length, _y / length);
             }
         }
 
         [IgnoreDataMember]
         public P2Double Absolute => new P2Double(
-            Math.Abs(this.X),
-            Math.Abs(this.Y));
+            Math.Abs(this._x),
+            Math.Abs(this._y));
 
         public P2Double(double x, double y)
         {
-            this.X = x;
-            this.Y = y;
+            this._x = x;
+            this._y = y;
         }
 
         public override string ToString()
         {
-            return $"({X}, {Y})";
+            return $"({_x}, {_y})";
         }
 
         public P2Double Normalize()
         {
             var length = Length;
             return new P2Double(
-                this.X / length,
-                this.Y / length);
+                this._x / length,
+                this._y / length);
         }
 
-        public static double Dot(P2Double v1, P2Double v2) => v1.X * v2.X + v1.Y * v2.Y;
+        public static double Dot(P2Double v1, P2Double v2) => v1._x * v2._x + v1._y * v2._y;
 
         public double Distance(P2Double p2) => (this - p2).Magnitude;
 
@@ -86,11 +97,11 @@ namespace Noggog
 
         public bool Equals(P2Double rhs)
         {
-            return this.X.EqualsWithin(rhs.X)
-                && this.Y.EqualsWithin(rhs.Y);
+            return this._x.EqualsWithin(rhs._x)
+                && this._y.EqualsWithin(rhs._y);
         }
 
-        public override int GetHashCode() => HashCode.Combine(X, Y);
+        public override int GetHashCode() => HashCode.Combine(_x, _y);
 
         public static P2Double Max(double p1, double p2, double c1, double c2)
         {
@@ -99,12 +110,12 @@ namespace Noggog
 
         public static P2Double Max(P2Double p, P2Double c)
         {
-            return new P2Double(Math.Max(p.X, c.X), Math.Max(p.Y, c.Y));
+            return new P2Double(Math.Max(p._x, c._x), Math.Max(p._y, c._y));
         }
 
         public P2Double Max(double c)
         {
-            return new P2Double(Math.Max(X, c), Math.Max(Y, c));
+            return new P2Double(Math.Max(_x, c), Math.Max(_y, c));
         }
 
         public static bool operator ==(P2Double obj1, P2Double obj2)
@@ -119,47 +130,47 @@ namespace Noggog
 
         public static P2Double operator -(P2Double c1)
         {
-            return new P2Double(-c1.X, -c1.Y);
+            return new P2Double(-c1._x, -c1._y);
         }
 
         public static P2Double operator +(P2Double c1, P2Double c2)
         {
-            return new P2Double(c1.X + c2.X, c1.Y + c2.Y);
+            return new P2Double(c1._x + c2._x, c1._y + c2._y);
         }
 
         public static P2Double operator +(P2Double c1, double f)
         {
-            return new P2Double(c1.X + f, c1.Y + f);
+            return new P2Double(c1._x + f, c1._y + f);
         }
 
         public static P2Double operator -(P2Double c1, P2Double c2)
         {
-            return new P2Double(c1.X - c2.X, c1.Y - c2.Y);
+            return new P2Double(c1._x - c2._x, c1._y - c2._y);
         }
 
         public static P2Double operator -(P2Double c1, double f)
         {
-            return new P2Double(c1.X - f, c1.Y - f);
+            return new P2Double(c1._x - f, c1._y - f);
         }
 
         public static P2Double operator *(P2Double c1, P2Double c2)
         {
-            return new P2Double(c1.X * c2.X, c1.Y * c2.Y);
+            return new P2Double(c1._x * c2._x, c1._y * c2._y);
         }
 
         public static P2Double operator *(P2Double c1, double f)
         {
-            return new P2Double(c1.X * f, c1.Y * f);
+            return new P2Double(c1._x * f, c1._y * f);
         }
 
         public static P2Double operator /(P2Double c1, P2Double c2)
         {
-            return new P2Double(c1.X / c2.X, c1.Y / c2.Y);
+            return new P2Double(c1._x / c2._x, c1._y / c2._y);
         }
 
         public static P2Double operator /(P2Double c1, double f)
         {
-            return new P2Double(c1.X / f, c1.Y / f);
+            return new P2Double(c1._x / f, c1._y / f);
         }
 
         public static implicit operator P2Double(P2Int point)
