@@ -1,6 +1,6 @@
 namespace Noggog.StructuredStrings.CSharp;
 
-public class Args : IDisposable
+public class Call : IDisposable
 {
     private readonly StructuredStringBuilder _sb;
     private readonly List<string[]> _args = new();
@@ -9,7 +9,7 @@ public class Args : IDisposable
     
     public bool SemiColon = true;
 
-    public Args(
+    public Call(
         StructuredStringBuilder sb,
         string? initialLine = null,
         string? suffixLine = null,

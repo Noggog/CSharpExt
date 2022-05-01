@@ -2,12 +2,12 @@ namespace Noggog.StructuredStrings.CSharp;
 
 public static class CSharpStructuredStringBuilderMixIn
 {
-    public static Args Args(this StructuredStringBuilder sb,
+    public static Call Call(this StructuredStringBuilder sb,
         string? initialLine = null,
         string? suffixLine = null,
         bool semiColon = true)
     {
-        return new Args(sb,
+        return new Call(sb,
             initialLine: initialLine,
             suffixLine: suffixLine,
             semiColon: semiColon);
@@ -32,9 +32,9 @@ public static class CSharpStructuredStringBuilderMixIn
         return new Namespace(sb, str: str, fileScoped: fileScoped);
     }
 
-    public static If If(this StructuredStringBuilder sb, bool ANDs, bool first = true)
+    public static If If(this StructuredStringBuilder sb, bool ands, bool first = true)
     {
-        return new If(sb, ANDs: ANDs, first: first);
+        return new If(sb, ANDs: ands, first: first);
     }
 
     public static Region Region(this StructuredStringBuilder sb, string str, bool appendExtraLine = true, bool skipIfOnlyOneLine = false)
