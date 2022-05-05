@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Diagnostics.CodeAnalysis;
 using System.IO.Abstractions;
 #if NETSTANDARD2_0
@@ -232,5 +232,10 @@ public class StructuredStringBuilder : IEnumerable<string>
     public CommaCollection CommaCollection(string delimiter = ",")
     {
         return new CommaCollection(this, delimiter: delimiter);
+    }
+
+    public Brace Brace(string start = "[", string end = "]", bool doIt = true)
+    {
+        return new Brace(this, start, end, doIt: doIt);
     }
 }

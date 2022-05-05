@@ -46,6 +46,22 @@ public static class CSharpStructuredStringBuilderMixIn
     {
         return new PropertyCtor(sb);
     }
+    
+    public static CurlyBrace CurlyBrace(
+        this StructuredStringBuilder sb,
+        bool extraLine = true, 
+        bool doIt = true,
+        bool appendParenthesis = false,
+        bool appendSemiColon = false,
+        bool appendComma = false)
+    {
+        return new CurlyBrace(sb, doIt)
+        {
+            AppendSemicolon = appendSemiColon,
+            AppendParenthesis = appendParenthesis,
+            AppendComma = appendComma
+        };
+    }
 
     public static string ToCodeString(this AccessModifier accessModifier)
     {

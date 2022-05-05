@@ -1,4 +1,4 @@
-namespace Noggog.StructuredStrings;
+namespace Noggog.StructuredStrings.CSharp;
 
 public class CurlyBrace : IDisposable
 {
