@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Diagnostics.CodeAnalysis;
 using System.IO.Abstractions;
 #if NETSTANDARD2_0
@@ -212,21 +212,6 @@ public class StructuredStringBuilder : IEnumerable<string>
     IEnumerator IEnumerable.GetEnumerator()
     {
         return GetEnumerator();
-    }
-    
-    public CurlyBrace CurlyBrace(
-        bool extraLine = true, 
-        bool doIt = true,
-        bool appendParenthesis = false,
-        bool appendSemiColon = false,
-        bool appendComma = false)
-    {
-        return new CurlyBrace(this, doIt)
-        {
-            AppendSemicolon = appendSemiColon,
-            AppendParenthesis = appendParenthesis,
-            AppendComma = appendComma
-        };
     }
     
     public Depth IncreaseDepth(bool doIt = true)
