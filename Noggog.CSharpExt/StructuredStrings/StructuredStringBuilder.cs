@@ -182,7 +182,7 @@ public class StructuredStringBuilder : IEnumerable<string>
     public void AppendItem(IPrintable? item, string? name = null)
     {
         if (item == null) return;
-        item.ToString(this, name);
+        item.Print(this, name);
     }
 
     public void RemoveAt(int index)
