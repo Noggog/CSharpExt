@@ -191,20 +191,6 @@ public class StructuredStringBuilder : IEnumerable<string>
         _strings.RemoveAt(index);
     }
 
-    public void Generate(FilePath file, bool onlyIfChanged = true, IFileSystem? fileSystem = null)
-    {
-        fileSystem ??= IFileSystemExt.DefaultFilesystem;
-        var str = GetString();
-        if (onlyIfChanged && fileSystem.File.Exists(file))
-        {
-            var existStr = fileSystem.File.ReadAllText(file.Path);
-            if (str.Equals(existStr)) return;
-        }
-
-        fileSystem.Directory.CreateDirectory(file.Directory);
-        fileSystem.File.WriteAllText(file.Path, str);
-    }
-
     public string GetString()
     {
         return string.Join(Environment.NewLine, _strings);
