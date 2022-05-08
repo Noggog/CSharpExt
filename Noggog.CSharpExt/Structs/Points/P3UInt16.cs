@@ -55,12 +55,6 @@ public struct P3UInt16 : IP3UInt16Get, IEquatable<P3UInt16>
 
     public static bool TryParse(string str, out P3UInt16 ret)
     {
-        if (str == null)
-        {
-            ret = default(P3UInt16);
-            return false;
-        }
-
         string[] split = str.Split(',');
         if (split.Length != 3)
         {
@@ -107,7 +101,7 @@ public struct P3UInt16 : IP3UInt16Get, IEquatable<P3UInt16>
 
     public override string ToString()
     {
-        return $"({_x},{_y},{_z}";
+        return $"({_x},{_y},{_z})";
     }
 
     public static bool operator ==(P3UInt16 obj1, P3UInt16 obj2)

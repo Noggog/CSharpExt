@@ -91,7 +91,7 @@ namespace Noggog;
 
         public override string ToString()
         {
-            return $"({_x},{_y},{_z}";
+            return $"({_x},{_y},{_z}) ";
         }
 
         public static bool operator ==(P3UInt8 obj1, P3UInt8 obj2)
