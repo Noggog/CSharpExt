@@ -12,7 +12,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Autofac" Version="6.3.0"/>
+        <PackageReference Include="Autofac" Version="6.4.0" />
         <PackageReference Include="GitInfo" Version="2.2.0">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -24,7 +24,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Noggog.CSharpExt\Noggog.CSharpExt.csproj"/>
+        <ProjectReference Include="..\Noggog.CSharpExt\Noggog.CSharpExt.csproj" />
     </ItemGroup>
 
     <ItemGroup>
@@ -36,7 +36,7 @@
     </ItemGroup>
 
     <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
-        <Exec Command="RD /S /Q &quot;%25USERPROFILE%25\.nuget\packages\noggog.autofac&quot;" Condition="!$([MSBuild]::IsOSUnixLike())"/>
+        <Exec Command="RD /S /Q &quot;%25USERPROFILE%25\.nuget\packages\noggog.autofac&quot;" Condition="!$([MSBuild]::IsOSUnixLike())" />
     </Target>
 
 </Project>
