@@ -1,5 +1,6 @@
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics.Contracts;
 using System.Globalization;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -283,27 +284,32 @@ public static class EnumExt
     }
     #endregion
 
+    [Pure]
     public static bool HasFlag<T>(this T e, T toCheck)
         where T : struct, Enum
     {
         return e.HasFlag((Enum)toCheck);
     }
 
+    [Pure]
     public static bool HasFlag(int value, int flagToCheck)
     {
         return (value & flagToCheck) > 0;
     }
 
+    [Pure]
     public static bool HasFlag(uint value, uint flagToCheck)
     {
         return (value & flagToCheck) > 0;
     }
 
+    [Pure]
     public static bool HasFlag(byte value, byte flagToCheck)
     {
         return (value & flagToCheck) > 0;
     }
 
+    [Pure]
     public static int SetFlag(int origValue, int flagToSet, bool on)
     {
         if (on)
@@ -316,6 +322,12 @@ public static class EnumExt
         }
     }
 
+    public static void SetFlag(ref int origValue, int flagToSet, bool on)
+    {
+        origValue = SetFlag(origValue, flagToSet, on);
+    }
+
+    [Pure]
     public static uint SetFlag(uint origValue, uint flagToSet, bool on)
     {
         if (on)
@@ -328,6 +340,12 @@ public static class EnumExt
         }
     }
 
+    public static void SetFlag(ref uint origValue, uint flagToSet, bool on)
+    {
+        origValue = SetFlag(origValue, flagToSet, on);
+    }
+
+    [Pure]
     public static byte SetFlag(byte origValue, byte flagToSet, bool on)
     {
         if (on)
@@ -338,6 +356,11 @@ public static class EnumExt
         {
             return (byte)(origValue & ~flagToSet);
         }
+    }
+
+    public static void SetFlag(ref byte origValue, byte flagToSet, bool on)
+    {
+        origValue = SetFlag(origValue, flagToSet, on);
     }
 
     public static IEnumerable<TEnum> EnumerateContainedFlags<TEnum>(this TEnum flags, bool includeUndefined = true)
