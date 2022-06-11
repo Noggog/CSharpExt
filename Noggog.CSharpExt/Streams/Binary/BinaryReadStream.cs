@@ -22,7 +22,6 @@ public class BinaryReadStream : Stream, IBinaryReadStream
     public override long Position { get => _streamPos - InternalStreamRemaining; set => SetPosition(value); }
     public ReadOnlySpan<byte> RemainingSpan => throw new NotImplementedException();
     public ReadOnlyMemorySlice<byte> RemainingMemory => throw new NotImplementedException();
-    Stream IBinaryReadStream.BaseStream => _stream;
 
     public bool CheckUnderlyingStreamPosition = false;
     public bool IsPersistantBacking => false;

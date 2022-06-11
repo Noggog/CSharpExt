@@ -7,7 +7,7 @@ namespace Noggog
     public class BinaryWriteWrapper : IBinaryWriteStream
     {
         private readonly BinaryWriter _stream;
-        internal bool _dispose;
+        internal readonly bool _dispose;
 
         public bool IsLittleEndian { get; }
 
@@ -25,8 +25,6 @@ namespace Noggog
         }
 
         public long Length => _stream.BaseStream.Length;
-
-        public Stream BaseStream => _stream.BaseStream;
 
         public void Dispose()
         {

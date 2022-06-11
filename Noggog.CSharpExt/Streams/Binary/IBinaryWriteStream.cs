@@ -5,7 +5,6 @@ public interface IBinaryWriteStream : IDisposable
     long Position { get; set; }
     long Length { get; }
     bool IsLittleEndian { get; }
-    Stream BaseStream { get; }
 #if NETSTANDARD2_0
 #else
     void Write(ReadOnlySpan<byte> buffer);

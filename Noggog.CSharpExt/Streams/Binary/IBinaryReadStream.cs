@@ -7,7 +7,6 @@ public interface IBinaryReadStream : IDisposable
     long Remaining { get; }
     bool Complete { get; }
     bool IsLittleEndian { get; }
-    Stream BaseStream { get; }
 
     /// <summary>
     /// True if the backing data is reliable between reading events
@@ -129,5 +128,6 @@ public interface IBinaryReadStream : IDisposable
     string ReadStringUTF8(int amount);
     string GetStringUTF8(int amount);
     string GetStringUTF8(int amount, int offset);
-    void WriteTo(Stream stream, int amount);
+    void CopyTo(Stream stream, int amount);
+    void CopyTo(Stream stream);
 }

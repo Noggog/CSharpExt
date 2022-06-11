@@ -26,8 +26,6 @@ public class BinaryWriteStream : Stream, IBinaryWriteStream
     public override bool CanWrite => true;
     public bool IsLittleEndian { get; }
 
-    Stream IBinaryWriteStream.BaseStream => this;
-
     public BinaryWriteStream(Stream stream, int bufferSize = 4096, bool dispose = true, bool isLittleEndian = true)
     {
         _dispose = dispose;

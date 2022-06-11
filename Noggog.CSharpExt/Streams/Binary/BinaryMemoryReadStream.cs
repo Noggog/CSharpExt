@@ -25,7 +25,6 @@ public class BinaryMemoryReadStream : Stream, IBinaryReadStream
     public int UnderlyingPosition => _data.StartPosition + _pos;
     public bool IsPersistantBacking => true;
     public bool IsLittleEndian { get; }
-    public Stream BaseStream => this;
 
     #region IBinaryReadStream
     long IBinaryReadStream.Position { get => _pos; set => SetPosition(checked((int)value)); }
@@ -216,10 +215,13 @@ public class BinaryMemoryReadStream : Stream, IBinaryReadStream
 
     public void WriteTo(Stream stream, int amount)
     {
-        // ToDo
-        // Swap to direct span usage when .NET Standard 2.1 comes out
-        var arr = _data.Span.Slice(_pos, amount).ToArray();
-        stream.Write(arr, 0, arr.Length);
+#if NETSTANDARD2_0
+        var arr = _data.Span.Slice(_pos, amount).ToArray(); 
+        stream.Write(arr, 0, arr.Length); 
+#else
+        ReadOnlySpan<byte> arr = _data.Span.Slice(_pos, amount);
+        stream.Write(arr);
+#endif
         _pos += amount;
     }
 
