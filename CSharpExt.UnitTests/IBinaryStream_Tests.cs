@@ -1,3 +1,4 @@
+using FluentAssertions;
 using Noggog;
 using Xunit;
 
@@ -181,6 +182,28 @@ public abstract class IBinaryStream_Tests
         {
             Assert.Equal(i % 256, b[i]);
         }
+    }
+
+    [Fact]
+    public void Read_MoreThanExists()
+    {
+        var streamLen = 10;
+        var stream = GetStream(streamLen);
+        var b = new byte[15];
+        var read = stream.Read(b, 0, b.Length);
+        read.Should().Be(10);
+    }
+
+    [Fact]
+    public void Read_AlreadyEmptyStream()
+    {
+        var streamLen = 10;
+        var stream = GetStream(streamLen);
+        var b = new byte[15];
+        var read = stream.Read(b, 0, b.Length);
+        read.Should().Be(10);
+        read = stream.Read(b, 0, b.Length);
+        read.Should().Be(0);
     }
 
     [Fact]

@@ -173,7 +173,7 @@ public class BinaryReadStream : Stream, IBinaryReadStream
         else
         {
             forceReload = true;
-            _stream.Read(buffer, offset, amount);
+            amount = _stream.Read(buffer, offset, amount);
             _streamPos += amount;
             return amount + remaining;
         }
