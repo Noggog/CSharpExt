@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Diagnostics;
+using System.Diagnostics.Contracts;
 
 namespace Noggog;
 
@@ -27,6 +28,7 @@ public readonly struct MemorySlice<T> : IEnumerable<T>
         _length = length;
     }
 
+    [Pure]
     public Span<T> Span => _arr.AsSpan(start: _startPos, length: _length);
 
     public T this[int index]
@@ -35,6 +37,7 @@ public readonly struct MemorySlice<T> : IEnumerable<T>
         set => _arr[index + _startPos] = value;
     }
 
+    [Pure]
     [DebuggerStepThrough]
     public MemorySlice<T> Slice(int start)
     {
@@ -47,6 +50,7 @@ public readonly struct MemorySlice<T> : IEnumerable<T>
         return new MemorySlice<T>(_arr, startPos, _length - start);
     }
 
+    [Pure]
     [DebuggerStepThrough]
     public MemorySlice<T> Slice(int start, int length)
     {
@@ -63,6 +67,7 @@ public readonly struct MemorySlice<T> : IEnumerable<T>
         return new MemorySlice<T>(_arr, startPos, length);
     }
 
+    [Pure]
     public IEnumerator<T> GetEnumerator()
     {
         for (int i = 0; i < _length; i++)
@@ -71,8 +76,10 @@ public readonly struct MemorySlice<T> : IEnumerable<T>
         }
     }
 
+    [Pure]
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
+    [Pure]
     public T[] ToArray()
     {
         var ret = new T[_length];
@@ -80,6 +87,7 @@ public readonly struct MemorySlice<T> : IEnumerable<T>
         return ret;
     }
 
+    [Pure]
     public static implicit operator ReadOnlyMemorySlice<T>(MemorySlice<T> mem)
     {
         return new ReadOnlyMemorySlice<T>(
@@ -88,21 +96,25 @@ public readonly struct MemorySlice<T> : IEnumerable<T>
             mem._length);
     }
 
+    [Pure]
     public static implicit operator ReadOnlySpan<T>(MemorySlice<T> mem)
     {
         return mem.Span;
     }
 
+    [Pure]
     public static implicit operator Span<T>(MemorySlice<T> mem)
     {
         return mem.Span;
     }
 
+    [Pure]
     public static implicit operator MemorySlice<T>(T[] mem)
     {
         return new MemorySlice<T>(mem);
     }
 
+    [Pure]
     public static implicit operator MemorySlice<T>?(T[]? mem)
     {
         if (mem == null) return null;
@@ -134,10 +146,13 @@ public readonly struct ReadOnlyMemorySlice<T> : IEnumerable<T>
         _length = length;
     }
 
+    [Pure]
     public ReadOnlySpan<T> Span => _arr.AsSpan(start: _startPos, length: _length);
 
+    [Pure]
     public T this[int index] => _arr[index + _startPos];
 
+    [Pure]
     [DebuggerStepThrough]
     public ReadOnlyMemorySlice<T> Slice(int start)
     {
@@ -150,6 +165,7 @@ public readonly struct ReadOnlyMemorySlice<T> : IEnumerable<T>
         return new ReadOnlyMemorySlice<T>(_arr, _startPos + start, _length - start);
     }
 
+    [Pure]
     [DebuggerStepThrough]
     public ReadOnlyMemorySlice<T> Slice(int start, int length)
     {
@@ -166,6 +182,7 @@ public readonly struct ReadOnlyMemorySlice<T> : IEnumerable<T>
         return new ReadOnlyMemorySlice<T>(_arr, _startPos + start, length);
     }
 
+    [Pure]
     public IEnumerator<T> GetEnumerator()
     {
         for (int i = 0; i < _length; i++)
@@ -174,8 +191,10 @@ public readonly struct ReadOnlyMemorySlice<T> : IEnumerable<T>
         }
     }
 
+    [Pure]
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
+    [Pure]
     public T[] ToArray()
     {
         var ret = new T[_length];
@@ -183,17 +202,20 @@ public readonly struct ReadOnlyMemorySlice<T> : IEnumerable<T>
         return ret;
     }
 
+    [Pure]
     public static implicit operator ReadOnlySpan<T>(ReadOnlyMemorySlice<T> mem)
     {
         return mem.Span;
     }
 
+    [Pure]
     public static implicit operator ReadOnlyMemorySlice<T>?(T[]? mem)
     {
         if (mem == null) return null;
         return new ReadOnlyMemorySlice<T>(mem);
     }
 
+    [Pure]
     public static implicit operator ReadOnlyMemorySlice<T>(T[] mem)
     {
         return new ReadOnlyMemorySlice<T>(mem);
