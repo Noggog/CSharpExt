@@ -130,6 +130,8 @@ public readonly struct ReadOnlyMemorySlice<T> : IEnumerable<T>
     public int Length => _length;
     public int StartPosition => _startPos;
 
+    public static readonly ReadOnlyMemorySlice<T> Empty = new ReadOnlyMemorySlice<T>(Array.Empty<T>());
+
     [DebuggerStepThrough]
     public ReadOnlyMemorySlice(T[] arr)
     {
