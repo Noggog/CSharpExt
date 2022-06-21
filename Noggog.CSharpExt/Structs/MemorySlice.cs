@@ -169,6 +169,13 @@ public readonly struct ReadOnlyMemorySlice<T> : IEnumerable<T>
 
     [Pure]
     [DebuggerStepThrough]
+    public ReadOnlyMemorySlice<T> SliceUpTo(int maxLength)
+    {
+        return Slice(0, Math.Min(_length, maxLength));
+    }
+
+    [Pure]
+    [DebuggerStepThrough]
     public ReadOnlyMemorySlice<T> Slice(int start, int length)
     {
         var startPos = _startPos + start;
