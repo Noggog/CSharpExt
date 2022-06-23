@@ -192,6 +192,8 @@ public abstract class IBinaryStream_Tests
         var b = new byte[15];
         var read = stream.Read(b, 0, b.Length);
         read.Should().Be(10);
+        stream.Remaining.Should().Be(0);
+        stream.Position.Should().Be(10);
     }
 
     [Fact]

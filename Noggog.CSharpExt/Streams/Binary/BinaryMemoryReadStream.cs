@@ -68,7 +68,7 @@ public class BinaryMemoryReadStream : Stream, IBinaryReadStream
     public override int Read(byte[] buffer, int offset, int amount)
     {
         var ret = Get(buffer, offset, amount);
-        _pos += amount;
+        _pos += ret;
         return ret;
     }
 
