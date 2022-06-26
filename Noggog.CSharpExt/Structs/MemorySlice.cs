@@ -82,6 +82,7 @@ public readonly struct MemorySlice<T> : IEnumerable<T>
     [Pure]
     public T[] ToArray()
     {
+        if (_arr == null || _length == 0) return Array.Empty<T>();
         var ret = new T[_length];
         Array.Copy(_arr, _startPos, ret, 0, _length);
         return ret;
@@ -206,6 +207,7 @@ public readonly struct ReadOnlyMemorySlice<T> : IEnumerable<T>
     [Pure]
     public T[] ToArray()
     {
+        if (_arr == null || _length == 0) return Array.Empty<T>();
         var ret = new T[_length];
         Array.Copy(_arr, _startPos, ret, 0, _length);
         return ret;
