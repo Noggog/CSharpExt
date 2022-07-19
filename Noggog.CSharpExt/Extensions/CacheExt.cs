@@ -1,5 +1,6 @@
 using DynamicData;
 using System.Diagnostics.CodeAnalysis;
+using System.Net.Http.Headers;
 
 namespace Noggog;
 
@@ -212,5 +213,33 @@ public static class CacheExt
         }
         value = default;
         return false;
+    }
+
+    public static bool ContentEquals<TObject, TKey>(this IReadOnlyCache<TObject, TKey> lhs, IReadOnlyCache<TObject, TKey> rhs, Func<TObject, TObject, bool>? equalityComparer = null)
+    {
+        if (ReferenceEquals(lhs, rhs)) return true;
+        if (lhs.Count != rhs.Count) return false;
+        equalityComparer ??= EqualityComparer<TObject>.Default.Equals;
+        foreach (var lhsItem in lhs)
+        {
+            if (!rhs.TryGetValue(lhsItem.Key, out var rhsValue))
+            {
+                return false;
+            }
+
+            if (!equalityComparer(lhsItem.Value, rhsValue))
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    public static bool ContentEqualsNullable<TObject, TKey>(this IReadOnlyCache<TObject, TKey>? lhs, IReadOnlyCache<TObject, TKey>? rhs, Func<TObject, TObject, bool>? equalityComparer = null)
+    {
+        if (lhs == null && rhs == null) return true;
+        if (lhs == null || rhs == null) return false;
+        return ContentEquals(lhs, rhs, equalityComparer);
     }
 }
