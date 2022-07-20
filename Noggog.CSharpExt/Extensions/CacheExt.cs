@@ -242,4 +242,23 @@ public static class CacheExt
         if (lhs == null || rhs == null) return false;
         return ContentEquals(lhs, rhs, equalityComparer);
     }
+
+    public static void RemoveWhere<TObject, TKey>(this ICache<TObject, TKey>? cache, Func<TObject, bool> shouldRemove)
+    {
+        if (cache == null) return;
+        List<TKey>? toRemove = null;
+        foreach (var keyValue in cache)
+        {
+            if (shouldRemove(keyValue.Value))
+            {
+                toRemove ??= new();
+                toRemove.Add(keyValue.Key);
+            }
+        }
+
+        if (toRemove != null)
+        {
+            cache.Remove(toRemove);
+        }
+    }
 }
