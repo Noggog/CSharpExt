@@ -149,33 +149,16 @@ public static class TypeExt
 
     public static IEnumerable<KeyValuePair<Type, Type>> GetInheritingFromGenericInterface(this Type targetType, bool loadAssemblies = true, Func<Assembly, bool>? filter = null)
     {
-        if (loadAssemblies)
+        foreach (var type in IterateTypes(loadAssemblies: loadAssemblies, assemblyFilter: filter))
         {
-            LoadAssemblies();
-        }
-        foreach (Assembly assemb in AppDomain.CurrentDomain.GetAssemblies())
-        {
-            if (filter != null && !filter(assemb)) continue;
-            IEnumerable<Type> types;
-            try
-            {
-                types = assemb.GetTypes();
-            }
-            catch (Exception)
-            {
-                continue;
-            }
-            foreach (Type p in types)
-            {
-                if (p.Equals(targetType)) continue;
+            if (type.Equals(targetType)) continue;
 
-                foreach (var i in p.GetInterfaces())
+            foreach (var i in type.GetInterfaces())
+            {
+                if (!i.IsGenericType) continue;
+                if (targetType.Equals(i.GetGenericTypeDefinition()))
                 {
-                    if (!i.IsGenericType) continue;
-                    if (targetType.Equals(i.GetGenericTypeDefinition()))
-                    {
-                        yield return new KeyValuePair<Type, Type>(i, p);
-                    }
+                    yield return new KeyValuePair<Type, Type>(i, type);
                 }
             }
         }
@@ -183,13 +166,44 @@ public static class TypeExt
 
     public static IEnumerable<Type> GetInheritingFromInterface(this Type targetType, bool loadAssemblies = true, Func<Assembly, bool>? filter = null)
     {
+        foreach (var type in IterateTypes(loadAssemblies: loadAssemblies, assemblyFilter: filter))
+        {
+            if (type.Equals(targetType))
+                continue;
+
+            if (targetType.IsGenericType)
+            {
+                if (!type.IsGenericType)
+                    continue;
+                foreach (var i in type.GetInterfaces())
+                {
+                    if (!i.IsGenericType)
+                        continue;
+                    if (targetType.Equals(i.GetGenericTypeDefinition()))
+                    {
+                        yield return type;
+                    }
+                }
+            }
+            else
+            {
+                if (targetType.IsAssignableFrom(type))
+                {
+                    yield return type;
+                }
+            }
+        }
+    }
+
+    public static IEnumerable<Type> IterateTypes(bool loadAssemblies = true, Func<Assembly, bool>? assemblyFilter = null)
+    {
         if (loadAssemblies)
         {
             LoadAssemblies();
         }
         foreach (Assembly assemb in AppDomain.CurrentDomain.GetAssemblies())
         {
-            if (filter != null && !filter(assemb)) continue;
+            if (assemblyFilter != null && !assemblyFilter(assemb)) continue;
             Type[] types;
             try
             {
@@ -199,35 +213,9 @@ public static class TypeExt
             {
                 continue;
             }
-            foreach (Type p in types)
+            foreach (Type type in types)
             {
-                if (p.Equals(targetType))
-                    continue;
-
-                if (targetType.IsGenericType)
-                {
-                    if (!p.IsGenericType)
-                        continue;
-                    foreach (var i in p.GetInterfaces())
-                    {
-                        if (!i.IsGenericType)
-                            continue;
-                        if (targetType.Equals(i.GetGenericTypeDefinition()))
-                        {
-                            yield return p;
-                            continue;
-
-                        }
-                    }
-                }
-                else
-                {
-                    if (targetType.IsAssignableFrom(p))
-                    {
-                        yield return p;
-                        continue;
-                    }
-                }
+                yield return type;
             }
         }
     }
