@@ -2,17 +2,25 @@
 
     <PropertyGroup>
         <TargetFramework>net6.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-        <AssemblyName>Noggog.Autofac</AssemblyName>
+        <AssemblyName>Noggog.Tooling</AssemblyName>
+        <RootNamespace>Noggog</RootNamespace>
         <Authors>Noggog</Authors>
         <Company>Noggog</Company>
         <LangVersion>preview</LangVersion>
         <IsPackable>true</IsPackable>
-        <Description>Autofac related utility</Description>
+        <RootNamespace>Noggog</RootNamespace>
+        <Description>Generic reusable classes and patterns that apply to no specific project and flavored to taste</Description>
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Autofac" Version="6.4.0" />
+        <PackageReference Include="System.Reactive" Version="5.0.0"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Noggog.CSharpExt\Noggog.CSharpExt.csproj"/>
         <PackageReference Include="GitInfo" Version="2.2.0">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -23,21 +31,8 @@
         </PackageReference>
     </ItemGroup>
 
-    <ItemGroup>
-        <ProjectReference Include="..\Noggog.CSharpExt\Noggog.CSharpExt.csproj" />
-        <ProjectReference Include="..\Noggog.Tooling\Noggog.Tooling.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
-        <Compile Update="Modules\NoggogModule.cs">
-            <CodeLanguage>cs</CodeLanguage>
-            <DefaultPackFolder>content</DefaultPackFolder>
-            <BuildAction>Compile</BuildAction>
-        </Compile>
-    </ItemGroup>
-
     <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
-        <Exec Command="RD /S /Q &quot;%25USERPROFILE%25\.nuget\packages\noggog.autofac&quot;" Condition="!$([MSBuild]::IsOSUnixLike())" />
+        <Exec Command="RD /S /Q &quot;%25USERPROFILE%25\.nuget\packages\noggog.tooling&quot;" Condition="!$([MSBuild]::IsOSUnixLike())" />
     </Target>
 
 </Project>

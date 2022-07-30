@@ -2,6 +2,7 @@
 using Noggog.IO;
 using Noggog.Reactive;
 using Noggog.Time;
+using Noggog.Tooling.WorkEngine;
 using Noggog.Utility;
 
 namespace Noggog.Autofac.Modules;
@@ -21,6 +22,12 @@ public class NoggogModule : Module
                 typeof(IDeleteEntireDirectory),
                 typeof(INowProvider),
                 typeof(IWatchFile))
+            .NotInjection()
+            .AsImplementedInterfaces()
+            .SingleInstance();
+        builder.RegisterAssemblyTypes(typeof(IWorkDropoff).Assembly)
+            .InNamespacesOf(
+                typeof(IWorkDropoff))
             .NotInjection()
             .AsImplementedInterfaces()
             .SingleInstance();
