@@ -404,6 +404,19 @@ public static class ListExt
         }
     }
 
+    public static IEnumerable<T> IterateOverAllStartingWithIndex<T>(this IReadOnlyList<T> list, int startingWithIndex)
+    {
+        for (int i = startingWithIndex; i < list.Count; i++)
+        {
+            yield return list[i];
+        }
+
+        for (int i = 0; i < startingWithIndex; i++)
+        {
+            yield return list[i];
+        }
+    }
+
     public static void SetToWithDefault<T>(
         this IList<T> not,
         IReadOnlyList<T> rhs,

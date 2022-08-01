@@ -389,9 +389,15 @@ public static class EnumerableExt
     {
         return e.StartWith(seedValue).Max();
     }
+
+    public static IEnumerable<T> Take<T>(this IEnumerable<T> e, int? amount)
+    {
+        if (amount == null) return e;
+        return e.Take(amount.Value);
+    }
 }
 
 public static class EnumerableExt<T>
 {
-    public static readonly IEnumerable<T> Empty = new T[0];
+    public static readonly IEnumerable<T> Empty = Array.Empty<T>();
 }
