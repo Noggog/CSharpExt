@@ -6,10 +6,10 @@ namespace Noggog.Utility
 {
     public class ConsoleThrottler : IAsyncDisposable
     {
-        private StringBuilder _existingBuilder = new StringBuilder();
-        private TextWriter _stdOut;
+        private StringBuilder _existingBuilder = new();
+        private readonly TextWriter _stdOut;
         private bool _stop;
-        private TaskCompletionSource _stopped = new TaskCompletionSource();
+        private readonly TaskCompletionSource _stopped = new();
 
         public ConsoleThrottler()
         {
