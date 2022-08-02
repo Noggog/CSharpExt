@@ -1,4 +1,6 @@
-﻿using System.Threading.Channels;
+﻿#if NETSTANDARD2_0 
+#else
+using System.Threading.Channels;
 
 namespace Noggog.Tooling.WorkEngine;
 
@@ -65,3 +67,4 @@ public class WorkDropoff : IWorkDropoff, IWorkQueue
         return await tcs.Task.ConfigureAwait(false);
     }
 }
+#endif

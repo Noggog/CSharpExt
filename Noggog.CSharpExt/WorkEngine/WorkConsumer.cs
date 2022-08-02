@@ -1,4 +1,6 @@
-﻿using System.Reactive.Disposables;
+﻿#if NETSTANDARD2_0 
+#else
+using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using Noggog.Utility;
@@ -137,3 +139,4 @@ public class WorkConsumer : IDisposable, IWorkConsumer
             .DisposeWithComposite(_disposable);
     }
 }
+#endif

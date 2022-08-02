@@ -1,4 +1,6 @@
-﻿namespace Noggog.Tooling.WorkEngine;
+﻿#if NETSTANDARD2_0 
+#else
+namespace Noggog.Tooling.WorkEngine;
 
 public interface IWorkDropoff
 {
@@ -9,3 +11,4 @@ public interface IWorkDropoff
     Task EnqueueAndWait(Func<Task> toDo, CancellationToken cancellationToken = default);
     Task<T> EnqueueAndWait<T>(Func<Task<T>> toDo, CancellationToken cancellationToken = default);
 }
+#endif

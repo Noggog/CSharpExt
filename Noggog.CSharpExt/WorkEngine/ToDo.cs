@@ -1,4 +1,6 @@
-﻿namespace Noggog.Tooling.WorkEngine;
+﻿#if NETSTANDARD2_0 
+#else
+namespace Noggog.Tooling.WorkEngine;
 
 public interface IToDo
 {
@@ -104,3 +106,4 @@ public class ToDo<T> : IToDo
         }
     }
 }
+#endif

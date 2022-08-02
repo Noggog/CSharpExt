@@ -1,4 +1,6 @@
-﻿using System.Reactive.Linq;
+﻿#if NETSTANDARD2_0 
+#else
+using System.Reactive.Linq;
 
 namespace Noggog.Tooling.WorkEngine;
 
@@ -11,3 +13,4 @@ public class NumWorkThreadsUnopinionated : INumWorkThreadsController
 {
     public IObservable<int?> NumDesiredThreads => Observable.Return(default(int?));
 }
+#endif

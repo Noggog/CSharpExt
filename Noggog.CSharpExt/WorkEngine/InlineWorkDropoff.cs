@@ -1,4 +1,6 @@
-﻿namespace Noggog.Tooling.WorkEngine;
+﻿#if NETSTANDARD2_0 
+#else
+namespace Noggog.Tooling.WorkEngine;
 
 public class InlineWorkDropoff : IWorkDropoff
 {
@@ -32,3 +34,4 @@ public class InlineWorkDropoff : IWorkDropoff
         return await toDo();
     }
 }
+#endif
