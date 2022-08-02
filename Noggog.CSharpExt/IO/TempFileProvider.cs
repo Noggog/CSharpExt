@@ -1,6 +1,6 @@
 ﻿using System.IO.Abstractions;
 
-namespace Noggog.Utility;
+namespace Noggog.IO;
 
 public interface IRandomTempFileProvider
 {
