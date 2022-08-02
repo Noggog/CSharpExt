@@ -1,8 +1,9 @@
 using System.Diagnostics;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
+using Noggog.Utility;
 
-namespace Noggog.Utility;
+namespace Noggog.Processes;
 
 public interface IProcessWrapper : IDisposable
 {

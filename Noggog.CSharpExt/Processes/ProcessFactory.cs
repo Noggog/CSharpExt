@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 
-namespace Noggog.Utility;
+namespace Noggog.Processes;
 
 public interface IProcessFactory
 {
