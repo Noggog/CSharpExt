@@ -15,4 +15,13 @@ public static class AsyncEnumerableExt
         return e.Where(i => i.HasValue)
             .Select(i => i!.Value);
     }
+
+    public static IAsyncEnumerable<T> DoAwait<T>(this IAsyncEnumerable<T> e, Func<T, Task> doJob)
+    {
+        return e.SelectAwait(async i =>
+        {
+            await doJob(i);
+            return i;
+        });
+    }
 }
