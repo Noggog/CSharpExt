@@ -1,4 +1,5 @@
 ﻿using AutoFixture;
+using Noggog.WorkEngine;
 
 namespace Noggog.Testing.AutoFixture;
 
@@ -24,5 +25,6 @@ public class DefaultCustomization : ICustomization
         fixture.Customizations.Add(new GetResponseParameterBuilder());
         fixture.Customizations.Add(new ProcessBuilder());
         fixture.Behaviors.Add(new ObservableEmptyBehavior());
+        fixture.Register<IWorkDropoff>(() => new InlineWorkDropoff());
     }
 }
