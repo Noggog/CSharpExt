@@ -2,7 +2,7 @@
 #else
 using System.Reactive.Linq;
 
-namespace Noggog.Tooling.WorkEngine;
+namespace Noggog.WorkEngine;
 
 public interface INumWorkThreadsController
 {

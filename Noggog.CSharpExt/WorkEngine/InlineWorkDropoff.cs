@@ -1,6 +1,6 @@
 ﻿#if NETSTANDARD2_0 
 #else
-namespace Noggog.Tooling.WorkEngine;
+namespace Noggog.WorkEngine;
 
 public class InlineWorkDropoff : IWorkDropoff
 {

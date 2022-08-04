@@ -5,7 +5,7 @@ using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using Noggog.Utility;
 
-namespace Noggog.Tooling.WorkEngine;
+namespace Noggog.WorkEngine;
 
 public interface IWorkConsumer
 {

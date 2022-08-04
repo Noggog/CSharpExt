@@ -25,7 +25,6 @@
 
     <ItemGroup>
         <ProjectReference Include="..\Noggog.CSharpExt\Noggog.CSharpExt.csproj" />
-        <ProjectReference Include="..\Noggog.Tooling\Noggog.Tooling.csproj" />
     </ItemGroup>
 
     <ItemGroup>

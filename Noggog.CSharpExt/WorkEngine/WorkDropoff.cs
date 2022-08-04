@@ -2,7 +2,7 @@
 #else
 using System.Threading.Channels;
 
-namespace Noggog.Tooling.WorkEngine;
+namespace Noggog.WorkEngine;
 
 public class WorkDropoff : IWorkDropoff, IWorkQueue
 {
