@@ -31,7 +31,7 @@ public class ProcessWrapper : IProcessWrapper
 
     public static ProcessWrapper Create(
         ProcessStartInfo startInfo,
-        CancellationToken? cancel = null,
+        CancellationToken cancel = default,
         bool hideWindow = true,
         bool hookOntoOutput = true,
         bool killWithParent = true)
@@ -56,7 +56,7 @@ public class ProcessWrapper : IProcessWrapper
         process.StartInfo = startInfo;
         process.EnableRaisingEvents = true;
         CancellationTokenRegistration? cancelSub;
-        cancelSub = cancel?.Register(() =>
+        cancelSub = cancel.Register(() =>
         {
             try
             {
@@ -113,7 +113,6 @@ public class ProcessWrapper : IProcessWrapper
             wrapper.Error = Observable.Empty<string>();
         }
 
-        cancel ??= CancellationToken.None;
         process.Exited += (s, e) =>
         {
             completeTask.SetResult(process.ExitCode);

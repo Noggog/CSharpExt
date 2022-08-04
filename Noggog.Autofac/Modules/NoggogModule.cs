@@ -1,6 +1,7 @@
 ﻿using Autofac;
+using Noggog.DotNetCli.DI;
 using Noggog.IO;
-using Noggog.Processes;
+using Noggog.Processes.DI;
 using Noggog.Reactive;
 using Noggog.Time;
 using Noggog.Tooling.WorkEngine;
@@ -15,11 +16,11 @@ public class NoggogModule : Module
             .InNamespacesOf(
                 typeof(IDeleteEntireDirectory),
                 typeof(INowProvider),
-                typeof(IProcessFactory),
+                typeof(IProcessRunner),
+                typeof(IQueryNugetListing),
                 typeof(IWatchFile))
             .Except<TempFile>()
             .Except<TempFolder>()
-            .Except<ProcessWrapper>()
             .NotInjection()
             .AsImplementedInterfaces()
             .SingleInstance();

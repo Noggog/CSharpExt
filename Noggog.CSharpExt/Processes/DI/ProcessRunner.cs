@@ -1,27 +1,27 @@
 ﻿using System.Diagnostics;
 
-namespace Noggog.Processes;
+namespace Noggog.Processes.DI;
 
 public interface IProcessRunner
 {
-    Task<ProcessRunner.Return> RunAndCapture(
+    Task<ProcessResult> RunAndCapture(
         ProcessStartInfo startInfo,
-        CancellationToken? cancel = null);
+        CancellationToken cancel = default);
         
     Task<int> Run(
         ProcessStartInfo startInfo,
-        CancellationToken? cancel = null);
+        CancellationToken cancel = default);
 
     Task<int> RunWithCallback(
         ProcessStartInfo startInfo,
         Action<string> outputCallback,
         Action<string> errorCallback,
-        CancellationToken? cancel = null);
+        CancellationToken cancel = default);
 
     Task<int> RunWithCallback(
         ProcessStartInfo startInfo,
         Action<string> callback,
-        CancellationToken? cancel = null);
+        CancellationToken cancel = default);
 }
 
 public class ProcessRunner : IProcessRunner
@@ -33,17 +33,10 @@ public class ProcessRunner : IProcessRunner
         Factory = processFactory;
     }
     
-    public record Return(int Result, List<string> Out, List<string> Errors)
-    {
-        public Return()
-            : this(-1, new(), new())
-        {
-        }
-    }
         
-    public async Task<Return> RunAndCapture(
+    public async Task<ProcessResult> RunAndCapture(
         ProcessStartInfo startInfo,
-        CancellationToken? cancel = null)
+        CancellationToken cancel = default)
     {
         var outs = new List<string>();
         var errs = new List<string>();
@@ -57,7 +50,7 @@ public class ProcessRunner : IProcessRunner
 
     public async Task<int> Run(
         ProcessStartInfo startInfo,
-        CancellationToken? cancel = null)
+        CancellationToken cancel = default)
     {
         using var proc = Factory.Create(
             startInfo,
@@ -69,7 +62,7 @@ public class ProcessRunner : IProcessRunner
         ProcessStartInfo startInfo,
         Action<string> outputCallback, 
         Action<string> errorCallback,
-        CancellationToken? cancel = null)
+        CancellationToken cancel = default)
     {
         using var proc = Factory.Create(
             startInfo,
@@ -93,7 +86,7 @@ public class ProcessRunner : IProcessRunner
     public async Task<int> RunWithCallback(
         ProcessStartInfo startInfo,
         Action<string> callback,
-        CancellationToken? cancel = null)
+        CancellationToken cancel = default)
     {
         return await RunWithCallback(
             startInfo,

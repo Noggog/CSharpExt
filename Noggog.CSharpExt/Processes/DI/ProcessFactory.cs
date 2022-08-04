@@ -1,12 +1,12 @@
 ﻿using System.Diagnostics;
 
-namespace Noggog.Processes;
+namespace Noggog.Processes.DI;
 
 public interface IProcessFactory
 {
     IProcessWrapper Create(
         ProcessStartInfo startInfo,
-        CancellationToken? cancel = null,
+        CancellationToken cancel = default,
         bool hideWindow = true,
         bool hookOntoOutput = true,
         bool killWithParent = true);
@@ -16,7 +16,7 @@ public class ProcessFactory : IProcessFactory
 {
     public IProcessWrapper Create(
         ProcessStartInfo startInfo,
-        CancellationToken? cancel = null,
+        CancellationToken cancel = default,
         bool hideWindow = true,
         bool hookOntoOutput = true,
         bool killWithParent = true)
