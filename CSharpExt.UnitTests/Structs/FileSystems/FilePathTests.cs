@@ -3,6 +3,7 @@ using System.IO.Abstractions;
 using System.Runtime.InteropServices;
 using FluentAssertions;
 using Noggog;
+using Noggog.Testing.AutoFixture;
 using NSubstitute;
 using Xunit;
 
@@ -325,7 +326,7 @@ public class FilePathTests
         str.Should().Be(fp.RelativePath);
     }
 
-    [Theory, BasicAutoData]
+    [Theory, DefaultAutoData]
     public void EqualOperatorOverload(
         FilePath file)
     {
@@ -333,7 +334,7 @@ public class FilePathTests
         Assert.True(file == other);
     }
 
-    [Theory, BasicAutoData]
+    [Theory, DefaultAutoData]
     public void NotEqualOperatorOverload(
         FilePath file,
         FilePath file2)
@@ -341,7 +342,7 @@ public class FilePathTests
         Assert.True(file != file2);
     }
 
-    [Theory, BasicAutoData]
+    [Theory, DefaultAutoData]
     public void NotEqualOperatorToDefault(
         FilePath file)
     {

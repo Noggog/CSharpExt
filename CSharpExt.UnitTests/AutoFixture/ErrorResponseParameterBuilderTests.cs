@@ -17,7 +17,7 @@ public class ErrorResponseParameterBuilderTests
         }
     }
         
-    [Theory, BasicAutoData]
+    [Theory, DefaultAutoData]
     public void UninterestingNameQueriesContext(
         ErrorResponse err,
         ISpecimenContext context,
@@ -45,7 +45,7 @@ public class ErrorResponseParameterBuilderTests
         }
     }
         
-    [Theory, BasicAutoData]
+    [Theory, DefaultAutoData]
     public void FailReturnsFail(
         string errString,
         ISpecimenContext context,
@@ -62,7 +62,7 @@ public class ErrorResponseParameterBuilderTests
         }
     }
         
-    [Theory, BasicAutoData]
+    [Theory, DefaultAutoData]
     public void FailDoesNotReturnException(
         string errString,
         ISpecimenContext context,

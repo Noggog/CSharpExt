@@ -9,7 +9,7 @@ namespace CSharpExt.UnitTests.AutoFixture;
 
 public class MakeFileExistTests
 {
-    [Theory, BasicAutoData]
+    [Theory, DefaultAutoData]
     public void FileMadeInFileSystem(
         FilePath path,
         MockFileSystem mockFileSystem,

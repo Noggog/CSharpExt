@@ -9,7 +9,7 @@ namespace CSharpExt.UnitTests.AutoFixture;
 
 public class ErrorResponseBuilderTests
 {
-    [Theory, BasicAutoData]
+    [Theory, DefaultAutoData]
     public void UnrelatedTypeReturnsNoSpecimen(
         string reason,
         ISpecimenContext context,
@@ -20,7 +20,7 @@ public class ErrorResponseBuilderTests
             .Should().BeOfType<NoSpecimen>();
     }
         
-    [Theory, BasicAutoData]
+    [Theory, DefaultAutoData]
     public void ReturnsErrorResponse(
         string reason,
         ISpecimenContext context,
@@ -31,7 +31,7 @@ public class ErrorResponseBuilderTests
             .Should().BeOfType<ErrorResponse>();
     }
         
-    [Theory, BasicAutoData]
+    [Theory, DefaultAutoData]
     public void ReturnsSuccessful(
         string reason,
         ISpecimenContext context,
@@ -42,7 +42,7 @@ public class ErrorResponseBuilderTests
             .Succeeded.Should().BeTrue();
     }
         
-    [Theory, BasicAutoData]
+    [Theory, DefaultAutoData]
     public void QueriesContextForReason(
         string reason,
         ISpecimenContext context,
@@ -53,7 +53,7 @@ public class ErrorResponseBuilderTests
             .Reason.Should().Be(reason);
     }
         
-    [Theory, BasicAutoData]
+    [Theory, DefaultAutoData]
     public void ExceptionNull(
         string reason,
         ISpecimenContext context,

@@ -4,6 +4,7 @@ using System.IO.Abstractions.TestingHelpers;
 using System.Runtime.InteropServices;
 using FluentAssertions;
 using Noggog;
+using Noggog.Testing.AutoFixture;
 using NSubstitute;
 using Xunit;
 
@@ -583,7 +584,7 @@ public class DirectoryPathTests
         }
     }
 
-    [Theory, BasicAutoData]
+    [Theory, DefaultAutoData]
     public void EqualOperatorOverload(
         DirectoryPath dir)
     {
@@ -591,7 +592,7 @@ public class DirectoryPathTests
         Assert.True(dir == other);
     }
 
-    [Theory, BasicAutoData]
+    [Theory, DefaultAutoData]
     public void NotEqualOperatorOverload(
         DirectoryPath dir,
         DirectoryPath dir2)
@@ -599,7 +600,7 @@ public class DirectoryPathTests
         Assert.True(dir != dir2);
     }
 
-    [Theory, BasicAutoData]
+    [Theory, DefaultAutoData]
     public void NotEqualOperatorToDefault(
         DirectoryPath dir)
     {

@@ -4,6 +4,7 @@ using AutoFixture.Xunit2;
 using FluentAssertions;
 using Noggog.Processes;
 using Noggog.Processes.DI;
+using Noggog.Testing.AutoFixture;
 using NSubstitute;
 using Xunit;
 
@@ -13,7 +14,7 @@ public class ProcessRunnerTests
 {
     #region Run
 
-    [Theory, BasicAutoData(ConfigureMembers: false)]
+    [Theory, DefaultAutoData(ConfigureMembers: false)]
     public async Task TypicalRun_StartInfoPassedToFactory(
         [Frozen]ProcessStartInfo startInfo,
         CancellationToken cancel,
@@ -23,7 +24,7 @@ public class ProcessRunnerTests
         sut.Factory.Received(1).Create(startInfo, cancel);
     }
 
-    [Theory, BasicAutoData(ConfigureMembers: false)]
+    [Theory, DefaultAutoData(ConfigureMembers: false)]
     public async Task TypicalRun_FactoryResultIsRunAndReturned(
         int ret,
         [Frozen]ProcessStartInfo startInfo,
@@ -41,7 +42,7 @@ public class ProcessRunnerTests
 
     #region RunAndCapture
 
-    [Theory, BasicAutoData]
+    [Theory, DefaultAutoData]
     public async Task RunAndCapture_CallsFactory(
         ProcessStartInfo startInfo,
         CancellationToken cancel,
@@ -51,7 +52,7 @@ public class ProcessRunnerTests
         sut.Factory.Received(1).Create(startInfo, cancel);
     }
         
-    [Theory, BasicAutoData(ConfigureMembers: false)]
+    [Theory, DefaultAutoData(ConfigureMembers: false)]
     public async Task RunAndCapture_PutsOutIntoOut(
         string str,
         [Frozen]ProcessStartInfo startInfo,
@@ -65,7 +66,7 @@ public class ProcessRunnerTests
         result.Out.Should().Equal(str);
     }
         
-    [Theory, BasicAutoData(ConfigureMembers: false)]
+    [Theory, DefaultAutoData(ConfigureMembers: false)]
     public async Task RunAndCapture_PutsErrIntoErr(
         string str,
         [Frozen]ProcessStartInfo startInfo,
@@ -79,7 +80,7 @@ public class ProcessRunnerTests
         result.Errors.Should().Equal(str);
     }
         
-    [Theory, BasicAutoData(ConfigureMembers: false)]
+    [Theory, DefaultAutoData(ConfigureMembers: false)]
     public async Task RunAndCapture_ReturnsProcessReturn(
         int ret,
         [Frozen]ProcessStartInfo startInfo,
@@ -97,7 +98,7 @@ public class ProcessRunnerTests
 
     #region RunWithCallbacks
 
-    [Theory, BasicAutoData]
+    [Theory, DefaultAutoData]
     public async Task RunWithCallbacks_CallsFactory(
         ProcessStartInfo startInfo,
         CancellationToken cancel,
@@ -108,7 +109,7 @@ public class ProcessRunnerTests
         sut.Factory.Received(1).Create(startInfo, cancel);
     }
         
-    [Theory, BasicAutoData(ConfigureMembers: false)]
+    [Theory, DefaultAutoData(ConfigureMembers: false)]
     public async Task RunWithCallbacks_CallsOutCallback(
         string str,
         [Frozen]ProcessStartInfo startInfo,
@@ -124,7 +125,7 @@ public class ProcessRunnerTests
         received.Should().Equal(str);
     }
         
-    [Theory, BasicAutoData(ConfigureMembers: false)]
+    [Theory, DefaultAutoData(ConfigureMembers: false)]
     public async Task RunWithCallbacks_PutsErrIntoErr(
         string str,
         [Frozen]ProcessStartInfo startInfo,
@@ -140,7 +141,7 @@ public class ProcessRunnerTests
         received.Should().Equal(str);
     }
         
-    [Theory, BasicAutoData(ConfigureMembers: false)]
+    [Theory, DefaultAutoData(ConfigureMembers: false)]
     public async Task RunWithCallbacks_ReturnsProcessReturn(
         int ret,
         [Frozen]ProcessStartInfo startInfo,
@@ -161,7 +162,7 @@ public class ProcessRunnerTests
     #region RunWithCallback
 
 
-    [Theory, BasicAutoData]
+    [Theory, DefaultAutoData]
     public async Task RunWithCallback_CallsFactory(
         ProcessStartInfo startInfo,
         CancellationToken cancel,
@@ -172,7 +173,7 @@ public class ProcessRunnerTests
         sut.Factory.Received(1).Create(startInfo, cancel);
     }
         
-    [Theory, BasicAutoData(ConfigureMembers: false)]
+    [Theory, DefaultAutoData(ConfigureMembers: false)]
     public async Task RunWithCallback_CallsOutCallback(
         string str,
         [Frozen]ProcessStartInfo startInfo,
@@ -187,7 +188,7 @@ public class ProcessRunnerTests
         received.Should().Equal(str);
     }
         
-    [Theory, BasicAutoData(ConfigureMembers: false)]
+    [Theory, DefaultAutoData(ConfigureMembers: false)]
     public async Task RunWithCallback_PutsErrIntoCallback(
         string str,
         [Frozen]ProcessStartInfo startInfo,
@@ -202,7 +203,7 @@ public class ProcessRunnerTests
         received.Should().Equal(str);
     }
         
-    [Theory, BasicAutoData(ConfigureMembers: false)]
+    [Theory, DefaultAutoData(ConfigureMembers: false)]
     public async Task RunWithCallback_ReturnsProcessReturn(
         int ret,
         [Frozen]ProcessStartInfo startInfo,

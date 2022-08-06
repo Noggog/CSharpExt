@@ -1,14 +1,13 @@
 ﻿using AutoFixture;
 using AutoFixture.AutoNSubstitute;
 using AutoFixture.Xunit2;
-using Noggog.Testing.AutoFixture;
 using Xunit;
 
-namespace CSharpExt.UnitTests;
+namespace Noggog.Testing.AutoFixture;
 
-public class BasicAutoData : AutoDataAttribute
+public class DefaultAutoData : AutoDataAttribute
 {
-    public BasicAutoData(
+    public DefaultAutoData(
         bool ConfigureMembers = false,
         bool UseMockFileSystem = true,
         bool GenerateDelegates = false,
@@ -29,14 +28,14 @@ public class BasicAutoData : AutoDataAttribute
     }
 }
 
-public class NoggogInlineData : CompositeDataAttribute
+public class DefaultInlineData : CompositeDataAttribute
 {
-    public NoggogInlineData(
+    public DefaultInlineData(
         bool ConfigureMembers = false, 
         params object[] ExtraParameters)
         : base(
             new InlineDataAttribute(ExtraParameters), 
-            new BasicAutoData(ConfigureMembers: ConfigureMembers))
+            new DefaultAutoData(ConfigureMembers: ConfigureMembers))
     {
     }
 }

@@ -43,7 +43,7 @@ public class SplitEnumerableIntoSubtypesTests
         }
     }
         
-    [Theory, BasicAutoData]
+    [Theory, DefaultAutoData]
     public void ExistsReturnsEnumerableModKeys(
         ISpecimenContext context,
         SplitEnumerableIntoSubtypes sut)

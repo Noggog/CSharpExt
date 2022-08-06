@@ -2,6 +2,7 @@
 using Noggog;
 using Noggog.DotNetCli.DI;
 using Noggog.Processes;
+using Noggog.Testing.AutoFixture;
 using NSubstitute;
 using Xunit;
 
@@ -9,7 +10,7 @@ namespace CSharpExt.UnitTests.DotNetCli;
 
 public class QueryNugetListingTests
 {
-    [Theory, BasicAutoData]
+    [Theory, DefaultAutoData]
     public async Task CallsConstructListWithProjPath(
         FilePath projPath,
         CancellationToken cancel,
@@ -20,7 +21,7 @@ public class QueryNugetListingTests
         sut.NetCommandStartConstructor.Received(1).Construct("list", projPath, Arg.Any<string[]>());
     }
         
-    [Theory, NoggogInlineData(true), NoggogInlineData(false)]
+    [Theory, DefaultInlineData(true), DefaultInlineData(false)]
     public async Task ConstructListRespectsOutdated(
         bool outdated,
         FilePath projPath,
@@ -42,7 +43,7 @@ public class QueryNugetListingTests
         }
     }
         
-    [Theory, NoggogInlineData(true), NoggogInlineData(false)]
+    [Theory, DefaultInlineData(true), DefaultInlineData(false)]
     public async Task ConstructListRespectsIncludePrerelease(
         bool inclPrerelease,
         FilePath projPath,
@@ -64,7 +65,7 @@ public class QueryNugetListingTests
         }
     }
 
-    [Theory, BasicAutoData]
+    [Theory, DefaultAutoData]
     public async Task PassesResultsToProcessor(
         FilePath projPath,
         CancellationToken cancel,
