@@ -1,11 +1,6 @@
 ﻿namespace Noggog.Autofac.Validation;
 
-public interface IIsAllowableEnumerable
-{
-    bool IsAllowed(Type type);
-}
-
-public class IsAllowableEnumerable : IIsAllowableEnumerable
+public class IsAllowableEnumerable : IValidationRule
 {
     public IValidateTypeCtor ValidateTypeCtor { get; set; } = null!;
 

@@ -1,11 +1,6 @@
 ﻿namespace Noggog.Autofac.Validation;
 
-public interface ICheckIsDelegateFactory
-{
-    bool Check(Type type);
-}
-
-public class CheckIsDelegateFactory : ICheckIsDelegateFactory
+public class CheckIsDelegateFactory : IValidationRule
 {
     public IRegistrations Registrations { get; }
     public IValidateTypeCtor ValidateTypeCtor { get; set; } = null!;
@@ -16,7 +11,7 @@ public class CheckIsDelegateFactory : ICheckIsDelegateFactory
         Registrations = registrations;
     }
 
-    public bool Check(Type type)
+    public bool IsAllowed(Type type)
     {
         if (type.BaseType?.FullName != "System.MulticastDelegate") return false;
         var invoke = type.GetMethod("Invoke");

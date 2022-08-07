@@ -9,10 +9,7 @@ public class ValidateType : IValidateType
 {
     public IRegistrations Registrations { get; }
     private readonly IValidateTracker _tracker;
-    public IIsAllowableFunc AllowableFunc { get; }
-    public IIsAllowableLazy AllowableLazy { get; }
-    public ICheckIsDelegateFactory IsDelegateFactory { get; }
-    public IIsAllowableEnumerable AllowableEnumerable { get; }
+    public IValidationRule[] Rules { get; }
         
     private readonly HashSet<Type> _checkedTypes = new();
 
@@ -21,27 +18,18 @@ public class ValidateType : IValidateType
     public ValidateType(
         IRegistrations registrations,
         IValidateTracker tracker,
-        IIsAllowableFunc allowableFunc,
-        IIsAllowableLazy allowableLazy,
-        ICheckIsDelegateFactory isDelegateFactory,
-        IIsAllowableEnumerable allowableEnumerable)
+        IValidationRule[] rules)
     {
         Registrations = registrations;
         _tracker = tracker;
-        AllowableFunc = allowableFunc;
-        AllowableLazy = allowableLazy;
-        IsDelegateFactory = isDelegateFactory;
-        AllowableEnumerable = allowableEnumerable;
+        Rules = rules;
     }
         
     public void Validate(Type type, bool validateCtor = true)
     {
         if (!_checkedTypes.Add(type)) return;
         using var track = _tracker.Track(type);
-        if (IsDelegateFactory.Check(type)) return;
-        if (AllowableFunc.IsAllowed(type)) return;
-        if (AllowableLazy.IsAllowed(type)) return;
-        if (AllowableEnumerable.IsAllowed(type)) return;
+        if (Rules.Any(r => r.IsAllowed(type))) return;
         if (Registrations.Items.ContainsKey(type))
         {
             var regis = Registrations.Items[type][^1];

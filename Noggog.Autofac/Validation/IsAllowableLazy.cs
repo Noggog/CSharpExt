@@ -1,11 +1,6 @@
 ﻿namespace Noggog.Autofac.Validation;
 
-public interface IIsAllowableLazy
-{
-    bool IsAllowed(Type type);
-}
-
-public class IsAllowableLazy : IIsAllowableLazy
+public class IsAllowableLazy : IValidationRule
 {
     public IValidateTypeCtor ValidateTypeCtor { get; set; } = null!;
 

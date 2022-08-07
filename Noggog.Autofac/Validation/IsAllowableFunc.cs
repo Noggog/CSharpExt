@@ -1,11 +1,6 @@
 ﻿namespace Noggog.Autofac.Validation;
 
-public interface IIsAllowableFunc
-{
-    bool IsAllowed(Type type);
-}
-
-public class IsAllowableFunc : IIsAllowableFunc
+public class IsAllowableFunc : IValidationRule
 {
     public IValidateTypeCtor ValidateTypeCtor { get; set; } = null!;
 
