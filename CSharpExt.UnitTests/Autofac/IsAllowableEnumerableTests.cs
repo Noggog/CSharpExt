@@ -16,6 +16,15 @@ public class IsAllowableEnumerableTests
 
         sut.ValidateTypeCtor.Received(1).Validate(typeof(string), null);
     }
+    
+    [Theory, TestData]
+    public void Array(IsAllowableEnumerable sut)
+    {
+        sut.IsAllowed(typeof(string[]))
+            .Should().BeTrue();
+
+        sut.ValidateTypeCtor.Received(1).Validate(typeof(string), null);
+    }
         
     [Theory, TestData]
     public void NotEnumerable(IsAllowableEnumerable sut)

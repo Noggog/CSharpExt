@@ -26,7 +26,7 @@ public class CheckIsDelegateFactoryTests
     [Theory, TestData]
     public void Typical(CheckIsDelegateFactory sut)
     {
-        sut.Check(typeof(ClassWithFactory.Factory))
+        sut.IsAllowed(typeof(ClassWithFactory.Factory))
             .Should().BeTrue();
         sut.ValidateTypeCtor.Received(1).Validate(typeof(ClassWithFactory),
             Arg.Is<HashSet<string>>(x => x.SetEquals("str", "i")));
@@ -41,7 +41,7 @@ public class CheckIsDelegateFactoryTests
             x[1] = new List<Registration>() { new(typeof(ClassWithFactory), true)};
             return true;
         });
-        sut.Check(typeof(ClassWithFactory.InterfaceFactory))
+        sut.IsAllowed(typeof(ClassWithFactory.InterfaceFactory))
             .Should().BeTrue();
         sut.ValidateTypeCtor.Received(1).Validate(typeof(ClassWithFactory),
             Arg.Is<HashSet<string>>(x => x.SetEquals("str", "i")));
@@ -56,7 +56,7 @@ public class CheckIsDelegateFactoryTests
             x[1] = new List<Registration>() { new(typeof(ClassWithFactory), false)};
             return true;
         });
-        sut.Check(typeof(ClassWithFactory.InterfaceFactory))
+        sut.IsAllowed(typeof(ClassWithFactory.InterfaceFactory))
             .Should().BeTrue();
         sut.ValidateTypeCtor.DidNotReceiveWithAnyArgs().Validate(default!);
         sut.ValidateType.Received(1).Validate(typeof(IClassWithFactory), false);
@@ -65,7 +65,7 @@ public class CheckIsDelegateFactoryTests
     [Theory, TestData]
     public void RandomType(CheckIsDelegateFactory sut)
     {
-        sut.Check(typeof(string))
+        sut.IsAllowed(typeof(string))
             .Should().BeFalse();
     }
 }

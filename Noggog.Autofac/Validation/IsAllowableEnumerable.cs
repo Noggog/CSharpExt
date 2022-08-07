@@ -13,6 +13,16 @@ public class IsAllowableEnumerable : IValidationRule
             ValidateTypeCtor.Validate(type.GenericTypeArguments[0]);
             return true;
         }
+
+        if (type.Name.EndsWith("[]"))
+        {
+            var elemType = type.GetElementType();
+            if (elemType != null)
+            {
+                ValidateTypeCtor.Validate(elemType);
+                return true;
+            }
+        }
         return false;
     }
 }
