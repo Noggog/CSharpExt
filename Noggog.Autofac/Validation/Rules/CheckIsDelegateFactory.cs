@@ -1,4 +1,4 @@
-﻿namespace Noggog.Autofac.Validation;
+﻿namespace Noggog.Autofac.Validation.Rules;
 
 public class CheckIsDelegateFactory : IValidationRule
 {

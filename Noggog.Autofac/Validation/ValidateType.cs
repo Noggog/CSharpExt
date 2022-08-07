@@ -1,4 +1,6 @@
-﻿namespace Noggog.Autofac.Validation;
+﻿using Noggog.Autofac.Validation.Rules;
+
+namespace Noggog.Autofac.Validation;
 
 public interface IValidateType
 {
