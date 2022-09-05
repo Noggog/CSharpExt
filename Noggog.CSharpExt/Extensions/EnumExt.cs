@@ -373,8 +373,8 @@ public static class EnumExt
 public static class EnumExt<T>
     where T : struct, Enum
 {
-    internal static Lazy<GenericBitwise<T>> bitwiseOperations = new Lazy<GenericBitwise<T>>();
-    private static Lazy<T[]> _Values = new Lazy<T[]>(() =>
+    internal static Lazy<GenericBitwise<T>> bitwiseOperations = new(); 
+    private static Lazy<T[]> _Values = new(() =>
     {
         List<T> ret = new List<T>();
         foreach (T item in Enum.GetValues(typeof(T)))
@@ -385,16 +385,7 @@ public static class EnumExt<T>
     });
     public static T[] Values => _Values.Value;
 
-    public static bool IsFlagsEnum()
-    {
-        foreach (var attr in typeof(T).GetCustomAttributes<FlagsAttribute>())
-        {
-            return true;
-        }
-        return false;
-    }
-
-    private static readonly Lazy<Func<long, T>> _convert = new Lazy<Func<long, T>>(GenerateConverter);
+    private static readonly Lazy<Func<long, T>> _convert = new(GenerateConverter);
     public static Func<long, T> Convert => _convert.Value;
     static Func<long, T> GenerateConverter()
     {
@@ -405,7 +396,7 @@ public static class EnumExt<T>
         return dynamicMethod.Compile();
     }
 
-    private static readonly Lazy<Func<T, long>> _convertFrom = new Lazy<Func<T, long>>(GenerateFromConverter);
+    private static readonly Lazy<Func<T, long>> _convertFrom = new(GenerateFromConverter);
     public static Func<T, long> ConvertFrom => _convertFrom.Value;
     static Func<T, long> GenerateFromConverter()
     {
@@ -416,17 +407,102 @@ public static class EnumExt<T>
         return dynamicMethod.Compile();
     }
 
-    public static readonly int Bits = Marshal.SizeOf(Enum.GetUnderlyingType(typeof(T))) * 8;
-    public static readonly uint MaxSize = (uint)(Math.Pow(2, Bits) - 1);
     public static IEnumerable<T> EnumerateContainedFlags(T flags, bool includeUndefined = true)
     {
+        if (includeUndefined)
+        {
+            return EnumFlags<T>.EnumerateAllContainedFlags(flags);
+        }
+        else
+        {
+            return EnumFlags<T>.EnumerateContainedDefinedFlags(flags);
+        }
+    }
+
+    public static bool IsFlags => EnumFlags<T>._hasFlags;
+}
+
+static class EnumFlags<TEnum>
+    where TEnum : struct, Enum
+{
+    public static bool _hasFlags;
+    public static IReadOnlyList<TEnum> _flagValues;
+    public static readonly int Bits = Marshal.SizeOf(Enum.GetUnderlyingType(typeof(TEnum))) * 8;
+    public static readonly uint MaxSize = (uint)(Math.Pow(2, Bits) - 1);
+
+    static EnumFlags()
+    {
+        _hasFlags = IsFlagsEnum();
+        _flagValues = GetFlagValues().ToArray();
+    }
+
+    public static bool IsFlagsEnum()
+    {
+        return typeof(TEnum).GetCustomAttributes<FlagsAttribute>().Any();
+    }
+
+    private static IEnumerable<TEnum> GetFlagValues()
+    {
+        if (!_hasFlags) yield break;
+        ulong flag = 0x1;
+        foreach (var value in EnumExt<TEnum>.Values)
+        {
+            ulong bits = Convert.ToUInt64(value);
+            if (bits == 0L)
+                //yield return value;
+                continue; // skip the zero value
+            while (flag < bits) flag <<= 1;
+            if (flag == bits)
+                yield return value;
+        }
+    }
+    
+    public static IEnumerable<TEnum> EnumerateContainedDefinedFlags(TEnum value)
+    {
+        if (!_hasFlags)
+        {
+            if (Enum.IsDefined(typeof(TEnum), value))
+            {
+                return new SingleCollection<TEnum>(value);
+            }
+            else
+            {
+                return Array.Empty<TEnum>();
+            }
+        }
+        ulong bits = Convert.ToUInt64(value);
+        var results = new List<TEnum>();
+        for (int i = _flagValues.Count - 1; i >= 0; i--)
+        {
+            ulong mask = Convert.ToUInt64(_flagValues[i]);
+            if (i == 0 && mask == 0L)
+                break;
+            if ((bits & mask) == mask)
+            {
+                results.Add(_flagValues[i]);
+                bits -= mask;
+            }
+        }
+        if (Convert.ToUInt64(value) != 0L)
+            return results.Reverse<TEnum>();
+        if (bits == Convert.ToUInt64(value) && _flagValues.Count > 0 && Convert.ToUInt64(_flagValues[0]) == 0L)
+            return _flagValues.Take(1);
+        return Enumerable.Empty<TEnum>();
+    }
+
+    public static IEnumerable<TEnum> EnumerateAllContainedFlags(TEnum flags)
+    {
+        if (!_hasFlags)
+        {
+            yield return flags;
+            yield break;
+        }
         ulong flagsLong = System.Convert.ToUInt64(flags);
         for (ulong i = 1; ; i <<= 1)
         {
-            if ((flagsLong & i) > 0
-                && (includeUndefined || Enum.IsDefined(typeof(T), i)))
+            if ((flagsLong & i) > 0)
             {
-                yield return (T)Enum.ToObject(typeof(T), i);
+                yield return (TEnum)Enum.ToObject(typeof(TEnum), i);
             }
             if (i >= MaxSize) break;
         }
