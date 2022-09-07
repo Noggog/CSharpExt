@@ -64,6 +64,11 @@
       <BuildAction>None</BuildAction>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <Compile Update="Enum\EnumerateContainedFlagsTests.cs">
+      <CodeLanguage>cs</CodeLanguage>
+      <DefaultPackFolder>content</DefaultPackFolder>
+      <BuildAction>Compile</BuildAction>
+    </Compile>
   </ItemGroup>
 
 </Project>
