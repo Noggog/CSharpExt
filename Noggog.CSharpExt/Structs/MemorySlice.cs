@@ -235,7 +235,7 @@ public readonly struct ReadOnlyMemorySlice<T> : IEnumerable<T>
 
 public static class MemorySliceExt
 {
-    public static bool Equal<T>(ReadOnlyMemorySlice<T>? lhs, ReadOnlyMemorySlice<T>? rhs)
+    public static bool Equal<T>(this ReadOnlyMemorySlice<T>? lhs, ReadOnlyMemorySlice<T>? rhs)
         where T : IEquatable<T>
     {
         if (lhs == null && rhs == null) return true;
