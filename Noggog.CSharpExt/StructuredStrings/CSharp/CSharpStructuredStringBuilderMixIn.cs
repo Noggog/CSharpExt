@@ -5,12 +5,14 @@ public static class CSharpStructuredStringBuilderMixIn
     public static Call Call(this StructuredStringBuilder sb,
         string? initialLine = null,
         string? suffixLine = null,
-        bool semiColon = true)
+        bool semiColon = true,
+        bool linePerArgument = true)
     {
         return new Call(sb,
             initialLine: initialLine,
             suffixLine: suffixLine,
-            semiColon: semiColon);
+            semiColon: semiColon,
+            linePerArgument: linePerArgument);
     }
 
     public static Function Function(this StructuredStringBuilder sb, string initialLine, bool semiColon = false)

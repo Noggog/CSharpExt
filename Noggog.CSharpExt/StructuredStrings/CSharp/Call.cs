@@ -8,17 +8,20 @@ public class Call : IDisposable
     private readonly string? _suffixLine;
     
     public bool SemiColon = true;
+    public bool LinePerArgument = true;
 
     public Call(
         StructuredStringBuilder sb,
         string? initialLine = null,
         string? suffixLine = null,
-        bool semiColon = true)
+        bool semiColon = true,
+        bool linePerArgument = true)
     {
         _sb = sb;
         SemiColon = semiColon;
         _initialLine = initialLine;
         _suffixLine = suffixLine;
+        LinePerArgument = linePerArgument;
     }
 
     public void Add(params string[] lines)
@@ -71,27 +74,51 @@ public class Call : IDisposable
             }
             else
             {
-                _sb.AppendLine($"{_initialLine}(");
+                _sb.AppendLine($"{_initialLine}(", appendNewLine: LinePerArgument);
             }
         }
         _sb.Depth++;
-        _args.Last(
-            each: (arg) =>
-            {
-                arg.Last(
-                    each: (item, last) =>
-                    {
-                        _sb.AppendLine($"{item}{(last ? "," : string.Empty)}");
-                    });
-            },
-            last: (arg) =>
-            {
-                arg.Last(
-                    each: (item, last) =>
-                    {
-                        _sb.AppendLine($"{item}{(last ? $"){_suffixLine}{(SemiColon ? ";" : string.Empty)}" : string.Empty)}");
-                    });
-            });
+        if (LinePerArgument)
+        {
+            _args.Last(
+                each: (arg) =>
+                {
+                    arg.Last(
+                        each: (item, last) =>
+                        {
+                            _sb.AppendLine($"{item}{(last ? "," : string.Empty)}");
+                        });
+                },
+                last: (arg) =>
+                {
+                    arg.Last(
+                        each: (item, last) =>
+                        {
+                            _sb.AppendLine($"{item}{(last ? $"){_suffixLine}{(SemiColon ? ";" : string.Empty)}" : string.Empty)}");
+                        });
+                });
+        }
+        else
+        {
+            _args.Last(
+                each: (arg) =>
+                {
+                    arg.Last(
+                        each: (item, last) =>
+                        {
+                            _sb.Append($"{item}{(last ? "," : string.Empty)} ");
+                        });
+                },
+                last: (arg) =>
+                {
+                    arg.Last(
+                        each: (item, last) =>
+                        {
+                            _sb.Append($"{item}{(last ? $"){_suffixLine}{(SemiColon ? ";" : string.Empty)}" : string.Empty)}");
+                        });
+                });
+            _sb.Append(Environment.NewLine);
+        }
         _sb.Depth--;
     }
 }

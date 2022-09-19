@@ -90,7 +90,7 @@ public class StructuredStringBuilder : IEnumerable<string>
         }
     }
 
-    public void Append(string? str)
+    public void Append(string? str, bool endWithNewLine = false)
     {
         if (str == null) str = string.Empty;
 #if NETSTANDARD2_0
@@ -122,6 +122,10 @@ public class StructuredStringBuilder : IEnumerable<string>
                     }
                 }
             });
+        if (endWithNewLine)
+        {
+            Append(Environment.NewLine, endWithNewLine: false);
+        }
     }
 
     public void AppendLine()
@@ -153,9 +157,9 @@ public class StructuredStringBuilder : IEnumerable<string>
         }
     }
 
-    public void AppendLine(string? str, bool extraLine = false)
+    public void AppendLine(string? str, bool extraLine = false, bool appendNewLine = true)
     {
-        using (new Line(this))
+        using (new Line(this, appendNewLine))
         {
             Append(str);
         }
