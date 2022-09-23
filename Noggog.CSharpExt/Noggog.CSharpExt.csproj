@@ -7,6 +7,7 @@
     <RootNamespace>Noggog</RootNamespace>
     <Authors>Noggog</Authors>
     <Company>Noggog</Company>
+    <ImplicitUsings>true</ImplicitUsings>
     <LangVersion>preview</LangVersion>
     <IsPackable>true</IsPackable>
     <RootNamespace>Noggog</RootNamespace>
