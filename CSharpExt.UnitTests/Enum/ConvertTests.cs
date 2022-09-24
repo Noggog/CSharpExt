@@ -55,4 +55,25 @@ public class ConvertTests
         Enums<FlagsTestEnum>.TryConvert(4, out val).Should().BeTrue();
         val.Should().Be(FlagsTestEnum.Four);
     }
+    
+    [Fact]
+    public void IsLongEnum()
+    {
+        Enums<LongEnum>.Convert(2).Should().Be((LongEnum)2);
+        Enums<LongEnum>.Convert(long.MaxValue).Should().Be((LongEnum)long.MaxValue);
+        Enums<LongEnum>.Convert(long.MinValue).Should().Be((LongEnum)long.MinValue);
+    }
+    
+    [Fact]
+    public void IsULongEnum()
+    {
+        Enums<ULongEnum>.Convert(2).Should().Be((ULongEnum)2);
+        Enums<ULongEnum>.Convert(long.MaxValue).Should().Be((ULongEnum)long.MaxValue);
+    }
+    
+    [Fact]
+    public void IsByteEnum()
+    {
+        Enums<ByteEnum>.Convert(2).Should().Be((ByteEnum)2);
+    }
 }

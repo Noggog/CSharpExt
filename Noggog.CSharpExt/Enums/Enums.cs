@@ -249,6 +249,61 @@ public static class Enums<TEnum>
         }
     }
 
+#if NETSTANDARD2_0 
+#else
+    public static bool TryParseFromNumber(ReadOnlySpan<char> str, out TEnum e)
+    {
+        if (Enum.TryParse<TEnum>(str, out var parsedEnum))
+        {
+            e = parsedEnum;
+            return true;
+        }
+
+        var isNeg = str.StartsWith("-");
+        if (isNeg)
+        {
+            str = str.Slice(1);
+        }
+
+        NumberStyles style = NumberStyles.Integer;
+        if (str.StartsWith("0x"))
+        {
+            style = NumberStyles.HexNumber;
+            str = str.Slice(2);
+        }
+                
+        if (long.TryParse(str, style, null, out var l))
+        {
+            if (isNeg)
+            {
+                l *= -1;
+            }
+            e = Convert(l);
+            return true;
+        }
+        
+        if (ulong.TryParse(str, style, null, out var ul))
+        {
+            if (isNeg)
+            {
+                e = default;
+                return false;
+            }
+            e = Convert((long)ul);
+            return true;
+        }
+
+        e = default;
+        return false;
+    }
+
+    public static TEnum TryParseFromNumber(ReadOnlySpan<char> str)
+    {
+        if (TryParseFromNumber(str, out var e)) return e;
+        throw new ArgumentException($"Could not be converted to {typeof(TEnum)}: {str}", nameof(str));
+    }
+#endif
+
     public static TEnum Convert(int number)
     {
         return _convert.Value(number);
