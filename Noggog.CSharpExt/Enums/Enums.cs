@@ -541,22 +541,19 @@ static class EnumFlags<TEnum>
 static class EnumStrings<T> 
     where T : struct, Enum
 {
-    private static readonly IReadOnlyDictionary<int, string> _stringsByInt;
     private static readonly IReadOnlyDictionary<T, string> _stringsByVal;
     private static readonly Func<T, string> _backupStringCall;
     
     static EnumStrings()
     {
-        var stringsByInt = new Dictionary<int, string>();
+        var stringsByInt = new Dictionary<long, string>();
         var stringsByval = new Dictionary<T, string>();
         foreach (var value in Enums<T>.Values)
         {
             var str = value.ToString();
-            stringsByInt[((IConvertible)value).ToInt32(CultureInfo.InvariantCulture)] = str;
             stringsByval[value] = str;
         }
 
-        _stringsByInt = stringsByInt;
         _stringsByVal = stringsByval;
             
             
@@ -650,14 +647,14 @@ static class EnumStrings<T>
         }
     }
     
-    public static string GetEnumString(int enumValue)
+    public static string GetEnumString(long enumValue)
     {
-        return _stringsByInt[enumValue];
+        return _stringsByVal[Enums<T>.Convert(enumValue)];
     }
 
-    public static bool TryGetEnumString(int enumValue, [MaybeNullWhen(false)] out string str)
+    public static bool TryGetEnumString(long enumValue, [MaybeNullWhen(false)] out string str)
     {
-        return _stringsByInt.TryGetValue(enumValue, out str);
+        return _stringsByVal.TryGetValue(Enums<T>.Convert(enumValue), out str);
     }
 
     public static bool TryGetEnumString(T enumValue, [MaybeNullWhen(false)] out string str)

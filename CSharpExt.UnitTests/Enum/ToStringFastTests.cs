@@ -15,4 +15,10 @@ public class ToStringFastTests
         (FlagsTestEnum.Two | FlagsTestEnum.Four).ToStringFast().Should().Be($"0x{6:x}");
         ((FlagsTestEnum)16).ToStringFast().Should().Be($"0x{16:x}");
     }
+    
+    [Fact]
+    public void ToStringFastLong()
+    {
+        LongEnum.Second.ToStringFast().Should().Be(nameof(LongEnum.Second));
+    }
 }
