@@ -25,6 +25,7 @@ public class DefaultCustomization : ICustomization
         fixture.Customizations.Add(new GetResponseParameterBuilder());
         fixture.Customizations.Add(new ProcessBuilder());
         fixture.Customizations.Add(new LazyBuilder());
+        fixture.Customizations.Add(new ExtendedListBuilder());
         fixture.Behaviors.Add(new ObservableEmptyBehavior());
         fixture.Register<IWorkDropoff>(() => new InlineWorkDropoff());
     }
