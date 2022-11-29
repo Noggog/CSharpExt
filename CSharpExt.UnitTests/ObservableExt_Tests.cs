@@ -63,7 +63,7 @@ namespace CSharpExt.UnitTests
             results.Should().ContainInOrder(secondWait);
         });
 
-        [Theory, TestData]
+        [Theory, TestData(UseMockFileSystem: true)]
         public void WatchFile_Typical(
             [Frozen]FilePath path,
             [Frozen]MockFileSystemWatcher mockFileWatcher,
@@ -78,7 +78,7 @@ namespace CSharpExt.UnitTests
             count.Should().Be(1);
         }
 
-        [Theory, TestData]
+        [Theory, TestData(UseMockFileSystem: true)]
         public void WatchFile_MovedOut(
             FilePath path,
             FileName name,
@@ -94,7 +94,7 @@ namespace CSharpExt.UnitTests
             count.Should().Be(1);
         }
 
-        [Theory, TestData]
+        [Theory, TestData(UseMockFileSystem: true)]
         public void WatchFile_MovedIn(
             FilePath path,
             FileName name,
@@ -110,7 +110,7 @@ namespace CSharpExt.UnitTests
             count.Should().Be(1);
         }
 
-        [Theory, TestData]
+        [Theory, TestData(UseMockFileSystem: true)]
         public void WatchFile_AtypicalPathSeparators(
             [Frozen]FilePath path,
             [Frozen]MockFileSystemWatcher mockFileWatcher,
@@ -125,34 +125,34 @@ namespace CSharpExt.UnitTests
             count.Should().Be(1);
         }
 
-        [Theory, TestData]
+        [Theory, TestData(UseMockFileSystem: true)]
         public void WatchFolder_Typical(
+            [Frozen]MockFileSystem fs,
             DirectoryPath existingDir,
-            FilePath existingFile,
-            [Frozen]MockFileSystemWatcher mockFileWatcher,
-            [Frozen]MockFileSystem fs)
+            [Frozen]MockFileSystemWatcher mockFileWatcher)
         {
+            var file = (FilePath)Path.Combine(existingDir.Path, "File");
             FilePath fileB = Path.Combine(existingDir.Path, "FileB");
-            fs.File.WriteAllText(existingFile, string.Empty);
+            fs.File.WriteAllText(file, string.Empty);
             var live = ObservableExt.WatchFolderContents(existingDir.Path, fileSystem: fs)
                 .RemoveKey();
             var list = live.AsObservableList();
             list.Count.Should().Be(1);
-            list.Items.ToExtendedList()[0].Should().Be(existingFile);
+            list.Items.ToExtendedList()[0].Should().Be(file);
             fs.File.WriteAllText(fileB, string.Empty);
             mockFileWatcher.MarkCreated(fileB);
             list = live.AsObservableList();
             list.Count.Should().Be(2);
-            list.Items.ToExtendedList()[0].Should().Be(existingFile);
+            list.Items.ToExtendedList()[0].Should().Be(file);
             list.Items.ToExtendedList()[1].Should().Be(fileB);
-            fs.File.Delete(existingFile);
-            mockFileWatcher.MarkDeleted(existingFile);
+            fs.File.Delete(file);
+            mockFileWatcher.MarkDeleted(file);
             list = live.AsObservableList();
             list.Count.Should().Be(1);
             list.Items.ToExtendedList()[0].Should().Be(fileB);
         }
 
-        [Theory, TestData]
+        [Theory, TestData(UseMockFileSystem: true)]
         public void WatchFolder_OnlySubfolder(
             [Frozen]DirectoryPath existingDir,
             [Frozen]MockFileSystemWatcher mockFileWatcher,
@@ -174,7 +174,7 @@ namespace CSharpExt.UnitTests
             list.Items.ToExtendedList()[0].Should().Be(fileA);
         }
 
-        [Theory, TestData]
+        [Theory, TestData(UseMockFileSystem: true)]
         public void WatchFolder_ATypicalSeparator(
             DirectoryPath someDirectory,
             [Frozen]FilePath file,

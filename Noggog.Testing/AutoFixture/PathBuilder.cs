@@ -1,4 +1,6 @@
-﻿using System.Reflection;
+﻿using System.IO.Abstractions;
+using System.Reflection;
+using AutoFixture;
 using AutoFixture.Kernel;
 using Noggog.Testing.IO;
 
@@ -10,52 +12,47 @@ public class PathBuilder : ISpecimenBuilder
     public static string ExistingFile = $"{PathingUtil.DrivePrefix}{Path.Combine("ExistingDirectory", "File")}";
         
     public object Create(object request, ISpecimenContext context)
-    { 
+    {
+        Type type;
+        string? name;
         if (request is ParameterInfo p)
         {
             if (p.Name == null) return new NoSpecimen();
-            if (p.Name.ContainsInsensitive("missing"))
-            {
-                if (p.ParameterType == typeof(FilePath))
-                {
-                    return new FilePath($"{PathingUtil.DrivePrefix}MissingFile");
-                }
-                else if (p.ParameterType == typeof(DirectoryPath))
-                {
-                    return new DirectoryPath($"{PathingUtil.DrivePrefix}MissingDirectory");
-                }
-            }
-            else if (p.Name.ContainsInsensitive("existing"))
-            {
-                if (p.ParameterType == typeof(FilePath))
-                {
-                    return new FilePath(Path.Combine(ExistingDirectory, "File"));
-                }
-                else if (p.ParameterType == typeof(DirectoryPath))
-                {
-                    return new DirectoryPath(ExistingDirectory);
-                }
-            }
-                
-            if (p.ParameterType == typeof(FilePath))
-            {
-                return new FilePath(Path.Combine(ExistingDirectory, $"{p.Name}{Path.GetRandomFileName()}"));
-            }
-            else if (p.ParameterType == typeof(DirectoryPath))
-            {
-                return new DirectoryPath($"{PathingUtil.DrivePrefix}{p.Name}{Path.GetRandomFileName()}");
-            }
+            type = p.ParameterType;
+            name = p.Name;
         }
         else if (request is Type t)
         {
-            if (t == typeof(FilePath))
+            type = t;
+            name = null;
+        }
+        else
+        {
+            return new NoSpecimen();
+        }
+
+        var existing = name != null && name.ContainsInsensitive("existing");
+        
+        if (type == typeof(FilePath))
+        {
+            var fp = new FilePath(Path.Combine(ExistingDirectory, $"{name}{Path.GetRandomFileName()}"));
+            if (existing)
             {
-                return new FilePath(Path.Combine(ExistingDirectory, Path.GetRandomFileName()));
+                var fs = context.Create<IFileSystem>();
+                fs.File.WriteAllText(fp, string.Empty);
             }
-            else if (t == typeof(DirectoryPath))
+            return fp;
+        }
+        else if (type == typeof(DirectoryPath))
+        {
+            var dir = new DirectoryPath($"{PathingUtil.DrivePrefix}{name}{Path.GetRandomFileName()}");
+            if (existing)
             {
-                return new DirectoryPath($"{PathingUtil.DrivePrefix}{Path.GetRandomFileName()}");
+                var fs = context.Create<IFileSystem>();
+                fs.Directory.CreateDirectory(dir);
             }
+
+            return dir;
         }
 
         return new NoSpecimen();

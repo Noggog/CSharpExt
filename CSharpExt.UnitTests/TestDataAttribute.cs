@@ -6,7 +6,9 @@ namespace Noggog.Testing.AutoFixture;
 
 public class TestDataAttribute : AutoDataAttribute
 {
-    public TestDataAttribute(bool ConfigureMembers = false)
+    public TestDataAttribute(
+        bool ConfigureMembers = false,
+        bool UseMockFileSystem = false)
         : base(() =>
         {
             var customization = new AutoNSubstituteCustomization()
@@ -17,7 +19,7 @@ public class TestDataAttribute : AutoDataAttribute
 
             return new Fixture()
                 .Customize(customization)
-                .Customize(new DefaultCustomization());
+                .Customize(new DefaultCustomization(useMockFileSystem: UseMockFileSystem));
         })
     {
     }
