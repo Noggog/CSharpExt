@@ -1,3 +1,4 @@
+using FluentAssertions;
 using Noggog;
 using Xunit;
 
@@ -30,5 +31,16 @@ public class FileName_Tests
     public static void FileNameEmpty()
     {
         new FileName(string.Empty);
+    }
+
+    [Fact]
+    public void NullableImplicitOperator()
+    {
+        FilePath? fp = new FilePath("Test");
+        string? str = fp;
+        str.Should().Be("Test");
+        fp = null;
+        str = fp;
+        str.Should().BeNull();
     }
 }

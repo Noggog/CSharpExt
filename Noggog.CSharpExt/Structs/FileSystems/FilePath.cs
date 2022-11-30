@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using Noggog.Extensions;
 using System.IO.Abstractions;
 using System.Runtime.Serialization;
@@ -100,7 +101,7 @@ public struct FilePath : IEquatable<FilePath>, IPath
 #if NETSTANDARD2_0 
         return Path.ToLower().GetHashCode();
 #else 
-            return Path.GetHashCode(StringComparison.OrdinalIgnoreCase);
+        return Path.GetHashCode(StringComparison.OrdinalIgnoreCase);
 #endif
     }
 
@@ -121,8 +122,22 @@ public struct FilePath : IEquatable<FilePath>, IPath
         return new FilePath(path);
     }
 
+    [return: NotNullIfNotNull("path")]
+    public static implicit operator FilePath?(string? path)
+    {
+        if (path == null) return null;
+        return new FilePath(path);
+    }
+
     public static implicit operator string(FilePath path)
     {
         return path._originalPath ?? string.Empty;
+    }
+
+    [return: NotNullIfNotNull("path")]
+    public static implicit operator string?(FilePath? path)
+    {
+        if (path == null) return null;
+        return (string)path.Value;
     }
 }

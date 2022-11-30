@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using Noggog.Extensions;
 using System.IO.Abstractions;
 using System.Runtime.Serialization;
@@ -204,9 +205,22 @@ public struct DirectoryPath : IEquatable<DirectoryPath>, IPath
         return new DirectoryPath(path);
     }
 
+    [return: NotNullIfNotNull("path")]
+    public static implicit operator DirectoryPath?(string? path)
+    {
+        if (path == null) return null;
+        return new DirectoryPath(path);
+    }
+
     public static implicit operator string(DirectoryPath dir)
     {
         return dir.RelativePath;
+    }
+
+    [return: NotNullIfNotNull("dir")]
+    public static implicit operator string?(DirectoryPath? dir)
+    {
+        return dir?.RelativePath;
     }
 
 #if NETSTANDARD2_0

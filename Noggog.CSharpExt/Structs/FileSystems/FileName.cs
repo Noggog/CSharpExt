@@ -1,3 +1,5 @@
+using System.Diagnostics.CodeAnalysis;
+
 namespace Noggog;
 
 public struct FileName : IEquatable<FileName>
@@ -47,9 +49,23 @@ public struct FileName : IEquatable<FileName>
         return new FileName(path);
     }
 
+    [return: NotNullIfNotNull("path")]
+    public static implicit operator FileName?(string? path)
+    {
+        if (path == null) return null;
+        return new FileName(path);
+    }
+
     public static implicit operator string(FileName name)
     {
         return name.String;
+    }
+
+    [return: NotNullIfNotNull("name")]
+    public static implicit operator string?(FileName? name)
+    {
+        if (name == null) return null;
+        return (string)name.Value;
     }
         
 #if NETSTANDARD2_0 
