@@ -1,3 +1,4 @@
+using System.Drawing;
 using Newtonsoft.Json;
 using System.IO;
 using System.Windows;
@@ -97,5 +98,34 @@ public static class WindowExt
         };
         window.DataContext = mainVM;
         return mainVM;
+    }
+
+    public static void CenterAround(this Window window, Rectangle rectangle)
+    {
+        if (window.Width > rectangle.Width)
+        {
+            var diff = window.Width - rectangle.Width;
+            diff /= 2;
+            window.Left = rectangle.Left - diff;
+        }
+        else
+        {
+            var diff = rectangle.Width - window.Width;
+            diff /= 2;
+            window.Left = rectangle.Left + diff;
+        }
+
+        if (window.Top > rectangle.Top)
+        {
+            var diff = window.Height - rectangle.Height;
+            diff /= 2;
+            window.Top = rectangle.Top - diff;
+        }
+        else
+        {
+            var diff = rectangle.Height - window.Height;
+            diff /= 2;
+            window.Top = rectangle.Top + diff;
+        }
     }
 }
