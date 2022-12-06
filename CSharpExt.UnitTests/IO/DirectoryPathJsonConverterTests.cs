@@ -97,6 +97,8 @@ public class DirectoryPathJsonConverterTests
             ret = ret.Replace("\\\\", $"{Path.DirectorySeparatorChar}");
             ret = IFileSystemExt.CleanDirectorySeparators(ret);
         }
+
+        ret = ret.ReplaceLineEndings();
         return ret;
     }
 }
