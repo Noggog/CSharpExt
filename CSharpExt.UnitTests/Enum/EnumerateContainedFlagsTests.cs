@@ -32,5 +32,7 @@ public class EnumerateContainedFlagsTests
             .Should().Equal(FlagsTestEnum.Two, FlagsTestEnum.Four);
         Enums<FlagsTestEnum>.EnumerateContainedFlags(FlagsTestEnum.Two | FlagsTestEnum.Four | (FlagsTestEnum)16, includeUndefined: true)
             .Should().Equal(FlagsTestEnum.Two, FlagsTestEnum.Four, (FlagsTestEnum)16);
+        Enums<FlagsTestEnum>.EnumerateContainedFlags(FlagsTestEnum.Two | FlagsTestEnum.Four | (FlagsTestEnum)(-16), includeUndefined: false)
+            .Should().Equal(FlagsTestEnum.Two, FlagsTestEnum.Four);
     }
 }

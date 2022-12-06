@@ -476,7 +476,7 @@ static class EnumFlags<TEnum>
         ulong flag = 0x1;
         foreach (var value in Enums<TEnum>.Values)
         {
-            ulong bits = Convert.ToUInt64(value);
+            var bits = (ulong)Enums<TEnum>.ConvertFrom(value);
             if (bits == 0L)
                 //yield return value;
                 continue; // skip the zero value
@@ -499,11 +499,11 @@ static class EnumFlags<TEnum>
                 return Array.Empty<TEnum>();
             }
         }
-        ulong bits = Convert.ToUInt64(value);
+        ulong bits = (ulong)Enums<TEnum>.ConvertFrom(value);
         var results = new List<TEnum>();
         for (int i = FlagValues.Count - 1; i >= 0; i--)
         {
-            ulong mask = Convert.ToUInt64(FlagValues[i]);
+            var mask = (ulong)Enums<TEnum>.ConvertFrom(FlagValues[i]);
             if (i == 0 && mask == 0L)
                 break;
             if ((bits & mask) == mask)
@@ -512,9 +512,9 @@ static class EnumFlags<TEnum>
                 bits -= mask;
             }
         }
-        if (Convert.ToUInt64(value) != 0L)
+        if (Enums<TEnum>.ConvertFrom(value) != 0L)
             return results.Reverse<TEnum>();
-        if (bits == Convert.ToUInt64(value) && FlagValues.Count > 0 && Convert.ToUInt64(FlagValues[0]) == 0L)
+        if (bits == (ulong)Enums<TEnum>.ConvertFrom(value) && FlagValues.Count > 0 && Enums<TEnum>.ConvertFrom(FlagValues[0]) == 0L)
             return FlagValues.Take(1);
         return Enumerable.Empty<TEnum>();
     }
@@ -526,7 +526,7 @@ static class EnumFlags<TEnum>
             yield return flags;
             yield break;
         }
-        ulong flagsLong = System.Convert.ToUInt64(flags);
+        ulong flagsLong = (ulong)Enums<TEnum>.ConvertFrom(flags);
         for (ulong i = 1; ; i <<= 1)
         {
             if ((flagsLong & i) > 0)
