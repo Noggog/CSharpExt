@@ -13,12 +13,27 @@ public class FlagTests
         e.HasFlag(FlagsTestEnum.Four)
             .Should().BeTrue();
     }
+    
     [Fact]
     public void HasFlags()
     {
         var e = FlagsTestEnum.One | FlagsTestEnum.Four;
         e.HasFlag(FlagsTestEnum.Four)
             .Should().BeTrue();
+    }
+    
+    [Fact]
+    public void HasMultipleFlags()
+    {
+        var e = FlagsTestEnum.One | FlagsTestEnum.Four;
+        e.HasFlag(FlagsTestEnum.Four | FlagsTestEnum.One)
+            .Should().BeTrue();
+        e.HasFlag(FlagsTestEnum.Four)
+            .Should().BeTrue();
+        e.HasFlag(FlagsTestEnum.One)
+            .Should().BeTrue();
+        e.HasFlag(FlagsTestEnum.One | FlagsTestEnum.Two)
+            .Should().BeFalse();
     }
     
     private void HasFlagTest(byte val, byte test, bool result)
