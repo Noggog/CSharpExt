@@ -1,4 +1,5 @@
 ﻿using System.Drawing;
+using System.Globalization;
 
 namespace Noggog;
 
@@ -146,4 +147,54 @@ public static class ColorExt
                 throw new ArgumentOutOfRangeException(nameof(alpha), alpha, null);
         }
     }
+    
+    public static string ToHexString(this Color color, IncludeAlpha alpha = IncludeAlpha.WhenApplicable)
+    {
+        switch (alpha)
+        {
+            case IncludeAlpha.Always:
+            case IncludeAlpha.WhenApplicable when color.A != 255: 
+                return $"#{color.A:X2}{color.R:X2}{color.G:X2}{color.B:X2}";
+            case IncludeAlpha.WhenApplicable:
+            case IncludeAlpha.Never:
+                return $"#{color.R:X2}{color.G:X2}{color.B:X2}";
+            default:
+                throw new ArgumentOutOfRangeException(nameof(alpha), alpha, null);
+        }
+    }
+
+#if NETSTANDARD2_0 
+#else
+    public static Color FromHexString(ReadOnlySpan<char> colorString)
+    {
+        if (colorString.Length < 6 || colorString.Length > 9)
+        {
+            throw new ArgumentException("Unexpected string length", nameof(colorString));
+        }
+
+        if (colorString[0] == '#')
+        {
+            colorString = colorString.Slice(1);
+        }
+
+        if (colorString.Length == 6)
+        {
+            return Color.FromArgb(
+                int.Parse(colorString.Slice(0, 2), NumberStyles.HexNumber),
+                int.Parse(colorString.Slice(2, 2), NumberStyles.HexNumber),
+                int.Parse(colorString.Slice(4, 2), NumberStyles.HexNumber));
+        }
+        
+        if (colorString.Length == 8)
+        {
+            return Color.FromArgb(
+                int.Parse(colorString.Slice(0, 2), NumberStyles.HexNumber),
+                int.Parse(colorString.Slice(2, 2), NumberStyles.HexNumber),
+                int.Parse(colorString.Slice(4, 2), NumberStyles.HexNumber),
+                int.Parse(colorString.Slice(6, 2), NumberStyles.HexNumber));
+        }
+        
+        throw new ArgumentException("Unexpected string length", nameof(colorString));
+    }
+#endif
 }
