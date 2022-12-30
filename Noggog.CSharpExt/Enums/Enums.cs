@@ -461,11 +461,26 @@ static class EnumFlags<TEnum>
 {
     public static bool IsFlagsEnum;
     public static IReadOnlyList<TEnum> FlagValues;
-    public static readonly int Bits = Marshal.SizeOf(Enum.GetUnderlyingType(typeof(TEnum))) * 8;
-    public static readonly uint MaxSize = (uint)(Math.Pow(2, Bits) - 1);
+    public static readonly int Bits;
+    public static readonly ulong MaxSize;
 
     static EnumFlags()
     {
+        var underlying = Enum.GetUnderlyingType(typeof(TEnum));
+        var bits = Marshal.SizeOf(underlying) * 8;
+        Bits = bits;
+        if (underlying == typeof(ulong))
+        {
+            MaxSize = 0x8000000000000000;
+        }
+        else if (underlying == typeof(long))
+        {
+            MaxSize = 0x4000000000000000;
+        }
+        else
+        {
+            MaxSize = (ulong)(Math.Pow(2, Bits));
+        }
         IsFlagsEnum = typeof(TEnum).GetCustomAttributes<FlagsAttribute>().Any();
         FlagValues = GetFlagValues().ToArray();
     }
@@ -527,7 +542,7 @@ static class EnumFlags<TEnum>
             yield break;
         }
         ulong flagsLong = (ulong)Enums<TEnum>.ConvertFrom(flags);
-        for (ulong i = 1; ; i <<= 1)
+        for (ulong i = 1; i >= 1; i <<= 1)
         {
             if ((flagsLong & i) > 0)
             {
