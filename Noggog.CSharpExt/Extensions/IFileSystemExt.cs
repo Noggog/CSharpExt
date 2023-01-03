@@ -139,7 +139,7 @@ public static class IFileSystemExt
 
     public static bool IsSubfolderOf(this IDirectory system, DirectoryPath path, DirectoryPath potentialParent)
     {
-        IDirectoryInfo parent;
+        IDirectoryInfo? parent;
         while ((parent = system.GetParent(path)) != null)
         {
             if (parent.FullName.Equals(potentialParent.Path, StringComparison.OrdinalIgnoreCase))

@@ -18,7 +18,11 @@ public class ExportStringToFile : IExportStringToFile
             if (str.Equals(existStr)) return;
         }
 
-        fileSystem.Directory.CreateDirectory(file.Directory);
+        if (file.Directory != null)
+        {
+            fileSystem.Directory.CreateDirectory(file.Directory);
+        }
+        
         fileSystem.File.WriteAllText(file.Path, str);
     }
 }

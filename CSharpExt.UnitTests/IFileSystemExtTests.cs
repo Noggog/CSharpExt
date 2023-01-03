@@ -36,7 +36,7 @@ public class IFileSystemExtTests
         var dir = Substitute.For<IDirectory>();
         dir.Exists(Arg.Any<string>()).Returns(false);
         dir.DeleteEntireFolder(default, default, default);
-        dir.DidNotReceiveWithAnyArgs().GetFiles(default);
+        dir.DidNotReceiveWithAnyArgs().GetFiles(default!);
     }
 
     [Fact]

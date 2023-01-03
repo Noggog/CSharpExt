@@ -461,7 +461,7 @@ public static class ObservableExt
         bool throwIfInvalidPath = false,
         IFileSystemWatcherFactory? fileWatcherFactory = null)
     {
-        fileWatcherFactory ??= new FileSystemWatcherFactory();
+        fileWatcherFactory ??= new FileSystemWatcherFactory(IFileSystemExt.DefaultFilesystem);
         return UsingWithCatch(
                 () =>
                 {
@@ -512,7 +512,7 @@ public static class ObservableExt
         bool throwIfInvalidPath = false,
         IFileSystemWatcherFactory? fileWatcherFactory = null)
     {
-        fileWatcherFactory ??= new FileSystemWatcherFactory();
+        fileWatcherFactory ??= new FileSystemWatcherFactory(IFileSystemExt.DefaultFilesystem);
         return UsingWithCatch(
                 () =>
                 {

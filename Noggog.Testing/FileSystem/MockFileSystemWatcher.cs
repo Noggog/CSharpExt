@@ -7,15 +7,18 @@ namespace Noggog.Testing.FileSystem;
 public class MockFileSystemWatcherFactory : IFileSystemWatcherFactory
 {
     private readonly MockFileSystemWatcher _mock;
+    public IFileSystem FileSystem { get; }
 
-    public MockFileSystemWatcherFactory()
+    public MockFileSystemWatcherFactory(IFileSystem fileSystem)
     {
-        _mock = new MockFileSystemWatcher();
+        _mock = new MockFileSystemWatcher(fileSystem);
+        FileSystem = fileSystem;
     }
 
-    public MockFileSystemWatcherFactory(MockFileSystemWatcher mock)
+    public MockFileSystemWatcherFactory(IFileSystem fileSystem, MockFileSystemWatcher mock)
     {
         _mock = mock;
+        FileSystem = fileSystem;
     }
 
     public IFileSystemWatcher CreateNew() => _mock;
@@ -23,6 +26,17 @@ public class MockFileSystemWatcherFactory : IFileSystemWatcherFactory
     public IFileSystemWatcher CreateNew(string path) => _mock;
 
     public IFileSystemWatcher CreateNew(string path, string filter) => _mock;
+
+    public IFileSystemWatcher New() => _mock;
+
+    public IFileSystemWatcher New(string path) => _mock;
+
+    public IFileSystemWatcher New(string path, string filter) => _mock;
+
+    public IFileSystemWatcher? Wrap(FileSystemWatcher? fileSystemWatcher)
+    {
+        throw new NotImplementedException();
+    }
 }
     
 public class MockFileSystemWatcher : IFileSystemWatcher
@@ -39,15 +53,19 @@ public class MockFileSystemWatcher : IFileSystemWatcher
     {
     }
 
-    public WaitForChangedResult WaitForChanged(WatcherChangeTypes changeType)
+    public IWaitForChangedResult WaitForChanged(WatcherChangeTypes changeType)
     {
         throw new NotImplementedException();
     }
 
-    public WaitForChangedResult WaitForChanged(WatcherChangeTypes changeType, int timeout)
+    public IWaitForChangedResult WaitForChanged(WatcherChangeTypes changeType, int timeout)
     {
         throw new NotImplementedException();
     }
+
+    public IContainer? Container { get; set; } = null;
+
+    public IFileSystem FileSystem { get; }
 
     public bool IncludeSubdirectories { get; set; }
     public bool EnableRaisingEvents { get; set; }
@@ -56,14 +74,19 @@ public class MockFileSystemWatcher : IFileSystemWatcher
     public int InternalBufferSize { get; set; }
     public NotifyFilters NotifyFilter { get; set; }
     public string Path { get; set; } = string.Empty;
-    public ISite Site { get; set; } = null!;
-    public ISynchronizeInvoke SynchronizingObject { get; set; } = null!;
+    public ISite? Site { get; set; } = null;
+    public ISynchronizeInvoke? SynchronizingObject { get; set; } = null;
     public event FileSystemEventHandler? Changed;
     public event FileSystemEventHandler? Created;
     public event FileSystemEventHandler? Deleted;
     public event ErrorEventHandler? Error;
     public event RenamedEventHandler? Renamed;
 
+    public MockFileSystemWatcher(IFileSystem fileSystem)
+    {
+        FileSystem = fileSystem;
+    }
+    
     public void MarkCreated(FilePath path)
     {
         if (Created == null) return;

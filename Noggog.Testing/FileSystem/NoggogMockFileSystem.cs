@@ -26,4 +26,9 @@ public class NoggogMockFileSystem : MockFileSystem
     {
         _fileSystemWatcher = fileSystemWatcher;
     }
+
+    public void SetFileSystemWatcherFactory(IFileSystemWatcherFactory factory)
+    {
+        _fileSystemWatcher = factory;
+    }
 }
