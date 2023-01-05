@@ -176,4 +176,25 @@ public struct P2Double : IEquatable<P2Double>
     {
         return new P2Double(point.X, point.Y);
     }
+
+    public static IEqualityComparer<P2Double?> NullableRawEqualityComparer => new NullableRawEqualityComparerImpl();
+
+    private class NullableRawEqualityComparerImpl : IEqualityComparer<P2Double?>
+    {
+        public bool Equals(P2Double? x, P2Double? y)
+        {
+            if (x == null && y == null) return true;
+            if (x == null || y == null) return false;
+            return x.Value.X == y.Value.X && x.Value.Y == y.Value.Y;
+        }
+
+        public int GetHashCode(P2Double? obj)
+        {
+            if (obj == null) return 0;
+            HashCode ret = new();
+            ret.Add(obj.Value.X);
+            ret.Add(obj.Value.Y);
+            return ret.GetHashCode();
+        }
+    }
 }

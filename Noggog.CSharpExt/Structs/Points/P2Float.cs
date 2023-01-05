@@ -170,4 +170,25 @@ public struct P2Float : IEquatable<P2Float>
     {
         return new P2Float(point.X, point.Y);
     }
+
+    public static IEqualityComparer<P2Float?> NullableRawEqualityComparer => new NullableRawEqualityComparerImpl();
+
+    private class NullableRawEqualityComparerImpl : IEqualityComparer<P2Float?>
+    {
+        public bool Equals(P2Float? x, P2Float? y)
+        {
+            if (x == null && y == null) return true;
+            if (x == null || y == null) return false;
+            return x.Value.X == y.Value.X && x.Value.Y == y.Value.Y;
+        }
+
+        public int GetHashCode(P2Float? obj)
+        {
+            if (obj == null) return 0;
+            HashCode ret = new();
+            ret.Add(obj.Value.X);
+            ret.Add(obj.Value.Y);
+            return ret.GetHashCode();
+        }
+    }
 }

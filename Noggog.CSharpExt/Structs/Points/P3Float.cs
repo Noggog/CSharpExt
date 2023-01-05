@@ -187,4 +187,26 @@ public struct P3Float : IEquatable<P3Float>
     {
         return new P3Float(point.X, point.Y, point.Z);
     }
+
+    public static IEqualityComparer<P3Float?> NullableRawEqualityComparer => new NullableRawEqualityComparerImpl();
+
+    private class NullableRawEqualityComparerImpl : IEqualityComparer<P3Float?>
+    {
+        public bool Equals(P3Float? x, P3Float? y)
+        {
+            if (x == null && y == null) return true;
+            if (x == null || y == null) return false;
+            return x.Value.X == y.Value.X && x.Value.Y == y.Value.Y && x.Value.Z == y.Value.Z;
+        }
+
+        public int GetHashCode(P3Float? obj)
+        {
+            if (obj == null) return 0;
+            HashCode ret = new();
+            ret.Add(obj.Value.X);
+            ret.Add(obj.Value.Y);
+            ret.Add(obj.Value.Z);
+            return ret.GetHashCode();
+        }
+    }
 }
