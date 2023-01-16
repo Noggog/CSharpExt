@@ -29,22 +29,11 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="GitInfo" Version="2.3.0">
-            <PrivateAssets>all</PrivateAssets>
-            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-        </PackageReference>
-        <PackageReference Include="NuGetizer" Version="0.9.1">
-            <PrivateAssets>all</PrivateAssets>
-            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-        </PackageReference>
-    </ItemGroup>
-
-    <ItemGroup>
       <ProjectReference Include="..\Noggog.CSharpExt\Noggog.CSharpExt.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
+      <PackageReference Include="Newtonsoft.Json" />
     </ItemGroup>
 
     <Target Name="PreBuild" BeforeTargets="PreBuildEvent">

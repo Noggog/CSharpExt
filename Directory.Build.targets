@@ -4,5 +4,12 @@
     <WarningsAsErrors>nullable</WarningsAsErrors>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <ImplicitUsings>true</ImplicitUsings>
-  </PropertyGroup>  
+  </PropertyGroup> 
+   
+  <ItemGroup >
+    <PackageReference Include="NuGetizer" > 
+      <PrivateAssets>all</PrivateAssets> 
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets> 
+    </PackageReference> 
+  </ItemGroup>  
 </Project>

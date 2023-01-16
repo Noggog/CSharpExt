@@ -34,16 +34,8 @@
     </ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="GitInfo" Version="2.3.0">
-			<PrivateAssets>all</PrivateAssets>
-			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-		</PackageReference>
-		<PackageReference Include="Microsoft.Win32.Registry" Version="5.0.0" />
-		<PackageReference Include="Nito.AsyncEx.Interop.WaitHandles" Version="5.1.2" />
-		<PackageReference Include="NuGetizer" Version="0.9.1">
-			<PrivateAssets>all</PrivateAssets>
-			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-		</PackageReference>
+		<PackageReference Include="Microsoft.Win32.Registry" />
+		<PackageReference Include="Nito.AsyncEx.Interop.WaitHandles" />
 	</ItemGroup>
 
 	<ItemGroup>
