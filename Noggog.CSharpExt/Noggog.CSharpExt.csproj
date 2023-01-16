@@ -35,11 +35,11 @@
   </ItemGroup>
 
   <ItemGroup Condition=" $(TargetFramework.StartsWith('netstandard2.0')) ">
-    <PackageReference Include="System.Memory" Version="4.5.5" />
-    <PackageReference Include="System.Reactive" Version="5.0.0" />
-    <PackageReference Include="System.Threading.Tasks" Version="4.3.0" />
-    <PackageReference Include="System.Buffers" Version="4.5.1" />
-    <PackageReference Include="Microsoft.Bcl.HashCode" Version="1.1.1" />
+    <PackageReference Include="System.Memory" />
+    <PackageReference Include="System.Reactive" />
+    <PackageReference Include="System.Threading.Tasks" />
+    <PackageReference Include="System.Buffers" />
+    <PackageReference Include="Microsoft.Bcl.HashCode" />
   </ItemGroup>
 
   <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
