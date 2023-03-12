@@ -186,4 +186,16 @@ public static class IFileSystemExt
         if (separator == Path.DirectorySeparatorChar) return str;
         return str.Replace(separator, Path.DirectorySeparatorChar);
     }
+
+    public static void CleanDirectorySeparators(Span<char> str)
+    {
+        CleanDirectorySeparators(str, '\\');
+        CleanDirectorySeparators(str, '/');
+    }
+
+    private static void CleanDirectorySeparators(Span<char> str, char separator)
+    {
+        if (separator == Path.DirectorySeparatorChar) return;
+        str.Replace(separator, Path.DirectorySeparatorChar);
+    }
 }
