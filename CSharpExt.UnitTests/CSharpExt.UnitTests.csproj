@@ -16,7 +16,7 @@
     <PackageReference Include="NSubstitute" />
     <PackageReference Include="Verify.DiffPlex" />
     <PackageReference Include="Verify.Xunit" />
-    <PackageReference Include="xunit.runner.visualstudio" >
+    <PackageReference Include="xunit.runner.visualstudio">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
