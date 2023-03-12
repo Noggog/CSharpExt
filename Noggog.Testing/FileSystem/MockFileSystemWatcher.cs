@@ -63,6 +63,11 @@ public class MockFileSystemWatcher : IFileSystemWatcher
         throw new NotImplementedException();
     }
 
+    public IWaitForChangedResult WaitForChanged(WatcherChangeTypes changeType, TimeSpan timeout)
+    {
+        throw new NotImplementedException();
+    }
+
     public IContainer? Container { get; set; } = null;
 
     public IFileSystem FileSystem { get; }
