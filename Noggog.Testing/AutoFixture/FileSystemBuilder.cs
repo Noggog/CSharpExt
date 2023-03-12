@@ -88,6 +88,10 @@ public class FileSystemBuilder : ISpecimenBuilder
         }
         foreach (var file in instrs.FilePaths(context))
         {
+            if (file.Directory is { } parent)
+            {
+                mockFs.Directory.CreateDirectory(parent);
+            }
             mockFs.File.Create(file);
         }
         return mockFs;
