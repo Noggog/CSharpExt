@@ -270,4 +270,15 @@ public static class SpanExt
         // foreach (ReadOnlySpan<char> entry in str.SplitLines())
         public static implicit operator ReadOnlySpan<char>(LineSplitEntry entry) => entry.Line;
     }
+
+    public static void Replace(this Span<char> span, char oldChar, char newChar)
+    {
+        for (int i = 0; i < span.Length; i++)
+        {
+            if (span[i] == oldChar)
+            {
+                span[i] = newChar;
+            }
+        }
+    }
 }
