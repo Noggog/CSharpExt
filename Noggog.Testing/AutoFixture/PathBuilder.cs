@@ -35,7 +35,7 @@ public class PathBuilder : ISpecimenBuilder
         
         if (type == typeof(FilePath))
         {
-            var fp = new FilePath(Path.Combine(ExistingDirectory, $"{name}{Path.GetRandomFileName()}"));
+            var fp = new FilePath($"{PathingUtil.DrivePrefix}{name}{Path.GetRandomFileName()}");
             if (existing)
             {
                 var fs = context.Create<IFileSystem>();
