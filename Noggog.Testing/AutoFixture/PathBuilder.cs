@@ -9,7 +9,7 @@ namespace Noggog.Testing.AutoFixture;
 public class PathBuilder : ISpecimenBuilder
 {
     public static string ExistingDirectory = $"{PathingUtil.DrivePrefix}ExistingDirectory";
-    public static string ExistingFile = $"{PathingUtil.DrivePrefix}{Path.Combine("ExistingDirectory", "File")}";
+    public static string ExistingFile = $"{PathingUtil.DrivePrefix}{Path.Combine("ExistingDirectory", "File.file")}";
         
     public object Create(object request, ISpecimenContext context)
     {
