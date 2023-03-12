@@ -6,7 +6,6 @@ using Noggog.Processes;
 using Noggog.Processes.DI;
 using Noggog.Testing.AutoFixture;
 using NSubstitute;
-using Xunit;
 
 namespace CSharpExt.UnitTests.Processes;
 

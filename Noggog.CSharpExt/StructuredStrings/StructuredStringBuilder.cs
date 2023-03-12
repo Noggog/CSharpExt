@@ -1,6 +1,5 @@
 ﻿using System.Collections;
 using System.Diagnostics.CodeAnalysis;
-using System.IO.Abstractions;
 #if NETSTANDARD2_0
 #else
 using System.Reactive.Subjects;

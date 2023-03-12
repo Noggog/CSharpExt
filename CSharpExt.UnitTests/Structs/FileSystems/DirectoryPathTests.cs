@@ -4,10 +4,8 @@ using System.IO.Abstractions.TestingHelpers;
 using System.Runtime.InteropServices;
 using FluentAssertions;
 using Noggog;
-using Noggog.Extensions;
 using Noggog.Testing.AutoFixture;
 using NSubstitute;
-using Xunit;
 
 namespace CSharpExt.UnitTests.Structs.FileSystems;
 

@@ -1,6 +1,5 @@
 ﻿using FluentAssertions;
 using Noggog;
-using Xunit;
 
 namespace CSharpExt.UnitTests.Enum;
 

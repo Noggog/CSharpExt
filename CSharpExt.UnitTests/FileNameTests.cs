@@ -1,10 +1,9 @@
 using FluentAssertions;
 using Noggog;
-using Xunit;
 
 namespace CSharpExt.UnitTests;
 
-public class FileName_Tests
+public class FileNameTests
 {
     [Fact]
     public static void FileNameTypical()

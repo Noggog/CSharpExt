@@ -2,7 +2,6 @@
 using Noggog.Streams;
 using Noggog.Testing.AutoFixture;
 using NSubstitute;
-using Xunit;
 
 namespace CSharpExt.UnitTests;
 

@@ -4,7 +4,6 @@ using Noggog;
 using Noggog.Testing.AutoFixture;
 using Noggog.Testing.AutoFixture.Testing;
 using NSubstitute;
-using Xunit;
 
 namespace CSharpExt.UnitTests.AutoFixture;
 

@@ -1,7 +1,6 @@
 ﻿using Autofac;
 using Noggog.Autofac;
 using Noggog.Autofac.Validation;
-using Xunit;
 
 namespace CSharpExt.UnitTests.Autofac.Integration;
 

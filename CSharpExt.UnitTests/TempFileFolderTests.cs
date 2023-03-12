@@ -1,7 +1,6 @@
 using FluentAssertions;
 using Noggog.IO;
-using Noggog.Utility;
-using Xunit;
+
 namespace CSharpExt.UnitTests;
 
 public class TempFileFolderTests

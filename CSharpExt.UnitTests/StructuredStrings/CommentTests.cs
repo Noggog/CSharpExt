@@ -1,5 +1,4 @@
 using Noggog.StructuredStrings;
-using Xunit;
 
 namespace CSharpExt.UnitTests.StructuredStrings;
 

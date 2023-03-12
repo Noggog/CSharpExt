@@ -4,7 +4,6 @@ using FluentAssertions;
 using Noggog;
 using Noggog.Testing.IO;
 using NSubstitute;
-using Xunit;
 
 namespace CSharpExt.UnitTests;
 

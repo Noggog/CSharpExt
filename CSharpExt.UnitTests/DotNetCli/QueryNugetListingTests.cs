@@ -4,7 +4,6 @@ using Noggog.DotNetCli.DI;
 using Noggog.Processes;
 using Noggog.Testing.AutoFixture;
 using NSubstitute;
-using Xunit;
 
 namespace CSharpExt.UnitTests.DotNetCli;
 

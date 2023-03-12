@@ -4,7 +4,6 @@ using Newtonsoft.Json;
 using Noggog;
 using Noggog.Json.IO;
 using Noggog.Testing.IO;
-using Xunit;
 
 namespace CSharpExt.UnitTests.IO;
 

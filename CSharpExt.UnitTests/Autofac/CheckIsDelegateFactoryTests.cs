@@ -4,7 +4,6 @@ using Noggog.Autofac.Validation;
 using Noggog.Autofac.Validation.Rules;
 using Noggog.Testing.AutoFixture;
 using NSubstitute;
-using Xunit;
 
 namespace CSharpExt.UnitTests.Autofac;
 

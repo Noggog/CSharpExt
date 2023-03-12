@@ -1,7 +1,6 @@
 ﻿using FluentAssertions;
 using Noggog;
 using Noggog.Testing.IO;
-using Xunit;
 
 namespace CSharpExt.UnitTests;
 

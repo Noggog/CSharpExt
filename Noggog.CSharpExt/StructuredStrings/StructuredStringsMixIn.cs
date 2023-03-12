@@ -1,6 +1,4 @@
-﻿using System.IO.Abstractions;
-
-namespace Noggog.StructuredStrings;
+﻿namespace Noggog.StructuredStrings;
 
 public static class StructuredStringsMixIn
 {

@@ -5,7 +5,6 @@ using FluentAssertions;
 using Noggog;
 using Noggog.Testing.AutoFixture;
 using NSubstitute;
-using Xunit;
 
 namespace CSharpExt.UnitTests.Structs.FileSystems;
 

@@ -6,7 +6,6 @@ using AutoFixture.Xunit2;
 using FluentAssertions;
 using Noggog.Testing.AutoFixture;
 using NSubstitute;
-using Xunit;
 
 namespace CSharpExt.UnitTests.AutoFixture;
 

@@ -3,7 +3,6 @@ using FluentAssertions;
 using Noggog;
 using Noggog.Testing.AutoFixture;
 using Noggog.Testing.IO;
-using Xunit;
 
 namespace CSharpExt.UnitTests.AutoFixture;
 
