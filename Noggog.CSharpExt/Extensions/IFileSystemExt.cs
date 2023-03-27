@@ -30,7 +30,7 @@ public static class IFileSystemExt
         var exceptions = new List<Exception>();
         foreach (string f in files)
         {
-            var fi = system.FileSystem.FileInfo.FromFileName(f);
+            var fi = system.FileSystem.FileInfo.New(f);
             if (disableReadOnly)
             {
                 if (fi.IsReadOnly)
@@ -160,7 +160,7 @@ public static class IFileSystemExt
             
         foreach (var file in system.GetFiles(from))
         {
-            var fi = system.FileSystem.FileInfo.FromFileName(file);
+            var fi = system.FileSystem.FileInfo.New(file);
             var rhs = Path.Combine(to.Path, Path.GetFileName(file));
             fi.CopyTo(rhs, overwrite);
         }

@@ -67,7 +67,7 @@ public class IFileSystemExtTests
         {
             { SomeFile, new MockFileData("Boop") },
         });
-        var file = fileSystem.FileInfo.FromFileName(SomeFile);
+        var file = fileSystem.FileInfo.New(SomeFile);
         file.IsReadOnly = true;
         fileSystem.Directory.DeleteEntireFolder(DirPath, disableReadOnly: true, deleteFolderItself: true);
         fileSystem.File.Exists(SomeFile).Should().BeFalse();
@@ -78,7 +78,7 @@ public class IFileSystemExtTests
     public void DeleteEntireFolder_ReadOnlyBlocks()
     {
         var fileSystem = TypicalFileSystem();
-        var file = fileSystem.FileInfo.FromFileName(SomeFile);
+        var file = fileSystem.FileInfo.New(SomeFile);
         file.IsReadOnly = true;
         Assert.Throws<UnauthorizedAccessException>(() =>
         {
@@ -94,7 +94,7 @@ public class IFileSystemExtTests
     public void TryDeleteEntireFolder_ReadOnlyBlocks()
     {
         var fileSystem = TypicalFileSystem();
-        var file = fileSystem.FileInfo.FromFileName(SomeFile);
+        var file = fileSystem.FileInfo.New(SomeFile);
         file.IsReadOnly = true;
         fileSystem.Directory.TryDeleteEntireFolder(DirPath, disableReadOnly: false, deleteFolderItself: true);
         fileSystem.File.Exists(SomeFile).Should().BeTrue();
