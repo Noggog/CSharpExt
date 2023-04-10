@@ -145,7 +145,8 @@ public struct P2Int : IP2IntGet, IEquatable<P2Int>
         return _x == rhs._x
                && _y == rhs._y;
     }
-
+    
+#if NETSTANDARD2_0
     public static bool TryParse(string str, out P2Int ret)
     {
         string[] split = str.Split(',');
@@ -165,6 +166,29 @@ public struct P2Int : IP2IntGet, IEquatable<P2Int>
         ret = new P2Int(x, y);
         return true;
     }
+#else 
+    public static bool TryParse(ReadOnlySpan<char> str, out P2Int ret)
+    {
+        // ToDo
+        // Improve parsing to reduce allocation
+        string[] split = str.ToString().Split(',');
+        if (split.Length != 2)
+        {
+            ret = default(P2Int);
+            return false;
+        }
+
+        if (!int.TryParse(split[0], out int x)
+            || !int.TryParse(split[1], out int y))
+        {
+            ret = default(P2Int);
+            return false;
+        }
+
+        ret = new P2Int(x, y);
+        return true;
+    }
+#endif
 
     public override int GetHashCode() => HashCode.Combine(_x, _y);
 

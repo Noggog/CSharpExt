@@ -249,8 +249,11 @@ public struct P3Double : IEquatable<P3Double>
         return p1.Absolute;
     }
 
+#if NETSTANDARD2_0
     public static bool TryParse(string str, out P3Double p3)
     {
+        // ToDo
+        // Improve parsing to reduce allocation
         string[] split = str.Split(',');
         if (split.Length != 3)
         {
@@ -279,6 +282,40 @@ public struct P3Double : IEquatable<P3Double>
         p3 = new P3Double(x, y, z);
         return true;
     }
+#else 
+    public static bool TryParse(ReadOnlySpan<char> str, out P3Double p3)
+    {
+        // ToDo
+        // Improve parsing to reduce allocation
+        string[] split = str.ToString().Split(',');
+        if (split.Length != 3)
+        {
+            p3 = default(P3Double);
+            return false;
+        }
+
+        if (!double.TryParse(split[0], out double x))
+        {
+            p3 = default(P3Double);
+            return false;
+        }
+
+        if (!double.TryParse(split[1], out double y))
+        {
+            p3 = default(P3Double);
+            return false;
+        }
+
+        if (!double.TryParse(split[2], out double z))
+        {
+            p3 = default(P3Double);
+            return false;
+        }
+
+        p3 = new P3Double(x, y, z);
+        return true;
+    }
+#endif
 
     public override bool Equals(object? obj)
     {

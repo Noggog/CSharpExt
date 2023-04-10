@@ -75,8 +75,11 @@ public struct P3Float : IEquatable<P3Float>
     public static float Dot(P3Float v1, P3Float v2) => v1._x * v2._x + v1._y * v2._y + v1._z * v2._z;
     public float Distance(P3Float p2) => (this - p2).Magnitude;
 
+#if NETSTANDARD2_0
     public static bool TryParse(string str, out P3Float p2)
     {
+        // ToDo
+        // Improve parsing to reduce allocation
         string[] split = str.Split(',');
         if (split.Length != 3)
         {
@@ -102,6 +105,37 @@ public struct P3Float : IEquatable<P3Float>
         p2 = new P3Float(x, y, z);
         return true;
     }
+#else 
+    public static bool TryParse(ReadOnlySpan<char> str, out P3Float p2)
+    {
+        // ToDo
+        // Improve parsing to reduce allocation
+        string[] split = str.ToString().Split(',');
+        if (split.Length != 3)
+        {
+            p2 = default(P3Float);
+            return false;
+        }
+
+        if (!float.TryParse(split[0], out float x))
+        {
+            p2 = default(P3Float);
+            return false;
+        }
+        if (!float.TryParse(split[1], out float y))
+        {
+            p2 = default(P3Float);
+            return false;
+        }
+        if (!float.TryParse(split[2], out float z))
+        {
+            p2 = default(P3Float);
+            return false;
+        }
+        p2 = new P3Float(x, y, z);
+        return true;
+    }
+#endif
 
     public override bool Equals(object? obj)
     {

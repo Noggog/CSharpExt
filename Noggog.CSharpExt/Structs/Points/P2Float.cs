@@ -64,8 +64,11 @@ public struct P2Float : IEquatable<P2Float>
     public static float Dot(P2Float v1, P2Float v2) => v1._x * v2._x + v1._y * v2._y;
     public float Distance(P2Float p2) => (this - p2).Magnitude;
 
+#if NETSTANDARD2_0
     public static bool TryParse(string str, out P2Float p2)
     {
+        // ToDo
+        // Improve parsing to reduce allocation
         string[] split = str.Split(',');
         if (split.Length != 2)
         {
@@ -86,6 +89,32 @@ public struct P2Float : IEquatable<P2Float>
         p2 = new P2Float(x, y);
         return true;
     }
+#else 
+    public static bool TryParse(ReadOnlySpan<char> str, out P2Float p2)
+    {
+        // ToDo
+        // Improve parsing to reduce allocation
+        string[] split = str.ToString().Split(',');
+        if (split.Length != 2)
+        {
+            p2 = default(P2Float);
+            return false;
+        }
+
+        if (!float.TryParse(split[0], out float x))
+        {
+            p2 = default(P2Float);
+            return false;
+        }
+        if (!float.TryParse(split[1], out float y))
+        {
+            p2 = default(P2Float);
+            return false;
+        }
+        p2 = new P2Float(x, y);
+        return true;
+    }
+#endif
 
     public override bool Equals(object? obj)
     {

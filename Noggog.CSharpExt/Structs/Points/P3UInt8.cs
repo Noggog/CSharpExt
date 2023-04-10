@@ -53,8 +53,11 @@ namespace Noggog;
             _z = z;
         }
 
+#if NETSTANDARD2_0
         public static bool TryParse(string str, out P3UInt8 ret)
         {
+            // ToDo
+            // Improve parsing to reduce allocation
             string[] split = str.Split(',');
             if (split.Length != 3)
             {
@@ -73,6 +76,30 @@ namespace Noggog;
             ret = new P3UInt8(x, y, z);
             return true;
         }
+#else 
+        public static bool TryParse(ReadOnlySpan<char> str, out P3UInt8 ret)
+        {
+            // ToDo
+            // Improve parsing to reduce allocation
+            string[] split = str.ToString().Split(',');
+            if (split.Length != 3)
+            {
+                ret = default(P3UInt8);
+                return false;
+            }
+
+            if (!byte.TryParse(split[0], out var x)
+                || !byte.TryParse(split[1], out var y)
+                || !byte.TryParse(split[2], out var z))
+            {
+                ret = default(P3UInt8);
+                return false;
+            }
+
+            ret = new P3UInt8(x, y, z);
+            return true;
+        }
+#endif
 
         public override bool Equals(object? obj)
         {

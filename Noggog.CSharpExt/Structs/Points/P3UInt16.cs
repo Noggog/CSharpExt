@@ -53,8 +53,11 @@ public struct P3UInt16 : IP3UInt16Get, IEquatable<P3UInt16>
         _z = z;
     }
 
+#if NETSTANDARD2_0
     public static bool TryParse(string str, out P3UInt16 ret)
     {
+        // ToDo
+        // Improve parsing to reduce allocation
         string[] split = str.Split(',');
         if (split.Length != 3)
         {
@@ -73,6 +76,30 @@ public struct P3UInt16 : IP3UInt16Get, IEquatable<P3UInt16>
         ret = new P3UInt16(x, y, z);
         return true;
     }
+#else 
+    public static bool TryParse(ReadOnlySpan<char> str, out P3UInt16 ret)
+    {
+        // ToDo
+        // Improve parsing to reduce allocation
+        string[] split = str.ToString().Split(',');
+        if (split.Length != 3)
+        {
+            ret = default(P3UInt16);
+            return false;
+        }
+
+        if (!ushort.TryParse(split[0], out ushort x)
+            || !ushort.TryParse(split[1], out ushort y)
+            || !ushort.TryParse(split[2], out ushort z))
+        {
+            ret = default(P3UInt16);
+            return false;
+        }
+
+        ret = new P3UInt16(x, y, z);
+        return true;
+    }
+#endif
 
     public P3UInt16 Shift(ushort x, ushort y, ushort z)
     {
