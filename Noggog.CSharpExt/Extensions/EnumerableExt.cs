@@ -154,7 +154,7 @@ public static class EnumerableExt
         }
     }
 
-    public static IEnumerable<(T Item, bool Last)> IterateMarkLast<T>(this IEnumerable<T> en)
+    public static IEnumerable<LastMarkedItem<T>> IterateMarkLast<T>(this IEnumerable<T> en)
     {
         T last = default(T)!;
         bool first = true;
@@ -162,7 +162,7 @@ public static class EnumerableExt
         {
             if (!first)
             {
-                yield return (last, false);
+                yield return new(last, false);
             }
             else
             {
@@ -172,7 +172,7 @@ public static class EnumerableExt
         }
         if (!first)
         {
-            yield return (last, true);
+            yield return new(last, true);
         }
     }
 
@@ -217,12 +217,12 @@ public static class EnumerableExt
         }
     }
 
-    public static IEnumerable<(int Index, T Item)> WithIndex<T>(this IEnumerable<T> en)
+    public static IEnumerable<IndexedItem<T>> WithIndex<T>(this IEnumerable<T> en)
     {
         int index = 0;
         foreach (var item in en)
         {
-            yield return (index++, item);
+            yield return new (index++, item);
         }
     }
 
