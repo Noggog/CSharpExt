@@ -23,4 +23,15 @@ public static class SpecimenContextSubstituteExt
         return context.Resolve(Arg.Is<SeededRequest>(o => (Type)o.Request == typeof(T)))
             .Returns(Substitute.For<T>());
     }
+        
+    public static void FillAllProperties<T>(this ISpecimenContext context, T item)
+        where T : class
+    {
+        foreach (var prop in item.GetType().GetProperties())
+        {
+            var setter = prop.GetSetMethod();
+            if (setter == null) continue;
+            setter.Invoke(item, new object[] { context.Resolve(prop.PropertyType) });
+        }
+    }
 }
