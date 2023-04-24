@@ -1,4 +1,4 @@
-﻿#if NETSTANDARD2_0 
+#if NETSTANDARD2_0 
 #else
 using System.Threading.Channels;
 
@@ -67,7 +67,7 @@ public class WorkDropoff : IWorkDropoff, IWorkQueue
         return await tcs.Task.ConfigureAwait(false);
     }
 
-    public async Task<T[]> EnqueueAndWait<T>(IEnumerable<T> items, Action<T> action, CancellationToken cancellationToken = default)
+    public async Task<IReadOnlyList<T>> EnqueueAndWait<T>(IEnumerable<T> items, Action<T> action, CancellationToken cancellationToken = default)
     {
         return await Task.WhenAll(items
             .Select(x => EnqueueAndWait(() =>
@@ -77,7 +77,7 @@ public class WorkDropoff : IWorkDropoff, IWorkQueue
             }, cancellationToken)));
     }
     
-    public async Task<T[]> EnqueueAndWait<T>(IEnumerable<T> items, Action<T, CancellationToken> action, CancellationToken cancellationToken = default)
+    public async Task<IReadOnlyList<T>> EnqueueAndWait<T>(IEnumerable<T> items, Action<T, CancellationToken> action, CancellationToken cancellationToken = default)
     {
         return await Task.WhenAll(items
             .Select(x => EnqueueAndWait(() =>
@@ -87,7 +87,7 @@ public class WorkDropoff : IWorkDropoff, IWorkQueue
             }, cancellationToken)));
     }
     
-    public async Task<TRet[]> EnqueueAndWait<TIn, TRet>(IEnumerable<TIn> items, Func<TIn, TRet> action, CancellationToken cancellationToken = default)
+    public async Task<IReadOnlyList<TRet>> EnqueueAndWait<TIn, TRet>(IEnumerable<TIn> items, Func<TIn, TRet> action, CancellationToken cancellationToken = default)
     {
         return await Task.WhenAll(items
             .Select(x => EnqueueAndWait(() =>
@@ -96,7 +96,7 @@ public class WorkDropoff : IWorkDropoff, IWorkQueue
             }, cancellationToken)));
     }
     
-    public async Task<TRet[]> EnqueueAndWait<TIn, TRet>(IEnumerable<TIn> items, Func<TIn, CancellationToken, TRet> action, CancellationToken cancellationToken = default)
+    public async Task<IReadOnlyList<TRet>> EnqueueAndWait<TIn, TRet>(IEnumerable<TIn> items, Func<TIn, CancellationToken, TRet> action, CancellationToken cancellationToken = default)
     {
         return await Task.WhenAll(items
             .Select(x => EnqueueAndWait(() =>
@@ -105,7 +105,7 @@ public class WorkDropoff : IWorkDropoff, IWorkQueue
             }, cancellationToken)));
     }
 
-    public async Task<T[]> EnqueueAndWait<T>(IEnumerable<T> items, Func<T, Task> action, CancellationToken cancellationToken = default)
+    public async Task<IReadOnlyList<T>> EnqueueAndWait<T>(IEnumerable<T> items, Func<T, Task> action, CancellationToken cancellationToken = default)
     {
         return await Task.WhenAll(items
             .Select(x => EnqueueAndWait(async () =>
@@ -115,7 +115,7 @@ public class WorkDropoff : IWorkDropoff, IWorkQueue
             }, cancellationToken)));
     }
 
-    public async Task<T[]> EnqueueAndWait<T>(IEnumerable<T> items, Func<T, CancellationToken, Task> action, CancellationToken cancellationToken = default)
+    public async Task<IReadOnlyList<T>> EnqueueAndWait<T>(IEnumerable<T> items, Func<T, CancellationToken, Task> action, CancellationToken cancellationToken = default)
     {
         return await Task.WhenAll(items
             .Select(x => EnqueueAndWait(async () =>
@@ -125,7 +125,7 @@ public class WorkDropoff : IWorkDropoff, IWorkQueue
             }, cancellationToken)));
     }
 
-    public async Task<TRet[]> EnqueueAndWait<TIn, TRet>(IEnumerable<TIn> items, Func<TIn, Task<TRet>> action, CancellationToken cancellationToken = default)
+    public async Task<IReadOnlyList<TRet>> EnqueueAndWait<TIn, TRet>(IEnumerable<TIn> items, Func<TIn, Task<TRet>> action, CancellationToken cancellationToken = default)
     {
         return await Task.WhenAll(items
             .Select(x => EnqueueAndWait(async () =>
@@ -134,7 +134,7 @@ public class WorkDropoff : IWorkDropoff, IWorkQueue
             }, cancellationToken)));
     }
 
-    public async Task<TRet[]> EnqueueAndWait<TIn, TRet>(IEnumerable<TIn> items, Func<TIn, CancellationToken, Task<TRet>> action, CancellationToken cancellationToken = default)
+    public async Task<IReadOnlyList<TRet>> EnqueueAndWait<TIn, TRet>(IEnumerable<TIn> items, Func<TIn, CancellationToken, Task<TRet>> action, CancellationToken cancellationToken = default)
     {
         return await Task.WhenAll(items
             .Select(x => EnqueueAndWait(async () =>

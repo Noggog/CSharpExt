@@ -36,7 +36,7 @@ public class ParallelWorkDropoff : IWorkDropoff
         return await _inline.EnqueueAndWait(toDo, cancellationToken).ConfigureAwait(false);
     }
 
-    public async Task<T[]> EnqueueAndWait<T>(IEnumerable<T> items, Action<T> action, CancellationToken cancellationToken = default)
+    public async Task<IReadOnlyList<T>> EnqueueAndWait<T>(IEnumerable<T> items, Action<T> action, CancellationToken cancellationToken = default)
     {
         var arr = items.ToArray();
         Parallel.ForEach(arr, new ParallelOptions()
@@ -50,7 +50,7 @@ public class ParallelWorkDropoff : IWorkDropoff
         return arr;
     }
 
-    public async Task<T[]> EnqueueAndWait<T>(IEnumerable<T> items, Action<T, CancellationToken> action, CancellationToken cancellationToken = default)
+    public async Task<IReadOnlyList<T>> EnqueueAndWait<T>(IEnumerable<T> items, Action<T, CancellationToken> action, CancellationToken cancellationToken = default)
     {
         var arr = items.ToArray();
         Parallel.ForEach(arr, new ParallelOptions()
@@ -64,7 +64,7 @@ public class ParallelWorkDropoff : IWorkDropoff
         return arr;
     }
 
-    public async Task<TRet[]> EnqueueAndWait<TIn, TRet>(IEnumerable<TIn> items, Func<TIn, TRet> action, CancellationToken cancellationToken = default)
+    public async Task<IReadOnlyList<TRet>> EnqueueAndWait<TIn, TRet>(IEnumerable<TIn> items, Func<TIn, TRet> action, CancellationToken cancellationToken = default)
     {
         var arr = items.ToArray();
         var ret = new TRet[arr.Length];
@@ -79,7 +79,7 @@ public class ParallelWorkDropoff : IWorkDropoff
         return ret;
     }
 
-    public async Task<TRet[]> EnqueueAndWait<TIn, TRet>(IEnumerable<TIn> items, Func<TIn, CancellationToken, TRet> action, CancellationToken cancellationToken = default)
+    public async Task<IReadOnlyList<TRet>> EnqueueAndWait<TIn, TRet>(IEnumerable<TIn> items, Func<TIn, CancellationToken, TRet> action, CancellationToken cancellationToken = default)
     {
         var arr = items.ToArray();
         var ret = new TRet[arr.Length];
@@ -94,7 +94,7 @@ public class ParallelWorkDropoff : IWorkDropoff
         return ret;
     }
 
-    public async Task<T[]> EnqueueAndWait<T>(IEnumerable<T> items, Func<T, Task> action, CancellationToken cancellationToken = default)
+    public async Task<IReadOnlyList<T>> EnqueueAndWait<T>(IEnumerable<T> items, Func<T, Task> action, CancellationToken cancellationToken = default)
     {
         var arr = items.ToArray();
         await Parallel.ForEachAsync(arr, new ParallelOptions()
@@ -108,7 +108,7 @@ public class ParallelWorkDropoff : IWorkDropoff
         return arr;
     }
 
-    public async Task<T[]> EnqueueAndWait<T>(IEnumerable<T> items, Func<T, CancellationToken, Task> action, CancellationToken cancellationToken = default)
+    public async Task<IReadOnlyList<T>> EnqueueAndWait<T>(IEnumerable<T> items, Func<T, CancellationToken, Task> action, CancellationToken cancellationToken = default)
     {
         var arr = items.ToArray();
         await Parallel.ForEachAsync(arr, new ParallelOptions()
@@ -122,7 +122,7 @@ public class ParallelWorkDropoff : IWorkDropoff
         return arr;
     }
 
-    public async Task<TRet[]> EnqueueAndWait<TIn, TRet>(IEnumerable<TIn> items, Func<TIn, Task<TRet>> action, CancellationToken cancellationToken = default)
+    public async Task<IReadOnlyList<TRet>> EnqueueAndWait<TIn, TRet>(IEnumerable<TIn> items, Func<TIn, Task<TRet>> action, CancellationToken cancellationToken = default)
     {
         var arr = items.ToArray();
         var ret = new TRet[arr.Length];
@@ -137,7 +137,7 @@ public class ParallelWorkDropoff : IWorkDropoff
         return ret;
     }
 
-    public async Task<TRet[]> EnqueueAndWait<TIn, TRet>(IEnumerable<TIn> items, Func<TIn, CancellationToken, Task<TRet>> action, CancellationToken cancellationToken = default)
+    public async Task<IReadOnlyList<TRet>> EnqueueAndWait<TIn, TRet>(IEnumerable<TIn> items, Func<TIn, CancellationToken, Task<TRet>> action, CancellationToken cancellationToken = default)
     {
         var arr = items.ToArray();
         var ret = new TRet[arr.Length];
