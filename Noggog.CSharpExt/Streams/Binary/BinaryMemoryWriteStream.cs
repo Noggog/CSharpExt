@@ -194,7 +194,7 @@ public class BinaryMemoryWriteStream : IBinaryWriteStream
 
     public void Dispose()
     {
-        _data = new byte[0];
+        _data = Array.Empty<byte>();
     }
 
     #region Private struct used for Single/Int32 conversions
