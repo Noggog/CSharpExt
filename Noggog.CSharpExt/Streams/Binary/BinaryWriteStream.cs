@@ -10,7 +10,7 @@ public class BinaryWriteStream : Stream, IBinaryWriteStream
     internal bool _dispose;
     internal long _streamFrontlinePos;
     internal long _pos;
-    internal readonly BinaryMemoryWriteStream _internalMemoryStream;
+    internal readonly IBinaryMemoryWriteStream _internalMemoryStream;
     private int InternalStreamRemaining => _internalMemoryStream.Remaining;
 
     public override long Position
@@ -33,7 +33,7 @@ public class BinaryWriteStream : Stream, IBinaryWriteStream
         _dispose = dispose;
         _stream = stream;
         _data = new byte[bufferSize];
-        _internalMemoryStream = new BinaryMemoryWriteStream(_data, isLittleEndian);
+        _internalMemoryStream = BinaryMemoryWriteStream.Factory(_data, isLittleEndian);
         IsLittleEndian = isLittleEndian;
     }
 
