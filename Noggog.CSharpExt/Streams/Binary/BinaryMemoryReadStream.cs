@@ -1,34 +1,56 @@
-using System.Buffers.Binary;
 using System.Diagnostics;
+using Noggog.Streams.Binary;
 
 namespace Noggog;
 
-public class BinaryMemoryReadStream : Stream, IBinaryReadStream
+public abstract class BinaryMemoryReadStream : Stream, IBinaryReadStream
 {
+    public static BinaryMemoryReadStream Factory(byte[] buffer, bool isLittleEndian = true)
+    {
+        return isLittleEndian
+            ? new LittleEndianBinaryMemoryReadStream(buffer)
+            : new BigEndianBinaryMemoryReadStream(buffer);
+    }
+    public static BinaryMemoryReadStream Factory(ReadOnlyMemorySlice<byte> data, bool isLittleEndian = true)
+    {
+        return isLittleEndian
+            ? new LittleEndianBinaryMemoryReadStream(data)
+            : new BigEndianBinaryMemoryReadStream(data);
+    }
+    
     internal int _pos;
     internal ReadOnlyMemorySlice<byte> _data;
     public ReadOnlyMemorySlice<byte> Data => _data;
+
     public override long Position
     {
         get => _pos;
         set => SetPosition(checked((int)value));
     }
+
     public int PositionInt
-    { 
+    {
         get => _pos;
         set => _pos = value;
     }
+
     public int Remaining => _data.Length - _pos;
     public bool Complete => _data.Length <= _pos;
+    public abstract bool IsLittleEndian { get; }
     public ReadOnlySpan<byte> RemainingSpan => _data.Span.Slice(_pos);
     public ReadOnlyMemorySlice<byte> RemainingMemory => _data.Slice(_pos);
     public int UnderlyingPosition => _data.StartPosition + _pos;
     public bool IsPersistantBacking => true;
-    public bool IsLittleEndian { get; }
     public Stream BaseStream => this;
 
     #region IBinaryReadStream
-    long IBinaryReadStream.Position { get => _pos; set => SetPosition(checked((int)value)); }
+
+    long IBinaryReadStream.Position
+    {
+        get => _pos;
+        set => SetPosition(checked((int)value));
+    }
+
     long IBinaryReadStream.Length => _data.Length;
     long IBinaryReadStream.Remaining => _data.Length - _pos;
     public override bool CanRead => true;
@@ -36,19 +58,18 @@ public class BinaryMemoryReadStream : Stream, IBinaryReadStream
     public override bool CanWrite => false;
     public override long Length => _data.Length;
     public int LengthInt => _data.Length;
+
     #endregion
 
     [DebuggerStepThrough]
-    public BinaryMemoryReadStream(ReadOnlyMemorySlice<byte> data, bool isLittleEndian = true)
+    protected BinaryMemoryReadStream(ReadOnlyMemorySlice<byte> data)
     {
         _data = data;
-        IsLittleEndian = isLittleEndian;
     }
 
-    public BinaryMemoryReadStream(byte[] data, bool isLittleEndian = true)
+    protected BinaryMemoryReadStream(byte[] data)
     {
         _data = new MemorySlice<byte>(data);
-        IsLittleEndian = isLittleEndian;
     }
 
     private void SetPosition(int value)
@@ -57,6 +78,7 @@ public class BinaryMemoryReadStream : Stream, IBinaryReadStream
         {
             throw new ArgumentException("Cannot set to a negative position");
         }
+
         _pos = value;
     }
 
@@ -143,52 +165,14 @@ public class BinaryMemoryReadStream : Stream, IBinaryReadStream
         return _data.Span[_pos++];
     }
 
-    public ushort ReadUInt16()
-    {
-        _pos += 2;
-        var span = _data.Span.Slice(_pos - 2);
-        return IsLittleEndian ? BinaryPrimitives.ReadUInt16LittleEndian(span) : BinaryPrimitives.ReadUInt16BigEndian(span);
-    }
-
-    public uint ReadUInt32()
-    {
-        _pos += 4;
-        var span = _data.Span.Slice(_pos - 4);
-        return IsLittleEndian ? BinaryPrimitives.ReadUInt32LittleEndian(span) : BinaryPrimitives.ReadUInt32BigEndian(span);
-    }
-
-    public ulong ReadUInt64()
-    {
-        _pos += 8;
-        var span = _data.Span.Slice(_pos - 8);
-        return IsLittleEndian ? BinaryPrimitives.ReadUInt64LittleEndian(span) : BinaryPrimitives.ReadUInt64BigEndian(span);
-    }
+    public abstract ulong GetUInt64(int offset);
 
     public sbyte ReadInt8()
     {
         return (sbyte)_data.Span[_pos++];
     }
 
-    public short ReadInt16()
-    {
-        _pos += 2;
-        var span = _data.Span.Slice(_pos - 2);
-        return IsLittleEndian ? BinaryPrimitives.ReadInt16LittleEndian(span) : BinaryPrimitives.ReadInt16BigEndian(span);
-    }
-
-    public int ReadInt32()
-    {
-        _pos += 4;
-        var span = _data.Span.Slice(_pos - 4);
-        return IsLittleEndian ? BinaryPrimitives.ReadInt32LittleEndian(span) : BinaryPrimitives.ReadInt32BigEndian(span);
-    }
-
-    public long ReadInt64()
-    {
-        _pos += 8;
-        var span = _data.Span.Slice(_pos - 8);
-        return IsLittleEndian ? BinaryPrimitives.ReadInt64LittleEndian(span) : BinaryPrimitives.ReadInt64BigEndian(span);
-    }
+    public abstract double GetDouble(int offset);
 
     public string ReadStringUTF8(int amount)
     {
@@ -229,6 +213,7 @@ public class BinaryMemoryReadStream : Stream, IBinaryReadStream
         {
             amount = Remaining;
         }
+
         _data.Span.Slice(_pos, amount).CopyTo(buffer.AsSpan(targetOffset));
         return amount;
     }
@@ -248,66 +233,32 @@ public class BinaryMemoryReadStream : Stream, IBinaryReadStream
         return _data.Span[_pos + offset];
     }
 
-    public ushort GetUInt16(int offset)
-    {
-        var span = _data.Span.Slice(_pos + offset);
-        return IsLittleEndian ? BinaryPrimitives.ReadUInt16LittleEndian(span) : BinaryPrimitives.ReadUInt16BigEndian(span);
-    }
-
-    public uint GetUInt32(int offset)
-    {
-        var span = _data.Span.Slice(_pos + offset);
-        return IsLittleEndian ? BinaryPrimitives.ReadUInt32LittleEndian(span) : BinaryPrimitives.ReadUInt32BigEndian(span);
-    }
-
-    public ulong GetUInt64(int offset)
-    {
-        var span = _data.Span.Slice(_pos + offset);
-        return IsLittleEndian ? BinaryPrimitives.ReadUInt64LittleEndian(span) : BinaryPrimitives.ReadUInt64BigEndian(span);
-    }
+    public abstract ushort ReadUInt16();
+    public abstract ushort GetUInt16();
+    public abstract ushort GetUInt16(int offset);
+    public abstract uint ReadUInt32();
+    public abstract uint GetUInt32();
+    public abstract uint GetUInt32(int offset);
+    public abstract ulong ReadUInt64();
+    public abstract ulong GetUInt64();
 
     public sbyte GetInt8(int offset)
     {
         return (sbyte)_data.Span[_pos + offset];
     }
 
-    public short GetInt16(int offset)
-    {
-        var span = _data.Span.Slice(_pos + offset);
-        return IsLittleEndian ? BinaryPrimitives.ReadInt16LittleEndian(span) : BinaryPrimitives.ReadInt16BigEndian(span);
-    }
-
-    public int GetInt32(int offset)
-    {
-        var span = _data.Span.Slice(_pos + offset);
-        return IsLittleEndian ? BinaryPrimitives.ReadInt32LittleEndian(span) : BinaryPrimitives.ReadInt32BigEndian(span);
-    }
-
-    public long GetInt64(int offset)
-    {
-        var span = _data.Span.Slice(_pos + offset);
-        return IsLittleEndian ? BinaryPrimitives.ReadInt64LittleEndian(span) : BinaryPrimitives.ReadInt64BigEndian(span);
-    }
-
-    public float GetFloat(int offset)
-    {
-#if NETSTANDARD2_0
-            throw new NotImplementedException();
-#else
-        var span = _data.Span.Slice(_pos + offset);
-        return IsLittleEndian ? BinaryPrimitives.ReadSingleLittleEndian(span) : BinaryPrimitives.ReadSingleBigEndian(span);
-#endif
-    }
-
-    public double GetDouble(int offset)
-    {
-#if NETSTANDARD2_0
-            throw new NotImplementedException();
-#else
-        var span = _data.Span.Slice(_pos + offset);
-        return IsLittleEndian ? BinaryPrimitives.ReadDoubleLittleEndian(span) : BinaryPrimitives.ReadDoubleBigEndian(span);
-#endif
-    }
+    public abstract short ReadInt16();
+    public abstract short GetInt16();
+    public abstract short GetInt16(int offset);
+    public abstract int ReadInt32();
+    public abstract int GetInt32();
+    public abstract int GetInt32(int offset);
+    public abstract long ReadInt64();
+    public abstract long GetInt64();
+    public abstract long GetInt64(int offset);
+    public abstract float GetFloat();
+    public abstract float GetFloat(int offset);
+    public abstract double GetDouble();
 
     public string GetStringUTF8(int amount, int offset)
     {
@@ -324,65 +275,9 @@ public class BinaryMemoryReadStream : Stream, IBinaryReadStream
         return _data.Span[_pos];
     }
 
-    public ushort GetUInt16()
-    {
-        var span = _data.Span.Slice(_pos);
-        return IsLittleEndian ? BinaryPrimitives.ReadUInt16LittleEndian(span) : BinaryPrimitives.ReadUInt16BigEndian(span);
-    }
-
-    public uint GetUInt32()
-    {
-        var span = _data.Span.Slice(_pos);
-        return IsLittleEndian ? BinaryPrimitives.ReadUInt32LittleEndian(span) : BinaryPrimitives.ReadUInt32BigEndian(span);
-    }
-
-    public ulong GetUInt64()
-    {
-        var span = _data.Span.Slice(_pos);
-        return IsLittleEndian ? BinaryPrimitives.ReadUInt64LittleEndian(span) : BinaryPrimitives.ReadUInt64BigEndian(span);
-    }
-
     public sbyte GetInt8()
     {
         return (sbyte)_data.Span[_pos];
-    }
-
-    public short GetInt16()
-    {
-        var span = _data.Span.Slice(_pos);
-        return IsLittleEndian ? BinaryPrimitives.ReadInt16LittleEndian(span) : BinaryPrimitives.ReadInt16BigEndian(span);
-    }
-
-    public int GetInt32()
-    {
-        var span = _data.Span.Slice(_pos);
-        return IsLittleEndian ? BinaryPrimitives.ReadInt32LittleEndian(span) : BinaryPrimitives.ReadInt32BigEndian(span);
-    }
-
-    public long GetInt64()
-    {
-        var span = _data.Span.Slice(_pos);
-        return IsLittleEndian ? BinaryPrimitives.ReadInt64LittleEndian(span) : BinaryPrimitives.ReadInt64BigEndian(span);
-    }
-
-    public float GetFloat()
-    {
-#if NETSTANDARD2_0
-            throw new NotImplementedException();
-#else
-        var span = _data.Span.Slice(_pos);
-        return IsLittleEndian ? BinaryPrimitives.ReadSingleLittleEndian(span) : BinaryPrimitives.ReadSingleBigEndian(span);
-#endif
-    }
-
-    public double GetDouble()
-    {
-#if NETSTANDARD2_0
-            throw new NotImplementedException();
-#else
-        var span = _data.Span.Slice(_pos);
-        return IsLittleEndian ? BinaryPrimitives.ReadDoubleLittleEndian(span) : BinaryPrimitives.ReadDoubleBigEndian(span);
-#endif
     }
 
     public string GetStringUTF8(int amount)
@@ -410,6 +305,7 @@ public class BinaryMemoryReadStream : Stream, IBinaryReadStream
             default:
                 throw new NotImplementedException();
         }
+
         return Position;
     }
 

@@ -9,7 +9,7 @@ public class BinaryMemoryStreamTests : IBinaryStreamTests
 
     public override IBinaryReadStream GetStream(int length)
     {
-        return new BinaryMemoryReadStream(
+        return BinaryMemoryReadStream.Factory(
             GetByteArray(length));
     }
 }
