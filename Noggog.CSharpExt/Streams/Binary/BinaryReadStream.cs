@@ -39,7 +39,7 @@ public class BinaryReadStream : Stream, IBinaryReadStream
         _stream = stream;
         _length = _stream.Length;
         _data = new byte[bufferSize];
-        _internalMemoryStream = new BinaryMemoryReadStream(new MemorySlice<byte>(_data), isLittleEndian: isLittleEndian);
+        _internalMemoryStream = BinaryMemoryReadStream.Factory(new MemorySlice<byte>(_data), isLittleEndian: isLittleEndian);
         _internalMemoryStream.Position = _data.Length;
         _internalBufferLength = _data.Length;
         IsLittleEndian = isLittleEndian;
