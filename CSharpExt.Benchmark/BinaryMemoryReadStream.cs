@@ -11,8 +11,8 @@ public class BinaryMemoryReadStream
     byte[] dataTarget = new byte[data.Length];
     byte[] offsetDataTarget = new byte[data.Length + offset];
     byte[] largeTarget = new byte[largeData.Length];
-    Noggog.BinaryMemoryReadStream readStream = new Noggog.BinaryMemoryReadStream(data);
-    Noggog.BinaryMemoryReadStream largeReadStream = new Noggog.BinaryMemoryReadStream(largeData);
+    Noggog.BinaryMemoryReadStream readStream = Noggog.BinaryMemoryReadStream.LittleEndian(data);
+    Noggog.BinaryMemoryReadStream largeReadStream = Noggog.BinaryMemoryReadStream.LittleEndian(largeData);
 
     static BinaryMemoryReadStream()
     {

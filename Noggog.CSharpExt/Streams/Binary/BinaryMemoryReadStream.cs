@@ -5,17 +5,38 @@ namespace Noggog;
 
 public abstract class BinaryMemoryReadStream : Stream, IBinaryReadStream
 {
-    public static BinaryMemoryReadStream Factory(byte[] buffer, bool isLittleEndian = true)
+    public static BinaryMemoryReadStream Factory(byte[] buffer, bool isLittleEndian)
     {
         return isLittleEndian
             ? new LittleEndianBinaryMemoryReadStream(buffer)
             : new BigEndianBinaryMemoryReadStream(buffer);
     }
-    public static BinaryMemoryReadStream Factory(ReadOnlyMemorySlice<byte> data, bool isLittleEndian = true)
+    
+    public static BinaryMemoryReadStream Factory(ReadOnlyMemorySlice<byte> data, bool isLittleEndian)
     {
         return isLittleEndian
             ? new LittleEndianBinaryMemoryReadStream(data)
             : new BigEndianBinaryMemoryReadStream(data);
+    }
+    
+    public static BinaryMemoryReadStream BigEndian(byte[] buffer)
+    {
+        return new BigEndianBinaryMemoryReadStream(buffer);
+    }
+    
+    public static BinaryMemoryReadStream BigEndian(ReadOnlyMemorySlice<byte> data)
+    {
+        return new BigEndianBinaryMemoryReadStream(data);
+    }
+    
+    public static BinaryMemoryReadStream LittleEndian(byte[] buffer)
+    {
+        return new LittleEndianBinaryMemoryReadStream(buffer);
+    }
+    
+    public static BinaryMemoryReadStream LittleEndian(ReadOnlyMemorySlice<byte> data)
+    {
+        return new LittleEndianBinaryMemoryReadStream(data);
     }
     
     internal int _pos;
