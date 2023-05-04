@@ -190,7 +190,76 @@ public static class SpanExt
     {
         return ToHexString((ReadOnlySpan<byte>)span);
     }
-        
+    
+    public static SplitEnumerator Split(this ReadOnlySpan<char> str, char separator)
+    {
+        return new SplitEnumerator(str, separator);
+    }
+    
+    public ref struct SplitEnumerator
+    {
+        private ReadOnlySpan<char> _strRemaining;
+        private char _separator;
+
+        public SplitEnumerator(ReadOnlySpan<char> strRemaining, char separator)
+        {
+            _strRemaining = strRemaining;
+            _separator = separator;
+            Current = default;
+        }
+
+        // Needed to be compatible with the foreach operator
+        public SplitEnumerator GetEnumerator() => this;
+
+        public bool MoveNext()
+        {
+            var span = _strRemaining;
+            if (span.Length == 0) // Reach the end of the string
+                return false;
+
+            var index = span.IndexOf(_separator);
+            if (index == -1)
+            {
+                _strRemaining = ReadOnlySpan<char>.Empty; // The remaining string is an empty string
+                Current = new SplitEntry(span, ReadOnlySpan<char>.Empty);
+                return true;
+            }
+
+            Current = new SplitEntry(span.Slice(0, index), span.Slice(index, 1));
+            _strRemaining = span.Slice(index + 1);
+            return true;
+        }
+
+        public SplitEntry Current { get; private set; }
+    }
+    
+
+    public readonly ref struct SplitEntry
+    {
+        public SplitEntry(ReadOnlySpan<char> subStr, ReadOnlySpan<char> separator)
+        {
+            SubStr = subStr;
+            Separator = separator;
+        }
+
+        public ReadOnlySpan<char> SubStr { get; }
+        public ReadOnlySpan<char> Separator { get; }
+
+        // This method allow to deconstruct the type, so you can write any of the following code
+        // foreach (var entry in str.SplitLines()) { _ = entry.Line; }
+        // foreach (var (line, endOfLine) in str.SplitLines()) { _ = line; }
+        // https://learn.microsoft.com/en-us/dotnet/csharp/fundamentals/functional/deconstruct?WT.mc_id=DT-MVP-5003978#deconstructing-user-defined-types
+        public void Deconstruct(out ReadOnlySpan<char> subStr, out ReadOnlySpan<char> separator)
+        {
+            subStr = SubStr;
+            separator = Separator;
+        }
+
+        // This method allow to implicitly cast the type into a ReadOnlySpan<char>, so you can write the following code
+        // foreach (ReadOnlySpan<char> entry in str.SplitLines())
+        public static implicit operator ReadOnlySpan<char>(SplitEntry entry) => entry.SubStr;
+    }
+
     public static LineSplitEnumerator SplitLines(this ReadOnlySpan<char> str)
     {
         // LineSplitEnumerator is a struct so there is no allocation here

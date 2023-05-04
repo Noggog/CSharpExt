@@ -120,23 +120,51 @@ public struct P2Int16 : IP2Int16Get, IEquatable<P2Int16>
 #else 
     public static bool TryParse(ReadOnlySpan<char> str, out P2Int16 ret)
     {
-        // ToDo
-        // Improve parsing to reduce allocation
-        string[] split = str.ToString().Split(',');
-        if (split.Length != 2)
+        short? x2 = null;
+        short? y2 = null;
+        
+        var index = 0;
+        foreach (var subStrSpan in str.Split(','))
         {
-            ret = default(P2Int16);
-            return false;
+            switch (index)
+            {
+                case 0:
+                {
+                    if (!short.TryParse(subStrSpan, out var x))
+                    {
+                        ret = default;
+                        return false;
+                    }
+
+                    x2 = x;
+                    break;
+                }
+                case 1:
+                {
+                    if (!short.TryParse(subStrSpan, out var y))
+                    {
+                        ret = default;
+                        return false;
+                    }
+
+                    y2 = y;
+                    break;
+                }
+                default:
+                    ret = default;
+                    return false;
+            }
+
+            index++;
         }
 
-        if (!short.TryParse(split[0], out var x)
-            || !short.TryParse(split[1], out var y))
+        if (x2 == null || y2 == null)
         {
-            ret = default(P2Int16);
+            ret = default;
             return false;
         }
-
-        ret = new P2Int16(x, y);
+        
+        ret = new P2Int16(x2.Value, y2.Value);
         return true;
     }
 #endif
