@@ -10,7 +10,6 @@
     <ImplicitUsings>true</ImplicitUsings>
     <LangVersion>preview</LangVersion>
     <IsPackable>true</IsPackable>
-    <RootNamespace>Noggog</RootNamespace>
     <Description>Generic reusable classes and extension methods that apply to no specific project and flavored to taste</Description>
   </PropertyGroup>
 

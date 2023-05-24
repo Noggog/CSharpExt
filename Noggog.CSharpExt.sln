@@ -26,6 +26,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Noggog.CSharpExt.Windows", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Noggog.CSharpExt.Json", "Noggog.CSharpExt.Json\Noggog.CSharpExt.Json.csproj", "{D2B93F42-022C-4BF1-AD25-6CA7F1DE014B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Noggog.SourceGenerators", "Noggog.SourceGenerators\Noggog.SourceGenerators.csproj", "{0AECE340-30ED-4059-8D58-C42E7E0722D2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -64,6 +66,10 @@ Global
 		{D2B93F42-022C-4BF1-AD25-6CA7F1DE014B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D2B93F42-022C-4BF1-AD25-6CA7F1DE014B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D2B93F42-022C-4BF1-AD25-6CA7F1DE014B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0AECE340-30ED-4059-8D58-C42E7E0722D2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0AECE340-30ED-4059-8D58-C42E7E0722D2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0AECE340-30ED-4059-8D58-C42E7E0722D2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0AECE340-30ED-4059-8D58-C42E7E0722D2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
