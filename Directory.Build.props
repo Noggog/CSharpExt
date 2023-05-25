@@ -1,14 +1,15 @@
 <Project>
  
   <PropertyGroup> 
-    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally> 
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+	  <Nullable>enable</Nullable>
+	  <WarningsAsErrors>nullable</WarningsAsErrors>
+	  <GenerateDocumentationFile>true</GenerateDocumentationFile>
+	  <ImplicitUsings>true</ImplicitUsings>
   </PropertyGroup> 
   
-  <ItemGroup> 
-    <PackageReference Include="GitInfo" > 
-      <PrivateAssets>all</PrivateAssets> 
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets> 
-    </PackageReference>
+  <ItemGroup>
+	  <PackageReference Include="GitInfo" />
   </ItemGroup> 
   
   <!-- To be redefined by GitInfo after restore. -->

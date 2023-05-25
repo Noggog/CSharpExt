@@ -30,11 +30,17 @@
     <PackageVersion Include="MahApps.Metro" Version="2.4.9" />
     <PackageVersion Include="MahApps.Metro.IconPacks" Version="4.11.0" />
     <PackageVersion Include="Microsoft.CodeAnalysis" Version="4.3.1" />
+    <PackageVersion Include="Microsoft.CodeAnalysis.Analyzers">
+      <Version>3.3.4</Version>
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageVersion>
+    <PackageVersion Include="Microsoft.CodeAnalysis.Common">
+      <Version>4.3.1</Version>
+    </PackageVersion>
     <PackageVersion Include="Microsoft.CodeAnalysis.CSharp" Version="4.3.1" />
     <PackageVersion Include="Microsoft.CodeAnalysis.SourceGenerators.Testing" Version="1.1.1" />
     <PackageVersion Include="Microsoft.CodeAnalysis.CSharp.SourceGenerators.Testing.XUnit" Version="1.1.1" />
-    <PackageVersion Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.3.1" />
-    <PackageVersion Include="Microsoft.CodeAnalysis.Common" Version="4.3.1" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk">
       <Version>17.5.0</Version>
     </PackageVersion>

@@ -8,6 +8,7 @@
     <PackageReference Include="AutoFixture" />
     <PackageReference Include="AutoFixture.Xunit2" />
     <PackageReference Include="FluentAssertions" />
+    <PackageReference Include="Microsoft.CodeAnalysis.Common" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" />
     <PackageReference Include="Newtonsoft.Json" />
     <PackageReference Include="ReactiveUI.Testing" />
@@ -20,6 +21,10 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.SourceGenerators.Testing.XUnit" />
+    <PackageReference Include="Microsoft.CodeAnalysis.SourceGenerators.Testing" />
+    <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" />
   </ItemGroup>
 
   <ItemGroup>
@@ -27,6 +32,7 @@
     <ProjectReference Include="..\Noggog.CSharpExt.Json\Noggog.CSharpExt.Json.csproj" />
     <ProjectReference Include="..\Noggog.CSharpExt.Windows\Noggog.CSharpExt.Windows.csproj" Condition="!$([MSBuild]::IsOSUnixLike())" />
     <ProjectReference Include="..\Noggog.CSharpExt\Noggog.CSharpExt.csproj" />
+    <ProjectReference Include="..\Noggog.SourceGenerators\Noggog.SourceGenerators.csproj" />
     <ProjectReference Include="..\Noggog.Testing\Noggog.Testing.csproj" />
   </ItemGroup>
 
