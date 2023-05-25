@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFrameworks>net6.0;net7.0;netstandard2.0</TargetFrameworks>
@@ -41,9 +41,5 @@
     <PackageReference Include="System.Buffers" />
     <PackageReference Include="Microsoft.Bcl.HashCode" />
   </ItemGroup>
-
-  <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
-    <Exec Command="RD /S /Q &quot;%25USERPROFILE%25\.nuget\packages\noggog.csharpext&quot;" Condition="!$([MSBuild]::IsOSUnixLike())" />
-  </Target>
 
 </Project>

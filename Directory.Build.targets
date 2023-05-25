@@ -11,5 +11,9 @@
       <PrivateAssets>all</PrivateAssets> 
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets> 
     </PackageReference> 
-  </ItemGroup>  
+  </ItemGroup>
+
+	<Target Name="PreBuild" BeforeTargets="PreBuildEvent">
+		<Exec Command="RD /S /Q &quot;%25USERPROFILE%25\.nuget\packages\$(PackageId)&quot;" Condition="!$([MSBuild]::IsOSUnixLike()) And $(PackageId) != ''" />
+	</Target>
 </Project>

@@ -50,10 +50,6 @@
       <BuildAction>Compile</BuildAction>
     </Compile>
   </ItemGroup>
-   
-  <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
-    <Exec Command="RD /S /Q &quot;%25USERPROFILE%25\.nuget\packages\noggog.wpf&quot;" />
-  </Target>
 
   <PropertyGroup>
     <GitInfoReportImportance Condition="$(Configuration) == 'Release'">high</GitInfoReportImportance>

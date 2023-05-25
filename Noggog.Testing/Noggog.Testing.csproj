@@ -24,8 +24,4 @@
       <ProjectReference Include="..\Noggog.Autofac\Noggog.Autofac.csproj" />
     </ItemGroup>
 
-    <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
-        <Exec Command="RD /S /Q &quot;%25USERPROFILE%25\.nuget\packages\noggog.testing&quot;" Condition="!$([MSBuild]::IsOSUnixLike())" />
-    </Target>
-
 </Project>
