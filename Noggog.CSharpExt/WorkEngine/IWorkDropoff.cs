@@ -19,4 +19,17 @@ public interface IWorkDropoff
     Task<IReadOnlyList<TRet>> EnqueueAndWait<TIn, TRet>(IEnumerable<TIn> items, Func<TIn, Task<TRet>> action, CancellationToken cancellationToken = default);
     Task<IReadOnlyList<TRet>> EnqueueAndWait<TIn, TRet>(IEnumerable<TIn> items, Func<TIn, CancellationToken, Task<TRet>> action, CancellationToken cancellationToken = default);
 }
+
+public static class IWorkDropoffExt
+{
+    public static IWorkDropoff GetOrFallback(this IWorkDropoff? workDropoff, Func<IWorkDropoff> fallback)
+    {
+        if (workDropoff == null || workDropoff is NoPreferenceWorkDropoff)
+        {
+            return fallback();
+        }
+
+        return workDropoff;
+    }
+}
 #endif
