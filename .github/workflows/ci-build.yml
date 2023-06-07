@@ -61,9 +61,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Pack Preview
-      if: github.event.inputs.is_release_event != 'true' || ${{ success() && github.ref != 'refs/heads/master' }}
+      if: ${{ success() && (github.event.inputs.is_release_event != 'true' || github.ref != 'refs/heads/master') }}
       run: dotnet pack ${{ matrix.project }}/${{ matrix.project }}.csproj -c Release --no-restore -include-source --version-suffix "CI-${{ steps.current-time.outputs.formattedTime }}"
     - name: Pack Release
-      if: github.event.inputs.is_release_event == 'true' && ${{ success() && github.ref == 'refs/heads/master' }}
+      if: ${{ success() && github.event.inputs.is_release_event == 'true' && github.ref == 'refs/heads/master' }}
       run: dotnet pack ${{ matrix.project }}/${{ matrix.project }}.csproj -c Release --no-restore -include-source
 
