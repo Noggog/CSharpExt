@@ -1,0 +1,134 @@
+name: Publish
+
+on:
+  schedule:
+    - cron: '0 9 * * *'
+  workflow_dispatch:
+  release:
+    types: [published]
+    inputs:
+      is_release_event:
+        description: Should this be a release or a preview package
+        required: true
+        default: 'false'
+
+jobs:
+  activity-short-circuit:
+    runs-on: ubuntu-latest
+    outputs:
+      same_sha: ${{ steps.check.outputs.same_sha }}
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          
+      - name: Get Activity Short Circuit
+        id: check
+        run: |
+          git fetch origin nightly:nightly
+          master_sha=$(git rev-parse master)
+          nightly_sha=$(git rev-parse nightly)
+          if [[ "$master_sha" == "$nightly_sha" ]]; then
+              same_sha=true;
+          else
+              same_sha=false;
+          fi
+          echo "master_sha=$master_sha"
+          echo "nightly_sha=$nightly_sha"
+          echo "same_sha=${same_sha}"
+          echo "same_sha=${same_sha}" >> $GITHUB_OUTPUT
+        
+  activity-short-circuit-print:
+    runs-on: ubuntu-latest
+    needs: activity-short-circuit
+    steps:
+      - run: |
+          echo "same_sha=${{ needs.activity-short-circuit.outputs.same_sha }}"
+
+  build-test:
+    needs: activity-short-circuit
+    if: needs.activity-short-circuit.outputs.same_sha == 'false'
+    runs-on: ${{ matrix.os }}
+    
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        project:
+          - CSharpExt.UnitTests
+          - Noggog.Autofac
+          - Noggog.CSharpExt
+          - Noggog.CSharpExt.Json
+          - Noggog.CSharpExt.Windows
+          - Noggog.Testing
+          - Noggog.WPF
+        exclude:
+          - os: ubuntu-latest
+            project: Noggog.WPF
+          - os: macos-latest
+            project: Noggog.WPF
+          - os: ubuntu-latest
+            project: Noggog.CSharpExt.Windows
+          - os: macos-latest
+            project: Noggog.CSharpExt.Windows
+          
+    steps:
+    - uses: actions/checkout@v2
+    - name: Install dependencies
+      run: |
+        dotnet clean -c Release && dotnet nuget locals all --clear
+        dotnet restore ${{ matrix.project }}/${{ matrix.project }}.csproj
+    - name: Build
+      run: dotnet build ${{ matrix.project }}/${{ matrix.project }}.csproj -c Release --no-restore
+    - name: Test
+      run: dotnet test ${{ matrix.project }}/${{ matrix.project }}.csproj -c Release --no-build
+
+  build-test-push:
+    needs: [build-test, activity-short-circuit]
+    if: needs.activity-short-circuit.outputs.same_sha == 'false'
+    runs-on: windows-latest
+    steps:
+    - name: Get timestamp
+      uses: 1466587594/get-current-time@v1
+      id: current-time
+      with:
+        format: YYYYMMDD-HHmmSS
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+    - name: Install dependencies
+      run: |
+        dotnet clean Noggog.CSharpExt.sln -c Release && dotnet nuget locals all --clear
+        dotnet restore Noggog.CSharpExt.sln
+    - name: Build
+      run: dotnet build Noggog.CSharpExt.sln -c Release --no-restore /p:GeneratePackageOnBuild=false
+    - name: Pack Preview
+      if: ${{ success() && (github.event.inputs.is_release_event != 'true' || github.ref != 'refs/heads/master') }}
+      run: |
+        dotnet pack Noggog.CSharpExt.sln -c Release --no-build --no-restore -o out --version-suffix "CI-${{ steps.current-time.outputs.formattedTime }}"
+    - name: Pack Release
+      if: ${{ success() && github.event.inputs.is_release_event == 'true' && github.ref == 'refs/heads/master' }}
+      run: | 
+        dotnet pack Noggog.CSharpExt.sln -c Release --no-build --no-restore -o out
+    - name: Publish to Github
+      uses: svenstaro/upload-release-action@v2
+      if: ${{ success() && github.event.inputs.is_release_event == 'true' && github.ref == 'refs/heads/master' }}
+      with:
+        file: "**/*.nupkg"
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        tag: ${{ github.event.release.tag_name }}
+        file_glob: "true"
+  
+  update-nightly:
+    needs: [build-test-push, activity-short-circuit]
+    if: needs.activity-short-circuit.outputs.same_sha == 'false'
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+    - name: Reset nightly to master
+      run: |
+        git checkout nightly
+        git reset --hard master
+        git push

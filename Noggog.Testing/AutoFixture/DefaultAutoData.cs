@@ -5,6 +5,9 @@ using Xunit;
 
 namespace Noggog.Testing.AutoFixture;
 
+/// <summary>
+/// AutoFixture attribute with default customizations
+/// </summary>
 public class DefaultAutoData : AutoDataAttribute
 {
     public DefaultAutoData(

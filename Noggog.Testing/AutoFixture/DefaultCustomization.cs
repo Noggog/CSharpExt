@@ -3,6 +3,9 @@ using Noggog.WorkEngine;
 
 namespace Noggog.Testing.AutoFixture;
 
+/// <summary>
+/// Default customization with all the typical builders
+/// </summary>
 public class DefaultCustomization : ICustomization
 {
     private readonly bool _useMockFileSystem;

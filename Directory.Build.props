@@ -1,32 +1,38 @@
 <Project>
- 
-  <PropertyGroup> 
-    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
-	  <Nullable>enable</Nullable>
-	  <WarningsAsErrors>nullable</WarningsAsErrors>
-	  <GenerateDocumentationFile>true</GenerateDocumentationFile>
-	  <ImplicitUsings>true</ImplicitUsings>
-  </PropertyGroup> 
-  
-  <ItemGroup>
-	  <PackageReference Include="GitInfo" />
-  </ItemGroup> 
-  
-  <!-- To be redefined by GitInfo after restore. -->
-  <Target Name="GitVersion" />
 
-  <Target Name="SetVersion"
-		  BeforeTargets="GetAssemblyVersion;GetPackageVersion"
-		  DependsOnTargets="GitVersion"
-		  Returns="$(PackageVersion)">
     <PropertyGroup>
-      <DevLabel Condition="$(GitCommits) != '0'">.1-dev</DevLabel>
-      <AssemblyDevLabel Condition="$(GitCommits) != '0'">.1</AssemblyDevLabel>
-      <AssemblyVersion>$(GitBaseVersionMajor).$(GitBaseVersionMinor).$(GitBaseVersionPatch)$(AssemblyDevLabel)</AssemblyVersion>
-      <FileVersion>$(GitBaseVersionMajor).$(GitBaseVersionMinor).$(GitBaseVersionPatch)$(AssemblyDevLabel)</FileVersion>
-      <PackageVersion>$(GitBaseVersionMajor).$(GitBaseVersionMinor).$(GitBaseVersionPatch)$(DevLabel)</PackageVersion>
-      <InformationalVersion>$(PackageVersion)</InformationalVersion>
+        <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+        <Nullable>enable</Nullable>
+        <WarningsAsErrors>nullable</WarningsAsErrors>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <ImplicitUsings>true</ImplicitUsings>
+        <GitVersion>false</GitVersion>
     </PropertyGroup>
-  </Target>
-  
+
+    <ItemGroup>
+        <PackageReference Include="GitInfo"/>
+    </ItemGroup>
+
+    <ItemGroup Condition=" '$(PackageId)' != 'Noggog.SourceGenerators' ">
+        <PackageReference Include="NuGetizer" />
+    </ItemGroup>
+
+	<!-- To be redefined by GitInfo after restore. -->
+	<Target Name="GitVersion" />
+
+	<Target Name="SetVersion"
+            BeforeTargets="GetAssemblyVersion;GetPackageVersion;GetAssemblyVersion;GenerateNuspec;GetPackageContents"
+            DependsOnTargets="GitVersion"
+			Returns="$(PackageVersion)">
+		<PropertyGroup>
+            <DevLabel Condition="$(GitCommits) != '0' And $(VersionSuffix) == ''">.1-dev</DevLabel>
+            <DevLabel Condition="$(GitCommits) != '0' And $(VersionSuffix) != ''">.1-$(VersionSuffix)</DevLabel>
+            <AssemblyDevLabel Condition="$(GitCommits) != '0'">.1</AssemblyDevLabel>
+            <AssemblyVersion>$(GitBaseVersionMajor).$(GitBaseVersionMinor).$(GitBaseVersionPatch)$(AssemblyDevLabel)</AssemblyVersion>
+            <FileVersion>$(GitBaseVersionMajor).$(GitBaseVersionMinor).$(GitBaseVersionPatch)$(AssemblyDevLabel)</FileVersion>
+            <PackageVersion>$(GitBaseVersionMajor).$(GitBaseVersionMinor).$(GitBaseVersionPatch)$(DevLabel)</PackageVersion>
+            <InformationalVersion>$(PackageVersion)</InformationalVersion>
+        </PropertyGroup>
+    </Target>
+
 </Project>
