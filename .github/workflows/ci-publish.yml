@@ -105,7 +105,7 @@ jobs:
     - name: Pack Preview
       if: ${{ success() && (github.event.inputs.is_release_event != 'true' || github.ref != 'refs/heads/master') }}
       run: |
-        dotnet pack Noggog.CSharpExt.sln -c Release --no-build --no-restore -o out --version-suffix "CI-${{ steps.current-time.outputs.formattedTime }}"
+        dotnet pack Noggog.CSharpExt.sln -c Release --no-build --no-restore -o out --version-suffix "nightly-${{ steps.current-time.outputs.formattedTime }}"
     - name: Pack Release
       if: ${{ success() && github.event.inputs.is_release_event == 'true' && github.ref == 'refs/heads/master' }}
       run: | 
