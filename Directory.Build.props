@@ -10,11 +10,17 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="GitInfo"/>
+        <PackageReference Include="GitInfo" >  
+          <PrivateAssets>all</PrivateAssets>  
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>  
+        </PackageReference> 
     </ItemGroup>
 
     <ItemGroup Condition=" '$(PackageId)' != 'Noggog.SourceGenerators' ">
-        <PackageReference Include="NuGetizer" />
+        <PackageReference Include="NuGetizer" >  
+          <PrivateAssets>all</PrivateAssets>  
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>  
+        </PackageReference> 
     </ItemGroup>
 
 	<!-- To be redefined by GitInfo after restore. -->
