@@ -38,13 +38,6 @@ jobs:
           echo "same_sha=${same_sha}"
           echo "same_sha=${same_sha}" >> $GITHUB_OUTPUT
         
-  activity-short-circuit-print:
-    runs-on: ubuntu-latest
-    needs: activity-short-circuit
-    steps:
-      - run: |
-          echo "same_sha=${{ needs.activity-short-circuit.outputs.same_sha }}"
-
   build-test:
     needs: activity-short-circuit
     if: needs.activity-short-circuit.outputs.same_sha == 'false'
