@@ -25,16 +25,15 @@ jobs:
       - name: Get Activity Short Circuit
         id: check
         run: |
-          git fetch origin master:master
           git fetch origin nightly:nightly
-          master_sha=$(git rev-parse master)
+          head_sha=$(git rev-parse head)
           nightly_sha=$(git rev-parse nightly)
-          if [[ "$master_sha" == "$nightly_sha" ]]; then
+          if [[ "$head_sha" == "$nightly_sha" ]]; then
               same_sha=true;
           else
               same_sha=false;
           fi
-          echo "master_sha=$master_sha"
+          echo "head_sha=$head_sha"
           echo "nightly_sha=$nightly_sha"
           echo "same_sha=${same_sha}"
           echo "same_sha=${same_sha}" >> $GITHUB_OUTPUT
@@ -125,7 +124,6 @@ jobs:
         fetch-depth: 0
     - name: Reset nightly to master
       run: |
-        git fetch origin master:master
         git checkout nightly
-        git reset --hard master
+        git reset --hard head
         git push
