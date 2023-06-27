@@ -125,6 +125,7 @@ jobs:
         fetch-depth: 0
     - name: Reset nightly to master
       run: |
+        git fetch origin master:master
         git checkout nightly
         git reset --hard master
         git push
