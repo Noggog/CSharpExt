@@ -126,5 +126,5 @@ jobs:
     - name: Reset nightly to master
       run: |
         git checkout nightly
-        git reset --hard head
+        git reset --hard HEAD
         git push
