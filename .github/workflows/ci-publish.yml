@@ -27,8 +27,8 @@ jobs:
         run: |
           git branch -a
           git fetch origin nightly:nightly
-          head_sha=$(git rev-parse head)
-          nightly_sha=$(git rev-parse nightly)
+          head_sha=$(git rev-parse --verify HEAD)
+          nightly_sha=$(git rev-parse --verify nightly)
           if [[ "$head_sha" == "$nightly_sha" ]]; then
               same_sha=true;
           else
