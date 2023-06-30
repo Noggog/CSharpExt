@@ -125,6 +125,7 @@ jobs:
         fetch-depth: 0
     - name: Reset nightly to master
       run: |
+        head_sha=$(git rev-parse --verify HEAD)
         git checkout nightly
-        git reset --hard HEAD
+        git reset --hard head_sha
         git push
