@@ -126,6 +126,7 @@ jobs:
     - name: Reset nightly to master
       run: |
         head_sha=$(git rev-parse --verify HEAD)
+        echo "head_sha=$head_sha"
         git checkout nightly
-        git reset --hard head_sha
+        git reset --hard $head_sha
         git push
