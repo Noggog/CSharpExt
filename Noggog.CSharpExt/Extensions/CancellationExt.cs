@@ -11,4 +11,16 @@ public static class CancellationExt
     {
         return CancellationTokenSource.CreateLinkedTokenSource(token.AsEnumerable().And(other).ToArray()).Token;
     }
+    
+    public static Task WhenCanceled(this CancellationToken cancellationToken)
+    {
+        var tcs = new TaskCompletionSource<bool>();
+        cancellationToken.Register(s => s.SetResult(true), tcs);
+        return tcs.Task;
+    }
+    
+    public static CancellationTokenRegistration Register<T>(this CancellationToken cancellationToken, Action<T> toDo, T obj)
+    {
+        return cancellationToken.Register(o => toDo((T)o!), obj);
+    }
 }

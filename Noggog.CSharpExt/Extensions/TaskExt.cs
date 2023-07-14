@@ -181,5 +181,14 @@ namespace Noggog
                 toDo();
             }
         }
+        
+        public static async Task<T> WithCancellation<T>(this Task<T> task, CancellationToken token)
+        {
+            token.ThrowIfCancellationRequested();
+            await Task.WhenAny(task, token.WhenCanceled());
+            token.ThrowIfCancellationRequested();
+
+            return await task;
+        }
     }
 }
