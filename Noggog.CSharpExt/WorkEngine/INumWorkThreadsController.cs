@@ -13,4 +13,9 @@ public class NumWorkThreadsUnopinionated : INumWorkThreadsController
 {
     public IObservable<int?> NumDesiredThreads => Observable.Return(default(int?));
 }
+
+public class NumWorkThreadsConstant(int? numThreads) : INumWorkThreadsController
+{
+    public IObservable<int?> NumDesiredThreads => Observable.Return(numThreads);
+}
 #endif

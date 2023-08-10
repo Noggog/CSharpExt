@@ -45,6 +45,14 @@ public class WorkConsumer : IDisposable, IWorkConsumer
         _queue = queue;
     }
 
+    public WorkConsumer(
+        int numThreads,
+        IWorkQueue queue)
+    {
+        _numWorkThreadsController = new NumWorkThreadsConstant(numThreads);
+        _queue = queue;
+    }
+
     private async Task AddNewThreadsIfNeeded(int desired)
     {
         using (await _lock.WaitAsync())
