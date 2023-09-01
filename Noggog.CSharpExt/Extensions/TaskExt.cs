@@ -125,7 +125,7 @@ namespace Noggog
             }
             catch (Exception ex)
             {
-                tcs?.SetException(ex);
+                tcs?.TrySetException(ex);
                 throw;
             }
         }
@@ -135,11 +135,11 @@ namespace Noggog
             try
             {
                 await action().ConfigureAwait(false);
-                tcs?.SetResult();
+                tcs?.TrySetResult();
             }
             catch (Exception ex)
             {
-                tcs?.SetException(ex);
+                tcs?.TrySetException(ex);
                 throw;
             }
         }
