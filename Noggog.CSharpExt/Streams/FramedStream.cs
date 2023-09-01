@@ -21,13 +21,13 @@ public class FramedStream : Stream
         set => _wrap.Position = value - _offset;
     }
 
-    public FramedStream(Stream wrap, long limit, bool doDispose = true)
+    public FramedStream(Stream wrap, long limit, bool doDispose = true, bool doubleCheckLength = true)
     {
         _offset = -wrap.Position;
         _wrap = wrap;
         _dispose = doDispose;
         _limit = limit;
-        if (_wrap.Length >= 0)
+        if (doubleCheckLength && _wrap.Length >= 0)
         {
             Length = Math.Min(_wrap.Remaining(), _limit);
         }
