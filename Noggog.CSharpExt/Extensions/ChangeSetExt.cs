@@ -1,4 +1,4 @@
-﻿using System.Reactive;
+using System.Reactive;
 using System.Reactive.Linq;
 using DynamicData;
 
@@ -31,6 +31,7 @@ public static class ChangeSetExt
         SortOptimisations sortOptimisations = SortOptimisations.None, 
         int resetThreshold = 100,
         IObservable<Unit>? resorter = null)
+        where TObj : notnull
         where TKey : notnull
         where TRhs : notnull
     {
@@ -51,6 +52,7 @@ public static class ChangeSetExt
         SortOptimisations sortOptimisations = SortOptimisations.None, 
         int resetThreshold = 100,
         IObservable<Unit>? resorter = null)
+        where TObj : notnull
         where TKey : notnull
         where TRhs : notnull
     {
@@ -71,6 +73,7 @@ public static class ChangeSetExt
         SortOptions options = SortOptions.None,
         IObservable<Unit>? resort = null,
         int resetThreshold = 100)
+        where TObj : notnull
         where TRhs : notnull
     {
         return obs.Sort(new Comparer<TObj, TRhs>(selector, comparer), options, resort, resetThreshold: resetThreshold);
@@ -83,6 +86,7 @@ public static class ChangeSetExt
         SortOptions options = SortOptions.None,
         IObservable<Unit>? resort = null,
         int resetThreshold = 100)
+        where TObj : notnull
         where TRhs : notnull
     {
         return obs.Sort(comparer.Select(x => new Comparer<TObj, TRhs>(selector, x)), options, resort, resetThreshold: resetThreshold);

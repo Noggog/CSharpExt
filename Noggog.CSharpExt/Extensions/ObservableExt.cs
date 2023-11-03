@@ -466,7 +466,7 @@ public static class ObservableExt
                 () =>
                 {
                     var targetPath = Path.GetDirectoryName(path)!;
-                    var watcher = fileWatcherFactory.CreateNew(targetPath, filter: Path.GetFileName(path));
+                    var watcher = fileWatcherFactory.New(targetPath, filter: Path.GetFileName(path));
                     watcher.EnableRaisingEvents = true;
                     return watcher;
                 },
@@ -516,7 +516,7 @@ public static class ObservableExt
         return UsingWithCatch(
                 () =>
                 {
-                    var watcher = fileWatcherFactory.CreateNew(path);
+                    var watcher = fileWatcherFactory.New(path);
                     watcher.EnableRaisingEvents = true;
                     return watcher;
                 },
@@ -561,7 +561,7 @@ public static class ObservableExt
         return UsingWithCatch(
             () =>
             {
-                var watcher = fileSystem.FileSystemWatcher.CreateNew(path);
+                var watcher = fileSystem.FileSystemWatcher.New(path);
                 watcher.EnableRaisingEvents = true;
                 return watcher;
             },
@@ -612,6 +612,7 @@ public static class ObservableExt
     /// Removes outdated key events from a changeset, only leaving the last relevent change for each key.
     /// </summary>
     public static IObservable<IChangeSet<TObject, TKey>> EnsureUniqueChanges<TObject, TKey>(this IObservable<IChangeSet<TObject, TKey>> source)
+        where TObject : notnull
         where TKey : notnull
     {
         return source.Select(EnsureUniqueChanges);
@@ -621,6 +622,7 @@ public static class ObservableExt
     /// Removes outdated key events from a changeset, only leaving the last relevent change for each key.
     /// </summary>
     public static IChangeSet<TObject, TKey> EnsureUniqueChanges<TObject, TKey>(this IChangeSet<TObject, TKey> input)
+        where TObject : notnull
         where TKey : notnull
     {
         var changes = input
@@ -633,6 +635,7 @@ public static class ObservableExt
     }
 
     internal static Optional<Change<TObject, TKey>> Reduce<TObject, TKey>(Optional<Change<TObject, TKey>> previous, Change<TObject, TKey> next)
+        where TObject : notnull
         where TKey : notnull
     {
         if (!previous.HasValue)
@@ -685,6 +688,7 @@ public static class ObservableExt
     }
 
     public static IObservable<IChangeSet<TRet, TKey>> WhereCastable<TObj, TKey, TRet>(this IObservable<IChangeSet<TObj, TKey>> obs)
+        where TObj : notnull
         where TKey : notnull
         where TRet : class, TObj
     {
@@ -693,23 +697,11 @@ public static class ObservableExt
     }
 
     public static IObservable<IChangeSet<TRet>> WhereCastable<TObj, TRet>(this IObservable<IChangeSet<TObj>> obs)
+        where TObj : notnull
         where TRet : class, TObj
     {
         return obs.Filter(x => x is TRet)
             .Transform(x => (TRet)x!);
-    }
-
-    public static IObservable<IChangeSet<TObj, TKey>> ChangeNotNull<TObj, TKey>(this IObservable<IChangeSet<TObj?, TKey>> obs)
-        where TKey : notnull
-        where TObj : class
-    {
-        return obs.Filter(x => x != null)!;
-    }
-
-    public static IObservable<IChangeSet<TObj>> ChangeNotNull<TObj>(this IObservable<IChangeSet<TObj?>> obs)
-        where TObj : class
-    {
-        return obs.Filter(x => x != null)!;
     }
         
     public static IObservable<TSource> RetryWithBackOff<TSource, TException>(

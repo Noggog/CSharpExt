@@ -150,6 +150,7 @@ public static partial class Drag
     }
 
     private static void HandleDragDropEvent<TType>(DragEventParams<TType> e)
+        where TType : notnull
     {
         if (e.Vm == null) return;
         if (e.RawArgs.OriginalSource is not DependencyObject dep) return;
@@ -183,6 +184,7 @@ public static partial class Drag
         Expression<Func<TViewModel, IList<TType>?>> vmProperty,
         bool onlyWithinSameBox = true,
         Func<object, DragEventArgs, bool>? filter = null)
+        where TType : notnull
     {
         return ListBoxDrops<TType>(
                 control,
@@ -197,6 +199,7 @@ public static partial class Drag
         Expression<Func<TViewModel, ISourceList<TType>?>> vmProperty,
         bool onlyWithinSameBox = true,
         Func<object, DragEventArgs, bool>? filter = null)
+        where TType : notnull
     {
         return ListBoxDrops<TType>(
                 control,
@@ -209,6 +212,7 @@ public static partial class Drag
         ListBox control,
         bool onlyWithinSameBox = true,
         Func<object, DragEventArgs, bool>? filter = null)
+        where TType : notnull
     {
         return ListBoxDrops<TType>(
                 control,
@@ -222,6 +226,7 @@ public static partial class Drag
         TViewModel vm,
         Expression<Func<TViewModel, IList<TType>?>> vmProperty,
         Action<ListBoxItem, Point> dragBegin)
+        where TType : notnull
     {
         return ListBoxDrops<TType>(control, dragBegin)
             .Subscribe(HandleDragDropEvent);
@@ -232,6 +237,7 @@ public static partial class Drag
         TViewModel vm,
         Expression<Func<TViewModel, ISourceList<TType>?>> vmProperty,
         Action<ListBoxItem, Point> dragBegin)
+        where TType : notnull
     {
         return ListBoxDrops<TType>(control, dragBegin)
             .Subscribe(HandleDragDropEvent);
@@ -240,6 +246,7 @@ public static partial class Drag
     public static IDisposable ListBoxDragDrop<TType>(
         ListBox control,
         Action<ListBoxItem, Point> dragBegin)
+        where TType : notnull
     {
         return ListBoxDrops<TType>(control, dragBegin)
             .Subscribe(HandleDragDropEvent);

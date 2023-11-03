@@ -92,6 +92,7 @@ public static class ObservableExt
     }
 
     public static IObservable<IChangeSet<T>> Bind<T>(this IObservable<IChangeSet<T>> source, out IObservableCollection<T> readOnlyObservableCollection, int resetThreshold = 25)
+        where T : notnull
     {
         var obsCol = new ObservableCollectionExtended<T>();
         readOnlyObservableCollection = obsCol;
@@ -99,6 +100,7 @@ public static class ObservableExt
     }
 
     public static IObservableCollection<TObj> ToObservableCollection<TObj>(this IObservable<IChangeSet<TObj>> changeSet, IDisposableDropoff disposable)
+        where TObj : notnull
     {
         changeSet
             .ObserveOnGui()
@@ -109,6 +111,7 @@ public static class ObservableExt
     }
 
     public static IObservableCollection<TObj> ToObservableCollection<TObj, TKey>(this IObservable<IChangeSet<TObj, TKey>> changeSet, IDisposableDropoff disposable)
+        where TObj : notnull
         where TKey : notnull
     {
         ObservableCollectionExtended<TObj> display = new ObservableCollectionExtended<TObj>();
@@ -225,6 +228,7 @@ public static class ObservableExt
     public static IObservable<IChangeSet<SelectedVm<T>>> WrapInSelectedCollection<T>(
         this IObservable<IList<T>?> list,
         out ReadOnlyObservableCollection<SelectedVm<T>> selectedList)
+        where T : notnull
     {
         return list.Select(x =>
             {
@@ -248,6 +252,7 @@ public static class ObservableExt
     public static IDisposable WrapInDerivativeSelectedCollection<T>(
         this IObservable<IList<T>?> list,
         out IDerivativeSelectedCollection<T> selectedList)
+        where T : notnull
     {
         var derivativeList = new DerivativeSelectedCollection<T>();
         selectedList = derivativeList;

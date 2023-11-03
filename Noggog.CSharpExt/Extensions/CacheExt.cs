@@ -66,6 +66,7 @@ public static class CacheExt
 
     public static void SetTo<V, K>(this ISourceCache<V, K> cache, IEnumerable<V> items)
         where K : notnull
+        where V : notnull
     {
         cache.Clear();
         cache.AddOrUpdate(items);
@@ -73,6 +74,7 @@ public static class CacheExt
 
     public static void SetTo<V, K>(this ISourceCache<V, K> cache, Func<V, K> keySelector, IEnumerable<V> items, SetTo setTo = Noggog.SetTo.Whitewash)
         where K : notnull
+        where V : notnull
     {
         if (setTo == Noggog.SetTo.Whitewash)
         {

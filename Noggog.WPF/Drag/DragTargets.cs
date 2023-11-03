@@ -1,4 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics.CodeAnalysis;
 using DynamicData;
 using Noggog.WPF.Containers;
 using Noggog.WPF.Internals;
@@ -10,6 +10,7 @@ namespace Noggog.WPF
         static bool TryGetAsDragDropTarget<T>(
             object obj,
             [MaybeNullWhen(false)] out IDragDropTarget<T> target)
+            where T : notnull
         {
             if (obj is ISourceList<T> sourceList)
             {
@@ -74,6 +75,7 @@ namespace Noggog.WPF
         }
 
         class SourceListDragDropTarget<T> : IDragDropTarget<T>
+            where T : notnull
         {
             private readonly ISourceList<T> _sourceList;
 

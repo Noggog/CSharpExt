@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using DynamicData;
@@ -7,11 +7,13 @@ using DynamicData.Binding;
 namespace Noggog.WPF.Containers;
 
 public interface ISourceListUiFunnel<T> : IObservableCollection<T>
+    where T : notnull
 {
     ISourceList<T> SourceList { get; }
 }
     
 public class SourceListUiFunnel<T> : ISourceListUiFunnel<T>
+    where T : notnull
 {
     private readonly IObservableCollection<T> _coll;
         

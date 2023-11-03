@@ -1,10 +1,11 @@
-﻿using DynamicData;
+using DynamicData;
 
 namespace Noggog;
 
 public static class SourceListExt
 {
     public static void SetTo<T>(this ISourceList<T> list, IEnumerable<T> items, bool checkEquality = false)
+        where T : notnull
     {
         list.Edit(l =>
         {
@@ -34,6 +35,7 @@ public static class SourceListExt
     }
 
     public static void RemoveToCount<T>(this ISourceList<T> list, int count)
+        where T : notnull
     {
         list.Edit(l =>
         {
