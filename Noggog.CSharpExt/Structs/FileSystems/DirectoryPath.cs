@@ -47,6 +47,12 @@ public struct DirectoryPath : IEquatable<DirectoryPath>, IPath
         _fullPath = relativePath == string.Empty ? string.Empty : System.IO.Path.GetFullPath(relativePath);
     }
 
+    private DirectoryPath(string? originalPath, string? fullPath)
+    {
+        _originalPath = originalPath;
+        _fullPath = fullPath;
+    }
+
     public bool CheckExists(IFileSystem? fs = null) => fs.GetOrDefault().Directory.Exists(Path);
 
     public static bool operator ==(DirectoryPath lhs, DirectoryPath rhs)
@@ -193,6 +199,11 @@ public struct DirectoryPath : IEquatable<DirectoryPath>, IPath
             Path,
             includeSelf: includeSelf,
             recursive: recursive);
+    }
+
+    public DirectoryPath MakeAbsolute()
+    {
+        return new DirectoryPath(_fullPath, _fullPath);
     }
 
     public static implicit operator DirectoryPath(DirectoryInfo info)

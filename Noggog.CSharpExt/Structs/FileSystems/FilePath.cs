@@ -38,6 +38,12 @@ public struct FilePath : IEquatable<FilePath>, IPath
     [IgnoreDataMember]
     public bool Exists => CheckExists();
 
+    private FilePath(string? fullPath, string? originalPath)
+    {
+        _fullPath = fullPath;
+        _originalPath = originalPath;
+    }
+
     public FilePath(string relativePath)
     {
         relativePath = IFileSystemExt.CleanDirectorySeparators(relativePath);
@@ -110,6 +116,11 @@ public struct FilePath : IEquatable<FilePath>, IPath
     public Stream OpenRead(IFileSystem? fileSystem = null)
     {
         return fileSystem.GetOrDefault().FileStream.Create(Path, FileMode.Open, FileAccess.Read, FileShare.Read);
+    }
+
+    public FilePath MakeAbsolute()
+    {
+        return new FilePath(_fullPath, _fullPath);
     }
 
     public static implicit operator FilePath(FileInfo info)
