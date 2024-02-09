@@ -68,6 +68,17 @@ public class Array2d<T> : IArray2d<T>, IShallowCloneable<Array2d<T>>
         }
     }
 
+    public void SetAllTo(Func<T> item)
+    {
+        for (int y = 0; y < Height; y++)
+        {
+            for (int x = 0; x < Width; x++)
+            {
+                _arr[x, y] = item();
+            }
+        }
+    }
+
     public IEnumerator<KeyValuePair<P2Int, T>> GetEnumerator()
     {
         for (int y = 0; y < Height; y++)
