@@ -315,6 +315,14 @@ public static class EnumerableExt
     { 
         return e.SequenceEqual((IEnumerable<T>)rhs); 
     }
+ 
+    public static bool SequenceEqual<T>(this IEnumerable<T> lhs, IEnumerable<T> rhs, Func<T, T, bool> equality) 
+    { 
+        if (ReferenceEquals(lhs, rhs)) return true;
+        return lhs
+            .Zip(rhs, equality)
+            .All(x => x);
+    }
 
     public static IEnumerable<T> StartWith<T>(this IEnumerable<T> e, T item)
     {
