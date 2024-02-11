@@ -4,8 +4,6 @@ namespace Noggog;
 
 public class Array2d<T> : IArray2d<T>, IShallowCloneable<Array2d<T>>
 {
-    public static readonly IReadOnlyArray2d<T> Empty = new Array2d<T>(0, 0);
-
     private readonly T[,] _arr;
 
     public int Width => _arr.GetLength(0);
@@ -16,13 +14,32 @@ public class Array2d<T> : IArray2d<T>, IShallowCloneable<Array2d<T>>
         _arr = arr;
     }
 
-    public Array2d(int width, int height)
+    public Array2d(IReadOnlyArray2d<T> rhs)
     {
-        _arr = new T[width, height];
+        _arr = new T[rhs.Width, rhs.Height];
+        for (int y = 0; y < rhs.Height; y++)
+        {
+            for (int x = 0; x < rhs.Width; x++)
+            {
+                this[x, y] = rhs[x, y];
+            }
+        }
     }
 
-    public Array2d(P2Int size)
-        : this(size.X, size.Y)
+    public Array2d(int width, int height, T initialVal)
+    {
+        _arr = new T[width, height];
+        SetAllTo(initialVal);
+    }
+
+    public Array2d(int width, int height, Func<T> initialVal)
+    {
+        _arr = new T[width, height];
+        SetAllTo(initialVal);
+    }
+
+    public Array2d(P2Int size, T initialVal)
+        : this(size.X, size.Y, initialVal)
     {
     }
 

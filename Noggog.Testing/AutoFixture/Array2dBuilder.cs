@@ -35,15 +35,6 @@ public class Array2dBuilder : ISpecimenBuilder
         ISpecimenContext context,
         object request)
     {
-        var arr = new Array2d<T>(3, 3);
-        for (int i = 0; i < 3; i++)
-        {
-            for (int j = 0; j < 3; j++)
-            {
-                arr[i, j] = context.Create<T>();
-            }
-        }
-
-        return arr;
+        return new Array2d<T>(3, 3, () => context.Create<T>());
     }
 }

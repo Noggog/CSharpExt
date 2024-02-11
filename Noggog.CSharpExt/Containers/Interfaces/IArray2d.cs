@@ -28,16 +28,7 @@ public static class IArray2dExt
             return direct.ShallowClone();
         }
 
-        var ret = new Array2d<T>(arr.Height, arr.Width);
-        for (int y = 0; y < arr.Height; y++)
-        {
-            for (int x = 0; x < arr.Width; x++)
-            {
-                ret[x, y] = arr[x, y];
-            }
-        }
-
-        return ret;
+        return new Array2d<T>(arr);
     }
     
     public static void SetTo<T>(this IArray2d<T> arr, IEnumerable<KeyValuePair<P2Int, T>> vals, T fallback)
