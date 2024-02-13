@@ -2,7 +2,7 @@ namespace Noggog;
 
 public static class ArrayExt
 {
-    static public bool Contains<T>(this T[] arr, T val)
+    public static bool Contains<T>(this T[] arr, T val)
     {
         foreach (T t in arr)
         {
@@ -26,6 +26,14 @@ public static class ArrayExt
                && y >= 0 
                && y < array.GetLength(0) 
                && x < array.GetLength(1);
+    }
+
+    public static void Fill<T>(this T[] array, T to)
+    {
+        for (int x = 0; x < array.Length; x++)
+        {
+            array[x] = to;
+        }
     }
 
     public static void Fill<T>(this T[,] array, T to)
@@ -68,7 +76,14 @@ public static class ArrayExt
         }
         return ret;
     }
-
+    
+    public static T[] Create<T>(int size, T val)
+    {
+        var ret = new T[size];
+        ret.Fill(val);
+        return ret;
+    }
+    
     public static T[,] Copy<T>(this T[,] array)
     {
         T[,] ret = new T[array.GetLength(0), array.GetLength(1)];
