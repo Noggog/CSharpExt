@@ -53,6 +53,11 @@ public static class DictionaryExt
 
     public static TValue? GetOrDefault<TKey, TValue>(this IDictionary<TKey, TValue> dict, TKey key)
     {
+        return TryGetValue(dict, key);
+    }
+
+    public static TValue? TryGetValue<TKey, TValue>(this IDictionary<TKey, TValue> dict, TKey key)
+    {
         if (!dict.TryGetValue(key, out var ret))
         {
             return default;
