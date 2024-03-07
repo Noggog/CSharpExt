@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
+using System.Runtime.InteropServices;
 using Noggog.Utility;
 
 namespace Noggog.Processes;
@@ -24,6 +25,7 @@ public class ProcessWrapper : IProcessWrapper
     public ProcessStartInfo StartInfo => _process.StartInfo;
     private IDisposable? _dispose;
     private bool _hookingOutput;
+    private bool _killWithParent;
 
     private ProcessWrapper()
     {
@@ -36,11 +38,6 @@ public class ProcessWrapper : IProcessWrapper
         bool hookOntoOutput = true,
         bool killWithParent = true)
     {
-        if (!killWithParent)
-        {
-            throw new NotImplementedException();
-        }
-            
         var process = new Process();
         if (hideWindow)
         {
@@ -75,6 +72,7 @@ public class ProcessWrapper : IProcessWrapper
             _process = process,
             _complete = completeTask.Task,
             _hookingOutput = hookOntoOutput,
+            _killWithParent = killWithParent
         };
 
         if (hookOntoOutput)
@@ -141,7 +139,14 @@ public class ProcessWrapper : IProcessWrapper
     public async Task<int> Run()
     {
         _process.Start();
-        ChildProcessTracker.AddProcess(_process);
+        if (_killWithParent)
+        {
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                throw new NotImplementedException();
+            }
+            ChildProcessTracker.AddProcess(_process);
+        }
         if (_hookingOutput)
         {
             _process.BeginErrorReadLine();
