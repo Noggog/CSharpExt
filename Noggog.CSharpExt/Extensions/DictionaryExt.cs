@@ -151,10 +151,4 @@ public static class DictionaryExt
     {
         public static Dictionary<TKey, TValue> Empty = new Dictionary<TKey, TValue>();
     }
-
-    public static Dictionary<TKey, TValue> ToDictionary<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> keyValuePairs)
-        where TKey : notnull
-    {
-        return keyValuePairs.ToDictionary(kv => kv.Key, kv => kv.Value);
-    }
 }
