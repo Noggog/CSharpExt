@@ -1,32 +1,31 @@
 <Project>
   <ItemGroup>
     <PackageVersion Include="Autofac">
-      <Version>7.1.0</Version>
+      <Version>8.0.0</Version>
     </PackageVersion>
     <PackageVersion Include="AutoFixture">
-      <Version>4.18.0</Version>
+      <Version>4.18.1</Version>
     </PackageVersion>
     <PackageVersion Include="AutoFixture.AutoNSubstitute">
-      <Version>4.18.0</Version>
+      <Version>4.18.1</Version>
     </PackageVersion>
     <PackageVersion Include="AutoFixture.Xunit2">
-      <Version>4.18.0</Version>
+      <Version>4.18.1</Version>
     </PackageVersion>
     <PackageVersion Include="AvalonEdit">
       <Version>6.3.0.90</Version>
     </PackageVersion>
     <PackageVersion Include="BenchmarkDotNet">
-      <Version>0.13.10</Version>
+      <Version>0.13.12</Version>
     </PackageVersion>
     <PackageVersion Include="DynamicData">
-      <Version>8.1.1</Version>
+      <Version>8.3.27</Version>
     </PackageVersion>
     <PackageVersion Include="FluentAssertions">
       <Version>6.12.0</Version>
     </PackageVersion>
-    <PackageVersion Include="GitInfo">
-      <Version>3.3.3</Version>
-      <PrivateAssets>all</PrivateAssets>
+    <PackageVersion Include="GitInfo" PrivateAssets="all">
+      <Version>3.3.4</Version>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageVersion>
     <PackageVersion Include="MahApps.Metro">
@@ -40,15 +39,15 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageVersion>
     <PackageVersion Include="Microsoft.CodeAnalysis.Common">
-      <Version>4.7.0</Version>
+      <Version>4.9.2</Version>
     </PackageVersion>
     <PackageVersion Include="Microsoft.CodeAnalysis.CSharp">
-      <Version>4.7.0</Version>
+      <Version>4.9.2</Version>
     </PackageVersion>
     <PackageVersion Include="Microsoft.CodeAnalysis.SourceGenerators.Testing" Version="1.1.1" />
     <PackageVersion Include="Microsoft.CodeAnalysis.CSharp.SourceGenerators.Testing.XUnit" Version="1.1.1" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk">
-      <Version>17.7.2</Version>
+      <Version>17.9.0</Version>
     </PackageVersion>
     <PackageVersion Include="Microsoft.Reactive.Testing">
       <Version>6.0.0</Version>
@@ -59,7 +58,7 @@
     </PackageVersion>
     <PackageVersion Include="Nito.AsyncEx.Interop.WaitHandles" Version="5.1.2" />
     <PackageVersion Include="NuGetizer">
-      <Version>0.9.5</Version>
+      <Version>1.2.1</Version>
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageVersion>
@@ -67,23 +66,23 @@
       <Version>5.1.0</Version>
     </PackageVersion>
     <PackageVersion Include="ReactiveUI">
-      <Version>19.5.1</Version>
+      <Version>19.5.41</Version>
     </PackageVersion>
     <PackageVersion Include="ReactiveUI.Events.WPF" Version="15.1.1" />
     <PackageVersion Include="ReactiveUI.Fody">
-      <Version>19.5.1</Version>
+      <Version>19.5.41</Version>
     </PackageVersion>
     <PackageVersion Include="ReactiveUI.Testing">
-      <Version>19.5.1</Version>
+      <Version>19.5.41</Version>
     </PackageVersion>
     <PackageVersion Include="ReactiveUI.WPF">
-      <Version>19.5.1</Version>
+      <Version>19.5.41</Version>
     </PackageVersion>
     <PackageVersion Include="System.IO.Abstractions">
-      <Version>19.2.69</Version>
+      <Version>20.0.28</Version>
     </PackageVersion>
     <PackageVersion Include="System.IO.Abstractions.TestingHelpers">
-      <Version>19.2.69</Version>
+      <Version>20.0.28</Version>
     </PackageVersion>
     <PackageVersion Include="System.Linq.Async" Version="6.0.1" />
     <PackageVersion Include="System.Reactive">
@@ -93,14 +92,14 @@
       <Version>2.3.0</Version>
     </PackageVersion>
     <PackageVersion Include="Verify.Xunit">
-      <Version>22.1.4</Version>
+      <Version>23.5.0</Version>
     </PackageVersion>
     <PackageVersion Include="WindowsAPICodePack-Shell" Version="1.1.1" />
     <PackageVersion Include="xunit">
-      <Version>2.6.1</Version>
+      <Version>2.7.0</Version>
     </PackageVersion>
     <PackageVersion Include="xunit.runner.visualstudio">
-      <Version>2.5.3</Version>
+      <Version>2.5.7</Version>
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageVersion>
