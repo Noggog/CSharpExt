@@ -93,11 +93,11 @@ public static class XmlExt
                     return (P)Convert.ChangeType(strVal, t);
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 if (throwException)
                 {
-                    throw ex;
+                    throw;
                 }
                 else
                 {
