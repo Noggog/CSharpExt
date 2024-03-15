@@ -69,7 +69,6 @@ public static class ByteExt
         return b1.Length == b2.Length && memcmp(b1, b2, b1.Length) == 0;
     }
 
-    [ReliabilityContract(Consistency.WillNotCorruptState, Cer.MayFail)]
     public static unsafe bool CharBytesEqualsFast(byte[] strA, byte[] strB)
     {
         if (strA == null && strB == null) return true;

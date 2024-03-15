@@ -115,7 +115,7 @@ public struct FilePath : IEquatable<FilePath>, IPath
 
     public Stream OpenRead(IFileSystem? fileSystem = null)
     {
-        return fileSystem.GetOrDefault().FileStream.Create(Path, FileMode.Open, FileAccess.Read, FileShare.Read);
+        return fileSystem.GetOrDefault().FileStream.New(Path, FileMode.Open, FileAccess.Read, FileShare.Read);
     }
 
     public FilePath MakeAbsolute()

@@ -8,7 +8,6 @@ public static class SymbolExtensions
     /// <summary>
     /// Given a lambda expression that calls a method, returns the method info.
     /// </summary>
-    /// <typeparam name="T"></typeparam>
     /// <param name="expression">The expression.</param>
     /// <returns></returns>
     public static MethodInfo GetMethodInfo(Expression<Action> expression)
@@ -31,6 +30,7 @@ public static class SymbolExtensions
     /// Given a lambda expression that calls a method, returns the method info.
     /// </summary>
     /// <typeparam name="T"></typeparam>
+    /// <typeparam name="TResult"></typeparam>
     /// <param name="expression">The expression.</param>
     /// <returns></returns>
     public static MethodInfo GetMethodInfo<T, TResult>(Expression<Func<T, TResult>> expression)

@@ -604,8 +604,8 @@ public static class ObservableExt
             });
     }
 
-    /// These snippets were provided by RolandPheasant (author of DynamicData)
-    /// They'll be going into the official library at some point, but are here for now.
+    // These snippets were provided by RolandPheasant (author of DynamicData)
+    // They'll be going into the official library at some point, but are here for now.
         
     #region Dynamic Data EnsureUniqueChanges
     /// <summary>
