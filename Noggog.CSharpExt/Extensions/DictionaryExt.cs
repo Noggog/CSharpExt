@@ -150,5 +150,14 @@ public static class DictionaryExt
         where TKey : notnull
     {
         public static Dictionary<TKey, TValue> Empty = new Dictionary<TKey, TValue>();
+    } 
+    
+#if NET8_0_OR_GREATER
+#else
+    public static Dictionary<TKey, TValue> ToDictionary<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> keyValuePairs) 
+        where TKey : notnull 
+    { 
+        return keyValuePairs.ToDictionary(kv => kv.Key, kv => kv.Value); 
     }
+#endif
 }
