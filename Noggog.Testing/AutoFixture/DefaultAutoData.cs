@@ -12,7 +12,7 @@ public class DefaultAutoData : AutoDataAttribute
 {
     public DefaultAutoData(
         bool ConfigureMembers = false,
-        bool UseMockFileSystem = true,
+        TargetFileSystem FileSystem = TargetFileSystem.Fake,
         bool GenerateDelegates = false,
         bool OmitAutoProperties = false)
         : base(() =>
@@ -23,7 +23,7 @@ public class DefaultAutoData : AutoDataAttribute
                 ConfigureMembers = ConfigureMembers,
                 GenerateDelegates = GenerateDelegates
             });
-            ret.Customize(new DefaultCustomization(UseMockFileSystem));
+            ret.Customize(new DefaultCustomization(FileSystem));
             ret.OmitAutoProperties = OmitAutoProperties;
             return ret;
         })

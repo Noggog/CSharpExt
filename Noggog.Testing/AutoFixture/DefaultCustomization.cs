@@ -8,16 +8,17 @@ namespace Noggog.Testing.AutoFixture;
 /// </summary>
 public class DefaultCustomization : ICustomization
 {
-    private readonly bool _useMockFileSystem;
+    private readonly TargetFileSystem _targetFileSystem;
 
-    public DefaultCustomization(bool useMockFileSystem = false)
+    public DefaultCustomization(
+        TargetFileSystem targetFileSystem = TargetFileSystem.Fake)
     {
-        _useMockFileSystem = useMockFileSystem;
+        _targetFileSystem = targetFileSystem;
     }
         
     public void Customize(IFixture fixture)
     {
-        fixture.Customizations.Add(new FileSystemBuilder(_useMockFileSystem));
+        fixture.Customizations.Add(new FileSystemBuilder(_targetFileSystem));
         fixture.Customizations.Add(new SchedulerBuilder());
         fixture.Customizations.Add(new PathBuilder());
         fixture.Customizations.Add(new CurrentDirectoryPathProviderBuilder());

@@ -8,7 +8,7 @@ public class TestDataAttribute : AutoDataAttribute
 {
     public TestDataAttribute(
         bool ConfigureMembers = false,
-        bool UseMockFileSystem = false)
+        TargetFileSystem FileSystem = TargetFileSystem.Fake)
         : base(() =>
         {
             var customization = new AutoNSubstituteCustomization()
@@ -19,7 +19,7 @@ public class TestDataAttribute : AutoDataAttribute
 
             return new Fixture()
                 .Customize(customization)
-                .Customize(new DefaultCustomization(useMockFileSystem: UseMockFileSystem));
+                .Customize(new DefaultCustomization(targetFileSystem: FileSystem));
         })
     {
     }

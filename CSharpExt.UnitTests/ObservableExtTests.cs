@@ -63,7 +63,7 @@ public class ObservableExtTests
         results.Should().ContainInOrder(secondWait);
     });
 
-    [Theory, TestData(UseMockFileSystem: true)]
+    [Theory, TestData(FileSystem: TargetFileSystem.Fake)]
     public void WatchFile_Typical(
         [Frozen] FilePath path,
         [Frozen] MockFileSystemWatcher mockFileWatcher,
@@ -78,7 +78,7 @@ public class ObservableExtTests
         count.Should().Be(1);
     }
 
-    [Theory, TestData(UseMockFileSystem: true)]
+    [Theory, TestData(FileSystem: TargetFileSystem.Fake)]
     public void WatchFile_MovedOut(
         FilePath path,
         FileName name,
@@ -94,7 +94,7 @@ public class ObservableExtTests
         count.Should().Be(1);
     }
 
-    [Theory, TestData(UseMockFileSystem: true)]
+    [Theory, TestData(FileSystem: TargetFileSystem.Fake)]
     public void WatchFile_MovedIn(
         FilePath path,
         FileName name,
@@ -111,7 +111,7 @@ public class ObservableExtTests
         count.Should().Be(1);
     }
 
-    [Theory, TestData(UseMockFileSystem: true)]
+    [Theory, TestData(FileSystem: TargetFileSystem.Fake)]
     public void WatchFile_AtypicalPathSeparators(
         [Frozen] FilePath path,
         [Frozen] MockFileSystemWatcher mockFileWatcher,
@@ -126,7 +126,7 @@ public class ObservableExtTests
         count.Should().Be(1);
     }
 
-    [Theory, TestData(UseMockFileSystem: true)]
+    [Theory, TestData(FileSystem: TargetFileSystem.Fake)]
     public void WatchFolder_Typical(
         [Frozen] MockFileSystem fs,
         DirectoryPath existingDir,
@@ -153,7 +153,7 @@ public class ObservableExtTests
         list.Items.ToExtendedList()[0].Should().Be(fileB);
     }
 
-    [Theory, TestData(UseMockFileSystem: true)]
+    [Theory, TestData(FileSystem: TargetFileSystem.Fake)]
     public void WatchFolder_OnlySubfolder(
         [Frozen] DirectoryPath existingDir,
         [Frozen] MockFileSystemWatcher mockFileWatcher,
@@ -175,7 +175,7 @@ public class ObservableExtTests
         list.Items.ToExtendedList()[0].Should().Be(fileA);
     }
 
-    [Theory, TestData(UseMockFileSystem: true)]
+    [Theory, TestData(FileSystem: TargetFileSystem.Fake)]
     public void WatchFolder_ATypicalSeparator(
         DirectoryPath someDirectory,
         [Frozen] FilePath file,

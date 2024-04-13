@@ -9,13 +9,13 @@ namespace Noggog.Testing.AutoFixture;
 
 public class FileSystemBuilder : ISpecimenBuilder
 {
-    private readonly bool _useMockFileSystem;
+    private readonly TargetFileSystem _targetFileSystem;
     private MockFileSystem? _mockFileSystem;
     private MockFileSystemWatcher? _fileSystemWatcher;
 
-    public FileSystemBuilder(bool useMockFileSystem = true)
+    public FileSystemBuilder(TargetFileSystem targetFileSystem = TargetFileSystem.Fake)
     {
-        _useMockFileSystem = useMockFileSystem;
+        _targetFileSystem = targetFileSystem;
     }
 
     public object Create(object request, ISpecimenContext context)
@@ -29,13 +29,16 @@ public class FileSystemBuilder : ISpecimenBuilder
             
         if (t == typeof(IFileSystem))
         {
-            if (_useMockFileSystem)
+            switch (_targetFileSystem)
             {
-                return context.Create<MockFileSystem>();
-            }
-            else
-            {
-                return Substitute.For<IFileSystem>();
+                case TargetFileSystem.Fake:
+                    return context.Create<MockFileSystem>();
+                case TargetFileSystem.Substitute:
+                    return Substitute.For<IFileSystem>();
+                case TargetFileSystem.Real:
+                    return new System.IO.Abstractions.FileSystem();
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
         }
         else if (t == typeof(MockFileSystem))
