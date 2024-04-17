@@ -9,14 +9,15 @@ public interface ITempFolder : IDisposable
 
 public class TempFolder : ITempFolder
 {
-    public DirectoryPath Dir { get; private set; }
-    public bool DeleteAfter = true;
-    public bool ThrowIfUnsuccessfulDisposal = true;
+    public DirectoryPath Dir { get; }
+    public bool DeleteAfter { get; set; }
+    public bool ThrowIfUnsuccessfulDisposal { get; set; }
     private readonly IFileSystem _fileSystem;
 
     protected TempFolder(
         DirectoryPath dir, 
         bool deleteAfter = true,
+        bool deleteBefore = true,
         bool throwIfUnsuccessfulDisposal = true,
         IFileSystem? fileSystem = null)
     {
@@ -24,7 +25,11 @@ public class TempFolder : ITempFolder
         _fileSystem = fileSystem ?? IFileSystemExt.DefaultFilesystem;
         DeleteAfter = deleteAfter;
         ThrowIfUnsuccessfulDisposal = throwIfUnsuccessfulDisposal;
-            
+
+        if (deleteBefore && _fileSystem.Directory.Exists(Dir))
+        {
+            Dir.DeleteEntireFolder();
+        }
         _fileSystem.Directory.CreateDirectory(Dir);
     }
 
