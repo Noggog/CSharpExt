@@ -49,12 +49,14 @@ public class TempFolder : ITempFolder
 
     public static TempFolder Factory(
         bool deleteAfter = true, 
+        bool deleteBefore = true,
         bool throwIfUnsuccessfulDisposal = true,
         IFileSystem? fileSystem = null)
     {
         return new TempFolder(
             new DirectoryPath(Path.Combine(Path.GetTempPath(), Path.GetRandomFileName())),
             deleteAfter: deleteAfter, 
+            deleteBefore: deleteBefore,
             throwIfUnsuccessfulDisposal: throwIfUnsuccessfulDisposal,
             fileSystem: fileSystem);
     }
@@ -62,12 +64,14 @@ public class TempFolder : ITempFolder
     public static TempFolder FactoryByPath(
         string path,
         bool deleteAfter = true, 
+        bool deleteBefore = true,
         bool throwIfUnsuccessfulDisposal = true,
         IFileSystem? fileSystem = null)
     {
         return new TempFolder(
             new DirectoryPath(path),
             deleteAfter: deleteAfter,
+            deleteBefore: deleteBefore,
             throwIfUnsuccessfulDisposal: throwIfUnsuccessfulDisposal,
             fileSystem: fileSystem);
     }
@@ -75,42 +79,67 @@ public class TempFolder : ITempFolder
     public static TempFolder FactoryByAddedPath(
         string addedFolderPath, 
         bool deleteAfter = true, 
+        bool deleteBefore = true,
         bool throwIfUnsuccessfulDisposal = true,
         IFileSystem? fileSystem = null)
     {
         return new TempFolder(
             new DirectoryPath(Path.Combine(Path.GetTempPath(), addedFolderPath)),
             deleteAfter: deleteAfter,
+            deleteBefore: deleteBefore,
             throwIfUnsuccessfulDisposal: throwIfUnsuccessfulDisposal,
             fileSystem: fileSystem);
     }
 
 #if NETSTANDARD2_0
 #else
-        public static AsyncTempFolder Factory(int retryCount, TimeSpan delay, bool throwIfUnsuccessfulDisposal = true)
+        public static AsyncTempFolder Factory(
+            int retryCount,
+            TimeSpan delay,
+            bool deleteAfter = true,
+            bool deleteBefore = true,
+            bool throwIfUnsuccessfulDisposal = true)
         {
             return new AsyncTempFolder(
                 new DirectoryPath(Path.Combine(Path.GetTempPath(), Path.GetRandomFileName())),
                 retryCount: retryCount,
                 delay: delay,
+                deleteAfter: deleteAfter,
+                deleteBefore: deleteBefore,
                 throwIfUnsuccessfulDisposal: throwIfUnsuccessfulDisposal);
         }
 
-        public static AsyncTempFolder FactoryByPath(string path, int retryCount, TimeSpan delay, bool throwIfUnsuccessfulDisposal = true)
+        public static AsyncTempFolder FactoryByPath(
+            string path,
+            int retryCount,
+            TimeSpan delay,
+            bool deleteAfter = true,
+            bool deleteBefore = true,
+            bool throwIfUnsuccessfulDisposal = true)
         {
             return new AsyncTempFolder(
                 new DirectoryPath(path),
                 retryCount: retryCount,
                 delay: delay,
+                deleteAfter: deleteAfter,
+                deleteBefore: deleteBefore,
                 throwIfUnsuccessfulDisposal: throwIfUnsuccessfulDisposal);
         }
 
-        public static AsyncTempFolder FactoryByAddedPath(string addedFolderPath, int retryCount, TimeSpan delay, bool throwIfUnsuccessfulDisposal = true)
+        public static AsyncTempFolder FactoryByAddedPath(
+            string addedFolderPath,
+            int retryCount,
+            TimeSpan delay,
+            bool deleteAfter = true,
+            bool deleteBefore = true,
+            bool throwIfUnsuccessfulDisposal = true)
         {
             return new AsyncTempFolder(
                 new DirectoryPath(Path.Combine(Path.GetTempPath(), addedFolderPath)),
                 retryCount: retryCount, 
                 delay: delay,
+                deleteAfter: deleteAfter,
+                deleteBefore: deleteBefore,
                 throwIfUnsuccessfulDisposal: throwIfUnsuccessfulDisposal);
         }
 #endif
@@ -123,8 +152,18 @@ public class TempFolder : ITempFolder
         public int RetryCount;
         public TimeSpan Delay;
 
-        public AsyncTempFolder(DirectoryPath dir, int retryCount, TimeSpan delay, bool throwIfUnsuccessfulDisposal = true)
-            : base(dir, deleteAfter: true, throwIfUnsuccessfulDisposal: throwIfUnsuccessfulDisposal)
+        public AsyncTempFolder(
+            DirectoryPath dir, 
+            int retryCount,
+            TimeSpan delay,
+            bool deleteAfter = true,
+            bool deleteBefore = true,
+            bool throwIfUnsuccessfulDisposal = true)
+            : base(
+                dir,
+                deleteBefore: deleteBefore,
+                deleteAfter: deleteAfter,
+                throwIfUnsuccessfulDisposal: throwIfUnsuccessfulDisposal)
         {
             RetryCount = retryCount;
             Delay = delay;
