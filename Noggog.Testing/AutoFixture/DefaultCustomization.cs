@@ -1,4 +1,5 @@
 ﻿using AutoFixture;
+using Noggog.IO;
 using Noggog.WorkEngine;
 
 namespace Noggog.Testing.AutoFixture;
@@ -32,6 +33,7 @@ public class DefaultCustomization : ICustomization
         fixture.Customizations.Add(new ExtendedListBuilder());
         fixture.Customizations.Add(new Array2dBuilder());
         fixture.Behaviors.Add(new ObservableEmptyBehavior());
-        fixture.Register<IWorkDropoff>(() => new InlineWorkDropoff());
+        fixture.Register<IWorkDropoff>(() => InlineWorkDropoff.Instance);
+        fixture.Register<ICreateStream>(() => NormalFileStreamCreator.Instance);
     }
 }
