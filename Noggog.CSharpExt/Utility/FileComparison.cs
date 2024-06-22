@@ -1,13 +1,16 @@
+using System.IO.Abstractions;
+
 namespace Noggog.Utility;
 
 public static class FileComparison
 {
     // https://stackoverflow.com/questions/1358510/how-to-compare-2-files-fast-using-net
     const int BYTES_TO_READ = sizeof(Int64);
-    public static bool FilesAreEqual(FilePath first, FilePath second)
+    public static bool FilesAreEqual(FilePath first, FilePath second, IFileSystem? fileSystem = null)
     {
-        var firstInfo = new FileInfo(first.Path);
-        var secondInfo = new FileInfo(second.Path);
+        fileSystem ??= fileSystem.GetOrDefault();
+        var firstInfo = fileSystem.FileInfo.New(first.Path);
+        var secondInfo = fileSystem.FileInfo.New(second.Path);
         if (firstInfo.Length != secondInfo.Length)
             return false;
 
@@ -16,9 +19,9 @@ public static class FileComparison
 
         int iterations = (int)Math.Ceiling((double)firstInfo.Length / BYTES_TO_READ);
 
-        using (var fs1 = first.OpenRead())
+        using (var fs1 = first.OpenRead(fileSystem))
         {
-            using (var fs2 = second.OpenRead())
+            using (var fs2 = second.OpenRead(fileSystem))
             {
                 return fs1.ContentsEqual(fs2);
             }
