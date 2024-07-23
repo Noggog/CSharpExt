@@ -35,10 +35,13 @@
 
   <ItemGroup Condition=" $(TargetFramework.StartsWith('netstandard2.0')) ">
     <PackageReference Include="System.Memory" />
-    <PackageReference Include="System.Reactive" />
     <PackageReference Include="System.Threading.Tasks" />
     <PackageReference Include="System.Buffers" />
     <PackageReference Include="Microsoft.Bcl.HashCode" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+    <PackageReference Include="System.Reactive" />
   </ItemGroup>
 
 </Project>
