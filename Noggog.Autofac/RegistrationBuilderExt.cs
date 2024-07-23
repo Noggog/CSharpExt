@@ -47,7 +47,8 @@ public static class RegistrationBuilderExt
         return registration
             .NotInjection()
             .NotDecorator()
-            .AsMatchingInterface();
+            .AsMatchingInterface()
+            .AsSelf();
     }
         
     public static Builder InstancePerMatchingLifetimeScope(this Builder registration, string? scopeName)
