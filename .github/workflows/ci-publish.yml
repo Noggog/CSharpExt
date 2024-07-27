@@ -92,7 +92,7 @@ jobs:
       id: current-time
       with:
         format: YYYYMMDD-HHmmSS
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
       with:
         fetch-depth: 0
     - name: Setup .NET 8
@@ -129,7 +129,7 @@ jobs:
     if: needs.activity-short-circuit.outputs.same_sha == 'false'
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
       with:
         fetch-depth: 0
     - name: Reset nightly to master
