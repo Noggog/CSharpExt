@@ -23,7 +23,7 @@ public class NugetListingParser : INugetListingParser
         [MaybeNullWhen(false)] out string resolved,
         out string? latest)
     {
-        var startIndex = line.IndexOf("> ");
+        var startIndex = line.IndexOf("> ", StringComparison.InvariantCulture);
         if (startIndex == -1)
         {
             package = default;

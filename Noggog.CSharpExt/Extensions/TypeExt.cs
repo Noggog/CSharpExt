@@ -72,7 +72,7 @@ public static class TypeExt
 
         string name = t.Name;
         StringBuilder sb = new StringBuilder();
-        int index = name.IndexOf("`");
+        int index = name.IndexOf("`", StringComparison.OrdinalIgnoreCase);
         name = name.Substring(0, index);
 
         var genArgs = t.GetGenericArguments();
@@ -113,7 +113,7 @@ public static class TypeExt
     public static string GetSimpleName(this Type t)
     {
         string str = t.Name;
-        int index = str.IndexOf("`");
+        int index = str.IndexOf("`", StringComparison.OrdinalIgnoreCase);
         if (index != -1)
             return str.Substring(0, index);
         return str;
