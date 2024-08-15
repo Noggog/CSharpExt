@@ -43,6 +43,9 @@ public class PathPickerVM : ViewModel
 
     [Reactive]
     public CheckOptions ExistCheckOption { get; set; }
+    
+    [Reactive]
+    public bool BlockMissingInDialog { get; set; }
 
     [Reactive]
     public CheckOptions FilterCheckOption { get; set; } = CheckOptions.IfPathNotEmpty;
@@ -293,8 +296,8 @@ public class PathPickerVM : ViewModel
                     AddToMostRecentlyUsedList = false,
                     AllowNonFileSystemItems = false,
                     DefaultDirectory = dirPath,
-                    EnsureFileExists = true,
-                    EnsurePathExists = true,
+                    EnsureFileExists = ExistCheckOption != CheckOptions.Off && BlockMissingInDialog,
+                    EnsurePathExists = ExistCheckOption != CheckOptions.Off && BlockMissingInDialog,
                     EnsureReadOnly = false,
                     EnsureValidNames = true,
                     Multiselect = false,
