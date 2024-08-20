@@ -19,12 +19,18 @@ public static class StringExt
         }
     }
 
+    [Obsolete("Use alternative with comparison parameter")]
     public static IEnumerable<string> Split(this string line, string delim, char escapeChar)
+    {
+        return Split(line, delim, escapeChar, StringComparison.CurrentCulture);
+    }
+
+    public static IEnumerable<string> Split(this string line, string delim, char escapeChar, StringComparison comparison)
     {
         int index = -1;
         string replace = escapeChar + delim;
         // Parse into delimited elements
-        while ((index = line.IndexOf(delim, index + 1)) != -1)
+        while ((index = line.IndexOf(delim, index + 1, comparison)) != -1)
         {
             if (index > 0 && line[index - 1] == escapeChar)
             { // Was escaped
@@ -37,9 +43,15 @@ public static class StringExt
         yield return line.Replace(replace, delim);
     }
 
+    [Obsolete("Use alternative with comparison parameter")]
     public static bool TrySubstringFromStart(this string src, string item, out string result)
     {
-        int index = src.IndexOf(item);
+        return TrySubstringFromStart(src, item, StringComparison.CurrentCulture, out result);
+    }
+
+    public static bool TrySubstringFromStart(this string src, string item, StringComparison comparison, out string result)
+    {
+        int index = src.IndexOf(item, comparison);
         if (index == -1)
         {
             result = src;
@@ -55,15 +67,28 @@ public static class StringExt
         return true;
     }
 
+    [Obsolete("Use alternative with comparison parameter")]
     public static string SubstringFromStart(this string src, string item)
     {
         TrySubstringFromStart(src, item, out string result);
         return result;
     }
 
+    public static string SubstringFromStart(this string src, string item, StringComparison comparison)
+    {
+        TrySubstringFromStart(src, item, comparison, out string result);
+        return result;
+    }
+
+    [Obsolete("Use alternative with comparison parameter")]
     public static bool TrySubstringFromEnd(this string src, string item, out string result)
     {
-        int index = src.LastIndexOf(item);
+        return TrySubstringFromEnd(src, item, StringComparison.CurrentCulture, out result);
+    }
+
+    public static bool TrySubstringFromEnd(this string src, string item, StringComparison comparison, out string result)
+    {
+        int index = src.LastIndexOf(item, comparison);
         if (index == -1)
         {
             result = src;
@@ -78,15 +103,28 @@ public static class StringExt
         return true;
     }
 
+    [Obsolete("Use alternative with comparison parameter")]
     public static string SubstringFromEnd(this string src, string item)
     {
         TrySubstringFromEnd(src, item, out string result);
         return result;
     }
 
+    public static string SubstringFromEnd(this string src, string item, StringComparison comparison)
+    {
+        TrySubstringFromEnd(src, item, comparison, out string result);
+        return result;
+    }
+
+    [Obsolete("Use alternative with comparison parameter")]
     public static bool TryTrimStart(this string src, string item, out string result)
     {
-        if (!src.StartsWith(item))
+        return TryTrimStart(src, item, StringComparison.CurrentCulture, out result);
+    }
+    
+    public static bool TryTrimStart(this string src, string item, StringComparison comparison, out string result)
+    {
+        if (!src.StartsWith(item, comparison))
         {
             result = src;
             return false;
@@ -100,9 +138,16 @@ public static class StringExt
         return true;
     }
 
+    [Obsolete("Use alternative with comparison parameter")]
     public static string TrimStart(this string src, string item)
     {
         TryTrimStart(src, item, out string result);
+        return result;
+    }
+
+    public static string TrimStart(this string src, string item, StringComparison comparison)
+    {
+        TryTrimStart(src, item, comparison, out string result);
         return result;
     }
 
