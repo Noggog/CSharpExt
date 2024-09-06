@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using Noggog.Extensions;
 using System.IO.Abstractions;
@@ -85,6 +86,7 @@ public struct DirectoryPath : IEquatable<DirectoryPath>, IPath
 #endif
     }
 
+    [DebuggerStepThrough]
     public override string ToString() => Path;
 
     public FilePath GetFile(string filePath)
@@ -206,16 +208,19 @@ public struct DirectoryPath : IEquatable<DirectoryPath>, IPath
         return new DirectoryPath(_fullPath, _fullPath);
     }
 
+    [DebuggerStepThrough]
     public static implicit operator DirectoryPath(DirectoryInfo info)
     {
         return new DirectoryPath(info.FullName);
     }
 
+    [DebuggerStepThrough]
     public static implicit operator DirectoryPath(string path)
     {
         return new DirectoryPath(path);
     }
 
+    [DebuggerStepThrough]
     [return: NotNullIfNotNull("path")]
     public static implicit operator DirectoryPath?(string? path)
     {
@@ -223,11 +228,13 @@ public struct DirectoryPath : IEquatable<DirectoryPath>, IPath
         return new DirectoryPath(path);
     }
 
+    [DebuggerStepThrough]
     public static implicit operator string(DirectoryPath dir)
     {
         return dir.RelativePath;
     }
 
+    [DebuggerStepThrough]
     [return: NotNullIfNotNull("dir")]
     public static implicit operator string?(DirectoryPath? dir)
     {
@@ -236,6 +243,7 @@ public struct DirectoryPath : IEquatable<DirectoryPath>, IPath
 
 #if NETSTANDARD2_0
 #else
+    [DebuggerStepThrough]
     public static implicit operator ReadOnlySpan<char>(DirectoryPath dir)
     {
         return dir.RelativePath;

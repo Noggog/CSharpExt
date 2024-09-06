@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using Noggog.Extensions;
 using System.IO.Abstractions;
@@ -111,6 +112,7 @@ public struct FilePath : IEquatable<FilePath>, IPath
 #endif
     }
 
+    [DebuggerStepThrough]
     public override string ToString() => Path;
 
     public Stream OpenRead(IFileSystem? fileSystem = null)
@@ -123,16 +125,19 @@ public struct FilePath : IEquatable<FilePath>, IPath
         return new FilePath(_fullPath, _fullPath);
     }
 
+    [DebuggerStepThrough]
     public static implicit operator FilePath(FileInfo info)
     {
         return new FilePath(info.FullName);
     }
 
+    [DebuggerStepThrough]
     public static implicit operator FilePath(string path)
     {
         return new FilePath(path);
     }
 
+    [DebuggerStepThrough]
     [return: NotNullIfNotNull("path")]
     public static implicit operator FilePath?(string? path)
     {
@@ -140,11 +145,13 @@ public struct FilePath : IEquatable<FilePath>, IPath
         return new FilePath(path);
     }
 
+    [DebuggerStepThrough]
     public static implicit operator string(FilePath path)
     {
         return path._originalPath ?? string.Empty;
     }
 
+    [DebuggerStepThrough]
     [return: NotNullIfNotNull("path")]
     public static implicit operator string?(FilePath? path)
     {
