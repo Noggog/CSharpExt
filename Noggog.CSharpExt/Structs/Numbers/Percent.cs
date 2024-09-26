@@ -1,6 +1,6 @@
 namespace Noggog;
 
-public struct Percent : IComparable, IEquatable<Percent>
+public readonly struct Percent : IComparable, IEquatable<Percent>, IComparable<Percent>
 {
     public static readonly Percent One = new Percent(1d);
     public static readonly Percent Zero = new Percent(0d);
@@ -59,7 +59,7 @@ public struct Percent : IComparable, IEquatable<Percent>
     {
         if (double.IsNaN(d) || double.IsInfinity(d))
         {
-            throw new ArgumentException();
+            throw new ArgumentException("Argument value out of range", nameof(d));
         }
         if (d < 0)
         {
@@ -173,4 +173,39 @@ public struct Percent : IComparable, IEquatable<Percent>
         p = default(Percent);
         return false;
     }
+
+    public int CompareTo(Percent other) => this.Value.CompareTo(other.Value);
+
+    public static bool operator ==(Percent left, Percent right)
+    {
+        return left.Equals(right);
+    }
+
+    public static bool operator !=(Percent left, Percent right)
+    {
+        return !(left == right);
+    }
+
+    public static bool operator <(Percent left, Percent right)
+    {
+        return left.CompareTo(right) < 0;
+    }
+
+    public static bool operator <=(Percent left, Percent right)
+    {
+        return left.CompareTo(right) <= 0;
+    }
+
+    public static bool operator >(Percent left, Percent right)
+    {
+        return left.CompareTo(right) > 0;
+    }
+
+    public static bool operator >=(Percent left, Percent right)
+    {
+        return left.CompareTo(right) >= 0;
+    }
+
+    public static implicit operator Percent(int i) => new Percent(i);
+    public static implicit operator Percent(double d) => new Percent(d);
 }
