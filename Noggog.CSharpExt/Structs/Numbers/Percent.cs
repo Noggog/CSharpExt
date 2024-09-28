@@ -205,7 +205,4 @@ public readonly struct Percent : IComparable, IEquatable<Percent>, IComparable<P
     {
         return left.CompareTo(right) >= 0;
     }
-
-    public static implicit operator Percent(int i) => new Percent(i);
-    public static implicit operator Percent(double d) => new Percent(d);
 }
