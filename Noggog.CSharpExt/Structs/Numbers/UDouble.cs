@@ -98,7 +98,14 @@ public readonly struct UDouble : IComparable<UDouble>, IComparable<double>, IEqu
     {
         if (TryParse(str, out UDouble ud))
             return ud;
-        return default;
+        throw new ArgumentException("Could not be converted to a UDouble", nameof(str));
+    }
+
+    public static UDouble? TryParse(string str)
+    {
+        if (TryParse(str, out UDouble ud))
+            return ud;
+        return null;
     }
 
     public static bool TryParse(string str, out UDouble doub)
