@@ -1,6 +1,6 @@
 namespace Noggog;
 
-public struct UDouble : IComparable<UDouble>, IComparable<double>, IEquatable<UDouble>
+public readonly struct UDouble : IComparable<UDouble>, IComparable<double>, IEquatable<UDouble>
 {
     public readonly double Value;
     public const double MinValue = 0d;
@@ -43,15 +43,20 @@ public struct UDouble : IComparable<UDouble>, IComparable<double>, IEquatable<UD
         return d.Value - amount;
     }
 
+    public static UDouble operator +(UDouble d, double amount)
+    {
+        return d.Value + amount;
+    }
+
     public override bool Equals(object? obj)
     {
         if (obj is UDouble uRhs)
         {
             return Value == uRhs.Value;
         }
-        else if (obj is double)
+        else if (obj is double d)
         {
-            return Value == (double)obj;
+            return Value == d;
         }
         else
         {
@@ -91,8 +96,9 @@ public struct UDouble : IComparable<UDouble>, IComparable<double>, IEquatable<UD
 
     public static UDouble Parse(string str)
     {
-        TryParse(str, out UDouble ud);
-        return ud;
+        if (TryParse(str, out UDouble ud))
+            return ud;
+        return default;
     }
 
     public static bool TryParse(string str, out UDouble doub)
@@ -108,7 +114,7 @@ public struct UDouble : IComparable<UDouble>, IComparable<double>, IEquatable<UD
 
     public bool EqualsWithin(UDouble rhs, double within = 0.000000001d)
     {
-        return rhs.Value.EqualsWithin(rhs.Value, within);
+        return Value.EqualsWithin(rhs.Value, within);
     }
 
     public bool IsInRange(UDouble min, UDouble max)
@@ -130,5 +136,35 @@ public struct UDouble : IComparable<UDouble>, IComparable<double>, IEquatable<UD
         if (Value < min) return min;
         if (Value > max) return max;
         return Value;
+    }
+
+    public static bool operator ==(UDouble left, UDouble right)
+    {
+        return left.Equals(right);
+    }
+
+    public static bool operator !=(UDouble left, UDouble right)
+    {
+        return !(left == right);
+    }
+
+    public static bool operator <(UDouble left, UDouble right)
+    {
+        return left.CompareTo(right) < 0;
+    }
+
+    public static bool operator <=(UDouble left, UDouble right)
+    {
+        return left.CompareTo(right) <= 0;
+    }
+
+    public static bool operator >(UDouble left, UDouble right)
+    {
+        return left.CompareTo(right) > 0;
+    }
+
+    public static bool operator >=(UDouble left, UDouble right)
+    {
+        return left.CompareTo(right) >= 0;
     }
 }
