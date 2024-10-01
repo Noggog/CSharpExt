@@ -45,6 +45,7 @@
     <PackageVersion Include="NSubstitute">
       <Version>5.1.0</Version>
     </PackageVersion>
+    <PackageVersion Include="Ookii.Dialogs.Wpf" Version="5.0.1" />
     <PackageVersion Include="ReactiveUI" Version="20.1.1" />
     <PackageVersion Include="ReactiveUI.Events.WPF" Version="15.1.1" />
     <PackageVersion Include="ReactiveUI.Fody">

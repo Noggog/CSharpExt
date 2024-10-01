@@ -1,5 +1,4 @@
 using DynamicData;
-using Microsoft.WindowsAPICodePack.Dialogs;
 using Newtonsoft.Json;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
@@ -43,7 +42,7 @@ public class PathPickerVM : ViewModel
 
     [Reactive]
     public CheckOptions ExistCheckOption { get; set; }
-    
+
     [Reactive]
     public bool BlockMissingInDialog { get; set; }
 
@@ -70,7 +69,7 @@ public class PathPickerVM : ViewModel
         x => x.TargetPath,
         (err, p) => err.BubbleResult(p));
 
-    public SourceList<CommonFileDialogFilter> Filters { get; } = new SourceList<CommonFileDialogFilter>();
+    public SourceList<(string Description, string Extension)> Filters { get; } = new SourceList<(string Description, string Extension)>();
 
     public const string FolderDoesNotExistText = "Folder does not exist";
     public const string PathDoesNotExistText = "Path does not exist";
@@ -190,9 +189,9 @@ public class PathPickerVM : ViewModel
                     try
                     {
                         var extension = Path.GetExtension(target);
-                        if (extension == null || !extension.StartsWith(".")) return false;
-                        extension = extension.Substring(1);
-                        if (!query.Any(filter => filter.Extensions.Any(ext => string.Equals(ext, extension)))) return false;
+                        if (extension == null || !extension.StartsWith('.')) return false;
+                        extension = extension[1..];
+                        if (!query.Any(filter => string.Equals(filter.Extension, extension))) return false;
                     }
                     catch (ArgumentException)
                     {
@@ -288,27 +287,36 @@ public class PathPickerVM : ViewModel
                 {
                     dirPath = TargetPath;
                 }
-                var dlg = new CommonOpenFileDialog
+
+                if (PathType == PathTypeOptions.Folder)
                 {
-                    Title = PromptTitle,
-                    IsFolderPicker = PathType == PathTypeOptions.Folder,
-                    InitialDirectory = dirPath,
-                    AddToMostRecentlyUsedList = false,
-                    AllowNonFileSystemItems = false,
-                    DefaultDirectory = dirPath,
-                    EnsureFileExists = ExistCheckOption != CheckOptions.Off && BlockMissingInDialog,
-                    EnsurePathExists = ExistCheckOption != CheckOptions.Off && BlockMissingInDialog,
-                    EnsureReadOnly = false,
-                    EnsureValidNames = true,
-                    Multiselect = false,
-                    ShowPlacesList = true,
-                };
-                foreach (var filter in Filters.Items)
-                {
-                    dlg.Filters.Add(filter);
+                    var dlg = new Ookii.Dialogs.Wpf.VistaFolderBrowserDialog()
+                    {
+                        SelectedPath = dirPath,
+                        Multiselect = false,
+                    };
+                    if (dlg.ShowDialog() == false) return;
+                    TargetPath = dlg.SelectedPath;
                 }
-                if (dlg.ShowDialog() != CommonFileDialogResult.Ok) return;
-                TargetPath = dlg.FileName;
+                else
+                {
+                    var dlg = new Ookii.Dialogs.Wpf.VistaOpenFileDialog
+                    {
+                        Title = PromptTitle,
+                        InitialDirectory = dirPath,
+                        //AddToMostRecentlyUsedList = false,
+                        //AllowNonFileSystemItems = false,
+                        CheckFileExists = ExistCheckOption != CheckOptions.Off && BlockMissingInDialog,
+                        CheckPathExists = ExistCheckOption != CheckOptions.Off && BlockMissingInDialog,
+                        ReadOnlyChecked = false,
+                        ValidateNames = true,
+                        Multiselect = false,
+                        Filter = string.Join('|', Filters.Items.Select(a => $"{a.Description}|{a.Extension}").ToArray())
+                    };
+
+                    if (dlg.ShowDialog() == false) return;
+                    TargetPath = dlg.FileName;
+                }
             });
     }
 
@@ -323,44 +331,35 @@ public class PathPickerVM : ViewModel
         {
             dirPath = TargetPath;
         }
-        var dlg = new CommonOpenFileDialog
+        var dlg = new Ookii.Dialogs.Wpf.VistaFolderBrowserDialog()
         {
-            Title = PromptTitle,
-            IsFolderPicker = type == PathTypeOptions.Folder,
-            InitialDirectory = dirPath,
-            AddToMostRecentlyUsedList = false,
-            AllowNonFileSystemItems = false,
-            DefaultDirectory = dirPath,
-            EnsureFileExists = true,
-            EnsurePathExists = true,
-            EnsureReadOnly = false,
-            EnsureValidNames = true,
+            Description = PromptTitle,UseDescriptionForTitle = true,
+            SelectedPath = dirPath,
             Multiselect = false,
-            ShowPlacesList = true,
         };
-        foreach (var filter in Filters.Items)
-        {
-            dlg.Filters.Add(filter);
-        }
-        if (dlg.ShowDialog() != CommonFileDialogResult.Ok) return;
-        TargetPath = dlg.FileName;
+        //foreach (var filter in Filters.Items)
+        //{
+        //    dlg.Filters.Add(filter);
+        //}
+        if (dlg.ShowDialog() == false) return;
+        TargetPath = dlg.SelectedPath;
     }
 
     public class PathPickerJsonConverter : JsonConverter
     {
         public override void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer)
         {
-            if (!(value is PathPickerVM vm)) throw new ArgumentException();
+            if (value is not PathPickerVM vm) throw new ArgumentException();
             writer.WriteValue(vm.TargetPath);
         }
 
         public override object ReadJson(JsonReader reader, Type objectType, object? existingValue, JsonSerializer serializer)
         {
-            if (!(existingValue is PathPickerVM vm))
+            if (existingValue is not PathPickerVM vm)
             {
                 vm = new PathPickerVM();
             }
-            if (!(reader.Value is string str)) throw new ArgumentException();
+            if (reader.Value is not string str) throw new ArgumentException();
             vm.TargetPath = str;
             return vm;
         }

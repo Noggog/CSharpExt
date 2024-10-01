@@ -31,18 +31,19 @@
     <PackageReference Include="MahApps.Metro" />
     <PackageReference Include="MahApps.Metro.IconPacks" />
     <PackageReference Include="Newtonsoft.Json" />
+    <PackageReference Include="Ookii.Dialogs.Wpf" />
     <PackageReference Include="ReactiveUI" />
     <PackageReference Include="ReactiveUI.Events.WPF" />
     <PackageReference Include="ReactiveUI.Fody" />
     <PackageReference Include="ReactiveUI.WPF" />
     <PackageReference Include="System.Reactive" />
-    <PackageReference Include="WindowsAPICodePack-Shell" />
+    <!--<PackageReference Include="WindowsAPICodePack-Shell" />-->
   </ItemGroup>
-   
+
   <ItemGroup>
     <ProjectReference Include="..\Noggog.CSharpExt\Noggog.CSharpExt.csproj" />
   </ItemGroup>
-   
+
   <ItemGroup>
     <Compile Update="Drag\Drag.cs">
       <CodeLanguage>cs</CodeLanguage>
@@ -54,5 +55,5 @@
   <PropertyGroup>
     <GitInfoReportImportance Condition="$(Configuration) == 'Release'">high</GitInfoReportImportance>
   </PropertyGroup>
-  
+
 </Project>
