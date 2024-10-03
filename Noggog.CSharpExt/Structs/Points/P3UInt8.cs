@@ -1,4 +1,5 @@
-﻿using System.Runtime.Serialization;
+﻿using System.Globalization;
+using System.Runtime.Serialization;
 
 namespace Noggog;
 
@@ -54,7 +55,7 @@ namespace Noggog;
         }
 
 #if NETSTANDARD2_0
-        public static bool TryParse(string str, out P3UInt8 ret)
+        public static bool TryParse(string str, out P3UInt8 ret, IFormatProvider? provider = null)
         {
             // ToDo
             // Improve parsing to reduce allocation
@@ -65,9 +66,9 @@ namespace Noggog;
                 return false;
             }
 
-            if (!byte.TryParse(split[0], out var x)
-                || !byte.TryParse(split[1], out var y)
-                || !byte.TryParse(split[2], out var z))
+            if (!byte.TryParse(split[0], NumberStyles.Any, provider, out var x)
+                || !byte.TryParse(split[1], NumberStyles.Any, provider, out var y)
+                || !byte.TryParse(split[2], NumberStyles.Any, provider, out var z))
             {
                 ret = default(P3UInt8);
                 return false;
@@ -77,7 +78,7 @@ namespace Noggog;
             return true;
         }
 #else 
-        public static bool TryParse(ReadOnlySpan<char> str, out P3UInt8 ret)
+        public static bool TryParse(ReadOnlySpan<char> str, out P3UInt8 ret, IFormatProvider? provider = null)
         {
             // ToDo
             // Improve parsing to reduce allocation
@@ -88,9 +89,9 @@ namespace Noggog;
                 return false;
             }
 
-            if (!byte.TryParse(split[0], out var x)
-                || !byte.TryParse(split[1], out var y)
-                || !byte.TryParse(split[2], out var z))
+            if (!byte.TryParse(split[0], NumberStyles.Any, provider, out var x)
+                || !byte.TryParse(split[1], NumberStyles.Any, provider, out var y)
+                || !byte.TryParse(split[2], NumberStyles.Any, provider, out var z))
             {
                 ret = default(P3UInt8);
                 return false;

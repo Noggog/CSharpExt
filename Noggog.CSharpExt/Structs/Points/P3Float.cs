@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Runtime.Serialization;
 
 namespace Noggog;
@@ -81,7 +82,7 @@ public struct P3Float : IEquatable<P3Float>
     public float Distance(P3Float p2) => (this - p2).Magnitude;
 
 #if NETSTANDARD2_0
-    public static bool TryParse(string str, out P3Float p2)
+    public static bool TryParse(string str, out P3Float p2, IFormatProvider? provider = null)
     {
         // ToDo
         // Improve parsing to reduce allocation
@@ -92,17 +93,17 @@ public struct P3Float : IEquatable<P3Float>
             return false;
         }
 
-        if (!float.TryParse(split[0], out float x))
+        if (!float.TryParse(split[0], NumberStyles.Any, provider, out float x))
         {
             p2 = default(P3Float);
             return false;
         }
-        if (!float.TryParse(split[1], out float y))
+        if (!float.TryParse(split[1], NumberStyles.Any, provider, out float y))
         {
             p2 = default(P3Float);
             return false;
         }
-        if (!float.TryParse(split[2], out float z))
+        if (!float.TryParse(split[2], NumberStyles.Any, provider, out float z))
         {
             p2 = default(P3Float);
             return false;
@@ -111,7 +112,7 @@ public struct P3Float : IEquatable<P3Float>
         return true;
     }
 #else 
-    public static bool TryParse(ReadOnlySpan<char> str, out P3Float p2)
+    public static bool TryParse(ReadOnlySpan<char> str, out P3Float p2, IFormatProvider? provider = null)
     {
         // ToDo
         // Improve parsing to reduce allocation
@@ -122,17 +123,17 @@ public struct P3Float : IEquatable<P3Float>
             return false;
         }
 
-        if (!float.TryParse(split[0], out float x))
+        if (!float.TryParse(split[0], NumberStyles.Any, provider, out float x))
         {
             p2 = default(P3Float);
             return false;
         }
-        if (!float.TryParse(split[1], out float y))
+        if (!float.TryParse(split[1], NumberStyles.Any, provider, out float y))
         {
             p2 = default(P3Float);
             return false;
         }
-        if (!float.TryParse(split[2], out float z))
+        if (!float.TryParse(split[2], NumberStyles.Any, provider, out float z))
         {
             p2 = default(P3Float);
             return false;

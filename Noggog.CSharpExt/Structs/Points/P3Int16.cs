@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Runtime.Serialization;
 
 namespace Noggog;
@@ -54,7 +55,7 @@ public struct P3Int16 : IP3Int16Get, IEquatable<P3Int16>
     }
 
 #if NETSTANDARD2_0
-    public static bool TryParse(string str, out P3Int16 ret)
+    public static bool TryParse(string str, out P3Int16 ret, IFormatProvider? provider = null)
     {
         // ToDo
         // Improve parsing to reduce allocation
@@ -65,9 +66,9 @@ public struct P3Int16 : IP3Int16Get, IEquatable<P3Int16>
             return false;
         }
 
-        if (!short.TryParse(split[0], out short x)
-            || !short.TryParse(split[1], out short y)
-            || !short.TryParse(split[2], out short z))
+        if (!short.TryParse(split[0], NumberStyles.Any, provider, out short x)
+            || !short.TryParse(split[1], NumberStyles.Any, provider, out short y)
+            || !short.TryParse(split[2], NumberStyles.Any, provider, out short z))
         {
             ret = default(P3Int16);
             return false;
@@ -77,7 +78,7 @@ public struct P3Int16 : IP3Int16Get, IEquatable<P3Int16>
         return true;
     }
 #else 
-    public static bool TryParse(ReadOnlySpan<char> str, out P3Int16 ret)
+    public static bool TryParse(ReadOnlySpan<char> str, out P3Int16 ret, IFormatProvider? provider = null)
     {
         // ToDo
         // Improve parsing to reduce allocation
@@ -88,9 +89,9 @@ public struct P3Int16 : IP3Int16Get, IEquatable<P3Int16>
             return false;
         }
 
-        if (!short.TryParse(split[0], out short x)
-            || !short.TryParse(split[1], out short y)
-            || !short.TryParse(split[2], out short z))
+        if (!short.TryParse(split[0], NumberStyles.Any, provider, out short x)
+            || !short.TryParse(split[1], NumberStyles.Any, provider, out short y)
+            || !short.TryParse(split[2], NumberStyles.Any, provider, out short z))
         {
             ret = default(P3Int16);
             return false;

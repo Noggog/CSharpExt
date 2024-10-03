@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Runtime.Serialization;
 
 namespace Noggog;
@@ -54,7 +55,7 @@ public struct P3Int : IP3IntGet, IEquatable<P3Int>
     }
 
 #if NETSTANDARD2_0
-    public static bool TryParse(string str, out P3Int ret)
+    public static bool TryParse(string str, out P3Int ret, IFormatProvider? provider = null)
     {
         // ToDo
         // Improve parsing to reduce allocation
@@ -65,9 +66,9 @@ public struct P3Int : IP3IntGet, IEquatable<P3Int>
             return false;
         }
 
-        if (!int.TryParse(split[0], out int x)
-            || !int.TryParse(split[1], out int y)
-            || !int.TryParse(split[2], out int z))
+        if (!int.TryParse(split[0], NumberStyles.Any, provider, out int x)
+            || !int.TryParse(split[1], NumberStyles.Any, provider, out int y)
+            || !int.TryParse(split[2], NumberStyles.Any, provider, out int z))
         {
             ret = default(P3Int);
             return false;
@@ -77,7 +78,7 @@ public struct P3Int : IP3IntGet, IEquatable<P3Int>
         return true;
     }
 #else 
-    public static bool TryParse(ReadOnlySpan<char> str, out P3Int ret)
+    public static bool TryParse(ReadOnlySpan<char> str, out P3Int ret, IFormatProvider? provider = null)
     {
         // ToDo
         // Improve parsing to reduce allocation
@@ -88,9 +89,9 @@ public struct P3Int : IP3IntGet, IEquatable<P3Int>
             return false;
         }
 
-        if (!int.TryParse(split[0], out int x)
-            || !int.TryParse(split[1], out int y)
-            || !int.TryParse(split[2], out int z))
+        if (!int.TryParse(split[0], NumberStyles.Any, provider, out int x)
+            || !int.TryParse(split[1], NumberStyles.Any, provider, out int y)
+            || !int.TryParse(split[2], NumberStyles.Any, provider, out int z))
         {
             ret = default(P3Int);
             return false;

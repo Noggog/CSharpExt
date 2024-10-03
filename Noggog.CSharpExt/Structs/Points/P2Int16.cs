@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Runtime.Serialization;
 
 namespace Noggog;
@@ -101,7 +102,7 @@ public struct P2Int16 : IP2Int16Get, IEquatable<P2Int16>
     }
 
 #if NETSTANDARD2_0
-    public static bool TryParse(string str, out P2Int16 ret)
+    public static bool TryParse(string str, out P2Int16 ret, IFormatProvider? provider = null)
     {
         // ToDo
         // Improve parsing to reduce allocation
@@ -112,8 +113,8 @@ public struct P2Int16 : IP2Int16Get, IEquatable<P2Int16>
             return false;
         }
 
-        if (!short.TryParse(split[0], out var x)
-            || !short.TryParse(split[1], out var y))
+        if (!short.TryParse(split[0], NumberStyles.Any, provider, out var x)
+            || !short.TryParse(split[1], NumberStyles.Any, provider, out var y))
         {
             ret = default(P2Int16);
             return false;
@@ -123,7 +124,7 @@ public struct P2Int16 : IP2Int16Get, IEquatable<P2Int16>
         return true;
     }
 #else 
-    public static bool TryParse(ReadOnlySpan<char> str, out P2Int16 ret)
+    public static bool TryParse(ReadOnlySpan<char> str, out P2Int16 ret, IFormatProvider? provider = null)
     {
         short? x2 = null;
         short? y2 = null;
@@ -135,7 +136,7 @@ public struct P2Int16 : IP2Int16Get, IEquatable<P2Int16>
             {
                 case 0:
                 {
-                    if (!short.TryParse(subStrSpan, out var x))
+                    if (!short.TryParse(subStrSpan, NumberStyles.Any, provider, out var x))
                     {
                         ret = default;
                         return false;
@@ -146,7 +147,7 @@ public struct P2Int16 : IP2Int16Get, IEquatable<P2Int16>
                 }
                 case 1:
                 {
-                    if (!short.TryParse(subStrSpan, out var y))
+                    if (!short.TryParse(subStrSpan, NumberStyles.Any, provider, out var y))
                     {
                         ret = default;
                         return false;
