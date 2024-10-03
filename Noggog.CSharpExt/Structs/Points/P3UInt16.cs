@@ -128,7 +128,12 @@ public struct P3UInt16 : IP3UInt16Get, IEquatable<P3UInt16>
 
     public override string ToString()
     {
-        return $"{_x},{_y},{_z}";
+        return $"{_x}, {_y}, {_z}";
+    }
+
+    public string ToString(IFormatProvider? provider)
+    {
+        return $"{_x.ToString(provider)}, {_y.ToString(provider)}, {_z.ToString(provider)}";
     }
 
     public static bool operator ==(P3UInt16 obj1, P3UInt16 obj2)

@@ -131,7 +131,12 @@ public struct P2Int : IP2IntGet, IEquatable<P2Int>
         
     public override string ToString()
     {
-        return $"{_x},{_y}";
+        return $"{_x}, {_y}";
+    }
+
+    public string ToString(IFormatProvider? provider)
+    {
+        return $"{_x.ToString(provider)}, {_y.ToString(provider)}";
     }
 
     public override bool Equals(object? obj)

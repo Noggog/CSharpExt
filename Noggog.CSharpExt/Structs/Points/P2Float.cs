@@ -51,7 +51,7 @@ public struct P2Float : IEquatable<P2Float>
 
     public override string ToString()
     {
-        return $"{_x.ToString()}, {_y}";
+        return $"{_x}, {_y}";
     }
 
     public string ToString(IFormatProvider? provider)

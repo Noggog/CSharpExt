@@ -104,7 +104,12 @@ namespace Noggog;
 
         public override string ToString()
         {
-            return $"{_x},{_y}";
+            return $"{_x}, {_y}";
+        }
+
+        public string ToString(IFormatProvider? provider)
+        {
+            return $"{_x.ToString(provider)}, {_y.ToString(provider)}";
         }
 
         public static bool operator ==(P2UInt8 obj1, P2UInt8 obj2)
