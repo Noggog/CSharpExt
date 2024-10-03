@@ -80,7 +80,7 @@ public struct P2Int16 : IP2Int16Get, IEquatable<P2Int16>
         
     public override string ToString()
     {
-        return $"({X},{_y})";
+        return $"{X},{_y}";
     }
 
     public override bool Equals(object? obj)

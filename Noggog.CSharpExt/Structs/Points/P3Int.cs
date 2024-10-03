@@ -128,7 +128,7 @@ public struct P3Int : IP3IntGet, IEquatable<P3Int>
 
     public override string ToString()
     {
-        return $"({_x},{_y},{_z})";
+        return $"{_x},{_y},{_z}";
     }
 
     public static bool operator ==(P3Int obj1, P3Int obj2)

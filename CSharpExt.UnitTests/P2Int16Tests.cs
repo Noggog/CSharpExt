@@ -86,4 +86,13 @@ public class P2Int16Tests
         P2Int16.TryParse(givenStr, out var result).Should().Be(expectedBool);
         result.Should().Be(expectedPoint);
     }
+    
+    [Theory]
+    [DefaultAutoData]
+    public void P2Int16Reparse(short x, short y)
+    {
+        var expectedPoint = new P2Int16(x, y);
+        P2Int16.TryParse(expectedPoint.ToString(), out var result).Should().BeTrue();
+        result.Should().Be(expectedPoint);
+    }
 }

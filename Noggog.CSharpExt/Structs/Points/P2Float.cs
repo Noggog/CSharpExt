@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Runtime.Serialization;
 
 namespace Noggog;
@@ -50,7 +51,12 @@ public struct P2Float : IEquatable<P2Float>
 
     public override string ToString()
     {
-        return $"({_x}, {_y})";
+        return $"{_x.ToString()}, {_y}";
+    }
+
+    public string ToString(IFormatProvider? provider)
+    {
+        return $"{_x.ToString(provider)}, {_y.ToString(provider)}";
     }
 
     public P2Float Normalize()
@@ -65,7 +71,7 @@ public struct P2Float : IEquatable<P2Float>
     public float Distance(P2Float p2) => (this - p2).Magnitude;
 
 #if NETSTANDARD2_0
-    public static bool TryParse(string str, out P2Float p2)
+    public static bool TryParse(string str, out P2Float p2, IFormatProvider? provider = null)
     {
         // ToDo
         // Improve parsing to reduce allocation
@@ -76,12 +82,12 @@ public struct P2Float : IEquatable<P2Float>
             return false;
         }
 
-        if (!float.TryParse(split[0], out float x))
+        if (!float.TryParse(split[0], NumberStyles.Any, provider, out float x))
         {
             p2 = default(P2Float);
             return false;
         }
-        if (!float.TryParse(split[1], out float y))
+        if (!float.TryParse(split[1], NumberStyles.Any, provider, out float y))
         {
             p2 = default(P2Float);
             return false;
@@ -90,7 +96,7 @@ public struct P2Float : IEquatable<P2Float>
         return true;
     }
 #else 
-    public static bool TryParse(ReadOnlySpan<char> str, out P2Float p2)
+    public static bool TryParse(ReadOnlySpan<char> str, out P2Float p2, IFormatProvider? provider = null)
     {
         // ToDo
         // Improve parsing to reduce allocation
@@ -100,13 +106,13 @@ public struct P2Float : IEquatable<P2Float>
             p2 = default(P2Float);
             return false;
         }
-
-        if (!float.TryParse(split[0], out float x))
+        
+        if (!float.TryParse(split[0], NumberStyles.Any, provider, out float x))
         {
             p2 = default(P2Float);
             return false;
         }
-        if (!float.TryParse(split[1], out float y))
+        if (!float.TryParse(split[1], NumberStyles.Any, provider, out float y))
         {
             p2 = default(P2Float);
             return false;

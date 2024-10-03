@@ -131,7 +131,7 @@ public struct P2Int : IP2IntGet, IEquatable<P2Int>
         
     public override string ToString()
     {
-        return $"({_x},{_y})";
+        return $"{_x},{_y}";
     }
 
     public override bool Equals(object? obj)

@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Runtime.Serialization;
 
 namespace Noggog;
@@ -50,7 +51,12 @@ public struct P2Double : IEquatable<P2Double>
 
     public override string ToString()
     {
-        return $"({_x}, {_y})";
+        return $"{_x}, {_y}";
+    }
+
+    public string ToString(IFormatProvider? provider)
+    {
+        return $"{_x.ToString(provider)}, {_y.ToString(provider)}";
     }
 
     public P2Double Normalize()
@@ -66,7 +72,7 @@ public struct P2Double : IEquatable<P2Double>
     public double Distance(P2Double p2) => (this - p2).Magnitude;
 
 #if NETSTANDARD2_0
-    public static bool TryParse(string str, out P2Double p2)
+    public static bool TryParse(string str, out P2Double p2, IFormatProvider? provider = null)
     {
         // ToDo
         // Improve parsing to reduce allocation
@@ -77,12 +83,12 @@ public struct P2Double : IEquatable<P2Double>
             return false;
         }
 
-        if (!double.TryParse(split[0], out double x))
+        if (!double.TryParse(split[0], NumberStyles.Any, provider, out double x))
         {
             p2 = default(P2Double);
             return false;
         }
-        if (!double.TryParse(split[1], out double y))
+        if (!double.TryParse(split[1], NumberStyles.Any, provider, out double y))
         {
             p2 = default(P2Double);
             return false;
@@ -91,7 +97,7 @@ public struct P2Double : IEquatable<P2Double>
         return true;
     }
 #else 
-    public static bool TryParse(ReadOnlySpan<char> str, out P2Double p2)
+    public static bool TryParse(ReadOnlySpan<char> str, out P2Double p2, IFormatProvider? provider = null)
     {
         // ToDo
         // Improve parsing to reduce allocation
@@ -102,12 +108,12 @@ public struct P2Double : IEquatable<P2Double>
             return false;
         }
 
-        if (!double.TryParse(split[0], out double x))
+        if (!double.TryParse(split[0], NumberStyles.Any, provider, out double x))
         {
             p2 = default(P2Double);
             return false;
         }
-        if (!double.TryParse(split[1], out double y))
+        if (!double.TryParse(split[1], NumberStyles.Any, provider, out double y))
         {
             p2 = default(P2Double);
             return false;

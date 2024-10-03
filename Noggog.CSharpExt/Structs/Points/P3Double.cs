@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Runtime.Serialization;
 
 namespace Noggog;
@@ -250,7 +251,7 @@ public struct P3Double : IEquatable<P3Double>
     }
 
 #if NETSTANDARD2_0
-    public static bool TryParse(string str, out P3Double p3)
+    public static bool TryParse(string str, out P3Double p3, IFormatProvider? provider = null)
     {
         // ToDo
         // Improve parsing to reduce allocation
@@ -261,19 +262,19 @@ public struct P3Double : IEquatable<P3Double>
             return false;
         }
 
-        if (!double.TryParse(split[0], out double x))
+        if (!double.TryParse(split[0], NumberStyles.Any, provider, out double x))
         {
             p3 = default(P3Double);
             return false;
         }
 
-        if (!double.TryParse(split[1], out double y))
+        if (!double.TryParse(split[1], NumberStyles.Any, provider, out double y))
         {
             p3 = default(P3Double);
             return false;
         }
 
-        if (!double.TryParse(split[2], out double z))
+        if (!double.TryParse(split[2], NumberStyles.Any, provider, out double z))
         {
             p3 = default(P3Double);
             return false;
@@ -283,7 +284,7 @@ public struct P3Double : IEquatable<P3Double>
         return true;
     }
 #else 
-    public static bool TryParse(ReadOnlySpan<char> str, out P3Double p3)
+    public static bool TryParse(ReadOnlySpan<char> str, out P3Double p3, IFormatProvider? provider = null)
     {
         // ToDo
         // Improve parsing to reduce allocation
@@ -294,19 +295,19 @@ public struct P3Double : IEquatable<P3Double>
             return false;
         }
 
-        if (!double.TryParse(split[0], out double x))
+        if (!double.TryParse(split[0], NumberStyles.Any, provider, out double x))
         {
             p3 = default(P3Double);
             return false;
         }
 
-        if (!double.TryParse(split[1], out double y))
+        if (!double.TryParse(split[1], NumberStyles.Any, provider, out double y))
         {
             p3 = default(P3Double);
             return false;
         }
 
-        if (!double.TryParse(split[2], out double z))
+        if (!double.TryParse(split[2], NumberStyles.Any, provider, out double z))
         {
             p3 = default(P3Double);
             return false;
@@ -334,7 +335,12 @@ public struct P3Double : IEquatable<P3Double>
 
     public override string ToString()
     {
-        return $"({_x}, {_y}, {_z})";
+        return $"{_x}, {_y}, {_z}";
+    }
+
+    public string ToString(IFormatProvider? provider)
+    {
+        return $"{_x.ToString(provider)}, {_y.ToString(provider)}, {_z.ToString(provider)}";
     }
 
     public static bool operator ==(P3Double obj1, P3Double obj2)

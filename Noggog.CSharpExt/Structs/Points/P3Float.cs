@@ -60,7 +60,12 @@ public struct P3Float : IEquatable<P3Float>
 
     public override string ToString()
     {
-        return $"({_x}, {_y}, {_z})";
+        return $"{_x}, {_y}, {_z}";
+    }
+
+    public string ToString(IFormatProvider? provider)
+    {
+        return $"{_x.ToString(provider)}, {_y.ToString(provider)}, {_z.ToString(provider)}";
     }
 
     public P3Float Normalize()
