@@ -18,7 +18,7 @@ jobs:
     outputs:
       same_sha: ${{ steps.check.outputs.same_sha }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
           
@@ -68,7 +68,7 @@ jobs:
             project: Noggog.CSharpExt.Windows
           
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: Setup .NET 6
       uses: actions/setup-dotnet@v3
       with:
@@ -100,7 +100,7 @@ jobs:
       id: current-time
       with:
         format: YYYYMMDD-HHmmSS
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         fetch-depth: 0
     - name: Setup .NET 8
@@ -137,7 +137,7 @@ jobs:
     if: needs.activity-short-circuit.outputs.same_sha == 'false'
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         fetch-depth: 0
     - name: Reset nightly to master
