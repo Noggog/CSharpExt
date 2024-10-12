@@ -6,7 +6,7 @@
         <WarningsAsErrors>nullable</WarningsAsErrors>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
         <ImplicitUsings>true</ImplicitUsings>
-        <VersionPrefix>2.65.1</VersionPrefix>
+        <VersionPrefix>2.65.2</VersionPrefix>
     </PropertyGroup>
 
 </Project>

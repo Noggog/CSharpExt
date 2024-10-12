@@ -13,6 +13,7 @@ public interface IWorkConsumer
     IObservable<(int CurrentCPUs, int DesiredCPUs)> CurrentCpuCount { get; }
     IObservable<Exception> Errors { get; }
     void Start();
+    Task AwaitUntilEmpty();
 }
 
 public class WorkConsumer : IDisposable, IWorkConsumer
@@ -20,6 +21,7 @@ public class WorkConsumer : IDisposable, IWorkConsumer
     private readonly CompositeDisposable _disposable = new();
     private const int UnassignedCpuId = 0;
     private readonly INumWorkThreadsController _numWorkThreadsController;
+    private readonly IWorkDropoff _workDropoff;
     private readonly IWorkQueue _queue;
     private readonly AsyncLock _lock = new();
     private int _desiredNumThreads;
@@ -36,21 +38,26 @@ public class WorkConsumer : IDisposable, IWorkConsumer
 
     private readonly Subject<Exception> _errors = new();
     public IObservable<Exception> Errors => _errors;
+    private int _numWorking;
 
     public WorkConsumer(
         INumWorkThreadsController numWorkThreadsController,
-        IWorkQueue queue)
+        IWorkQueue queue,
+        IWorkDropoff workDropoff)
     {
         _numWorkThreadsController = numWorkThreadsController;
+        _workDropoff = workDropoff;
         _queue = queue;
     }
 
     public WorkConsumer(
         int numThreads,
-        IWorkQueue queue)
+        IWorkQueue queue,
+        IWorkDropoff workDropoff)
     {
         _numWorkThreadsController = new NumWorkThreadsConstant(numThreads);
         _queue = queue;
+        _workDropoff = workDropoff;
     }
 
     private async Task AddNewThreadsIfNeeded(int desired)
@@ -90,6 +97,7 @@ public class WorkConsumer : IDisposable, IWorkConsumer
 
                 if (toDo != null)
                 {
+                    Interlocked.Add(ref _numWorking, 1);
                     if (toDo.IsAsync)
                     {
                         await toDo.DoAsync();
@@ -98,6 +106,7 @@ public class WorkConsumer : IDisposable, IWorkConsumer
                     {
                         toDo.Do();
                     }
+                    Interlocked.Add(ref _numWorking, -1);
                 }
                 else
                 {
@@ -145,6 +154,14 @@ public class WorkConsumer : IDisposable, IWorkConsumer
             .DistinctUntilChanged()
             .Subscribe(AddNewThreadsIfNeeded)
             .DisposeWithComposite(_disposable);
+    }
+
+    public async Task AwaitUntilEmpty()
+    {
+        while (_queue.Reader.Count > 0 || _numWorking > 0)
+        {
+            await _workDropoff.EnqueueAndWait(() => { });
+        }
     }
 }
 #endif
