@@ -21,7 +21,19 @@ public static class ObservableExt
         return source.Subscribe((i) => action());
     }
 
+    [Obsolete("Use SubscribeAsyncConcat instead")]
     public static IDisposable Subscribe<T>(this IObservable<T> source, Func<Task> action)
+    {
+        return SubscribeAsyncConcat<T>(source, action);
+    }
+
+    [Obsolete("Use SubscribeAsyncConcat instead")]
+    public static IDisposable Subscribe<T>(this IObservable<T> source, Func<T, Task> action)
+    {
+        return SubscribeAsyncConcat<T>(source, action);
+    }
+
+    public static IDisposable SubscribeAsyncConcat<T>(this IObservable<T> source, Func<Task> action)
     {
         return source
             .Select(_ => Observable.FromAsync(action))
@@ -29,7 +41,7 @@ public static class ObservableExt
             .Subscribe();
     }
 
-    public static IDisposable Subscribe<T>(this IObservable<T> source, Func<T, Task> action)
+    public static IDisposable SubscribeAsyncConcat<T>(this IObservable<T> source, Func<T, Task> action)
     {
         return source
             .Select(l => Observable.FromAsync(() => action(l)))
