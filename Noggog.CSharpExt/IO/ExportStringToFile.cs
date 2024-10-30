@@ -4,25 +4,31 @@ namespace Noggog.IO;
 
 public interface IExportStringToFile
 {
-    void ExportToFile(FilePath file, string str, bool onlyIfChanged = true, IFileSystem? fileSystem = null);
+    void ExportToFile(FilePath file, string str, bool onlyIfChanged = true);
 }
 
 public class ExportStringToFile : IExportStringToFile
 {
-    public void ExportToFile(FilePath file, string str, bool onlyIfChanged = true, IFileSystem? fileSystem = null)
+    private readonly IFileSystem _fileSystem;
+
+    public ExportStringToFile(IFileSystem fileSystem)
     {
-        fileSystem ??= IFileSystemExt.DefaultFilesystem;
-        if (onlyIfChanged && fileSystem.File.Exists(file))
+        _fileSystem = fileSystem;
+    }
+    
+    public void ExportToFile(FilePath file, string str, bool onlyIfChanged = true)
+    {
+        if (onlyIfChanged && _fileSystem.File.Exists(file))
         {
-            var existStr = fileSystem.File.ReadAllText(file.Path);
+            var existStr = _fileSystem.File.ReadAllText(file.Path);
             if (str.Equals(existStr)) return;
         }
 
         if (file.Directory != null)
         {
-            fileSystem.Directory.CreateDirectory(file.Directory);
+            _fileSystem.Directory.CreateDirectory(file.Directory);
         }
         
-        fileSystem.File.WriteAllText(file.Path, str);
+        _fileSystem.File.WriteAllText(file.Path, str);
     }
 }
