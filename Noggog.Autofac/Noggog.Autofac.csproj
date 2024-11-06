@@ -8,6 +8,8 @@
         <Company>Noggog</Company>
         <LangVersion>preview</LangVersion>
         <IsPackable>true</IsPackable>
+        <DebugType>portable</DebugType>
+        <DebugSymbols>true</DebugSymbols>
         <PublishRepositoryUrl>true</PublishRepositoryUrl>
         <EmbedUntrackedSources>true</EmbedUntrackedSources>
         <IncludeSymbols>true</IncludeSymbols>
@@ -22,39 +24,6 @@
 
     <ItemGroup>
         <ProjectReference Include="..\Noggog.CSharpExt\Noggog.CSharpExt.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
-        <Compile Update="Modules\NoggogModule.cs">
-            <CodeLanguage>cs</CodeLanguage>
-            <DefaultPackFolder>content</DefaultPackFolder>
-            <BuildAction>Compile</BuildAction>
-        </Compile>
-        <Compile Update="Validation\Rules\IValidationRule.cs">
-          <CodeLanguage>cs</CodeLanguage>
-          <DefaultPackFolder>content</DefaultPackFolder>
-          <BuildAction>Compile</BuildAction>
-        </Compile>
-        <Compile Update="Validation\Rules\IsAllowableLazy.cs">
-          <CodeLanguage>cs</CodeLanguage>
-          <DefaultPackFolder>content</DefaultPackFolder>
-          <BuildAction>Compile</BuildAction>
-        </Compile>
-        <Compile Update="Validation\Rules\IsAllowableFunc.cs">
-          <CodeLanguage>cs</CodeLanguage>
-          <DefaultPackFolder>content</DefaultPackFolder>
-          <BuildAction>Compile</BuildAction>
-        </Compile>
-        <Compile Update="Validation\Rules\IsAllowableEnumerable.cs">
-          <CodeLanguage>cs</CodeLanguage>
-          <DefaultPackFolder>content</DefaultPackFolder>
-          <BuildAction>Compile</BuildAction>
-        </Compile>
-        <Compile Update="Validation\Rules\CheckIsDelegateFactory.cs">
-          <CodeLanguage>cs</CodeLanguage>
-          <DefaultPackFolder>content</DefaultPackFolder>
-          <BuildAction>Compile</BuildAction>
-        </Compile>
     </ItemGroup>
 
 </Project>

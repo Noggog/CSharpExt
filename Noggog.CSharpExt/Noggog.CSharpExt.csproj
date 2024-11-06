@@ -8,7 +8,10 @@
     <Authors>Noggog</Authors>
     <Company>Noggog</Company>
     <ImplicitUsings>true</ImplicitUsings>
-    <LangVersion>preview</LangVersion>
+      <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+      <LangVersion>preview</LangVersion>
+      <DebugType>portable</DebugType>
+      <DebugSymbols>true</DebugSymbols>
     <IsPackable>true</IsPackable>
       <PublishRepositoryUrl>true</PublishRepositoryUrl>
       <EmbedUntrackedSources>true</EmbedUntrackedSources>
@@ -16,20 +19,6 @@
       <SymbolPackageFormat>snupkg</SymbolPackageFormat>
       <DebugType>embedded</DebugType>
     <Description>Generic reusable classes and extension methods that apply to no specific project and flavored to taste</Description>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <DocumentationFile>Noggog.CSharpExt.xml</DocumentationFile>
-    <DebugType>embedded</DebugType>
-    <DebugSymbols>true</DebugSymbols>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <DocumentationFile>Noggog.CSharpExt.xml</DocumentationFile>
-    <DebugType>embedded</DebugType>
-    <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
 
   <ItemGroup>

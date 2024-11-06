@@ -10,6 +10,8 @@
     <Description>Generic reusable WPF classes and extension methods that apply to no specific project and flavored to taste</Description>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <IsPackable>true</IsPackable>
+      <DebugType>portable</DebugType>
+      <DebugSymbols>true</DebugSymbols>
       <PublishRepositoryUrl>true</PublishRepositoryUrl>
       <EmbedUntrackedSources>true</EmbedUntrackedSources>
       <IncludeSymbols>true</IncludeSymbols>
@@ -17,18 +19,6 @@
       <DebugType>embedded</DebugType>
     <TargetPlatformIdentifier>Windows</TargetPlatformIdentifier>
     <LangVersion>preview</LangVersion>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>Noggog.WPF.xml</DocumentationFile>
-    <DebugType>embedded</DebugType>
-    <DebugSymbols>true</DebugSymbols>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <DocumentationFile>Noggog.WPF.xml</DocumentationFile>
-    <DebugType>embedded</DebugType>
-    <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
 
   <ItemGroup>
