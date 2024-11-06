@@ -8,6 +8,10 @@
         <Authors>Noggog</Authors>
         <Company>Noggog</Company>
         <IsPackable>true</IsPackable>
+        <PublishRepositoryUrl>true</PublishRepositoryUrl>
+        <EmbedUntrackedSources>true</EmbedUntrackedSources>
+        <IncludeSymbols>true</IncludeSymbols>
+        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     </PropertyGroup>
 
     <ItemGroup>

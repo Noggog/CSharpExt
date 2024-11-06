@@ -8,6 +8,10 @@
         <Company>Noggog</Company>
         <LangVersion>preview</LangVersion>
         <IsPackable>true</IsPackable>
+        <PublishRepositoryUrl>true</PublishRepositoryUrl>
+        <EmbedUntrackedSources>true</EmbedUntrackedSources>
+        <IncludeSymbols>true</IncludeSymbols>
+        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
         <Description>Autofac related utility</Description>
     </PropertyGroup>
 

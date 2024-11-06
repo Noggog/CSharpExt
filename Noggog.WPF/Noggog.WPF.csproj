@@ -10,6 +10,10 @@
     <Description>Generic reusable WPF classes and extension methods that apply to no specific project and flavored to taste</Description>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <IsPackable>true</IsPackable>
+      <PublishRepositoryUrl>true</PublishRepositoryUrl>
+      <EmbedUntrackedSources>true</EmbedUntrackedSources>
+      <IncludeSymbols>true</IncludeSymbols>
+      <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <TargetPlatformIdentifier>Windows</TargetPlatformIdentifier>
     <LangVersion>preview</LangVersion>
   </PropertyGroup>

@@ -10,6 +10,10 @@
         <Company>Noggog</Company>
         <LangVersion>preview</LangVersion>
         <IsPackable>true</IsPackable>
+        <PublishRepositoryUrl>true</PublishRepositoryUrl>
+        <EmbedUntrackedSources>true</EmbedUntrackedSources>
+        <IncludeSymbols>true</IncludeSymbols>
+        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
         <Nullable>enable</Nullable>
         <Description>Generic reusable classes and extension methods that apply to no specific project and flavored to taste</Description>
     </PropertyGroup>
