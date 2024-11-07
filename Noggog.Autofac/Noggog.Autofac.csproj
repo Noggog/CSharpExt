@@ -14,7 +14,6 @@
         <EmbedUntrackedSources>true</EmbedUntrackedSources>
         <IncludeSymbols>true</IncludeSymbols>
         <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-        <DebugType>embedded</DebugType>
         <Description>Autofac related utility</Description>
     </PropertyGroup>
 

@@ -16,7 +16,6 @@
       <EmbedUntrackedSources>true</EmbedUntrackedSources>
       <IncludeSymbols>true</IncludeSymbols>
       <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-      <DebugType>embedded</DebugType>
     <TargetPlatformIdentifier>Windows</TargetPlatformIdentifier>
     <LangVersion>preview</LangVersion>
   </PropertyGroup>
