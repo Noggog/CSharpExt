@@ -11,6 +11,8 @@
         <LangVersion>default</LangVersion>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <IsPackable>true</IsPackable>
+        <DebugSymbols>false</DebugSymbols>
+        <IncludeSymbols>false</IncludeSymbols>
         <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
         <Description>Source generators that apply to no specific project and flavored to taste</Description>
     </PropertyGroup>
