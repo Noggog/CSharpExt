@@ -31,6 +31,10 @@
     <PackageReference Include="ReactiveUI.WPF" />
     <PackageReference Include="System.Reactive" />
     <PackageReference Include="WindowsAPICodePack-Shell" />
+      <PackageReference Include="GitVersion.MsBuild">
+          <PrivateAssets>all</PrivateAssets>
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      </PackageReference>
   </ItemGroup>
    
   <ItemGroup>

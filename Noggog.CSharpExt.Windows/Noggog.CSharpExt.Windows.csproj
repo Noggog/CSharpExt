@@ -28,6 +28,10 @@
 	<ItemGroup>
 		<PackageReference Include="Microsoft.Win32.Registry" />
 		<PackageReference Include="Nito.AsyncEx.Interop.WaitHandles" />
+        <PackageReference Include="GitVersion.MsBuild">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
 	</ItemGroup>
 
 </Project>

@@ -22,6 +22,10 @@
         <PackageReference Include="Microsoft.Reactive.Testing" />
         <PackageReference Include="AutoFixture.Xunit2" />
         <PackageReference Include="System.IO.Abstractions.TestingHelpers" />
+        <PackageReference Include="GitVersion.MsBuild">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
     </ItemGroup>
 
     <ItemGroup>
