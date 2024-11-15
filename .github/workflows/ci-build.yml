@@ -10,6 +10,8 @@ on:
 jobs:
   build:
     runs-on: ${{ matrix.os }}
+    env:
+      GITVERSION_NO_BUILD: "true"
     
     strategy:
       fail-fast: false

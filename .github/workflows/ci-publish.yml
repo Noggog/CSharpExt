@@ -44,6 +44,8 @@ jobs:
     needs: activity-short-circuit
     if: needs.activity-short-circuit.outputs.same_sha == 'false'
     runs-on: ${{ matrix.os }}
+    env:
+      GITVERSION_NO_BUILD: "true"
     
     strategy:
       fail-fast: false
