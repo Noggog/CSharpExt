@@ -4,6 +4,6 @@
 		<Exec Condition="'$(IsLinux)'=='true' And $(PackageId) != ''" Command="rm -rf &quot;%25USERPROFILE%25\.nuget\packages\$(PackageId)&quot;" />
 	</Target>
     <PropertyGroup Condition="'$(GITVERSION_NO_BUILD)' == 'true'">
-        <GitVersionTask>false</GitVersionTask>
+        <UpdateAssemblyInfo>false</UpdateAssemblyInfo>
     </PropertyGroup>
 </Project>
