@@ -3,7 +3,7 @@
 		<Exec Condition="'$(IsWindows)'=='true' And $(PackageId) != ''" Command="RD /S /Q &quot;%25USERPROFILE%25\.nuget\packages\$(PackageId)&quot;" />
 		<Exec Condition="'$(IsLinux)'=='true' And $(PackageId) != ''" Command="rm -rf &quot;%25USERPROFILE%25\.nuget\packages\$(PackageId)&quot;" />
 	</Target>
-    <PropertyGroup Condition="'$(GITVERSION_NO_BUILD)' != 'true'">
-        <GitVersionTask>true</GitVersionTask>
+    <PropertyGroup Condition="'$(GITVERSION_NO_BUILD)' == 'true'">
+        <GitVersionTask>false</GitVersionTask>
     </PropertyGroup>
 </Project>
