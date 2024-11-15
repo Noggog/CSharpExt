@@ -1,8 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
+        <OutputType>Library</OutputType>
         <TargetFramework>netstandard2.0</TargetFramework>
-        <IncludeBuildOutput>false</IncludeBuildOutput>
         <PackageId>Noggog.SourceGenerators</PackageId>
         <Authors>Noggog</Authors>
         <Company>Noggog</Company>
