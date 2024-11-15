@@ -36,7 +36,7 @@ jobs:
     steps:
     - uses: actions/checkout@v4
       with:
-        fetch-depth: 1000
+        fetch-depth: 10
     - name: Setup .NET 6
       uses: actions/setup-dotnet@v4
       with:
