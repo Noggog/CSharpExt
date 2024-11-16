@@ -19,7 +19,7 @@ public class SingleApplicationEnforcerTests
             .Take(1)
             .Subscribe(x => tcs.SetResult(x));
 
-        await Task.Delay(1000);
+        await Task.Delay(100);
         
         singleApp.ForwardArgs(new []{ "Hello", "World" });
 
@@ -48,14 +48,14 @@ public class SingleApplicationEnforcerTests
             .SubscribeOn(TaskPoolScheduler.Default)
             .Subscribe(results.Add);
 
-        await Task.Delay(1000);
+        await Task.Delay(100);
         
         singleApp.ForwardArgs(new []{ "Hello", "World" });
 
-        await Task.Delay(1000);
+        await Task.Delay(100);
         singleApp.ForwardArgs(new []{ "What", "Is", "Up" });
 
-        await Task.Delay(1000);
+        await Task.Delay(100);
 
         results.Should().HaveCount(2);
         results[0].Should().Equal( "Hello", "World");
@@ -73,12 +73,12 @@ public class SingleApplicationEnforcerTests
             .SubscribeOn(TaskPoolScheduler.Default)
             .Subscribe(results.Add);
 
-        await Task.Delay(1000);
+        await Task.Delay(100);
         
         singleApp.ForwardArgs(new []{ "Hello", "World" });
         singleApp.ForwardArgs(new []{ "What", "Is", "Up" });
 
-        await Task.Delay(5000);
+        await Task.Delay(500);
 
         // Notified twice, but only see the last message twice
         results.Should().HaveCount(2);
