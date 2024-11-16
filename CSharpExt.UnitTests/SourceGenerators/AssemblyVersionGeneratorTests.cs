@@ -1,4 +1,4 @@
-﻿using System.IO.Abstractions;
+using System.IO.Abstractions;
 using System.Runtime.CompilerServices;
 using Autofac.Features.OwnedInstances;
 using Microsoft.CodeAnalysis;

@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net6.0;net7.0;net8.0;netstandard2.0</TargetFrameworks>
+    <TargetFrameworks>net8.0;net9.0;netstandard2.0</TargetFrameworks>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <AssemblyName>Noggog.CSharpExt</AssemblyName>
     <RootNamespace>Noggog</RootNamespace>
@@ -31,13 +31,13 @@
   </ItemGroup>
 
   <ItemGroup Condition=" $(TargetFramework.StartsWith('netstandard2.0')) ">
-    <PackageReference Include="System.Memory" />
     <PackageReference Include="System.Threading.Tasks" />
-    <PackageReference Include="System.Buffers" />
-    <PackageReference Include="Microsoft.Bcl.HashCode" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+    <PackageReference Include="Microsoft.Bcl.HashCode" />
+    <PackageReference Include="System.Buffers" />
+    <PackageReference Include="System.Memory" />
     <PackageReference Include="System.Reactive" />
   </ItemGroup>
 

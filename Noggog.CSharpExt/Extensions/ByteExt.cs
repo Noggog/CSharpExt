@@ -1,4 +1,3 @@
-using System.Runtime.ConstrainedExecution;
 using System.Runtime.InteropServices;
 
 namespace Noggog;
@@ -62,14 +61,14 @@ public static class ByteExt
         return new string(result);
     }
         
-    public static unsafe bool EqualsFast(this byte[] b1, byte[] b2)
+    public static unsafe bool EqualsFast(this byte[]? b1, byte[]? b2)
     {
         if (b1 == null && b2 == null) return true;
         if (b1 == null || b2 == null) return false;
         return b1.Length == b2.Length && memcmp(b1, b2, b1.Length) == 0;
     }
 
-    public static unsafe bool CharBytesEqualsFast(byte[] strA, byte[] strB)
+    public static unsafe bool CharBytesEqualsFast(byte[]? strA, byte[]? strB)
     {
         if (strA == null && strB == null) return true;
         if (strA == null || strB == null) return false;
