@@ -216,6 +216,17 @@ public static class EnumExt
         return (TEnum)Enum.ToObject(typeof(TEnum), lhs);
     }
 
+    public static TEnum SetFlag<TEnum>(this TEnum? e, Enum flag, bool on)
+        where TEnum : struct, Enum
+    {
+        if (e == null)
+        {
+            e = new();
+        }
+
+        return e.Value.SetFlag(flag, on);
+    }
+
     public static T And<T>(this T value1, T value2)
         where T : struct, Enum
     {

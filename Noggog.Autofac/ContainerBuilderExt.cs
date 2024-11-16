@@ -10,4 +10,23 @@ public static class ContainerBuilderExt
         builder.RegisterType<FileSystem>().As<IFileSystem>()
             .SingleInstance();
     }
+
+    public static void TypicalSingletonFolderRegistration<TPrototype>(this ContainerBuilder builder)
+    {
+        builder.RegisterAssemblyTypes(typeof(TPrototype).Assembly)
+            .InNamespacesOf(
+                typeof(TPrototype))
+            .AsImplementedInterfaces()
+            .AsSelf()
+            .SingleInstance();
+    }
+
+    public static void TypicalTransientFolderRegistration<TPrototype>(this ContainerBuilder builder)
+    {
+        builder.RegisterAssemblyTypes(typeof(TPrototype).Assembly)
+            .InNamespacesOf(
+                typeof(TPrototype))
+            .AsImplementedInterfaces()
+            .AsSelf();
+    }
 }

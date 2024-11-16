@@ -63,7 +63,7 @@ public static partial class Drag
                 return default(DragEventArgs?);
             })
             .Merge(control.Events().Drop)
-            .NotNull();
+            .WhereNotNull();
     }
 
     public static IObservable<DragEventParams<TType>> ListBoxDrops<TType>(

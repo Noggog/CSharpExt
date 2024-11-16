@@ -31,7 +31,7 @@ public class CheckIsDelegateFactory : IValidationRule
             }
         }
             
-        var parameterNames = new HashSet<string>(invoke.GetParameters().Select(p => p.Name).NotNull());
+        var parameterNames = new HashSet<string>(invoke.GetParameters().Select(p => p.Name).WhereNotNull());
         ValidateTypeCtor.Validate(typeToCheck, parameterNames);
         return true;
     }

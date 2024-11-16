@@ -67,7 +67,7 @@ public class Function : IDisposable
                 _sb.AppendLine($"{_args[0][_args[0].Length - 1]}){(SemiColonAfterParenthesis ? ";" : null)}");
             }
             _sb.Depth++;
-            foreach (var where in Wheres.NotNull().IterateMarkLast())
+            foreach (var where in Wheres.WhereNotNull().IterateMarkLast())
             {
                 _sb.AppendLine($"{where.Item}{(SemiColon && where.Last ? ";" : null)}");
             }

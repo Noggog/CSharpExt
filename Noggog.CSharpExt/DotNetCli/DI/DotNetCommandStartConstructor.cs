@@ -19,7 +19,7 @@ public class DotNetCommandStartConstructor : IDotNetCommandStartConstructor
 
     public ProcessStartInfo Construct(string command, FilePath path, params string?[] args)
     {
-        var argStr = string.Join(" ", args.NotNull());
+        var argStr = string.Join(" ", args.WhereNotNull());
         var cmd =  $"{command} \"{path.RelativePath}\"{(argStr.IsNullOrWhitespace() ? string.Empty : $" {argStr}")}";
         return new ProcessStartInfo(DotNetPathProvider.Path, cmd);
     }

@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net6.0;net7.0;net8.0</TargetFrameworks>
+    <TargetFrameworks>net8.0;net9.0</TargetFrameworks>
   </PropertyGroup>
 
   <ItemGroup>
@@ -15,8 +15,9 @@
     <PackageReference Include="System.IO.Abstractions.TestingHelpers" />
     <PackageReference Include="xunit" />
     <PackageReference Include="NSubstitute" />
-    <PackageReference Include="Verify.DiffPlex" />
-    <PackageReference Include="Verify.Xunit" />
+      <PackageReference Include="Verify.DiffPlex" />
+      <PackageReference Include="Verify.SourceGenerators" />
+      <PackageReference Include="Verify.Xunit" />
     <PackageReference Include="xunit.runner.visualstudio">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

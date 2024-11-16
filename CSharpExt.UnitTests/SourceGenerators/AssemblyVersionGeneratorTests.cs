@@ -1,33 +1,90 @@
-﻿using System.Text;
-using Microsoft.CodeAnalysis.Testing;
+using System.IO.Abstractions;
+using System.Runtime.CompilerServices;
+using Autofac.Features.OwnedInstances;
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
+using Noggog;
 using Noggog.SourceGenerators.AssemblyVersion;
-using VerifyCS = CSharpExt.UnitTests.SourceGenerators.CSharpSourceGeneratorVerifier<Noggog.SourceGenerators.AssemblyVersion.Generator>;
 
 namespace CSharpExt.UnitTests.SourceGenerators;
 
 public class AssemblyVersionGeneratorTests
 {
-    private async Task TypicalTest(
-        string source,
-        params (Type sourceGeneratorType, string filename, string content)[] content)
+    public class SourceGenerationTestHelper
     {
-        var testState = new VerifyCS.Test
+        private static bool AutoVerify = false;
+
+        private static VerifySettings GetVerifySettings()
         {
-            TestState =
+            var verifySettings = new VerifySettings();
+    #if DEBUG
+            if (AutoVerify)
             {
-                Sources =
-                {
-                    ("SomeFile.cs", source)
-                },
-            },
-        };
-        foreach (var c in content)
+                verifySettings.AutoVerify();
+            }
+    #else
+            verifySettings.DisableDiff();
+    #endif
+            return verifySettings;
+        }
+        
+        public static Task VerifySerialization(string source, [CallerFilePath] string sourceFile = "")
         {
-            testState.TestState.GeneratedSources.Add(c);
+            // Parse the provided string into a C# syntax tree
+            SyntaxTree syntaxTree = CSharpSyntaxTree.ParseText(source);
+        
+            IEnumerable<PortableExecutableReference> references = new[]
+            {
+                MetadataReference.CreateFromFile(typeof(Owned<>).Assembly.Location),
+                MetadataReference.CreateFromFile(typeof(FilePath).Assembly.Location),
+            };
+            
+            // Create a Roslyn compilation for the syntax tree.
+            CSharpCompilation compilation = CSharpCompilation.Create(
+                assemblyName: "Tests",
+                syntaxTrees: new[] { syntaxTree },
+                references: references);
+
+            // Create an instance of our incremental source generator
+            var generator = new AssemblyVersionGenerator();
+
+            // The GeneratorDriver is used to run our generator against a compilation
+            GeneratorDriver driver = CSharpGeneratorDriver.Create(generator);
+        
+            // Run the source generator!
+            driver = driver.RunGenerators(compilation);
+            
+            // Use verify to snapshot test the source generator output!
+            return Verifier.Verify(driver, GetVerifySettings(), sourceFile);
         }
 
-        await testState.RunAsync();
+        public static GeneratorDriverRunResult RunSourceGenerator(string source)
+        {
+            // Parse the provided string into a C# syntax tree
+            SyntaxTree syntaxTree = CSharpSyntaxTree.ParseText(source);
+
+            IEnumerable<PortableExecutableReference> references = new[]
+            {
+                MetadataReference.CreateFromFile(typeof(FilePath).Assembly.Location),
+            };
+
+            // Create a Roslyn compilation for the syntax tree.
+            CSharpCompilation compilation = CSharpCompilation.Create(
+                assemblyName: "Tests",
+                syntaxTrees: new[] { syntaxTree },
+                references: references);
+
+            // Create an instance of our incremental source generator
+            var generator = new AssemblyVersionGenerator();
+
+            // The GeneratorDriver is used to run our generator against a compilation
+            GeneratorDriver driver = CSharpGeneratorDriver.Create(generator);
+
+            // Run the source generator!
+            driver = driver.RunGenerators(compilation);
+            
+            return driver.GetRunResult();
+        }
     }
 
     [Fact]
@@ -41,36 +98,7 @@ namespace System.Runtime.CompilerServices
     {
     }
 }";
-        var expected = @"using System;
-using System.Diagnostics;
-using System.Reflection;
-
-#nullable enable
-
-/// <summary>
-/// Struct holding the information about an Assembly's version
-/// </summary>
-/// <param name=""PrettyName"">Name of the assembly</param>
-/// <param name=""ProductVersion"">Version string for the assembly</param>
-public record AssemblyVersions(string PrettyName, string? ProductVersion)
-{
-
-    /// <summary>
-    /// Gets the assembly version information for a given type
-    /// </summary>
-    /// <typeparam name=""TTypeFromAssembly"">Type to get information about</typeparam>
-    /// <returns>Structure containing the assembly version information</returns>
-    public static AssemblyVersions For<TTypeFromAssembly>()
-    {
-        var t = typeof(TTypeFromAssembly);
-
-        throw new NotImplementedException();
-    }
-}
-";
-
-        await TypicalTest(source,
-            (typeof(Generator), "AssemblyVersions.g.cs", expected));
+        await SourceGenerationTestHelper.VerifySerialization(source);
     }
 
     [Fact]
@@ -91,40 +119,7 @@ namespace System.Runtime.CompilerServices
     {
     }
 }";
-        StringBuilder sb = new();
-        sb.AppendLine(@"using SomeNamespace;
-using System;
-using System.Diagnostics;
-using System.Reflection;
-
-#nullable enable
-
-/// <summary>
-/// Struct holding the information about an Assembly's version
-/// </summary>
-/// <param name=""PrettyName"">Name of the assembly</param>
-/// <param name=""ProductVersion"">Version string for the assembly</param>
-public record AssemblyVersions(string PrettyName, string? ProductVersion)
-{");
-        sb.AppendLine(
-            "    private static readonly AssemblyVersions _MyClass = new(\"<global assembly>\", \"0.0.0.0\");");
-        sb.AppendLine(@"
-    /// <summary>
-    /// Gets the assembly version information for a given type
-    /// </summary>
-    /// <typeparam name=""TTypeFromAssembly"">Type to get information about</typeparam>
-    /// <returns>Structure containing the assembly version information</returns>
-    public static AssemblyVersions For<TTypeFromAssembly>()
-    {
-        var t = typeof(TTypeFromAssembly);
-        if (t == typeof(SomeNamespace.MyClass)) return _MyClass;
-
-        throw new NotImplementedException();
-    }
-}");
-
-        await TypicalTest(source,
-            (typeof(Generator), "AssemblyVersions.g.cs", sb.ToString()));
+        await SourceGenerationTestHelper.VerifySerialization(source);
     }
 
     [Fact]
@@ -145,40 +140,8 @@ namespace System.Runtime.CompilerServices
     {
     }
 }";
-        StringBuilder sb = new();
-        sb.AppendLine(@"using SomeNamespace;
-using System;
-using System.Diagnostics;
-using System.Reflection;
 
-#nullable enable
-
-/// <summary>
-/// Struct holding the information about an Assembly's version
-/// </summary>
-/// <param name=""PrettyName"">Name of the assembly</param>
-/// <param name=""ProductVersion"">Version string for the assembly</param>
-public record AssemblyVersions(string PrettyName, string? ProductVersion)
-{");
-        sb.AppendLine(
-            "    private static readonly AssemblyVersions _MyClass = new(\"<global assembly>\", \"0.0.0.0\");");
-        sb.AppendLine(@"
-    /// <summary>
-    /// Gets the assembly version information for a given type
-    /// </summary>
-    /// <typeparam name=""TTypeFromAssembly"">Type to get information about</typeparam>
-    /// <returns>Structure containing the assembly version information</returns>
-    public static AssemblyVersions For<TTypeFromAssembly>()
-    {
-        var t = typeof(TTypeFromAssembly);
-        if (t == typeof(SomeNamespace.MyClass)) return _MyClass;
-
-        throw new NotImplementedException();
-    }
-}");
-
-        await TypicalTest(source,
-            (typeof(Generator), "AssemblyVersions.g.cs", sb.ToString()));
+        await SourceGenerationTestHelper.VerifySerialization(source);
     }
 
     [Fact]
@@ -199,59 +162,7 @@ namespace System.Runtime.CompilerServices
     {
     }
 }";
-        var expected = @"using System;
-using System.Diagnostics;
-using System.Reflection;
 
-#nullable enable
-
-/// <summary>
-/// Struct holding the information about an Assembly's version
-/// </summary>
-/// <param name=""PrettyName"">Name of the assembly</param>
-/// <param name=""ProductVersion"">Version string for the assembly</param>
-public record AssemblyVersions(string PrettyName, string? ProductVersion)
-{
-
-    /// <summary>
-    /// Gets the assembly version information for a given type
-    /// </summary>
-    /// <typeparam name=""TTypeFromAssembly"">Type to get information about</typeparam>
-    /// <returns>Structure containing the assembly version information</returns>
-    public static AssemblyVersions For<TTypeFromAssembly>()
-    {
-        var t = typeof(TTypeFromAssembly);
-
-        throw new NotImplementedException();
-    }
-}
-";
-
-        var testState = new VerifyCS.Test
-        {
-            TestState =
-            {
-                Sources =
-                {
-                    ("SomeFile.cs", source)
-                },
-            },
-            CompilerDiagnostics = CompilerDiagnostics.Errors,
-            ExpectedDiagnostics =
-            {
-                new DiagnosticResult(
-                        new DiagnosticDescriptor(
-                            "SY0001",
-                            "Unknown type passed to AssemblyVersions",
-                            "Unknown type passed to AssemblyVersions",
-                            "AssemblyVersions",
-                            DiagnosticSeverity.Error,
-                            true,
-                            description: "Need to pass a known concrete type, rather than a generic."))
-                    .WithSpan("SomeFile.cs", 6, 67, 6, 68)
-            }
-        };
-        testState.TestState.GeneratedSources.Add((typeof(Generator), "AssemblyVersions.g.cs", expected));
-        await testState.RunAsync();
+        await SourceGenerationTestHelper.VerifySerialization(source);
     }
 }

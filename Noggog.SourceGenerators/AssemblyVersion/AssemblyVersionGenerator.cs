@@ -1,21 +1,40 @@
-﻿using System.Text;
+using System.Text;
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
-namespace Noggog.SourceGenerators.AssemblyVersion
+namespace Noggog.SourceGenerators.AssemblyVersion;
+
+[Generator]
+public class AssemblyVersionGenerator : IIncrementalGenerator
 {
-    [Generator]
-    public class Generator : ISourceGenerator
+    public void Initialize(IncrementalGeneratorInitializationContext context)
     {
-        public void Initialize(GeneratorInitializationContext context)
-        {
-            context.RegisterForSyntaxNotifications(() => new AssemblyVersionReceiver());
-        }
+        var invocations = context.SyntaxProvider
+            .CreateSyntaxProvider(
+                predicate: static (node, _) => node is InvocationExpressionSyntax,
+                transform: static (node, _) => (InvocationExpressionSyntax)node.Node)
+            .Select(static (invocation, cancel) =>
+            {
+                cancel.ThrowIfCancellationRequested();
+                if (invocation.Expression is not MemberAccessExpressionSyntax memberAccessExpressionSyntax) return null;
+                if (memberAccessExpressionSyntax.Expression is not IdentifierNameSyntax nameSyntax) return null;
+                if (nameSyntax.ToString() != "AssemblyVersions") return null;
+                if (memberAccessExpressionSyntax.Name is not GenericNameSyntax genName) return null;
+                if (genName.Identifier.ToString() != "For") return null;
+                if (genName.TypeArgumentList.Arguments.Count != 1) return null;
+                if (genName.TypeArgumentList.Arguments[0] is not NameSyntax typeNameSyntax) return null;
 
-        public void Execute(GeneratorExecutionContext context)
-        {
-            if (context.SyntaxReceiver is not AssemblyVersionReceiver receiver) return;
-            if (context.CancellationToken.IsCancellationRequested) return;
+                return typeNameSyntax;
+            })
+            .Where(x => x != null);
 
+        var combination = context.CompilationProvider
+            .Combine(invocations.Collect());
+        
+        context.RegisterSourceOutput(combination, (sourceContext, data) =>
+        {
+            var (compilation, classes) = data;
+            
             Dictionary<IAssemblySymbol, HashSet<INamedTypeSymbol>> targets = new(SymbolEqualityComparer.Default);
             var namespaces = new HashSet<string>()
             {
@@ -24,13 +43,14 @@ namespace Noggog.SourceGenerators.AssemblyVersion
                 "System.Diagnostics"
             };
 
-            foreach (var identifier in receiver.Located)
+            foreach (var identifier in classes)
             {
-                var model = context.Compilation.GetSemanticModel(identifier.SyntaxTree.GetRoot().SyntaxTree);
-                var typeInfo = model.GetTypeInfo(identifier, context.CancellationToken);
+                if (identifier == null) continue;
+                var model = compilation.GetSemanticModel(identifier.SyntaxTree.GetRoot().SyntaxTree);
+                var typeInfo = model.GetTypeInfo(identifier);
                 if (typeInfo.Type is not INamedTypeSymbol namedTypeSymbol)
                 {
-                    context.ReportDiagnostic(Diagnostic.Create(
+                    sourceContext.ReportDiagnostic(Diagnostic.Create(
                         new DiagnosticDescriptor(
                             "SY0001",
                             "Unknown type passed to AssemblyVersions",
@@ -57,16 +77,20 @@ namespace Noggog.SourceGenerators.AssemblyVersion
             {
                 sb.AppendLine($"using {ns};");
             }
-            sb.AppendLine(@"
-#nullable enable
 
-/// <summary>
-/// Struct holding the information about an Assembly's version
-/// </summary>
-/// <param name=""PrettyName"">Name of the assembly</param>
-/// <param name=""ProductVersion"">Version string for the assembly</param>
-public record AssemblyVersions(string PrettyName, string? ProductVersion)
-{");
+            sb.AppendLine(
+                """
+                
+                #nullable enable
+                
+                /// <summary>
+                /// Struct holding the information about an Assembly's version
+                /// </summary>
+                /// <param name="PrettyName">Name of the assembly</param>
+                /// <param name="ProductVersion">Version string for the assembly</param>
+                public record AssemblyVersions(string PrettyName, string? ProductVersion)
+                {
+                """);
             foreach (var pair in targets)
             {
                 INamedTypeSymbol? first = null;
@@ -93,16 +117,19 @@ public record AssemblyVersions(string PrettyName, string? ProductVersion)
                 }
             }
 
-            sb.AppendLine(@"
-    /// <summary>
-    /// Gets the assembly version information for a given type
-    /// </summary>
-    /// <typeparam name=""TTypeFromAssembly"">Type to get information about</typeparam>
-    /// <returns>Structure containing the assembly version information</returns>
-    public static AssemblyVersions For<TTypeFromAssembly>()
-    {
-        var t = typeof(TTypeFromAssembly);");
-
+            sb.AppendLine(
+                """
+                
+                    /// <summary>
+                    /// Gets the assembly version information for a given type
+                    /// </summary>
+                    /// <typeparam name="TTypeFromAssembly">Type to get information about</typeparam>
+                    /// <returns>Structure containing the assembly version information</returns>
+                    public static AssemblyVersions For<TTypeFromAssembly>()
+                    {
+                        var t = typeof(TTypeFromAssembly);
+                """);
+            
             foreach (var item in targets.SelectMany(x => x.Value))
             {
                 sb.AppendLine($"        if (t == typeof({item.ContainingNamespace}.{item.Name})) return _{item.Name};");
@@ -111,8 +138,7 @@ public record AssemblyVersions(string PrettyName, string? ProductVersion)
         throw new NotImplementedException();
     }
 }");
-        
-            context.AddSource("AssemblyVersions.g.cs", sb.ToString());
-        }
+            sourceContext.AddSource("AssemblyVersions.g.cs", sb.ToString());
+        });
     }
 }

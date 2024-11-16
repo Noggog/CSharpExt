@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFrameworks>net6.0;net7.0;net8.0;netstandard2.0</TargetFrameworks>
+        <TargetFrameworks>net8.0;net9.0;netstandard2.0</TargetFrameworks>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <TargetPlatformIdentifier>Windows</TargetPlatformIdentifier>
         <ImplicitUsings>enable</ImplicitUsings>
@@ -28,6 +28,10 @@
 	<ItemGroup>
 		<PackageReference Include="Microsoft.Win32.Registry" />
 		<PackageReference Include="Nito.AsyncEx.Interop.WaitHandles" />
+        <PackageReference Include="GitVersion.MsBuild">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
 	</ItemGroup>
 
 </Project>

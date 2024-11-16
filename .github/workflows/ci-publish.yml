@@ -69,18 +69,12 @@ jobs:
           
     steps:
     - uses: actions/checkout@v4
-    - name: Setup .NET 6
+      with:
+        fetch-depth: 0
+    - name: Setup .NET 9
       uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: 6.0.*
-    - name: Setup .NET 7
-      uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: 7.0.*
-    - name: Setup .NET 8
-      uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: 8.0.*
+        dotnet-version: 9.0.*
     - name: Install dependencies
       run: |
         dotnet clean -c Release && dotnet nuget locals all --clear
@@ -95,18 +89,13 @@ jobs:
     if: needs.activity-short-circuit.outputs.same_sha == 'false'
     runs-on: windows-latest
     steps:
-    - name: Get timestamp
-      uses: 1466587594/get-current-time@v1
-      id: current-time
-      with:
-        format: YYYYMMDD-HHmmSS
     - uses: actions/checkout@v4
       with:
         fetch-depth: 0
-    - name: Setup .NET 8
+    - name: Setup .NET 9
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 8.0.*
+        dotnet-version: 9.0.*
     - name: Install dependencies
       run: |
         dotnet clean Noggog.CSharpExt.sln -c Release && dotnet nuget locals all --clear
@@ -116,11 +105,11 @@ jobs:
     - name: Pack Preview
       if: ${{ success() && (github.event.release.prerelease || github.event_name != 'release') }}
       run: |
-        dotnet pack Noggog.CSharpExt.sln -c Release --no-build --no-restore -o out --version-suffix "nightly-${{ steps.current-time.outputs.formattedTime }}" --include-symbols -p:SymbolPackageFormat=snupkg
+        dotnet pack Noggog.CSharpExt.sln -c Release --no-restore -o out --include-symbols -p:SymbolPackageFormat=snupkg
     - name: Pack Release
       if: ${{ success() && !github.event.release.prerelease && github.event_name == 'release' }}
       run: | 
-        dotnet pack Noggog.CSharpExt.sln -c Release --no-build --no-restore -o out
+        dotnet pack Noggog.CSharpExt.sln -c Release --no-restore -o out
     - name: Publish to Github
       uses: svenstaro/upload-release-action@v2
       if: ${{ success() && !github.event.release.prerelease && github.event_name == 'release' }}

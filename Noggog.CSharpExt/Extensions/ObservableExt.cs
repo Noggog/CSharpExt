@@ -66,12 +66,13 @@ public static class ObservableExt
         return source.Select<T, R>(x => x);
     }
 
+    [Obsolete("WhereCastable is deprecated in favor of OfType")]
     public static IObservable<R> WhereCastable<T, R>(this IObservable<T> source)
         where T : class
         where R : class
     {
         return source.Select(x => x as R)
-            .NotNull();
+            .WhereNotNull();
     }
 
     /// <summary>
@@ -165,13 +166,27 @@ public static class ObservableExt
         return source.Select(u => System.Reactive.Unit.Default);
     }
 
+    [Obsolete("NotNull is deprecated in favor of WhereNotNull for naming consistency.")]
     public static IObservable<T> NotNull<T>(this IObservable<T?> source)
         where T : class
     {
         return source.Where(u => u != null)!;
     }
 
+    [Obsolete("NotNull is deprecated in favor of WhereNotNull for naming consistency.")]
     public static IObservable<T> NotNull<T>(this IObservable<T?> source)
+        where T : struct
+    {
+        return source.Where(u => u != null).Select(x => x!.Value);
+    }
+
+    public static IObservable<T> WhereNotNull<T>(this IObservable<T?> source)
+        where T : class
+    {
+        return source.Where(u => u != null)!;
+    }
+
+    public static IObservable<T> WhereNotNull<T>(this IObservable<T?> source)
         where T : struct
     {
         return source.Where(u => u != null).Select(x => x!.Value);
