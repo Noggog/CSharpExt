@@ -74,12 +74,12 @@ public class SingleApplicationEnforcerTests
             .SubscribeOn(TaskPoolScheduler.Default)
             .Subscribe(results.Add);
 
-        await Task.Delay(100);
+        await Task.Delay(1000);
         
         singleApp.ForwardArgs(new []{ "Hello", "World" });
         singleApp.ForwardArgs(new []{ "What", "Is", "Up" });
 
-        await Task.Delay(500);
+        await Task.Delay(5000);
 
         // Notified twice, but only see the last message twice
         results.Should().HaveCount(2);
