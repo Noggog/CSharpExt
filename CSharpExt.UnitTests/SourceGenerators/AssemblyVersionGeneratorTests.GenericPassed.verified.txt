@@ -1,15 +1,24 @@
 ﻿{
   Diagnostics: [
     {
-      Id: SY0001,
-      Title: Unknown type passed to AssemblyVersions,
-      Severity: Error,
-      WarningLevel: 0,
-      Location: : (5,66)-(5,67),
-      Description: Need to pass a known concrete type, rather than a generic.,
-      MessageFormat: Unknown type passed to AssemblyVersions,
+      Location: /*
+    {
+        public AssemblyVersions Test<T>() => AssemblyVersions.For<T>();
+                                                                  ^
+    }
+*/
+ : (5,66)-(5,67),
       Message: Unknown type passed to AssemblyVersions,
-      Category: AssemblyVersions
+      Severity: Error,
+      Descriptor: {
+        Id: SY0001,
+        Title: Unknown type passed to AssemblyVersions,
+        Description: Need to pass a known concrete type, rather than a generic.,
+        MessageFormat: Unknown type passed to AssemblyVersions,
+        Category: AssemblyVersions,
+        DefaultSeverity: Error,
+        IsEnabledByDefault: true
+      }
     }
   ]
 }
