@@ -1,0 +1,15 @@
+﻿{
+  Diagnostics: [
+    {
+      Id: SY0001,
+      Title: Unknown type passed to AssemblyVersions,
+      Severity: Error,
+      WarningLevel: 0,
+      Location: : (5,66)-(5,67),
+      Description: Need to pass a known concrete type, rather than a generic.,
+      MessageFormat: Unknown type passed to AssemblyVersions,
+      Message: Unknown type passed to AssemblyVersions,
+      Category: AssemblyVersions
+    }
+  ]
+}
