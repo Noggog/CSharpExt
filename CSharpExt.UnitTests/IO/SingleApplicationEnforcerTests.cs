@@ -2,15 +2,16 @@
 using System.Reactive.Linq;
 using FluentAssertions;
 using Noggog.IO;
+using Noggog.Testing.AutoFixture;
 
 namespace CSharpExt.UnitTests.IO;
 
 public class SingleApplicationEnforcerTests
 {
-    [Fact]
-    public async Task SendingMessageIsReceivedOnExistingApp()
+    [Theory, DefaultAutoData]
+    public async Task SendingMessageIsReceivedOnExistingApp(string appName)
     {
-        using var singleApp = new SingletonApplicationEnforcer(nameof(SendingMessageIsReceivedOnExistingApp));
+        using var singleApp = new SingletonApplicationEnforcer(appName);
 
         var tcs = new TaskCompletionSource<IReadOnlyList<string>>();
         
@@ -26,10 +27,10 @@ public class SingleApplicationEnforcerTests
         (await tcs.Task).Should().Equal("Hello", "World");
     }
     
-    [Fact]
-    public async Task SendingNonExistantAppThrows()
+    [Theory, DefaultAutoData]
+    public async Task SendingNonExistantAppThrows(string appName)
     {
-        using var singleApp = new SingletonApplicationEnforcer(nameof(SendingNonExistantAppThrows));
+        using var singleApp = new SingletonApplicationEnforcer(appName);
 
         Assert.Throws<FileNotFoundException>(() =>
         {
@@ -37,10 +38,10 @@ public class SingleApplicationEnforcerTests
         });
     }
     
-    [Fact]
-    public async Task SendingMultipleMessagesWithDelayGetsAll()
+    [Theory, DefaultAutoData]
+    public async Task SendingMultipleMessagesWithDelayGetsAll(string appName)
     {
-        using var singleApp = new SingletonApplicationEnforcer(nameof(SendingMultipleMessagesWithDelayGetsAll));
+        using var singleApp = new SingletonApplicationEnforcer(appName);
 
         var results = new List<IReadOnlyList<string>>();
 
@@ -62,10 +63,10 @@ public class SingleApplicationEnforcerTests
         results[1].Should().Equal("What", "Is", "Up");
     }
     
-    [Fact]
-    public async Task SendingMultipleMessagesImmediatelyProblematic()
+    [Theory, DefaultAutoData]
+    public async Task SendingMultipleMessagesImmediatelyProblematic(string appName)
     {
-        using var singleApp = new SingletonApplicationEnforcer(nameof(SendingMultipleMessagesImmediatelyProblematic));
+        using var singleApp = new SingletonApplicationEnforcer(appName);
 
         var results = new List<IReadOnlyList<string>>();
 
