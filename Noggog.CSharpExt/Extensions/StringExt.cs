@@ -167,12 +167,6 @@ public static class StringExt
         return true;
     }
 
-    public static string TrimEnd(this string src, string item)
-    {
-        TryTrimEnd(src, item, out string result);
-        return result;
-    }
-
     public static byte[] ToBytes(this string str)
     {
         return Encoding.ASCII.GetBytes(str);
