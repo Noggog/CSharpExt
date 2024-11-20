@@ -167,11 +167,6 @@ public static class StringExt
         return true;
     }
 
-    public static byte[] ToBytes(this string str)
-    {
-        return Encoding.ASCII.GetBytes(str);
-    }
-
     public static string RemoveDisallowedFilepathChars(string str)
     {
         Regex illegalInFileName = new Regex(@"[\\/:*?""<>|]");
