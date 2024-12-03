@@ -36,6 +36,16 @@ public static class DictionaryExt
         return ret;
     }
 
+    public static TValue GetOrAdd<TKey, TValue>(this IDictionary<TKey, TValue> dict, TKey key, Func<TKey, TValue> getNew)
+    {
+        if (!dict.TryGetValue(key, out var ret))
+        {
+            ret = getNew(key);
+            dict[key] = ret;
+        }
+        return ret;
+    }
+
     public static TValue UpdateOrAdd<TKey, TValue>(this IDictionary<TKey, TValue> dict, TKey key, Func<TValue?, TValue> getNew)
     {
         if (dict.TryGetValue(key, out var ret))
