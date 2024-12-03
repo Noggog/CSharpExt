@@ -3,6 +3,7 @@ using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Windows.Controls;
 using System.Windows.Input;
+using ReactiveMarbles.ObservableEvents;
 
 namespace Noggog.WPF;
 

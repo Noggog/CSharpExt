@@ -7,6 +7,7 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Linq.Expressions;
+using ReactiveMarbles.ObservableEvents;
 
 namespace Noggog.WPF;
 
