@@ -409,7 +409,7 @@ public static class EnumerableExt
     public static IEnumerable<T> Take<T>(this IEnumerable<T> e, int? amount)
     {
         if (amount == null) return e;
-        return e.Take(amount.Value);
+        return System.Linq.Enumerable.Take(e, amount.Value);
     }
 }
 
