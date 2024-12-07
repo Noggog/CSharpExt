@@ -283,3 +283,4 @@ Noggog.CSharpExt.Windows/Noggog.CSharpExt.xml
 Noggog.CSharpExt.Json/Noggog.CSharpExt.Json.xml
 
 *wpftmp.csproj
+outputPackages/
