@@ -24,7 +24,7 @@ public class PathPickerVM : ViewModel
     {
         Off,
         IfPathNotEmpty,
-        On
+        On,
     }
 
     [Reactive]
@@ -46,6 +46,9 @@ public class PathPickerVM : ViewModel
     
     [Reactive]
     public bool BlockMissingInDialog { get; set; }
+
+    [Reactive] 
+    public bool MissingIsError { get; set; } = true;
 
     [Reactive]
     public CheckOptions FilterCheckOption { get; set; } = CheckOptions.IfPathNotEmpty;
@@ -212,7 +215,8 @@ public class PathPickerVM : ViewModel
         var errorText = Observable.CombineLatest(
                 this.WhenAnyValue(x => x.Exists),
                 doExistsCheck,
-                resultSelector: (exists, doExists) => !doExists || exists)
+                this.WhenAnyValue(x => x.MissingIsError),
+                resultSelector: (exists, doExists, existsIsError) => !existsIsError || !doExists || exists)
             .WithLatestFrom(
                 this.WhenAnyValue(x => x.PathType),
                 (exists, type) => (exists, type))
