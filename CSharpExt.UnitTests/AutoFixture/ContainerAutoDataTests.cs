@@ -14,6 +14,8 @@ public class ContainerAutoDataTests
         {
             builder.RegisterType<Something>()
                 .AsImplementedInterfaces().SingleInstance();
+            builder.RegisterType<TargetMissing>()
+                .AsImplementedInterfaces().SingleInstance();
         }
     }
 
@@ -23,7 +25,22 @@ public class ContainerAutoDataTests
 
     public class Something : ISomething
     {
-        
+    }
+
+    public interface IMissing
+    {
+    }
+
+    public interface ITargetMissing
+    {
+    }
+
+    public class TargetMissing : ITargetMissing
+    {
+        public TargetMissing(IMissing missing)
+        {
+            
+        }
     }
 
     [Theory, ContainerAutoData(typeof(TypicalModule))]
@@ -33,7 +50,7 @@ public class ContainerAutoDataTests
     }
 
     [Theory, ContainerAutoData(typeof(TypicalModule))]
-    public void Missing(IFileSystem missing, int i)
+    public void Unrelated(IFileSystem missing, int i)
     {
     }
 }

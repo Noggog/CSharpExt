@@ -1,5 +1,6 @@
 ﻿using Autofac;
 using Autofac.Core;
+using Autofac.Core.Registration;
 using AutoFixture;
 using AutoFixture.Kernel;
 
@@ -40,7 +41,16 @@ public class ContainerAutoDataCustomization : ICustomization
                 {
                     return _container.Resolve(t);
                 }
-                catch (Exception e)
+                catch (ComponentNotRegisteredException)
+                {
+                    _blacklist.Add(t);
+                    return new NoSpecimen();
+                }
+                catch (DependencyResolutionException)
+                {
+                    throw;
+                }
+                catch (Exception)
                 {
                     _blacklist.Add(t);
                     return new NoSpecimen();
