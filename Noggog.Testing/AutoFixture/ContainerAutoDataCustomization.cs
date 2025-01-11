@@ -11,48 +11,46 @@ public class ContainerAutoDataCustomization : ICustomization
     private readonly IContainer _container;
     
     public ContainerAutoDataCustomization(Type module)
+        : this((IModule)Activator.CreateInstance(module)!)
+    {
+    }
+    
+    public ContainerAutoDataCustomization(IModule module)
     {
         var builder = new ContainerBuilder();
-        builder.RegisterModule((IModule)Activator.CreateInstance(module)!);
+        builder.RegisterModule(module);
         _container = builder.Build();
     }
     
     public void Customize(IFixture fixture)
     {
-        fixture.Customizations.Add(new ContainerSpecimenBuilder(_container));
+        fixture.Customizations.Add(new ContainerSpecimenBuilder(_container, throwOnUnresolved: false));
+        fixture.ResidueCollectors.Add(new ContainerSpecimenBuilder(_container, throwOnUnresolved: true));
         fixture.Register<IContainer>(() => _container);
     }
 
     class ContainerSpecimenBuilder : ISpecimenBuilder
     {
         private readonly IContainer _container;
-        private readonly HashSet<Type> _blacklist = new();
+        private readonly bool _throwOnUnresolved;
 
-        public ContainerSpecimenBuilder(IContainer container)
+        public ContainerSpecimenBuilder(IContainer container, bool throwOnUnresolved)
         {
             _container = container;
+            _throwOnUnresolved = throwOnUnresolved;
         }
         
         public object Create(object request, ISpecimenContext context)
         {
-            if (request is Type t && !_blacklist.Contains(t))
+            if (request is Type t)
             {
                 try
                 {
                     return _container.Resolve(t);
                 }
-                catch (ComponentNotRegisteredException)
-                {
-                    _blacklist.Add(t);
-                    return new NoSpecimen();
-                }
-                catch (DependencyResolutionException)
-                {
-                    throw;
-                }
                 catch (Exception)
+                when (!_throwOnUnresolved)
                 {
-                    _blacklist.Add(t);
                     return new NoSpecimen();
                 }
             }

@@ -44,9 +44,10 @@ public class ContainerAutoDataTests
     }
 
     [Theory, ContainerAutoData(typeof(TypicalModule))]
-    public void Typical(ISomething something, int i)
+    public void Typical(ISomething something, ISomething something2, int i)
     {
         something.Should().BeOfType<Something>();
+        something.Should().BeSameAs(something2);
     }
 
     [Theory, ContainerAutoData(typeof(TypicalModule))]
