@@ -59,6 +59,36 @@ public class DictionaryExtTests
     }
     
     [Theory, DefaultAutoData]
+    public void GetOrAddNoKeyFuncConcurrent(
+        string key,
+        int value,
+        int value2)
+    {
+        var d = new ConcurrentDictionary<string, int>();
+        var s = d.GetOrAdd(key, () =>
+        {
+            return value;
+        });
+        s.ShouldBe(value);
+        var s2 = d.GetOrAdd(key, () =>
+        {
+            return value2;
+        });
+        s2.ShouldBe(value);
+    }
+    
+    [Theory, DefaultAutoData]
+    public void GetOrAddDefaultConcurrent(
+        string key)
+    {
+        var d = new ConcurrentDictionary<string, int>();
+        var s = d.GetOrAdd(key);
+        s.ShouldBe(default(int));
+        var s2 = d.GetOrAdd(key);
+        s2.ShouldBe(default(int));
+    }
+    
+    [Theory, DefaultAutoData]
     public void ConcurrentDictionaryGetOrAdd(
         string key,
         int value,

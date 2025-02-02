@@ -1,3 +1,4 @@
+using System.Collections.Concurrent;
 using System.Runtime.InteropServices;
 
 namespace Noggog;
@@ -15,6 +16,25 @@ public static class DictionaryExt
     public static void Set<TKey, TValue>(this IDictionary<TKey, TValue> dict, TKey key, TValue value)
     {
         dict[key] = value;
+    }
+    
+    public static TValue GetOrAdd<TKey, TValue>(this ConcurrentDictionary<TKey, TValue> dict, TKey key)
+        where TKey : notnull
+        where TValue : new()
+    {
+        return dict.GetOrAdd(key, (_) =>
+        {
+            return new TValue();
+        });
+    }
+    
+    public static TValue GetOrAdd<TKey, TValue>(this ConcurrentDictionary<TKey, TValue> dict, TKey key, Func<TValue> getNew)
+        where TKey : notnull
+    {
+        return dict.GetOrAdd(key, (_) =>
+        {
+            return getNew();
+        });
     }
 
 #if NETSTANDARD2_0
