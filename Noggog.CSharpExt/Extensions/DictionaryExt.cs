@@ -17,6 +17,37 @@ public static class DictionaryExt
     {
         dict[key] = value;
     }
+ 
+    public static TValue GetOrAdd<TKey, TValue>(this IDictionary<TKey, TValue> dict, TKey key) 
+        where TValue : new() 
+    { 
+        if (!dict.TryGetValue(key, out var ret)) 
+        { 
+            ret = new TValue(); 
+            dict[key] = ret; 
+        } 
+        return ret; 
+    } 
+ 
+    public static TValue GetOrAdd<TKey, TValue>(this IDictionary<TKey, TValue> dict, TKey key, Func<TValue> getNew) 
+    { 
+        if (!dict.TryGetValue(key, out var ret)) 
+        { 
+            ret = getNew(); 
+            dict[key] = ret; 
+        } 
+        return ret; 
+    } 
+ 
+    public static TValue GetOrAdd<TKey, TValue>(this IDictionary<TKey, TValue> dict, TKey key, Func<TKey, TValue> getNew) 
+    { 
+        if (!dict.TryGetValue(key, out var ret)) 
+        { 
+            ret = getNew(key); 
+            dict[key] = ret; 
+        } 
+        return ret; 
+    } 
     
     public static TValue GetOrAdd<TKey, TValue>(this ConcurrentDictionary<TKey, TValue> dict, TKey key)
         where TKey : notnull
