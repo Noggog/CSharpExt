@@ -18,6 +18,39 @@ public static class DictionaryExt
     }
 
 #if NETSTANDARD2_0
+    public static TValue GetOrAdd<TKey, TValue>(this Dictionary<TKey, TValue> dict, TKey key)
+        where TKey : notnull
+        where TValue : new()
+    {
+        if (!dict.TryGetValue(key, out var ret)) 
+        { 
+            ret = new(); 
+            dict[key] = ret; 
+        } 
+        return ret; 
+    }
+    
+    public static TValue GetOrAdd<TKey, TValue>(this Dictionary<TKey, TValue> dict, TKey key, Func<TValue> getNew)
+        where TKey : notnull
+    {
+        if (!dict.TryGetValue(key, out var ret)) 
+        { 
+            ret = getNew(); 
+            dict[key] = ret; 
+        } 
+        return ret; 
+    }
+    
+    public static TValue GetOrAdd<TKey, TValue>(this Dictionary<TKey, TValue> dict, TKey key, Func<TKey, TValue> getNew)
+        where TKey : notnull
+    {
+        if (!dict.TryGetValue(key, out var ret)) 
+        { 
+            ret = getNew(key); 
+            dict[key] = ret; 
+        } 
+        return ret; 
+    }
 #else
     public static TValue GetOrAdd<TKey, TValue>(this Dictionary<TKey, TValue> dict, TKey key)
         where TKey : notnull
