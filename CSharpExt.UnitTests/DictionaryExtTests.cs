@@ -29,6 +29,25 @@ public class DictionaryExtTests
     }
     
     [Theory, DefaultAutoData]
+    public void GetOrAddNoKeyFunc(
+        string key,
+        int value,
+        int value2)
+    {
+        var d = new Dictionary<string, int>();
+        var s = d.GetOrAdd(key, () =>
+        {
+            return value;
+        });
+        s.Should().Be(value);
+        var s2 = d.GetOrAdd(key, () =>
+        {
+            return value2;
+        });
+        s2.Should().Be(value);
+    }
+    
+    [Theory, DefaultAutoData]
     public void GetOrAddDefault(
         string key)
     {

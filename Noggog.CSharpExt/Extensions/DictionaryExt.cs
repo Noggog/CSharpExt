@@ -33,10 +33,21 @@ public static class DictionaryExt
         val = newVal;
         return newVal;
     }
-#endif
+    
+    public static TValue GetOrAdd<TKey, TValue>(this Dictionary<TKey, TValue> dict, TKey key, Func<TValue> getNew)
+        where TKey : notnull
+    {
+        ref var val = ref CollectionsMarshal.GetValueRefOrAddDefault(dict, key, out var exists);
+        if (exists)
+        {
+            return val!;
+        }
 
-#if NETSTANDARD2_0
-#else
+        var newVal = getNew();
+        val = newVal;
+        return newVal;
+    }
+    
     public static TValue GetOrAdd<TKey, TValue>(this Dictionary<TKey, TValue> dict, TKey key, Func<TKey, TValue> getNew)
         where TKey : notnull
     {
