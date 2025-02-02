@@ -1,6 +1,6 @@
-﻿using FluentAssertions;
-using Noggog;
+﻿using Noggog;
 using Noggog.Testing.AutoFixture;
+using Shouldly;
 
 namespace CSharpExt.UnitTests;
 
@@ -13,8 +13,8 @@ public class P2Int16Tests
         var givenStr = $"{x},{y}";
         var expectedPoint = new P2Int16(x, y);
         var expectedBool = true;
-        P2Int16.TryParse(givenStr, out var result).Should().Be(expectedBool);
-        result.Should().Be(expectedPoint);
+        P2Int16.TryParse(givenStr, out var result).ShouldBe(expectedBool);
+        result.ShouldBe(expectedPoint);
     }
 
     [Fact]
@@ -23,8 +23,8 @@ public class P2Int16Tests
         var givenStr = $"{short.MinValue},{short.MaxValue}";
         var expectedPoint = new P2Int16(short.MinValue, short.MaxValue);
         var expectedBool = true;
-        P2Int16.TryParse(givenStr, out var result).Should().Be(expectedBool);
-        result.Should().Be(expectedPoint);
+        P2Int16.TryParse(givenStr, out var result).ShouldBe(expectedBool);
+        result.ShouldBe(expectedPoint);
     }
 
     [Fact]
@@ -33,8 +33,8 @@ public class P2Int16Tests
         var givenStr = "Hello World";
         var expectedPoint = default(P2Int16);
         var expectedBool = false;
-        P2Int16.TryParse(givenStr, out var result).Should().Be(expectedBool);
-        result.Should().Be(expectedPoint);
+        P2Int16.TryParse(givenStr, out var result).ShouldBe(expectedBool);
+        result.ShouldBe(expectedPoint);
     }
 
     [Fact]
@@ -43,8 +43,8 @@ public class P2Int16Tests
         var givenStr = "";
         var expectedPoint = default(P2Int16);
         var expectedBool = false;
-        P2Int16.TryParse(givenStr, out var result).Should().Be(expectedBool);
-        result.Should().Be(expectedPoint);
+        P2Int16.TryParse(givenStr, out var result).ShouldBe(expectedBool);
+        result.ShouldBe(expectedPoint);
     }
 
     [Fact]
@@ -53,8 +53,8 @@ public class P2Int16Tests
         var givenStr = "100";
         var expectedPoint = default(P2Int16);
         var expectedBool = false;
-        P2Int16.TryParse(givenStr, out var result).Should().Be(expectedBool);
-        result.Should().Be(expectedPoint);
+        P2Int16.TryParse(givenStr, out var result).ShouldBe(expectedBool);
+        result.ShouldBe(expectedPoint);
     }
 
     [Fact]
@@ -63,8 +63,8 @@ public class P2Int16Tests
         var givenStr = "100,";
         var expectedPoint = default(P2Int16);
         var expectedBool = false;
-        P2Int16.TryParse(givenStr, out var result).Should().Be(expectedBool);
-        result.Should().Be(expectedPoint);
+        P2Int16.TryParse(givenStr, out var result).ShouldBe(expectedBool);
+        result.ShouldBe(expectedPoint);
     }
 
     [Fact]
@@ -73,8 +73,8 @@ public class P2Int16Tests
         var givenStr = "100,879,222";
         var expectedPoint = default(P2Int16);
         var expectedBool = false;
-        P2Int16.TryParse(givenStr, out var result).Should().Be(expectedBool);
-        result.Should().Be(expectedPoint);
+        P2Int16.TryParse(givenStr, out var result).ShouldBe(expectedBool);
+        result.ShouldBe(expectedPoint);
     }
 
     [Fact]
@@ -83,8 +83,8 @@ public class P2Int16Tests
         var givenStr = "54687643846846,48979878979";
         var expectedPoint = default(P2Int16);
         var expectedBool = false;
-        P2Int16.TryParse(givenStr, out var result).Should().Be(expectedBool);
-        result.Should().Be(expectedPoint);
+        P2Int16.TryParse(givenStr, out var result).ShouldBe(expectedBool);
+        result.ShouldBe(expectedPoint);
     }
     
     [Theory]
@@ -92,7 +92,7 @@ public class P2Int16Tests
     public void P2Int16Reparse(short x, short y)
     {
         var expectedPoint = new P2Int16(x, y);
-        P2Int16.TryParse(expectedPoint.ToString(), out var result).Should().BeTrue();
-        result.Should().Be(expectedPoint);
+        P2Int16.TryParse(expectedPoint.ToString(), out var result).ShouldBeTrue();
+        result.ShouldBe(expectedPoint);
     }
 }

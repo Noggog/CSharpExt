@@ -1,8 +1,8 @@
 ﻿using AutoFixture.Kernel;
-using FluentAssertions;
 using Noggog;
 using Noggog.Testing.AutoFixture;
 using Noggog.Testing.AutoFixture.Testing;
+using Shouldly;
 
 namespace CSharpExt.UnitTests.AutoFixture;
 
@@ -16,7 +16,7 @@ public class ErrorResponseBuilderTests
     {
         context.MockToReturn(reason);
         sut.Create(typeof(string), context)
-            .Should().BeOfType<NoSpecimen>();
+            .ShouldBeOfType<NoSpecimen>();
     }
         
     [Theory, DefaultAutoData]
@@ -27,7 +27,7 @@ public class ErrorResponseBuilderTests
     {
         context.MockToReturn(reason);
         sut.Create(typeof(ErrorResponse), context)
-            .Should().BeOfType<ErrorResponse>();
+            .ShouldBeOfType<ErrorResponse>();
     }
         
     [Theory, DefaultAutoData]
@@ -38,7 +38,7 @@ public class ErrorResponseBuilderTests
     {
         context.MockToReturn(reason);
         ((ErrorResponse)sut.Create(typeof(ErrorResponse), context))
-            .Succeeded.Should().BeTrue();
+            .Succeeded.ShouldBeTrue();
     }
         
     [Theory, DefaultAutoData]
@@ -49,7 +49,7 @@ public class ErrorResponseBuilderTests
     {
         context.MockToReturn(reason);
         ((ErrorResponse)sut.Create(typeof(ErrorResponse), context))
-            .Reason.Should().Be(reason);
+            .Reason.ShouldBe(reason);
     }
         
     [Theory, DefaultAutoData]
@@ -60,6 +60,6 @@ public class ErrorResponseBuilderTests
     {
         context.MockToReturn(reason);
         ((ErrorResponse)sut.Create(typeof(ErrorResponse), context))
-            .Exception.Should().BeNull();
+            .Exception.ShouldBeNull();
     }
 }

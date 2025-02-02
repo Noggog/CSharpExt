@@ -1,9 +1,9 @@
 ﻿using System.IO.Abstractions.TestingHelpers;
 using System.Xml.Linq;
 using AutoFixture.Xunit2;
-using FluentAssertions;
 using Noggog.Nuget.Errors;
 using Noggog.Testing.AutoFixture;
+using Shouldly;
 using Xunit;
 
 namespace Noggog.Nuget.Tests;
@@ -23,7 +23,7 @@ public class MissingNugetOrgErrorTests
                                    "</configuration>");
         sut.RunFix(path);
         var doc = XDocument.Load(fs.FileStream.New(path, FileMode.Open, FileAccess.Read));
-        doc.Should().BeEquivalentTo(NotExistsError.TypicalFile());
+        doc.ShouldBeEquivalentTo(NotExistsError.TypicalFile());
     }
         
     [Theory, DefaultAutoData]
@@ -37,7 +37,7 @@ public class MissingNugetOrgErrorTests
                                    "</configuration>");
         sut.RunFix(path);
         var doc = XDocument.Load(fs.FileStream.New(path, FileMode.Open, FileAccess.Read));
-        doc.Should().BeEquivalentTo(NotExistsError.TypicalFile());
+        doc.ShouldBeEquivalentTo(NotExistsError.TypicalFile());
     }
         
     [Theory, DefaultAutoData]
@@ -66,7 +66,7 @@ public class MissingNugetOrgErrorTests
         var expected = new XDocument(
             new XDeclaration("1.0", "utf-8", null),
             elem);
-        doc.Should().BeEquivalentTo(expected);
+        doc.ShouldBeEquivalentTo(expected);
     }
         
     [Theory, DefaultAutoData]
@@ -84,6 +84,6 @@ public class MissingNugetOrgErrorTests
         fs.File.WriteAllText(path, txt);
         sut.RunFix(path);
         fs.File.ReadAllText(path)
-            .Should().Be(txt);
+            .ShouldBe(txt);
     }
 }

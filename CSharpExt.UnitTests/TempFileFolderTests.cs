@@ -1,5 +1,5 @@
-using FluentAssertions;
 using Noggog.IO;
+using Shouldly;
 
 namespace CSharpExt.UnitTests;
 
@@ -11,9 +11,9 @@ public class TempFileFolderTests
         var filepath = Path.Combine(Path.GetTempPath(), $"CSharpEXT/Test");
         using (var tmp = TempFolder.FactoryByPath(filepath, deleteAfter: true))
         {
-            Directory.Exists(filepath).Should().BeTrue();
+            Directory.Exists(filepath).ShouldBeTrue();
         }
-        Directory.Exists(filepath).Should().BeFalse();
+        Directory.Exists(filepath).ShouldBeFalse();
     }
 
     [Fact]
@@ -24,6 +24,6 @@ public class TempFileFolderTests
         {
             path = tmp.File.Path.ToString();
         }
-        File.Exists(path).Should().BeFalse();
+        File.Exists(path).ShouldBeFalse();
     }
 }

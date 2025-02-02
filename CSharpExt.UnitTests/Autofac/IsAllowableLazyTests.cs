@@ -1,7 +1,7 @@
-﻿using FluentAssertions;
-using Noggog.Autofac.Validation.Rules;
+﻿using Noggog.Autofac.Validation.Rules;
 using Noggog.Testing.AutoFixture;
 using NSubstitute;
+using Shouldly;
 
 namespace CSharpExt.UnitTests.Autofac;
 
@@ -11,7 +11,7 @@ public class IsAllowableLazyTests
     public void Typical(IsAllowableLazy sut)
     {
         sut.IsAllowed(typeof(Lazy<string>))
-            .Should().BeTrue();
+            .ShouldBeTrue();
         sut.ValidateTypeCtor.Received(1).Validate(typeof(string), Arg.Any<HashSet<string>>());
     }
         
@@ -19,6 +19,6 @@ public class IsAllowableLazyTests
     public void NotLazy(IsAllowableLazy sut)
     {
         sut.IsAllowed(typeof(string))
-            .Should().BeFalse();
+            .ShouldBeFalse();
     }
 }

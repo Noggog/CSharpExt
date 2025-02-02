@@ -1,8 +1,8 @@
 ﻿using System.IO.Abstractions;
-using FluentAssertions;
 using Noggog;
 using Noggog.Testing.AutoFixture;
 using Noggog.Testing.IO;
+using Shouldly;
 
 namespace CSharpExt.UnitTests.AutoFixture;
 
@@ -14,8 +14,8 @@ public class PathBuilderTests
         IFileSystem fileSystem,
         FilePath file)
     {
-        file.IsUnderneath(PathingUtil.DrivePrefix).Should().BeTrue();
-        fileSystem.File.Exists(file).Should().BeFalse();
+        file.IsUnderneath(PathingUtil.DrivePrefix).ShouldBeTrue();
+        fileSystem.File.Exists(file).ShouldBeFalse();
     }
     
     [Theory]
@@ -24,8 +24,8 @@ public class PathBuilderTests
         IFileSystem fileSystem,
         DirectoryPath dir)
     {
-        dir.IsUnderneath(PathingUtil.DrivePrefix).Should().BeTrue();
-        fileSystem.Directory.Exists(dir).Should().BeFalse();
+        dir.IsUnderneath(PathingUtil.DrivePrefix).ShouldBeTrue();
+        fileSystem.Directory.Exists(dir).ShouldBeFalse();
     }
     
     [Theory]
@@ -34,7 +34,7 @@ public class PathBuilderTests
         FilePath file1,
         FilePath file2)
     {
-        file1.Path.Should().NotBe(file2.Path);
+        file1.Path.ShouldNotBe(file2.Path);
     }
     
     [Theory]
@@ -43,7 +43,7 @@ public class PathBuilderTests
         DirectoryPath dir1,
         DirectoryPath dir2)
     {
-        dir1.Path.Should().NotBe(dir2.Path);
+        dir1.Path.ShouldNotBe(dir2.Path);
     }
     
     [Theory]
@@ -52,8 +52,8 @@ public class PathBuilderTests
         IFileSystem fileSystem,
         FilePath existingFile)
     {
-        existingFile.IsUnderneath(PathingUtil.DrivePrefix).Should().BeTrue();
-        fileSystem.File.Exists(existingFile).Should().BeTrue();
+        existingFile.IsUnderneath(PathingUtil.DrivePrefix).ShouldBeTrue();
+        fileSystem.File.Exists(existingFile).ShouldBeTrue();
     }
     
     [Theory]
@@ -62,8 +62,8 @@ public class PathBuilderTests
         IFileSystem fileSystem,
         DirectoryPath existingDir)
     {
-        existingDir.IsUnderneath(PathingUtil.DrivePrefix).Should().BeTrue();
-        fileSystem.Directory.Exists(existingDir).Should().BeTrue();
+        existingDir.IsUnderneath(PathingUtil.DrivePrefix).ShouldBeTrue();
+        fileSystem.Directory.Exists(existingDir).ShouldBeTrue();
     }
     
     [Theory]
@@ -73,7 +73,7 @@ public class PathBuilderTests
         FilePath existingFile1,
         FilePath existingFile2)
     {
-        existingFile1.Path.Should().NotBe(existingFile2.Path);
+        existingFile1.Path.ShouldNotBe(existingFile2.Path);
     }
     
     [Theory]
@@ -83,6 +83,6 @@ public class PathBuilderTests
         DirectoryPath existingDir1,
         DirectoryPath existingDir2)
     {
-        existingDir1.Path.Should().NotBe(existingDir2.Path);
+        existingDir1.Path.ShouldNotBe(existingDir2.Path);
     }
 }

@@ -1,7 +1,7 @@
-﻿using FluentAssertions;
-using Noggog.Autofac.Validation.Rules;
+﻿using Noggog.Autofac.Validation.Rules;
 using Noggog.Testing.AutoFixture;
 using NSubstitute;
+using Shouldly;
 
 namespace CSharpExt.UnitTests.Autofac;
 
@@ -11,7 +11,7 @@ public class IsAllowableFuncTests
     public void Typical(IsAllowableFunc sut)
     {
         sut.IsAllowed(typeof(Func<string>))
-            .Should().BeTrue();
+            .ShouldBeTrue();
         sut.ValidateTypeCtor.Received(1).Validate(typeof(string), Arg.Any<HashSet<string>?>());
     }
         
@@ -19,13 +19,13 @@ public class IsAllowableFuncTests
     public void TooManyArgs(IsAllowableFunc sut)
     {
         sut.IsAllowed(typeof(Func<string, string>))
-            .Should().BeFalse();
+            .ShouldBeFalse();
     }
         
     [Theory, TestData]
     public void NotEnumerable(IsAllowableFunc sut)
     {
         sut.IsAllowed(typeof(string))
-            .Should().BeFalse();
+            .ShouldBeFalse();
     }
 }

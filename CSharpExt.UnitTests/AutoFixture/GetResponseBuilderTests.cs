@@ -1,8 +1,8 @@
 ﻿using AutoFixture.Kernel;
-using FluentAssertions;
 using Noggog;
 using Noggog.Testing.AutoFixture;
 using Noggog.Testing.AutoFixture.Testing;
+using Shouldly;
 
 namespace CSharpExt.UnitTests.AutoFixture;
 
@@ -18,7 +18,7 @@ public class GetResponseBuilderTests
         context.MockToReturn(reason);
         context.MockToReturn(val);
         sut.Create(typeof(string), context)
-            .Should().BeOfType<NoSpecimen>();
+            .ShouldBeOfType<NoSpecimen>();
     }
         
     [Theory, DefaultAutoData]
@@ -31,7 +31,7 @@ public class GetResponseBuilderTests
         context.MockToReturn(reason);
         context.MockToReturn(val);
         sut.Create(typeof(GetResponse<int>), context)
-            .Should().BeOfType<GetResponse<int>>();
+            .ShouldBeOfType<GetResponse<int>>();
     }
         
     [Theory, DefaultAutoData]
@@ -44,7 +44,7 @@ public class GetResponseBuilderTests
         context.MockToReturn(reason);
         context.MockToReturn(val);
         ((GetResponse<int>)sut.Create(typeof(GetResponse<int>), context))
-            .Succeeded.Should().BeTrue();
+            .Succeeded.ShouldBeTrue();
     }
         
     [Theory, DefaultAutoData]
@@ -57,7 +57,7 @@ public class GetResponseBuilderTests
         context.MockToReturn(reason);
         context.MockToReturn(val);
         ((GetResponse<int>)sut.Create(typeof(GetResponse<int>), context))
-            .Reason.Should().Be(reason);
+            .Reason.ShouldBe(reason);
     }
         
     [Theory, DefaultAutoData]
@@ -70,7 +70,7 @@ public class GetResponseBuilderTests
         context.MockToReturn(reason);
         context.MockToReturn(val);
         ((GetResponse<int>)sut.Create(typeof(GetResponse<int>), context))
-            .Exception.Should().BeNull();
+            .Exception.ShouldBeNull();
     }
         
     [Theory, DefaultAutoData]
@@ -83,6 +83,6 @@ public class GetResponseBuilderTests
         context.MockToReturn(reason);
         context.MockToReturn(val);
         ((GetResponse<int>)sut.Create(typeof(GetResponse<int>), context))
-            .Value.Should().Be(val);
+            .Value.ShouldBe(val);
     }
 }

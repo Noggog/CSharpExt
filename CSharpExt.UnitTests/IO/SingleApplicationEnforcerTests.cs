@@ -1,8 +1,9 @@
 ﻿using System.Reactive.Concurrency;
 using System.Reactive.Linq;
-using FluentAssertions;
 using Noggog.IO;
 using Noggog.Testing.AutoFixture;
+using Noggog.Testing.Extensions;
+using Shouldly;
 
 namespace CSharpExt.UnitTests.IO;
 
@@ -24,7 +25,7 @@ public class SingleApplicationEnforcerTests
         
         singleApp.ForwardArgs(new []{ "Hello", "World" });
 
-        (await tcs.Task).Should().Equal("Hello", "World");
+        (await tcs.Task).ShouldBe("Hello", "World");
     }
     
     [Theory, DefaultAutoData]
@@ -58,9 +59,9 @@ public class SingleApplicationEnforcerTests
 
         await Task.Delay(100);
 
-        results.Should().HaveCount(2);
-        results[0].Should().Equal( "Hello", "World");
-        results[1].Should().Equal("What", "Is", "Up");
+        results.Count.ShouldBe(2);
+        results[0].ShouldBe( "Hello", "World");
+        results[1].ShouldBe("What", "Is", "Up");
     }
     
     [Theory, DefaultAutoData]
@@ -82,8 +83,8 @@ public class SingleApplicationEnforcerTests
         await Task.Delay(5000);
 
         // Notified twice, but only see the last message twice
-        results.Should().HaveCount(2);
-        results[0].Should().Equal("What", "Is", "Up");
-        results[1].Should().Equal("What", "Is", "Up");
+        results.Count.ShouldBe(2);
+        results[0].ShouldBe("What", "Is", "Up");
+        results[1].ShouldBe("What", "Is", "Up");
     }
 }

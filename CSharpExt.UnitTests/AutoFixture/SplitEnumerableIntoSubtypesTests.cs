@@ -1,7 +1,8 @@
 ﻿using AutoFixture.Kernel;
-using FluentAssertions;
 using Noggog.Testing.AutoFixture;
 using Noggog.Testing.AutoFixture.Testing;
+using Noggog.Testing.Extensions;
+using Shouldly;
 
 namespace CSharpExt.UnitTests.AutoFixture;
 
@@ -52,7 +53,7 @@ public class SplitEnumerableIntoSubtypesTests
         {
             var param = method.GetParameters().First();
             var ret = sut.Split<string>(context, param.ParameterType);
-            ret.GetType().Should().BeAssignableTo(param.ParameterType);
+            ret.ShouldBeAssignableTo(param.ParameterType);
         }
     }
 }

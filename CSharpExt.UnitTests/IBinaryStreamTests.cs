@@ -1,5 +1,5 @@
-using FluentAssertions;
 using Noggog;
+using Shouldly;
 
 namespace CSharpExt.UnitTests;
 
@@ -190,9 +190,9 @@ public abstract class IBinaryStreamTests
         var stream = GetStream(streamLen);
         var b = new byte[15];
         var read = stream.Read(b, 0, b.Length);
-        read.Should().Be(10);
-        stream.Remaining.Should().Be(0);
-        stream.Position.Should().Be(10);
+        read.ShouldBe(10);
+        stream.Remaining.ShouldBe(0);
+        stream.Position.ShouldBe(10);
     }
 
     [Fact]
@@ -202,9 +202,9 @@ public abstract class IBinaryStreamTests
         var stream = GetStream(streamLen);
         var b = new byte[15];
         var read = stream.Read(b, 0, b.Length);
-        read.Should().Be(10);
+        read.ShouldBe(10);
         read = stream.Read(b, 0, b.Length);
-        read.Should().Be(0);
+        read.ShouldBe(0);
     }
 
     [Fact]

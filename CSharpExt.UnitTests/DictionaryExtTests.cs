@@ -1,7 +1,7 @@
 ﻿using System.Collections.Concurrent;
-using FluentAssertions;
 using Noggog;
 using Noggog.Testing.AutoFixture;
+using Shouldly;
 
 namespace CSharpExt.UnitTests;
 
@@ -16,16 +16,16 @@ public class DictionaryExtTests
         var d = new Dictionary<string, int>();
         var s = d.GetOrAdd(key, (s) =>
         {
-            s.Should().Be(key);
+            s.ShouldBe(key);
             return value;
         });
-        s.Should().Be(value);
+        s.ShouldBe(value);
         var s2 = d.GetOrAdd(key, (s) =>
         {
-            s.Should().Be(key);
+            s.ShouldBe(key);
             return value2;
         });
-        s2.Should().Be(value);
+        s2.ShouldBe(value);
     }
     
     [Theory, DefaultAutoData]
@@ -39,12 +39,12 @@ public class DictionaryExtTests
         {
             return value;
         });
-        s.Should().Be(value);
+        s.ShouldBe(value);
         var s2 = d.GetOrAdd(key, () =>
         {
             return value2;
         });
-        s2.Should().Be(value);
+        s2.ShouldBe(value);
     }
     
     [Theory, DefaultAutoData]
@@ -53,9 +53,9 @@ public class DictionaryExtTests
     {
         var d = new Dictionary<string, int>();
         var s = d.GetOrAdd(key);
-        s.Should().Be(default(int));
+        s.ShouldBe(default(int));
         var s2 = d.GetOrAdd(key);
-        s2.Should().Be(default(int));
+        s2.ShouldBe(default(int));
     }
     
     [Theory, DefaultAutoData]
@@ -67,16 +67,16 @@ public class DictionaryExtTests
         var d = new ConcurrentDictionary<string, int>();
         var s = d.GetOrAdd(key, (s) =>
         {
-            s.Should().Be(key);
+            s.ShouldBe(key);
             return value;
         });
-        s.Should().Be(value);
+        s.ShouldBe(value);
         var s2 = d.GetOrAdd(key, (s) =>
         {
-            s.Should().Be(key);
+            s.ShouldBe(key);
             return value2;
         });
-        s2.Should().Be(value);
+        s2.ShouldBe(value);
     }
     
     [Theory, DefaultAutoData]
@@ -88,18 +88,18 @@ public class DictionaryExtTests
         var d = new Dictionary<string, int>();
         var s = d.UpdateOrAdd(key, (k, s) =>
         {
-            k.Should().Be(key);
-            s.Should().Be(default(int));
+            k.ShouldBe(key);
+            s.ShouldBe(default(int));
             return value;
         });
-        s.Should().Be(value);
+        s.ShouldBe(value);
         var s2 = d.UpdateOrAdd(key, (k, s) =>
         {
-            k.Should().Be(key);
-            s.Should().Be(value);
+            k.ShouldBe(key);
+            s.ShouldBe(value);
             return value2;
         });
-        s2.Should().Be(value2);
+        s2.ShouldBe(value2);
     }
     
     [Theory, DefaultAutoData]
@@ -111,18 +111,18 @@ public class DictionaryExtTests
         IDictionary<string, int> d = new Dictionary<string, int>();
         var s = d.UpdateOrAdd(key, (k, s) =>
         {
-            k.Should().Be(key);
-            s.Should().Be(default(int));
+            k.ShouldBe(key);
+            s.ShouldBe(default(int));
             return value;
         });
-        s.Should().Be(value);
+        s.ShouldBe(value);
         var s2 = d.UpdateOrAdd(key, (k, s) =>
         {
-            k.Should().Be(key);
-            s.Should().Be(value);
+            k.ShouldBe(key);
+            s.ShouldBe(value);
             return value2;
         });
-        s2.Should().Be(value2);
+        s2.ShouldBe(value2);
     }
     
     [Theory, DefaultAutoData]
@@ -134,16 +134,16 @@ public class DictionaryExtTests
         var d = new Dictionary<string, int>();
         var s = d.UpdateOrAdd(key, (s) =>
         {
-            s.Should().Be(default(int));
+            s.ShouldBe(default(int));
             return value;
         });
-        s.Should().Be(value);
+        s.ShouldBe(value);
         var s2 = d.UpdateOrAdd(key, (s) =>
         {
-            s.Should().Be(value);
+            s.ShouldBe(value);
             return value2;
         });
-        s2.Should().Be(value2);
+        s2.ShouldBe(value2);
     }
     
     [Theory, DefaultAutoData]
@@ -155,15 +155,15 @@ public class DictionaryExtTests
         IDictionary<string, int> d = new Dictionary<string, int>();
         var s = d.UpdateOrAdd(key, (s) =>
         {
-            s.Should().Be(default(int));
+            s.ShouldBe(default(int));
             return value;
         });
-        s.Should().Be(value);
+        s.ShouldBe(value);
         var s2 = d.UpdateOrAdd(key, (s) =>
         {
-            s.Should().Be(value);
+            s.ShouldBe(value);
             return value2;
         });
-        s2.Should().Be(value2);
+        s2.ShouldBe(value2);
     }
 }

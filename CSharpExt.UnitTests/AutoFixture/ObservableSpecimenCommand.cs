@@ -3,9 +3,9 @@ using System.Reactive.Subjects;
 using AutoFixture;
 using AutoFixture.AutoNSubstitute;
 using AutoFixture.Xunit2;
-using FluentAssertions;
 using Noggog.Testing.AutoFixture;
 using NSubstitute;
+using Shouldly;
 
 namespace CSharpExt.UnitTests.AutoFixture;
 
@@ -57,6 +57,6 @@ public class ObservableSpecimenCommand
             received = true;
         });
         subj.OnNext(Unit.Default);
-        received.Should().BeTrue();
+        received.ShouldBeTrue();
     }
 }

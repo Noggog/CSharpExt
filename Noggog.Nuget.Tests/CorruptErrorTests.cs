@@ -1,9 +1,9 @@
 ﻿using System.IO.Abstractions.TestingHelpers;
 using System.Xml.Linq;
 using AutoFixture.Xunit2;
-using FluentAssertions;
 using Noggog.Nuget.Errors;
 using Noggog.Testing.AutoFixture;
+using Shouldly;
 using Xunit;
 
 namespace Noggog.Nuget.Tests;
@@ -19,6 +19,6 @@ public class CorruptErrorTests
         fs.File.WriteAllText(path, "Whut");
         sut.RunFix(path);
         var doc = XDocument.Load(fs.FileStream.New(path, FileMode.Open, FileAccess.Read));
-        doc.Should().BeEquivalentTo(NotExistsError.TypicalFile());
+        doc.ShouldBeEquivalentTo(NotExistsError.TypicalFile());
     }
 }

@@ -1,11 +1,12 @@
 ﻿using System.Diagnostics;
 using System.Reactive.Linq;
 using AutoFixture.Xunit2;
-using FluentAssertions;
 using Noggog.Processes;
 using Noggog.Processes.DI;
 using Noggog.Testing.AutoFixture;
+using Noggog.Testing.Extensions;
 using NSubstitute;
+using Shouldly;
 
 namespace CSharpExt.UnitTests.Processes;
 
@@ -34,7 +35,7 @@ public class ProcessRunnerTests
         process.Run().Returns(Task.FromResult(ret));
         sut.Factory.Create(default!).ReturnsForAnyArgs(process);
         (await sut.Run(startInfo, cancel))
-            .Should().Be(ret);
+            .ShouldBe(ret);
     }
 
     #endregion
@@ -62,7 +63,7 @@ public class ProcessRunnerTests
         process.Output.Returns(Observable.Return(str));
         sut.Factory.Create(default!).ReturnsForAnyArgs(process);
         var result = await sut.RunAndCapture(startInfo, cancel);
-        result.Out.Should().Equal(str);
+        result.Out.ShouldBe(str);
     }
         
     [Theory, DefaultAutoData(ConfigureMembers: false)]
@@ -76,7 +77,7 @@ public class ProcessRunnerTests
         process.Error.Returns(Observable.Return(str));
         sut.Factory.Create(default!).ReturnsForAnyArgs(process);
         var result = await sut.RunAndCapture(startInfo, cancel);
-        result.Errors.Should().Equal(str);
+        result.Errors.ShouldBe(str);
     }
         
     [Theory, DefaultAutoData(ConfigureMembers: false)]
@@ -90,7 +91,7 @@ public class ProcessRunnerTests
         process.Run().Returns(Task.FromResult(ret));
         sut.Factory.Create(default!).ReturnsForAnyArgs(process);
         (await sut.RunAndCapture(startInfo, cancel))
-            .Result.Should().Be(ret);
+            .Result.ShouldBe(ret);
     }
 
     #endregion
@@ -121,7 +122,7 @@ public class ProcessRunnerTests
         sut.Factory.Create(default!).ReturnsForAnyArgs(process);
         var received = new List<string>();
         await sut.RunWithCallback(startInfo, received.Add, errCb, cancel);
-        received.Should().Equal(str);
+        received.ShouldBe(str);
     }
         
     [Theory, DefaultAutoData(ConfigureMembers: false)]
@@ -137,7 +138,7 @@ public class ProcessRunnerTests
         sut.Factory.Create(default!).ReturnsForAnyArgs(process);
         var received = new List<string>();
         await sut.RunWithCallback(startInfo, outCb, received.Add, cancel);
-        received.Should().Equal(str);
+        received.ShouldBe(str);
     }
         
     [Theory, DefaultAutoData(ConfigureMembers: false)]
@@ -153,7 +154,7 @@ public class ProcessRunnerTests
         process.Run().Returns(Task.FromResult(ret));
         sut.Factory.Create(default!).ReturnsForAnyArgs(process);
         (await sut.RunWithCallback(startInfo, outCb, errCb, cancel))
-            .Should().Be(ret);
+            .ShouldBe(ret);
     }
 
     #endregion
@@ -184,7 +185,7 @@ public class ProcessRunnerTests
         sut.Factory.Create(default!).ReturnsForAnyArgs(process);
         var received = new List<string>();
         await sut.RunWithCallback(startInfo, received.Add, cancel);
-        received.Should().Equal(str);
+        received.ShouldBe(str);
     }
         
     [Theory, DefaultAutoData(ConfigureMembers: false)]
@@ -199,7 +200,7 @@ public class ProcessRunnerTests
         sut.Factory.Create(default!).ReturnsForAnyArgs(process);
         var received = new List<string>();
         await sut.RunWithCallback(startInfo, received.Add, cancel);
-        received.Should().Equal(str);
+        received.ShouldBe(str);
     }
         
     [Theory, DefaultAutoData(ConfigureMembers: false)]
@@ -214,7 +215,7 @@ public class ProcessRunnerTests
         process.Run().Returns(Task.FromResult(ret));
         sut.Factory.Create(default!).ReturnsForAnyArgs(process);
         (await sut.RunWithCallback(startInfo, callback, cancel))
-            .Should().Be(ret);
+            .ShouldBe(ret);
     }
 
     #endregion

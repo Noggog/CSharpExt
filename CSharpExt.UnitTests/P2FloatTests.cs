@@ -1,6 +1,6 @@
-﻿using FluentAssertions;
-using Noggog;
+﻿using Noggog;
 using Noggog.Testing.AutoFixture;
+using Shouldly;
 
 namespace CSharpExt.UnitTests;
 
@@ -12,8 +12,8 @@ public class P2FloatTests
     {
         var givenStr = $"{x},{y}";
         var expectedPoint = new P2Float(x, y);
-        P2Float.TryParse(givenStr, out var result).Should().BeTrue();
-        result.Should().Be(expectedPoint);
+        P2Float.TryParse(givenStr, out var result).ShouldBeTrue();
+        result.ShouldBe(expectedPoint);
     }
     
     [Theory]
@@ -21,7 +21,7 @@ public class P2FloatTests
     public void P2FloatReparse(float x, float y)
     {
         var expectedPoint = new P2Float(x, y);
-        P2Float.TryParse(expectedPoint.ToString(), out var result).Should().BeTrue();
-        result.Should().Be(expectedPoint);
+        P2Float.TryParse(expectedPoint.ToString(), out var result).ShouldBeTrue();
+        result.ShouldBe(expectedPoint);
     }
 }

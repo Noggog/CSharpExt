@@ -1,9 +1,9 @@
 ﻿using System.IO.Abstractions.TestingHelpers;
 using AutoFixture.Xunit2;
-using FluentAssertions;
 using Noggog.Nuget.Errors;
 using Noggog.Nuget.Services.Singleton;
 using Noggog.Testing.AutoFixture;
+using Shouldly;
 using Xunit;
 
 namespace Noggog.Nuget.Tests;
@@ -18,7 +18,7 @@ public class AnalyzeNugetConfigTests
     {
         fs.File.WriteAllText(path, "Whut");
         sut.Analyze(path)
-            .Should().BeOfType<CorruptError>();
+            .ShouldBeOfType<CorruptError>();
     }
         
     [Theory, DefaultAutoData]
@@ -27,7 +27,7 @@ public class AnalyzeNugetConfigTests
         AnalyzeNugetConfig sut)
     {
         sut.Analyze(path)
-            .Should().BeOfType<NotExistsError>();
+            .ShouldBeOfType<NotExistsError>();
     }
         
     [Theory, DefaultAutoData]
@@ -38,7 +38,7 @@ public class AnalyzeNugetConfigTests
     {
         fs.File.WriteAllText(path, "");
         sut.Analyze(path)
-            .Should().BeOfType<NotExistsError>();
+            .ShouldBeOfType<NotExistsError>();
     }
         
     [Theory, DefaultAutoData]
@@ -49,7 +49,7 @@ public class AnalyzeNugetConfigTests
     {
         fs.File.WriteAllText(path, "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<something />");
         sut.Analyze(path)
-            .Should().BeOfType<NotExistsError>();
+            .ShouldBeOfType<NotExistsError>();
     }
         
     [Theory, DefaultAutoData]
@@ -64,7 +64,7 @@ public class AnalyzeNugetConfigTests
                                    "</packageSources>" +
                                    "</configuration>");
         sut.Analyze(path)
-            .Should().BeOfType<MissingNugetOrgError>();
+            .ShouldBeOfType<MissingNugetOrgError>();
     }
         
     [Theory, DefaultAutoData]
@@ -80,7 +80,7 @@ public class AnalyzeNugetConfigTests
                                    "</packageSources>" +
                                    "</configuration>");
         sut.Analyze(path)
-            .Should().BeOfType<MissingNugetOrgError>();
+            .ShouldBeOfType<MissingNugetOrgError>();
     }
         
     [Theory, DefaultAutoData]
@@ -93,7 +93,7 @@ public class AnalyzeNugetConfigTests
                                    "<configuration>" +
                                    "</configuration>");
         sut.Analyze(path)
-            .Should().BeOfType<MissingNugetOrgError>();
+            .ShouldBeOfType<MissingNugetOrgError>();
     }
 
     [Theory, DefaultAutoData]
@@ -109,6 +109,6 @@ public class AnalyzeNugetConfigTests
                                    "</packageSources>" +
                                    "</configuration>");
         sut.Analyze(path)
-            .Should().BeNull();
+            .ShouldBeNull();
     }
 }

@@ -1,7 +1,7 @@
-﻿using FluentAssertions;
-using Noggog.Streams;
+﻿using Noggog.Streams;
 using Noggog.Testing.AutoFixture;
 using NSubstitute;
+using Shouldly;
 
 namespace CSharpExt.UnitTests;
 
@@ -12,8 +12,8 @@ public class FramedStreamTests
     {
         framedStream.Length.Returns(10);
         var frame = new FramedStream(framedStream, 6);
-        frame.Length.Should().Be(6);
-        frame.Position.Should().Be(0);
+        frame.Length.ShouldBe(6);
+        frame.Position.ShouldBe(0);
     }
 
     [Theory, TestData]
@@ -21,8 +21,8 @@ public class FramedStreamTests
     {
         framedStream.Length.Returns(4);
         var frame = new FramedStream(framedStream, 6);
-        frame.Length.Should().Be(4);
-        frame.Position.Should().Be(0);
+        frame.Length.ShouldBe(4);
+        frame.Position.ShouldBe(0);
     }
 
     [Theory, TestData]
@@ -31,8 +31,8 @@ public class FramedStreamTests
         framedStream.Length.Returns(10);
         framedStream.Position = 8;
         var frame = new FramedStream(framedStream, 6);
-        frame.Length.Should().Be(2);
-        frame.Position.Should().Be(0);
+        frame.Length.ShouldBe(2);
+        frame.Position.ShouldBe(0);
     }
 
     [Theory, TestData]
@@ -41,8 +41,8 @@ public class FramedStreamTests
         framedStream.Length.Returns(-1);
         framedStream.Position = 0;
         var frame = new FramedStream(framedStream, 6);
-        frame.Length.Should().Be(6);
-        frame.Position.Should().Be(0);
+        frame.Length.ShouldBe(6);
+        frame.Position.ShouldBe(0);
     }
 
     [Theory, TestData]
@@ -51,11 +51,11 @@ public class FramedStreamTests
         framedStream.Length.Returns(10);
         framedStream.Position = 0;
         var frame = new FramedStream(framedStream, 6);
-        frame.Length.Should().Be(6);
-        frame.Position.Should().Be(0);
+        frame.Length.ShouldBe(6);
+        frame.Position.ShouldBe(0);
         framedStream.Position = 6;
-        frame.Length.Should().Be(6);
-        frame.Position.Should().Be(6);
+        frame.Length.ShouldBe(6);
+        frame.Position.ShouldBe(6);
     }
 
     [Theory, TestData]
@@ -65,7 +65,7 @@ public class FramedStreamTests
         framedStream.Position = 0;
         var frame = new FramedStream(framedStream, 6);
         frame.Position += 2;
-        framedStream.Position.Should().Be(2);
+        framedStream.Position.ShouldBe(2);
     }
 
     [Theory, TestData]
@@ -89,15 +89,15 @@ public class FramedStreamTests
         var frame = new FramedStream(framedStream, 6, doDispose: false);
         byte[] buf = new byte[100];
         frame.Read(buf, 0, 7)
-            .Should().Be(6);
+            .ShouldBe(6);
         for (byte i = 0; i < 6; i++)
         {
-            buf[i].Should().Be(i);
+            buf[i].ShouldBe(i);
         }
 
         for (int i = 6; i < 100; i++)
         {
-            buf[i].Should().Be(0);
+            buf[i].ShouldBe((byte)0);
         }
     }
 
@@ -133,7 +133,7 @@ public class FramedStreamTests
         framedStream.Position = 0;
         var frame = new FramedStream(framedStream, 6, doDispose: false);
         Action act = () => frame.Write(Array.Empty<byte>(), 0, 7);
-        act.Should().Throw<ArgumentOutOfRangeException>();
+        act.ShouldThrow<ArgumentOutOfRangeException>();
     }
 
     [Theory, TestData]
@@ -155,8 +155,8 @@ public class FramedStreamTests
         framedStream.Position = 3;
         var frame = new FramedStream(framedStream, 6, doDispose: false);
         frame.Position += 10;
-        frame.Position.Should().Be(10);
-        framedStream.Position.Should().Be(13);
+        frame.Position.ShouldBe(10);
+        framedStream.Position.ShouldBe(13);
     }
 
     [Theory, TestData]
@@ -165,7 +165,7 @@ public class FramedStreamTests
         framedStream.Position = 3;
         var frame = new FramedStream(framedStream, 6, doDispose: false);
         frame.Seek(10, SeekOrigin.Begin);
-        framedStream.Position.Should().Be(13);
+        framedStream.Position.ShouldBe(13);
     }
 
     [Theory, TestData]
@@ -175,8 +175,8 @@ public class FramedStreamTests
         var frame = new FramedStream(framedStream, 6, doDispose: false);
         frame.Position = 3;
         frame.Seek(10, SeekOrigin.Current);
-        frame.Position.Should().Be(13);
-        framedStream.Position.Should().Be(16);
+        frame.Position.ShouldBe(13);
+        framedStream.Position.ShouldBe(16);
     }
 
     [Theory, TestData]
@@ -186,7 +186,7 @@ public class FramedStreamTests
         framedStream.Length.Returns(10);
         var frame = new FramedStream(framedStream, 6, doDispose: false);
         frame.Seek(-3, SeekOrigin.End);
-        frame.Position.Should().Be(3);
-        framedStream.Position.Should().Be(6);
+        frame.Position.ShouldBe(3);
+        framedStream.Position.ShouldBe(6);
     }
 }

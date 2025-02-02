@@ -15,7 +15,7 @@
     </PackageVersion>
     <PackageVersion Include="BenchmarkDotNet" Version="0.14.0" />
     <PackageVersion Include="DynamicData" Version="9.1.1" />
-    <PackageVersion Include="FluentAssertions" Version="8.0.1" />
+    <PackageVersion Include="Shouldly" Version="4.3.0" />
     <PackageVersion Include="GitVersion.MsBuild" Version="6.1.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

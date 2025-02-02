@@ -1,8 +1,7 @@
 ﻿using System.IO.Abstractions;
 using Autofac;
-using FluentAssertions;
-using Noggog;
 using Noggog.Testing.AutoFixture;
+using Shouldly;
 
 namespace CSharpExt.UnitTests.AutoFixture;
 
@@ -46,8 +45,8 @@ public class ContainerAutoDataTests
     [Theory, ContainerAutoData(typeof(TypicalModule))]
     public void Typical(ISomething something, ISomething something2, int i)
     {
-        something.Should().BeOfType<Something>();
-        something.Should().BeSameAs(something2);
+        something.ShouldBeOfType<Something>();
+        something.ShouldBeSameAs(something2);
     }
 
     [Theory, ContainerAutoData(typeof(TypicalModule))]

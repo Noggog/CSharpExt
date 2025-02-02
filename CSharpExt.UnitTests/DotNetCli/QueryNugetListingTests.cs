@@ -1,9 +1,10 @@
-﻿using FluentAssertions;
-using Noggog;
+﻿using Noggog;
 using Noggog.DotNetCli.DI;
 using Noggog.Processes;
 using Noggog.Testing.AutoFixture;
+using Noggog.Testing.Extensions;
 using NSubstitute;
+using Shouldly;
 
 namespace CSharpExt.UnitTests.DotNetCli;
 
@@ -34,11 +35,13 @@ public class QueryNugetListingTests
         await sut.Query(projPath, default, outdated: outdated, default, cancel);
         if (outdated)
         {
-            passedArgs.Should().Contain("--outdated");
+            passedArgs.ShouldNotBeNull();
+            passedArgs.ShouldContain("--outdated");
         }
         else
         {
-            passedArgs.Should().NotContain("--outdated");
+            passedArgs.ShouldNotBeNull();
+            passedArgs.ShouldNotContain("--outdated");
         }
     }
         
@@ -56,11 +59,13 @@ public class QueryNugetListingTests
         await sut.Query(projPath, default, default, includePrerelease: inclPrerelease, cancel);
         if (inclPrerelease)
         {
-            passedArgs.Should().Contain("--include-prerelease");
+            passedArgs.ShouldNotBeNull();
+            passedArgs.ShouldContain("--include-prerelease");
         }
         else
         {
-            passedArgs.Should().NotContain("--include-prerelease");
+            passedArgs.ShouldNotBeNull();
+            passedArgs.ShouldNotContain("--include-prerelease");
         }
     }
 
@@ -76,7 +81,7 @@ public class QueryNugetListingTests
         sut.ProcessRunner.RunAndCapture(default!, default).ReturnsForAnyArgs(processReturn);
         sut.ResultProcessor.Process(processReturn.Out).Returns(functionReturn);
         var result = await sut.Query(projPath, default, default, default, cancel);
-        result.Succeeded.Should().BeTrue();
-        result.Value.Should().Equal(functionReturn);
+        result.Succeeded.ShouldBeTrue();
+        result.Value.ShouldBe(functionReturn);
     }
 }

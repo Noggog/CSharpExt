@@ -1,7 +1,7 @@
-﻿using FluentAssertions;
-using Noggog.Autofac.Validation.Rules;
+﻿using Noggog.Autofac.Validation.Rules;
 using Noggog.Testing.AutoFixture;
 using NSubstitute;
+using Shouldly;
 
 namespace CSharpExt.UnitTests.Autofac;
 
@@ -11,7 +11,7 @@ public class IsAllowableEnumerableTests
     public void Typical(IsAllowableEnumerable sut)
     {
         sut.IsAllowed(typeof(IEnumerable<string>))
-            .Should().BeTrue();
+            .ShouldBeTrue();
 
         sut.ValidateTypeCtor.Received(1).Validate(typeof(string), null);
     }
@@ -20,7 +20,7 @@ public class IsAllowableEnumerableTests
     public void Array(IsAllowableEnumerable sut)
     {
         sut.IsAllowed(typeof(string[]))
-            .Should().BeTrue();
+            .ShouldBeTrue();
 
         sut.ValidateTypeCtor.Received(1).Validate(typeof(string), null);
     }
@@ -29,6 +29,6 @@ public class IsAllowableEnumerableTests
     public void NotEnumerable(IsAllowableEnumerable sut)
     {
         sut.IsAllowed(typeof(string))
-            .Should().BeFalse();
+            .ShouldBeFalse();
     }
 }

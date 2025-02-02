@@ -1,6 +1,6 @@
-﻿using FluentAssertions;
-using Noggog;
+﻿using Noggog;
 using Noggog.Testing.IO;
+using Shouldly;
 
 namespace CSharpExt.UnitTests;
 
@@ -14,7 +14,7 @@ public class StreamExtTests
             var b1 = Enumerable.Range(0, 1000).Select(x => (byte)x).ToArray();
             var mem1 = new MemoryStream(b1);
             var mem2 = new MemoryStream(b1);
-            mem1.ContentsEqual(mem2).Should().BeTrue();
+            mem1.ContentsEqual(mem2).ShouldBeTrue();
         }
             
         [Fact]
@@ -24,7 +24,7 @@ public class StreamExtTests
             var b2 = Enumerable.Range(0, 950).Select(x => (byte)x).ToArray();
             var mem1 = new MemoryStream(b1);
             var mem2 = new MemoryStream(b2);
-            mem1.ContentsEqual(mem2).Should().BeFalse();
+            mem1.ContentsEqual(mem2).ShouldBeFalse();
         }
             
         [Fact]
@@ -34,7 +34,7 @@ public class StreamExtTests
             var b2 = Enumerable.Range(0, 1000).Select(x => (byte)(x + 1)).ToArray();
             var mem1 = new MemoryStream(b1);
             var mem2 = new MemoryStream(b2);
-            mem1.ContentsEqual(mem2).Should().BeFalse();
+            mem1.ContentsEqual(mem2).ShouldBeFalse();
         }
             
         [Fact]
@@ -44,7 +44,7 @@ public class StreamExtTests
             var b2 = Enumerable.Range(0, 950).Select(_ => (byte)0).ToArray();
             var mem1 = new MemoryStream(b1);
             var mem2 = new LengthLiarStream(new MemoryStream(b2), 1000);
-            mem1.ContentsEqual(mem2).Should().BeFalse();
+            mem1.ContentsEqual(mem2).ShouldBeFalse();
         }
     }
 }

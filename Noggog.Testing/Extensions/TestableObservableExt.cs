@@ -1,6 +1,6 @@
 ﻿using System.Reactive;
-using FluentAssertions;
 using Microsoft.Reactive.Testing;
+using Shouldly;
 
 namespace Noggog;
 
@@ -9,14 +9,12 @@ public static class TestableObservableExt
     public static void ShouldHaveNoErrors<T>(this ITestableObservable<T> obs)
     {
         obs.Messages.Where(x => x.Value.Kind == NotificationKind.OnError)
-            .Should()
-            .BeEmpty();
+            .ShouldBeEmpty();
     }
         
     public static void ShouldNotBeCompleted<T>(this ITestableObservable<T> obs)
     {
         obs.Messages.Where(x => x.Value.Kind == NotificationKind.OnCompleted)
-            .Should()
-            .BeEmpty();
+            .ShouldBeEmpty();
     }
 }
