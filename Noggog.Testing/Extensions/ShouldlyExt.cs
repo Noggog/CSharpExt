@@ -18,4 +18,22 @@ public static class ShouldlyExt
         return type.GetMethods()
             .Where(m => m.Name is not "GetType" and not "ToString" and not "GetHashCode" and not "Equals");
     }
+    
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public static void ShouldHaveCount<T>(this IEnumerable<T> actual, int count)
+    {
+        actual.Count().ShouldBe(count);
+    }
+    
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public static void ShouldHaveCount<T>(this IReadOnlyCollection<T> actual, int count)
+    {
+        actual.Count.ShouldBe(count);
+    }
+    
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public static void ShouldHaveCount<T>(this T[] actual, int count)
+    {
+        actual.Length.ShouldBe(count);
+    }
 }
