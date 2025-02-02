@@ -1,3 +1,5 @@
+using System.Runtime.InteropServices;
+
 namespace Noggog;
 
 public static class DictionaryExt
@@ -15,36 +17,40 @@ public static class DictionaryExt
         dict[key] = value;
     }
 
-    public static TValue GetOrAdd<TKey, TValue>(this IDictionary<TKey, TValue> dict, TKey key)
+#if NETSTANDARD2_0
+#else
+    public static TValue GetOrAdd<TKey, TValue>(this Dictionary<TKey, TValue> dict, TKey key)
+        where TKey : notnull
         where TValue : new()
     {
-        if (!dict.TryGetValue(key, out var ret))
+        ref var val = ref CollectionsMarshal.GetValueRefOrAddDefault(dict, key, out var exists);
+        if (exists)
         {
-            ret = new TValue();
-            dict[key] = ret;
+            return val!;
         }
-        return ret;
-    }
 
-    public static TValue GetOrAdd<TKey, TValue>(this IDictionary<TKey, TValue> dict, TKey key, Func<TValue> getNew)
-    {
-        if (!dict.TryGetValue(key, out var ret))
-        {
-            ret = getNew();
-            dict[key] = ret;
-        }
-        return ret;
+        var newVal = new TValue();
+        val = newVal;
+        return newVal;
     }
+#endif
 
-    public static TValue GetOrAdd<TKey, TValue>(this IDictionary<TKey, TValue> dict, TKey key, Func<TKey, TValue> getNew)
+#if NETSTANDARD2_0
+#else
+    public static TValue GetOrAdd<TKey, TValue>(this Dictionary<TKey, TValue> dict, TKey key, Func<TKey, TValue> getNew)
+        where TKey : notnull
     {
-        if (!dict.TryGetValue(key, out var ret))
+        ref var val = ref CollectionsMarshal.GetValueRefOrAddDefault(dict, key, out var exists);
+        if (exists)
         {
-            ret = getNew(key);
-            dict[key] = ret;
+            return val!;
         }
-        return ret;
+
+        var newVal = getNew(key);
+        val = newVal;
+        return newVal;
     }
+#endif
 
     public static TValue UpdateOrAdd<TKey, TValue>(this IDictionary<TKey, TValue> dict, TKey key, Func<TValue?, TValue> getNew)
     {
@@ -60,6 +66,60 @@ public static class DictionaryExt
         }
         return ret;
     }
+
+    public static TValue UpdateOrAdd<TKey, TValue>(this IDictionary<TKey, TValue> dict, TKey key, Func<TKey, TValue?, TValue> getNew)
+    {
+        if (dict.TryGetValue(key, out var ret))
+        {
+            ret = getNew(key, ret);
+            dict[key] = ret;
+        }
+        else
+        {
+            ret = getNew(key, default);
+            dict[key] = ret;
+        }
+        return ret;
+    }
+
+#if NETSTANDARD2_0
+#else
+    public static TValue UpdateOrAdd<TKey, TValue>(this Dictionary<TKey, TValue> dict, TKey key, Func<TValue?, TValue> getNew)
+        where TKey : notnull
+    {
+        ref var val = ref CollectionsMarshal.GetValueRefOrAddDefault(dict, key, out var exists);
+        if (exists)
+        {
+            var update = getNew(val);
+            val = update;
+            return update;
+        }
+        else
+        {
+            var newVal = getNew(default);
+            val = newVal;
+            return newVal;
+        }
+    }
+    
+    public static TValue UpdateOrAdd<TKey, TValue>(this Dictionary<TKey, TValue> dict, TKey key, Func<TKey, TValue?, TValue> getNew)
+        where TKey : notnull
+    {
+        ref var val = ref CollectionsMarshal.GetValueRefOrAddDefault(dict, key, out var exists);
+        if (exists)
+        {
+            var update = getNew(key, val);
+            val = update;
+            return update;
+        }
+        else
+        {
+            var newVal = getNew(key, default);
+            val = newVal;
+            return newVal;
+        }
+    }
+#endif
 
     public static TValue? GetOrDefault<TKey, TValue>(this IDictionary<TKey, TValue> dict, TKey key)
     {
