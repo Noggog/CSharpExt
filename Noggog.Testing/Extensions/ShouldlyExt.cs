@@ -36,4 +36,10 @@ public static class ShouldlyExt
     {
         actual.Length.ShouldBe(count);
     }
+    
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public static void ShouldAllBe<T>(this IEnumerable<T> actual, T item)
+    {
+        actual.ShouldAllBe<T>(x => Equals(x, item));    
+    }
 }
