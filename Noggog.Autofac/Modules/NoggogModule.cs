@@ -27,6 +27,7 @@ public class NoggogModule : Module
         builder.RegisterAssemblyTypes(typeof(IWorkDropoff).Assembly)
             .InNamespacesOf(
                 typeof(IWorkDropoff))
+            .Except<NumWorkThreadsConstant>()
             .NotInjection()
             .AsImplementedInterfaces()
             .SingleInstance();
