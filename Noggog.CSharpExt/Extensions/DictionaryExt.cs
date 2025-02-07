@@ -80,6 +80,22 @@ public static class DictionaryExt
         } 
         return ret; 
     }
+#else
+    public static TValue GetOrAdd<TKey, TValue>(this Dictionary<TKey, TValue> dict, TKey key)
+        where TKey : notnull
+        where TValue : new()
+    {
+        ref var val = ref CollectionsMarshal.GetValueRefOrAddDefault(dict, key, out var exists);
+        if (exists)
+        {
+            return val!;
+        }
+
+        var newVal = new TValue();
+        val = newVal;
+        return newVal;
+    }
+#endif
     
     public static TValue GetOrAdd<TKey, TValue>(this Dictionary<TKey, TValue> dict, TKey key, Func<TValue> getNew)
         where TKey : notnull
@@ -102,50 +118,6 @@ public static class DictionaryExt
         } 
         return ret; 
     }
-#else
-    public static TValue GetOrAdd<TKey, TValue>(this Dictionary<TKey, TValue> dict, TKey key)
-        where TKey : notnull
-        where TValue : new()
-    {
-        ref var val = ref CollectionsMarshal.GetValueRefOrAddDefault(dict, key, out var exists);
-        if (exists)
-        {
-            return val!;
-        }
-
-        var newVal = new TValue();
-        val = newVal;
-        return newVal;
-    }
-    
-    public static TValue GetOrAdd<TKey, TValue>(this Dictionary<TKey, TValue> dict, TKey key, Func<TValue> getNew)
-        where TKey : notnull
-    {
-        ref var val = ref CollectionsMarshal.GetValueRefOrAddDefault(dict, key, out var exists);
-        if (exists)
-        {
-            return val!;
-        }
-
-        var newVal = getNew();
-        val = newVal;
-        return newVal;
-    }
-    
-    public static TValue GetOrAdd<TKey, TValue>(this Dictionary<TKey, TValue> dict, TKey key, Func<TKey, TValue> getNew)
-        where TKey : notnull
-    {
-        ref var val = ref CollectionsMarshal.GetValueRefOrAddDefault(dict, key, out var exists);
-        if (exists)
-        {
-            return val!;
-        }
-
-        var newVal = getNew(key);
-        val = newVal;
-        return newVal;
-    }
-#endif
 
     public static TValue UpdateOrAdd<TKey, TValue>(this IDictionary<TKey, TValue> dict, TKey key, Func<TValue?, TValue> getNew)
     {
@@ -182,37 +154,17 @@ public static class DictionaryExt
     public static TValue UpdateOrAdd<TKey, TValue>(this Dictionary<TKey, TValue> dict, TKey key, Func<TValue?, TValue> getNew)
         where TKey : notnull
     {
-        ref var val = ref CollectionsMarshal.GetValueRefOrAddDefault(dict, key, out var exists);
-        if (exists)
-        {
-            var update = getNew(val);
-            val = update;
-            return update;
-        }
-        else
-        {
-            var newVal = getNew(default);
-            val = newVal;
-            return newVal;
-        }
-    }
-    
-    public static TValue UpdateOrAdd<TKey, TValue>(this Dictionary<TKey, TValue> dict, TKey key, Func<TKey, TValue?, TValue> getNew)
-        where TKey : notnull
-    {
-        ref var val = ref CollectionsMarshal.GetValueRefOrAddDefault(dict, key, out var exists);
-        if (exists)
-        {
-            var update = getNew(key, val);
-            val = update;
-            return update;
-        }
-        else
-        {
-            var newVal = getNew(key, default);
-            val = newVal;
-            return newVal;
-        }
+        if (dict.TryGetValue(key, out var ret)) 
+        { 
+            ret = getNew(ret); 
+            dict[key] = ret; 
+        } 
+        else 
+        { 
+            ret = getNew(default); 
+            dict[key] = ret; 
+        } 
+        return ret; 
     }
 #endif
 

@@ -17,6 +17,10 @@ public class DictionaryExtTests
         var s = d.GetOrAdd(key, (s) =>
         {
             s.ShouldBe(key);
+            
+            // Edge case test
+            if (d.TryGetValue(key, out var existing)) return existing;
+
             return value;
         });
         s.ShouldBe(value);
@@ -37,6 +41,9 @@ public class DictionaryExtTests
         var d = new Dictionary<string, int>();
         var s = d.GetOrAdd(key, () =>
         {
+            // Edge case test
+            if (d.TryGetValue(key, out var existing)) return existing;
+
             return value;
         });
         s.ShouldBe(value);
@@ -67,6 +74,10 @@ public class DictionaryExtTests
         var s = d.GetOrAdd(key, (s) =>
         {
             s.ShouldBe(key);
+            
+            // Edge case test
+            if (d.TryGetValue(key, out var existing)) return existing;
+
             return value;
         });
         s.ShouldBe(value);
@@ -87,6 +98,9 @@ public class DictionaryExtTests
         IDictionary<string, int> d = new Dictionary<string, int>();
         var s = d.GetOrAdd(key, () =>
         {
+            // Edge case test
+            if (d.TryGetValue(key, out var existing)) return existing;
+
             return value;
         });
         s.ShouldBe(value);
@@ -117,6 +131,9 @@ public class DictionaryExtTests
         var d = new ConcurrentDictionary<string, int>();
         var s = d.GetOrAdd(key, () =>
         {
+            // Edge case test
+            if (d.TryGetValue(key, out var existing)) return existing;
+
             return value;
         });
         s.ShouldBe(value);
@@ -148,6 +165,10 @@ public class DictionaryExtTests
         var s = d.GetOrAdd(key, (s) =>
         {
             s.ShouldBe(key);
+            
+            // Edge case test
+            if (d.TryGetValue(key, out var existing)) return existing;
+
             return value;
         });
         s.ShouldBe(value);
@@ -170,6 +191,10 @@ public class DictionaryExtTests
         {
             k.ShouldBe(key);
             s.ShouldBe(default(int));
+            
+            // Edge case test
+            if (d.TryGetValue(key, out var existing)) return existing;
+
             return value;
         });
         s.ShouldBe(value);
@@ -193,6 +218,10 @@ public class DictionaryExtTests
         {
             k.ShouldBe(key);
             s.ShouldBe(default(int));
+            
+            // Edge case test
+            if (d.TryGetValue(key, out var existing)) return existing;
+
             return value;
         });
         s.ShouldBe(value);
@@ -215,12 +244,17 @@ public class DictionaryExtTests
         var s = d.UpdateOrAdd(key, (s) =>
         {
             s.ShouldBe(default(int));
+            
+            // Edge case test
+            if (d.TryGetValue(key, out var existing)) return existing;
+
             return value;
         });
         s.ShouldBe(value);
         var s2 = d.UpdateOrAdd(key, (s) =>
         {
             s.ShouldBe(value);
+            
             return value2;
         });
         s2.ShouldBe(value2);
@@ -235,13 +269,18 @@ public class DictionaryExtTests
         IDictionary<string, int> d = new Dictionary<string, int>();
         var s = d.UpdateOrAdd(key, (s) =>
         {
-            s.ShouldBe(default(int));
+            s.ShouldBe(default(int));            
+            
+            // Edge case test
+            if (d.TryGetValue(key, out var existing)) return existing;
+
             return value;
         });
         s.ShouldBe(value);
         var s2 = d.UpdateOrAdd(key, (s) =>
         {
             s.ShouldBe(value);
+            
             return value2;
         });
         s2.ShouldBe(value2);
