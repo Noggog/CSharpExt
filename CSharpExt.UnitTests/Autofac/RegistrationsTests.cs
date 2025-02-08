@@ -31,7 +31,7 @@ public class RegistrationsTests
         new Registrations(cont).Items
             .Where(x => x.Key == typeof(Class))
             .SelectMany(x => x.Value)
-            .ShouldBe(
+            .ShouldEqual(
                 new Registration(typeof(Class), true));
     }
 
@@ -44,7 +44,7 @@ public class RegistrationsTests
         new Registrations(cont).Items
             .Where(x => x.Key == typeof(Class))
             .SelectMany(x => x.Value)
-            .ShouldBe(
+            .ShouldEqual(
                 new Registration(typeof(Class), false));
     }
 
@@ -57,7 +57,7 @@ public class RegistrationsTests
         new Registrations(cont).Items
             .Where(x => x.Key == typeof(Class))
             .SelectMany(x => x.Value)
-            .ShouldBe(
+            .ShouldEqual(
                 new Registration(typeof(Class), false));
     }
 

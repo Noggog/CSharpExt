@@ -12,13 +12,13 @@ public class EnumerateContainedFlagsTests
     public void EnumerateContainedFlags(bool includeUndefined)
     {
         Enums<TestEnum>.EnumerateContainedFlags(TestEnum.Second, includeUndefined: includeUndefined)
-            .ShouldBe(TestEnum.Second);
+            .ShouldEqual(TestEnum.Second);
         Enums<FlagsTestEnum>.EnumerateContainedFlags(default(FlagsTestEnum), includeUndefined: includeUndefined)
             .ShouldBeEmpty();
         Enums<FlagsTestEnum>.EnumerateContainedFlags(FlagsTestEnum.Two, includeUndefined: includeUndefined)
-            .ShouldBe(FlagsTestEnum.Two);
+            .ShouldEqual(FlagsTestEnum.Two);
         Enums<FlagsTestEnum>.EnumerateContainedFlags(FlagsTestEnum.Two | FlagsTestEnum.Four, includeUndefined: includeUndefined)
-            .ShouldBe(FlagsTestEnum.Two, FlagsTestEnum.Four);
+            .ShouldEqual(FlagsTestEnum.Two, FlagsTestEnum.Four);
     }
 
     [Fact]
@@ -27,13 +27,13 @@ public class EnumerateContainedFlagsTests
         Enums<TestEnum>.EnumerateContainedFlags((TestEnum)17, includeUndefined: false)
             .ShouldBeEmpty();
         Enums<TestEnum>.EnumerateContainedFlags((TestEnum)17, includeUndefined: true)
-            .ShouldBe((TestEnum)17);
+            .ShouldEqual((TestEnum)17);
         Enums<FlagsTestEnum>.EnumerateContainedFlags(FlagsTestEnum.Two | FlagsTestEnum.Four | (FlagsTestEnum)16, includeUndefined: false)
-            .ShouldBe(FlagsTestEnum.Two, FlagsTestEnum.Four);
+            .ShouldEqual(FlagsTestEnum.Two, FlagsTestEnum.Four);
         Enums<FlagsTestEnum>.EnumerateContainedFlags(FlagsTestEnum.Two | FlagsTestEnum.Four | (FlagsTestEnum)16, includeUndefined: true)
-            .ShouldBe(FlagsTestEnum.Two, FlagsTestEnum.Four, (FlagsTestEnum)16);
+            .ShouldEqual(FlagsTestEnum.Two, FlagsTestEnum.Four, (FlagsTestEnum)16);
         Enums<FlagsTestEnum>.EnumerateContainedFlags(FlagsTestEnum.Two | FlagsTestEnum.Four | (FlagsTestEnum)(-16), includeUndefined: false)
-            .ShouldBe(FlagsTestEnum.Two, FlagsTestEnum.Four);
+            .ShouldEqual(FlagsTestEnum.Two, FlagsTestEnum.Four);
     }
     
     [Theory]
@@ -44,22 +44,22 @@ public class EnumerateContainedFlagsTests
         Enums<UlongFlagsTestEnum>.EnumerateContainedFlags(default(UlongFlagsTestEnum), includeUndefined: includeUndefined)
             .ShouldBeEmpty();
         Enums<UlongFlagsTestEnum>.EnumerateContainedFlags(UlongFlagsTestEnum.Two, includeUndefined: includeUndefined)
-            .ShouldBe(UlongFlagsTestEnum.Two);
+            .ShouldEqual(UlongFlagsTestEnum.Two);
         Enums<UlongFlagsTestEnum>.EnumerateContainedFlags(UlongFlagsTestEnum.Two | UlongFlagsTestEnum.Four, includeUndefined: includeUndefined)
-            .ShouldBe(UlongFlagsTestEnum.Two, UlongFlagsTestEnum.Four);
+            .ShouldEqual(UlongFlagsTestEnum.Two, UlongFlagsTestEnum.Four);
         Enums<UlongFlagsTestEnum>.EnumerateContainedFlags(UlongFlagsTestEnum.Max, includeUndefined: includeUndefined)
-            .ShouldBe(UlongFlagsTestEnum.Max);
+            .ShouldEqual(UlongFlagsTestEnum.Max);
     }
 
     [Fact]
     public void EnumerateContainedUlongFlagsUndefined()
     {
         Enums<UlongFlagsTestEnum>.EnumerateContainedFlags(UlongFlagsTestEnum.Two | UlongFlagsTestEnum.Four | (UlongFlagsTestEnum)16, includeUndefined: false)
-            .ShouldBe(UlongFlagsTestEnum.Two, UlongFlagsTestEnum.Four);
+            .ShouldEqual(UlongFlagsTestEnum.Two, UlongFlagsTestEnum.Four);
         Enums<UlongFlagsTestEnum>.EnumerateContainedFlags(UlongFlagsTestEnum.Two | UlongFlagsTestEnum.Four | (UlongFlagsTestEnum)16, includeUndefined: true)
-            .ShouldBe(UlongFlagsTestEnum.Two, UlongFlagsTestEnum.Four, (UlongFlagsTestEnum)16);
+            .ShouldEqual(UlongFlagsTestEnum.Two, UlongFlagsTestEnum.Four, (UlongFlagsTestEnum)16);
         Enums<UlongFlagsTestEnum>.EnumerateContainedFlags(UlongFlagsTestEnum.Max, includeUndefined: true)
-            .ShouldBe(UlongFlagsTestEnum.Max);
+            .ShouldEqual(UlongFlagsTestEnum.Max);
     }
 
     [Theory]
@@ -70,21 +70,21 @@ public class EnumerateContainedFlagsTests
         Enums<LongFlagsTestEnum>.EnumerateContainedFlags(default(LongFlagsTestEnum), includeUndefined: includeUndefined)
             .ShouldBeEmpty();
         Enums<LongFlagsTestEnum>.EnumerateContainedFlags(LongFlagsTestEnum.Two, includeUndefined: includeUndefined)
-            .ShouldBe(LongFlagsTestEnum.Two);
+            .ShouldEqual(LongFlagsTestEnum.Two);
         Enums<LongFlagsTestEnum>.EnumerateContainedFlags(LongFlagsTestEnum.Two | LongFlagsTestEnum.Four, includeUndefined: includeUndefined)
-            .ShouldBe(LongFlagsTestEnum.Two, LongFlagsTestEnum.Four);
+            .ShouldEqual(LongFlagsTestEnum.Two, LongFlagsTestEnum.Four);
         Enums<LongFlagsTestEnum>.EnumerateContainedFlags(LongFlagsTestEnum.Max, includeUndefined: includeUndefined)
-            .ShouldBe(LongFlagsTestEnum.Max);
+            .ShouldEqual(LongFlagsTestEnum.Max);
     }
 
     [Fact]
     public void EnumerateContainedLongFlagsUndefined()
     {
         Enums<LongFlagsTestEnum>.EnumerateContainedFlags(LongFlagsTestEnum.Two | LongFlagsTestEnum.Four | (LongFlagsTestEnum)16, includeUndefined: false)
-            .ShouldBe(LongFlagsTestEnum.Two, LongFlagsTestEnum.Four);
+            .ShouldEqual(LongFlagsTestEnum.Two, LongFlagsTestEnum.Four);
         Enums<LongFlagsTestEnum>.EnumerateContainedFlags(LongFlagsTestEnum.Two | LongFlagsTestEnum.Four | (LongFlagsTestEnum)16, includeUndefined: true)
-            .ShouldBe(LongFlagsTestEnum.Two, LongFlagsTestEnum.Four, (LongFlagsTestEnum)16);
+            .ShouldEqual(LongFlagsTestEnum.Two, LongFlagsTestEnum.Four, (LongFlagsTestEnum)16);
         Enums<LongFlagsTestEnum>.EnumerateContainedFlags(LongFlagsTestEnum.Max, includeUndefined: false)
-            .ShouldBe(LongFlagsTestEnum.Max);
+            .ShouldEqual(LongFlagsTestEnum.Max);
     }
 }

@@ -25,7 +25,7 @@ public class SingleApplicationEnforcerTests
         
         singleApp.ForwardArgs(new []{ "Hello", "World" });
 
-        (await tcs.Task).ShouldBe("Hello", "World");
+        (await tcs.Task).ShouldEqual("Hello", "World");
     }
     
     [Theory, DefaultAutoData]
@@ -60,8 +60,8 @@ public class SingleApplicationEnforcerTests
         await Task.Delay(100);
 
         results.Count.ShouldBe(2);
-        results[0].ShouldBe( "Hello", "World");
-        results[1].ShouldBe("What", "Is", "Up");
+        results[0].ShouldEqual( "Hello", "World");
+        results[1].ShouldEqual("What", "Is", "Up");
     }
     
     [Theory, DefaultAutoData]
@@ -84,7 +84,7 @@ public class SingleApplicationEnforcerTests
 
         // Notified twice, but only see the last message twice
         results.Count.ShouldBe(2);
-        results[0].ShouldBe("What", "Is", "Up");
-        results[1].ShouldBe("What", "Is", "Up");
+        results[0].ShouldEqual("What", "Is", "Up");
+        results[1].ShouldEqual("What", "Is", "Up");
     }
 }
