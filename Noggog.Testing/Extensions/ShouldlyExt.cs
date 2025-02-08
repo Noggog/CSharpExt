@@ -13,6 +13,24 @@ public static class ShouldlyExt
     }
     
     [MethodImpl(MethodImplOptions.NoInlining)]
+    public static void ShouldEqual<T, TRhs>(this T actual, TRhs item)
+    {
+        actual.ShouldBe<object>(item);    
+    }
+    
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public static void ShouldEqual<T, TRhs>(this IEnumerable<T> actual, params TRhs[] item)
+    {
+        actual.ShouldBe<object>(item);
+    }
+    
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public static void ShouldEqual<T, TRhs>(this IEnumerable<T> actual, IEnumerable<TRhs> item)
+    {
+        actual.ShouldBe<object>(item);
+    }
+    
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public static IEnumerable<MethodInfo> Methods(this Type type)
     {
         return type.GetMethods()
@@ -38,7 +56,7 @@ public static class ShouldlyExt
     }
     
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public static void ShouldAllBe<T>(this IEnumerable<T> actual, T item)
+    public static void ShouldAllEqual<T>(this IEnumerable<T> actual, T item)
     {
         actual.ShouldAllBe<T>(x => Equals(x, item));    
     }
