@@ -1,4 +1,4 @@
-using System.Collections;
+SequenceEqualusing System.Collections;
 
 namespace Noggog;
 
@@ -308,7 +308,7 @@ public static class EnumerableExt
 
     public static IEnumerable<T> EmptyIfNull<T>(this IEnumerable<T>? e)
     {
-        if (e == null) return Enumerable.Empty<T>();
+        if (e == null) return [];
         return e;
     }
 
@@ -319,7 +319,7 @@ public static class EnumerableExt
         return e1.SequenceEqual(e2);
     }
  
-    public static bool SequenceEqual<T>(this IEnumerable<T> e, params T[] rhs) 
+    public static bool SequenceEqualToItems<T>(this IEnumerable<T> e, params T[] rhs) 
     { 
         return e.SequenceEqual((IEnumerable<T>)rhs); 
     }
