@@ -1,4 +1,4 @@
-SequenceEqualusing System.Collections;
+using System.Collections;
 
 namespace Noggog;
 
