@@ -260,14 +260,14 @@ public static class EnumerableExt
     public static IEnumerable<T> WhereNotNull<T>(this IEnumerable<T?> e)
         where T : struct => e.Where(i => i.HasValue).Select(i => i!.Value);
 
-    [Obsolete("NotNull is deprecated in favor of WhereNotNull for naming consistency.")]
+    // Keep NotNull variants, as ReactiveUI has a collision with WhereNotNull
     public static IEnumerable<T> NotNull<T>(this IEnumerable<T?> e)
         where T : class
     {
         return e.Where(i => i != null)!;
     }
 
-    [Obsolete("NotNull is deprecated in favor of WhereNotNull for naming consistency.")]
+    // Keep NotNull variants, as ReactiveUI has a collision with WhereNotNull
     public static IEnumerable<T> NotNull<T>(this IEnumerable<T?> e)
         where T : struct
     {
