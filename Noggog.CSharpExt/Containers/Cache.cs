@@ -9,7 +9,7 @@ public class Cache<TObject, TKey> : ICache<TObject, TKey>
     public static readonly IReadOnlyCache<TObject, TKey> Empty = new Cache<TObject, TKey>(_ => default!);
 
     private readonly Func<TObject, TKey> _keySelector;
-    private Dictionary<TKey, TObject> _dict = new();
+    private readonly Dictionary<TKey, TObject> _dict;
 
     public TObject this[TKey key] => _dict[key];
 
@@ -21,8 +21,9 @@ public class Cache<TObject, TKey> : ICache<TObject, TKey>
 
     public IEnumerable<KeyValuePair<TKey, TObject>> KeyValues => _dict;
 
-    public Cache(Func<TObject, TKey> keySelector)
+    public Cache(Func<TObject, TKey> keySelector, IEqualityComparer<TKey>? equalityComparer = null)
     {
+        _dict = new Dictionary<TKey, TObject>(equalityComparer);
         _keySelector = keySelector ?? throw new ArgumentNullException(nameof(keySelector));
     }
 
@@ -50,40 +51,6 @@ public class Cache<TObject, TKey> : ICache<TObject, TKey>
         }
 
         return default;
-    }
-    
-    public void Refresh()
-    {
-        var tmp = _dict;
-        _dict = new Dictionary<TKey, TObject>();
-        foreach (var item in tmp.Values)
-        {
-            _dict[_keySelector(item)] = item;
-        }
-    }
-
-    public void Refresh(IEnumerable<TKey> keys)
-    {
-        List<TObject> objs = new();
-        foreach (var key in keys)
-        {
-            if (_dict.TryGetValue(key, out var val))
-            {
-                objs.Add(val);
-                _dict.Remove(key);
-            }
-        }
-        foreach (var obj in objs)
-        {
-            _dict[_keySelector(obj)] = obj;
-        }
-    }
-
-    public void Refresh(TKey key)
-    {
-        if (!TryGetValue(key, out var val)) return;
-        _dict.Remove(key);
-        _dict[_keySelector(val)] = val;
     }
 
     public IEnumerator<IKeyValue<TKey, TObject>> GetEnumerator()

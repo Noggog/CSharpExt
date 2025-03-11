@@ -7,7 +7,7 @@
   <ItemGroup>
     <PackageReference Include="AutoFixture" />
     <PackageReference Include="AutoFixture.Xunit2" />
-    <PackageReference Include="FluentAssertions" />
+    <PackageReference Include="Shouldly" />
     <PackageReference Include="Microsoft.CodeAnalysis.Common" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" />
     <PackageReference Include="Newtonsoft.Json" />
@@ -29,7 +29,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Noggog.Autofac\Noggog.Autofac.csproj" />
     <ProjectReference Include="..\Noggog.CSharpExt.Json\Noggog.CSharpExt.Json.csproj" />
     <ProjectReference Include="..\Noggog.CSharpExt.Windows\Noggog.CSharpExt.Windows.csproj" Condition="!$([MSBuild]::IsOSUnixLike())" />
     <ProjectReference Include="..\Noggog.CSharpExt\Noggog.CSharpExt.csproj" />

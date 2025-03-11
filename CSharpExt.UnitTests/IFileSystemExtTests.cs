@@ -1,9 +1,10 @@
 ﻿using System.IO.Abstractions;
 using System.IO.Abstractions.TestingHelpers;
-using FluentAssertions;
 using Noggog;
+using Noggog.Testing.Extensions;
 using Noggog.Testing.IO;
 using NSubstitute;
+using Shouldly;
 
 namespace CSharpExt.UnitTests;
 
@@ -43,10 +44,10 @@ public class IFileSystemExtTests
     {
         var fileSystem = TypicalFileSystem();
         fileSystem.Directory.DeleteEntireFolder(DirPath, disableReadOnly: true, deleteFolderItself: true);
-        fileSystem.File.Exists(SomeFile).Should().BeFalse();
-        fileSystem.File.Exists(SomeSubFile).Should().BeFalse();
-        fileSystem.Directory.Exists(DirPath).Should().BeFalse();
-        fileSystem.Directory.Exists(SomeSubDir).Should().BeFalse();
+        fileSystem.File.Exists(SomeFile).ShouldBeFalse();
+        fileSystem.File.Exists(SomeSubFile).ShouldBeFalse();
+        fileSystem.Directory.Exists(DirPath).ShouldBeFalse();
+        fileSystem.Directory.Exists(SomeSubDir).ShouldBeFalse();
     }
 
     [Fact]
@@ -54,10 +55,10 @@ public class IFileSystemExtTests
     {
         var fileSystem = TypicalFileSystem();
         fileSystem.Directory.DeleteEntireFolder(DirPath, disableReadOnly: true, deleteFolderItself: false);
-        fileSystem.File.Exists(SomeFile).Should().BeFalse();
-        fileSystem.File.Exists(SomeSubFile).Should().BeFalse();
-        fileSystem.Directory.Exists(DirPath).Should().BeTrue();
-        fileSystem.Directory.Exists(SomeSubDir).Should().BeFalse();
+        fileSystem.File.Exists(SomeFile).ShouldBeFalse();
+        fileSystem.File.Exists(SomeSubFile).ShouldBeFalse();
+        fileSystem.Directory.Exists(DirPath).ShouldBeTrue();
+        fileSystem.Directory.Exists(SomeSubDir).ShouldBeFalse();
     }
 
     [Fact]
@@ -70,8 +71,8 @@ public class IFileSystemExtTests
         var file = fileSystem.FileInfo.New(SomeFile);
         file.IsReadOnly = true;
         fileSystem.Directory.DeleteEntireFolder(DirPath, disableReadOnly: true, deleteFolderItself: true);
-        fileSystem.File.Exists(SomeFile).Should().BeFalse();
-        fileSystem.Directory.Exists(DirPath).Should().BeFalse();
+        fileSystem.File.Exists(SomeFile).ShouldBeFalse();
+        fileSystem.Directory.Exists(DirPath).ShouldBeFalse();
     }
 
     [Fact]
@@ -84,10 +85,10 @@ public class IFileSystemExtTests
         {
             fileSystem.Directory.DeleteEntireFolder(DirPath, disableReadOnly: false, deleteFolderItself: true);
         });
-        fileSystem.File.Exists(SomeFile).Should().BeTrue();
-        fileSystem.File.Exists(SomeSubFile).Should().BeFalse();
-        fileSystem.Directory.Exists(DirPath).Should().BeTrue();
-        fileSystem.Directory.Exists(SomeSubDir).Should().BeFalse();
+        fileSystem.File.Exists(SomeFile).ShouldBeTrue();
+        fileSystem.File.Exists(SomeSubFile).ShouldBeFalse();
+        fileSystem.Directory.Exists(DirPath).ShouldBeTrue();
+        fileSystem.Directory.Exists(SomeSubDir).ShouldBeFalse();
     }
         
     [Fact]
@@ -97,10 +98,10 @@ public class IFileSystemExtTests
         var file = fileSystem.FileInfo.New(SomeFile);
         file.IsReadOnly = true;
         fileSystem.Directory.TryDeleteEntireFolder(DirPath, disableReadOnly: false, deleteFolderItself: true);
-        fileSystem.File.Exists(SomeFile).Should().BeTrue();
-        fileSystem.File.Exists(SomeSubFile).Should().BeFalse();
-        fileSystem.Directory.Exists(DirPath).Should().BeTrue();
-        fileSystem.Directory.Exists(SomeSubDir).Should().BeFalse();
+        fileSystem.File.Exists(SomeFile).ShouldBeTrue();
+        fileSystem.File.Exists(SomeSubFile).ShouldBeFalse();
+        fileSystem.Directory.Exists(DirPath).ShouldBeTrue();
+        fileSystem.Directory.Exists(SomeSubDir).ShouldBeFalse();
     }
 
     #endregion
@@ -112,7 +113,7 @@ public class IFileSystemExtTests
     {
         var fileSystem = TypicalFileSystem();
         fileSystem.Directory.EnumerateFilePaths(DirPath)
-            .Should().Equal(
+            .ShouldEqual(
                 SomeFile,
                 SomeFileTxt);
     }
@@ -122,7 +123,7 @@ public class IFileSystemExtTests
     {
         var fileSystem = TypicalFileSystem();
         fileSystem.Directory.EnumerateFilePaths(DirPath, "*.txt")
-            .Should().Equal(
+            .ShouldEqual(
                 SomeFileTxt);
     }
         
@@ -131,7 +132,7 @@ public class IFileSystemExtTests
     {
         var fileSystem = TypicalFileSystem();
         fileSystem.Directory.EnumerateFilePaths(DirPath, recursive: true)
-            .Should().Equal(
+            .ShouldEqual(
                 SomeFile,
                 SomeFileTxt,
                 SomeSubFile,
@@ -143,7 +144,7 @@ public class IFileSystemExtTests
     {
         var fileSystem = TypicalFileSystem();
         fileSystem.Directory.EnumerateFilePaths(DirPath, "*.txt", recursive: true)
-            .Should().Equal(
+            .ShouldEqual(
                 SomeFileTxt,
                 SomeSubFileTxt);
     }
@@ -163,7 +164,7 @@ public class IFileSystemExtTests
             { subSubDir, new MockFileData("Doop") },
         });
         fileSystem.Directory.EnumerateDirectoryPaths(DirPath, includeSelf: true, recursive: true)
-            .Should().Equal(
+            .ShouldEqual(
                 DirPath,
                 SomeSubDir);
     }
@@ -173,7 +174,7 @@ public class IFileSystemExtTests
     {
         var fileSystem = TypicalFileSystem();
         fileSystem.Directory.EnumerateDirectoryPaths(DirPath, includeSelf: false, recursive: true)
-            .Should().Equal(
+            .ShouldEqual(
                 SomeSubDir);
     }
 
@@ -187,7 +188,7 @@ public class IFileSystemExtTests
             { Path.Combine(SomeSubDir, "SubSubDir"), new MockFileData("Doop") },
         });
         fileSystem.Directory.EnumerateDirectoryPaths(DirPath, includeSelf: true, recursive: false)
-            .Should().Equal(
+            .ShouldEqual(
                 DirPath,
                 SomeSubDir);
     }
@@ -201,7 +202,7 @@ public class IFileSystemExtTests
     {
         var fileSystem = TypicalFileSystem();
         fileSystem.Directory.IsSubfolderOf(SomeSubDir, DirPath)
-            .Should().BeTrue();
+            .ShouldBeTrue();
     }
 
     [Fact]
@@ -209,7 +210,7 @@ public class IFileSystemExtTests
     {
         var fileSystem = TypicalFileSystem();
         fileSystem.Directory.IsSubfolderOf(DirPath, SomeSubDir)
-            .Should().BeFalse();
+            .ShouldBeFalse();
     }
 
     #endregion
@@ -226,10 +227,10 @@ public class IFileSystemExtTests
         FilePath targetSomeSubFile = Path.Combine(DirPath, "SubDir", "SubFile");
 
         fileSystem.Directory.DeepCopy(DirPath, targetDir);
-        fileSystem.File.Exists(targetSomeFile).Should().BeTrue();
-        fileSystem.File.Exists(targetSomeSubFile).Should().BeTrue();
-        fileSystem.Directory.Exists(targetDir).Should().BeTrue();
-        fileSystem.Directory.Exists(targetSomeSubDir).Should().BeTrue();
+        fileSystem.File.Exists(targetSomeFile).ShouldBeTrue();
+        fileSystem.File.Exists(targetSomeSubFile).ShouldBeTrue();
+        fileSystem.Directory.Exists(targetDir).ShouldBeTrue();
+        fileSystem.Directory.Exists(targetSomeSubDir).ShouldBeTrue();
     }
 
     #endregion

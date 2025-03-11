@@ -1,5 +1,6 @@
-﻿using FluentAssertions;
-using Noggog;
+﻿using Noggog;
+using Noggog.Testing.Extensions;
+using Shouldly;
 
 namespace CSharpExt.UnitTests.Enum;
 
@@ -8,7 +9,7 @@ public class ValuesTests
     [Fact]
     public void Typical()
     {
-        Enums<TestEnum>.Values.Should().Equal(
+        Enums<TestEnum>.Values.ShouldEqual(
             TestEnum.First,
             TestEnum.Second,
             TestEnum.Third);
@@ -17,13 +18,13 @@ public class ValuesTests
     [Fact]
     public void Empty()
     {
-        Enums<EmptyTestEnum>.Values.Should().BeEmpty();
+        Enums<EmptyTestEnum>.Values.ShouldBeEmpty();
     }
 
     [Fact]
     public void TypicalFlags()
     {
-        Enums<FlagsTestEnum>.Values.Should().Equal(
+        Enums<FlagsTestEnum>.Values.ShouldEqual(
             FlagsTestEnum.One,
             FlagsTestEnum.Two,
             FlagsTestEnum.Four);
@@ -32,6 +33,6 @@ public class ValuesTests
     [Fact]
     public void EmptyFlags()
     {
-        Enums<EmptyFlagsTestEnum>.Values.Should().BeEmpty();
+        Enums<EmptyFlagsTestEnum>.Values.ShouldBeEmpty();
     }
 }

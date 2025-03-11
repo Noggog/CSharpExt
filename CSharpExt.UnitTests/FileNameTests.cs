@@ -1,5 +1,5 @@
-using FluentAssertions;
 using Noggog;
+using Shouldly;
 
 namespace CSharpExt.UnitTests;
 
@@ -37,9 +37,9 @@ public class FileNameTests
     {
         FilePath? fp = new FilePath("Test");
         string? str = fp;
-        str.Should().Be("Test");
+        str.ShouldBe("Test");
         fp = null;
         str = fp;
-        str.Should().BeNull();
+        str.ShouldBeNull();
     }
 }

@@ -1,3 +1,6 @@
+using System.Collections.Concurrent;
+using System.Runtime.InteropServices;
+
 namespace Noggog;
 
 public static class DictionaryExt
@@ -14,26 +17,106 @@ public static class DictionaryExt
     {
         dict[key] = value;
     }
-
-    public static TValue GetOrAdd<TKey, TValue>(this IDictionary<TKey, TValue> dict, TKey key)
+ 
+    public static TValue GetOrAdd<TKey, TValue>(this IDictionary<TKey, TValue> dict, TKey key) 
+        where TValue : new() 
+    { 
+        if (!dict.TryGetValue(key, out var ret)) 
+        { 
+            ret = new TValue(); 
+            dict[key] = ret; 
+        } 
+        return ret; 
+    } 
+ 
+    public static TValue GetOrAdd<TKey, TValue>(this IDictionary<TKey, TValue> dict, TKey key, Func<TValue> getNew) 
+    { 
+        if (!dict.TryGetValue(key, out var ret)) 
+        { 
+            ret = getNew(); 
+            dict[key] = ret; 
+        } 
+        return ret; 
+    } 
+ 
+    public static TValue GetOrAdd<TKey, TValue>(this IDictionary<TKey, TValue> dict, TKey key, Func<TKey, TValue> getNew) 
+    { 
+        if (!dict.TryGetValue(key, out var ret)) 
+        { 
+            ret = getNew(key); 
+            dict[key] = ret; 
+        } 
+        return ret; 
+    } 
+    
+    public static TValue GetOrAdd<TKey, TValue>(this ConcurrentDictionary<TKey, TValue> dict, TKey key)
+        where TKey : notnull
         where TValue : new()
     {
-        if (!dict.TryGetValue(key, out var ret))
+        return dict.GetOrAdd(key, (_) =>
         {
-            ret = new TValue();
-            dict[key] = ret;
-        }
-        return ret;
+            return new TValue();
+        });
+    }
+    
+    public static TValue GetOrAdd<TKey, TValue>(this ConcurrentDictionary<TKey, TValue> dict, TKey key, Func<TValue> getNew)
+        where TKey : notnull
+    {
+        return dict.GetOrAdd(key, (_) =>
+        {
+            return getNew();
+        });
     }
 
-    public static TValue GetOrAdd<TKey, TValue>(this IDictionary<TKey, TValue> dict, TKey key, Func<TValue> getNew)
+#if NETSTANDARD2_0
+    public static TValue GetOrAdd<TKey, TValue>(this Dictionary<TKey, TValue> dict, TKey key)
+        where TKey : notnull
+        where TValue : new()
     {
-        if (!dict.TryGetValue(key, out var ret))
+        if (!dict.TryGetValue(key, out var ret)) 
+        { 
+            ret = new(); 
+            dict[key] = ret; 
+        } 
+        return ret; 
+    }
+#else
+    public static TValue GetOrAdd<TKey, TValue>(this Dictionary<TKey, TValue> dict, TKey key)
+        where TKey : notnull
+        where TValue : new()
+    {
+        ref var val = ref CollectionsMarshal.GetValueRefOrAddDefault(dict, key, out var exists);
+        if (exists)
         {
-            ret = getNew();
-            dict[key] = ret;
+            return val!;
         }
-        return ret;
+
+        var newVal = new TValue();
+        val = newVal;
+        return newVal;
+    }
+#endif
+    
+    public static TValue GetOrAdd<TKey, TValue>(this Dictionary<TKey, TValue> dict, TKey key, Func<TValue> getNew)
+        where TKey : notnull
+    {
+        if (!dict.TryGetValue(key, out var ret)) 
+        { 
+            ret = getNew(); 
+            dict[key] = ret; 
+        } 
+        return ret; 
+    }
+    
+    public static TValue GetOrAdd<TKey, TValue>(this Dictionary<TKey, TValue> dict, TKey key, Func<TKey, TValue> getNew)
+        where TKey : notnull
+    {
+        if (!dict.TryGetValue(key, out var ret)) 
+        { 
+            ret = getNew(key); 
+            dict[key] = ret; 
+        } 
+        return ret; 
     }
 
     public static TValue UpdateOrAdd<TKey, TValue>(this IDictionary<TKey, TValue> dict, TKey key, Func<TValue?, TValue> getNew)
@@ -50,6 +133,40 @@ public static class DictionaryExt
         }
         return ret;
     }
+
+    public static TValue UpdateOrAdd<TKey, TValue>(this IDictionary<TKey, TValue> dict, TKey key, Func<TKey, TValue?, TValue> getNew)
+    {
+        if (dict.TryGetValue(key, out var ret))
+        {
+            ret = getNew(key, ret);
+            dict[key] = ret;
+        }
+        else
+        {
+            ret = getNew(key, default);
+            dict[key] = ret;
+        }
+        return ret;
+    }
+
+#if NETSTANDARD2_0
+#else
+    public static TValue UpdateOrAdd<TKey, TValue>(this Dictionary<TKey, TValue> dict, TKey key, Func<TValue?, TValue> getNew)
+        where TKey : notnull
+    {
+        if (dict.TryGetValue(key, out var ret)) 
+        { 
+            ret = getNew(ret); 
+            dict[key] = ret; 
+        } 
+        else 
+        { 
+            ret = getNew(default); 
+            dict[key] = ret; 
+        } 
+        return ret; 
+    }
+#endif
 
     public static TValue? GetOrDefault<TKey, TValue>(this IDictionary<TKey, TValue> dict, TKey key)
     {

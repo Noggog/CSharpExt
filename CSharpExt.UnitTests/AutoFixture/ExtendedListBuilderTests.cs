@@ -1,6 +1,6 @@
-﻿using FluentAssertions;
-using Noggog;
+﻿using Noggog;
 using Noggog.Testing.AutoFixture;
+using Shouldly;
 
 namespace CSharpExt.UnitTests.AutoFixture;
 
@@ -11,10 +11,10 @@ public class ExtendedListBuilderTests
         ExtendedList<int> list, 
         IExtendedList<int> listInterf)
     {
-        list.Count.Should().NotBe(0);
-        list.Should().OnlyHaveUniqueItems();
-        listInterf.Count.Should().NotBe(0);
-        listInterf.Should().OnlyHaveUniqueItems();
+        list.Count.ShouldNotBe(0);
+        list.ShouldBeUnique();
+        listInterf.Count.ShouldNotBe(0);
+        listInterf.ShouldBeUnique();
     }
     
     [Theory, DefaultAutoData]
@@ -22,10 +22,10 @@ public class ExtendedListBuilderTests
         ExtendedList<TestClass> list, 
         IExtendedList<TestClass> listInterf)
     {
-        list.Count.Should().NotBe(0);
-        list.Should().OnlyHaveUniqueItems();
-        listInterf.Count.Should().NotBe(0);
-        listInterf.Should().OnlyHaveUniqueItems();
+        list.Count.ShouldNotBe(0);
+        list.ShouldBeUnique();
+        listInterf.Count.ShouldNotBe(0);
+        listInterf.ShouldBeUnique();
     }
 
     public record TestClass(int Int, string String);

@@ -1,5 +1,5 @@
-﻿using FluentAssertions;
-using Noggog;
+﻿using Noggog;
+using Shouldly;
 
 namespace CSharpExt.UnitTests.Enum;
 
@@ -10,7 +10,7 @@ public class FlagTests
     {
         var e = FlagsTestEnum.One | FlagsTestEnum.Four;
         e.HasFlag(FlagsTestEnum.Four)
-            .Should().BeTrue();
+            .ShouldBeTrue();
     }
     
     [Fact]
@@ -18,7 +18,7 @@ public class FlagTests
     {
         var e = FlagsTestEnum.One | FlagsTestEnum.Four;
         e.HasFlag(FlagsTestEnum.Four)
-            .Should().BeTrue();
+            .ShouldBeTrue();
     }
     
     [Fact]
@@ -26,20 +26,20 @@ public class FlagTests
     {
         var e = FlagsTestEnum.One | FlagsTestEnum.Four;
         e.HasFlag(FlagsTestEnum.Four | FlagsTestEnum.One)
-            .Should().BeTrue();
+            .ShouldBeTrue();
         e.HasFlag(FlagsTestEnum.Four)
-            .Should().BeTrue();
+            .ShouldBeTrue();
         e.HasFlag(FlagsTestEnum.One)
-            .Should().BeTrue();
+            .ShouldBeTrue();
         e.HasFlag(FlagsTestEnum.One | FlagsTestEnum.Two)
-            .Should().BeFalse();
+            .ShouldBeFalse();
     }
     
     private void HasFlagTest(byte val, byte test, bool result)
     {
-        Enums.HasFlag((int)val, (int)test).Should().Be(result);
-        Enums.HasFlag((uint)val, (uint)test).Should().Be(result);
-        Enums.HasFlag((byte)val, (byte)test).Should().Be(result);
+        Enums.HasFlag((int)val, (int)test).ShouldBe(result);
+        Enums.HasFlag((uint)val, (uint)test).ShouldBe(result);
+        Enums.HasFlag((byte)val, (byte)test).ShouldBe(result);
     }
     
     [Fact]
@@ -54,18 +54,18 @@ public class FlagTests
     
     private void SetFlagTest(byte val, byte test, bool on, byte result)
     {
-        Enums.SetFlag((int)val, (int)test, on).Should().Be(result);
-        Enums.SetFlag((uint)val, (uint)test, on).Should().Be(result);
-        Enums.SetFlag((byte)val, (byte)test, on).Should().Be(result);
+        Enums.SetFlag((int)val, (int)test, on).ShouldBe(result);
+        Enums.SetFlag((uint)val, (uint)test, on).ShouldBe(result);
+        Enums.SetFlag((byte)val, (byte)test, on).ShouldBe(result);
         byte b = val;
         Enums.SetFlag(ref b, test, on);
-        b.Should().Be(result);
+        b.ShouldBe(result);
         uint ui = val;
         Enums.SetFlag(ref ui, test, on);
-        ui.Should().Be(result);
+        ui.ShouldBe(result);
         int i = val;
         Enums.SetFlag(ref i, test, on);
-        i.Should().Be(result);
+        i.ShouldBe(result);
     }
     
     [Fact]
@@ -82,7 +82,7 @@ public class FlagTests
     [Fact]
     public void IsFlagsEnum()
     {
-        Enums<TestEnum>.IsFlagsEnum.Should().BeFalse();
-        Enums<FlagsTestEnum>.IsFlagsEnum.Should().BeTrue();
+        Enums<TestEnum>.IsFlagsEnum.ShouldBeFalse();
+        Enums<FlagsTestEnum>.IsFlagsEnum.ShouldBeTrue();
     }
 }

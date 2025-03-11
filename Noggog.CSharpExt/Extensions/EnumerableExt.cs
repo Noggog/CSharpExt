@@ -260,14 +260,14 @@ public static class EnumerableExt
     public static IEnumerable<T> WhereNotNull<T>(this IEnumerable<T?> e)
         where T : struct => e.Where(i => i.HasValue).Select(i => i!.Value);
 
-    [Obsolete("NotNull is deprecated in favor of WhereNotNull for naming consistency.")]
+    // Keep NotNull variants, as ReactiveUI has a collision with WhereNotNull
     public static IEnumerable<T> NotNull<T>(this IEnumerable<T?> e)
         where T : class
     {
         return e.Where(i => i != null)!;
     }
 
-    [Obsolete("NotNull is deprecated in favor of WhereNotNull for naming consistency.")]
+    // Keep NotNull variants, as ReactiveUI has a collision with WhereNotNull
     public static IEnumerable<T> NotNull<T>(this IEnumerable<T?> e)
         where T : struct
     {
@@ -308,7 +308,7 @@ public static class EnumerableExt
 
     public static IEnumerable<T> EmptyIfNull<T>(this IEnumerable<T>? e)
     {
-        if (e == null) return Enumerable.Empty<T>();
+        if (e == null) return [];
         return e;
     }
 
@@ -319,7 +319,7 @@ public static class EnumerableExt
         return e1.SequenceEqual(e2);
     }
  
-    public static bool SequenceEqual<T>(this IEnumerable<T> e, params T[] rhs) 
+    public static bool SequenceEqualToItems<T>(this IEnumerable<T> e, params T[] rhs) 
     { 
         return e.SequenceEqual((IEnumerable<T>)rhs); 
     }
@@ -409,7 +409,7 @@ public static class EnumerableExt
     public static IEnumerable<T> Take<T>(this IEnumerable<T> e, int? amount)
     {
         if (amount == null) return e;
-        return e.Take(amount.Value);
+        return System.Linq.Enumerable.Take(e, amount.Value);
     }
 }
 

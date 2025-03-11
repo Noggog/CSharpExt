@@ -28,6 +28,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Noggog.CSharpExt.Json", "No
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Noggog.SourceGenerators", "Noggog.SourceGenerators\Noggog.SourceGenerators.csproj", "{0AECE340-30ED-4059-8D58-C42E7E0722D2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Noggog.Nuget", "Noggog.Nuget\Noggog.Nuget.csproj", "{2F4881EA-922D-4B82-814F-024A203F9DBC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Noggog.Nuget.Tests", "Noggog.Nuget.Tests\Noggog.Nuget.Tests.csproj", "{3AC3936D-79BF-4F38-8E3B-8B945E6E58E5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -70,6 +74,14 @@ Global
 		{0AECE340-30ED-4059-8D58-C42E7E0722D2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0AECE340-30ED-4059-8D58-C42E7E0722D2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0AECE340-30ED-4059-8D58-C42E7E0722D2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2F4881EA-922D-4B82-814F-024A203F9DBC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2F4881EA-922D-4B82-814F-024A203F9DBC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2F4881EA-922D-4B82-814F-024A203F9DBC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2F4881EA-922D-4B82-814F-024A203F9DBC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3AC3936D-79BF-4F38-8E3B-8B945E6E58E5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3AC3936D-79BF-4F38-8E3B-8B945E6E58E5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3AC3936D-79BF-4F38-8E3B-8B945E6E58E5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3AC3936D-79BF-4F38-8E3B-8B945E6E58E5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

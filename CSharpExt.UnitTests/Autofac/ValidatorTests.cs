@@ -19,7 +19,7 @@ public class ValidatorTests
             
         sut.ValidateEverything();
             
-        sut.ValidateTypes.Received(1).Validate(Arg.Is<IEnumerable<Type>>(x => x.SequenceEqual(typeof(string))));
+        sut.ValidateTypes.Received(1).Validate(Arg.Is<IEnumerable<Type>>(x => x.SequenceEqualToItems(typeof(string))));
         sut.ReferenceChecker.Received(1).Check();
     }
         
@@ -37,7 +37,7 @@ public class ValidatorTests
             
         sut.ValidateEverything();
             
-        sut.ValidateTypes.Received(1).Validate(Arg.Is<IEnumerable<Type>>(x => x.SequenceEqual(typeof(string))));
+        sut.ValidateTypes.Received(1).Validate(Arg.Is<IEnumerable<Type>>(x => x.SequenceEqualToItems(typeof(string))));
         sut.ReferenceChecker.Received(1).Check();
     }
         
@@ -51,7 +51,7 @@ public class ValidatorTests
             
         sut.Validate(typeof(double), typeof(float));
             
-        sut.ValidateTypes.Received(1).Validate(Arg.Is<IEnumerable<Type>>(x => x.SequenceEqual(typeof(double), typeof(float))));
+        sut.ValidateTypes.Received(1).Validate(Arg.Is<IEnumerable<Type>>(x => x.SequenceEqualToItems(typeof(double), typeof(float))));
         sut.ShouldSkip.DidNotReceiveWithAnyArgs().ShouldSkip(default!);
         sut.ReferenceChecker.Received(1).Check();
     }

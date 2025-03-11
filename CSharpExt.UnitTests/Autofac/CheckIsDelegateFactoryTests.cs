@@ -1,9 +1,9 @@
-﻿using FluentAssertions;
-using Noggog;
+﻿using Noggog;
 using Noggog.Autofac.Validation;
 using Noggog.Autofac.Validation.Rules;
 using Noggog.Testing.AutoFixture;
 using NSubstitute;
+using Shouldly;
 
 namespace CSharpExt.UnitTests.Autofac;
 
@@ -27,7 +27,7 @@ public class CheckIsDelegateFactoryTests
     public void Typical(CheckIsDelegateFactory sut)
     {
         sut.IsAllowed(typeof(ClassWithFactory.Factory))
-            .Should().BeTrue();
+            .ShouldBeTrue();
         sut.ValidateTypeCtor.Received(1).Validate(typeof(ClassWithFactory),
             Arg.Is<HashSet<string>>(x => x.SetEquals("str", "i")));
         sut.ValidateType.Received(1).Validate(typeof(ClassWithFactory), false);
@@ -42,7 +42,7 @@ public class CheckIsDelegateFactoryTests
             return true;
         });
         sut.IsAllowed(typeof(ClassWithFactory.InterfaceFactory))
-            .Should().BeTrue();
+            .ShouldBeTrue();
         sut.ValidateTypeCtor.Received(1).Validate(typeof(ClassWithFactory),
             Arg.Is<HashSet<string>>(x => x.SetEquals("str", "i")));
         sut.ValidateType.Received(1).Validate(typeof(IClassWithFactory), false);
@@ -57,7 +57,7 @@ public class CheckIsDelegateFactoryTests
             return true;
         });
         sut.IsAllowed(typeof(ClassWithFactory.InterfaceFactory))
-            .Should().BeTrue();
+            .ShouldBeTrue();
         sut.ValidateTypeCtor.DidNotReceiveWithAnyArgs().Validate(default!);
         sut.ValidateType.Received(1).Validate(typeof(IClassWithFactory), false);
     }
@@ -66,6 +66,6 @@ public class CheckIsDelegateFactoryTests
     public void RandomType(CheckIsDelegateFactory sut)
     {
         sut.IsAllowed(typeof(string))
-            .Should().BeFalse();
+            .ShouldBeFalse();
     }
 }

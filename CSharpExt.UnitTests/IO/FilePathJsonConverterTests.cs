@@ -1,15 +1,15 @@
 ﻿using System.Runtime.InteropServices;
-using FluentAssertions;
 using Newtonsoft.Json;
 using Noggog;
 using Noggog.Json.IO;
 using Noggog.Testing.IO;
+using Shouldly;
 
 namespace CSharpExt.UnitTests.IO;
 
 public class FilePathJsonConverterTests
 {
-    private JsonSerializerSettings ConverterSettings = new JsonSerializerSettings()
+    private JsonSerializerSettings ConverterSettings = new()
     {
         Formatting = Formatting.Indented,
         Converters = new List<JsonConverter>()
@@ -28,7 +28,7 @@ public class FilePathJsonConverterTests
     {
         var str = GetTestFile(Path.Combine("IO", "Files", "OldFilePathSerialization.json"));
         var converted = JsonConvert.DeserializeObject<Dto>(str)!;
-        converted.MyFile.RelativePath.Should().Be(Path.Combine($"{PathingUtil.DrivePrefix}SomeDir", "SomeFile.txt"));
+        converted.MyFile.RelativePath.ShouldBe(Path.Combine($"{PathingUtil.DrivePrefix}SomeDir", "SomeFile.txt"));
     }
 
     [Fact]
@@ -36,7 +36,7 @@ public class FilePathJsonConverterTests
     {
         var str = GetTestFile(Path.Combine("IO", "Files", "NakedFilePathSerialization.json"));
         var converted = JsonConvert.DeserializeObject<Dto>(str)!;
-        converted.MyFile.RelativePath.Should().Be(Path.Combine($"{PathingUtil.DrivePrefix}SomeDir", "SomeFile.txt"));
+        converted.MyFile.RelativePath.ShouldBe(Path.Combine($"{PathingUtil.DrivePrefix}SomeDir", "SomeFile.txt"));
     }
 
     [Fact]
@@ -47,7 +47,7 @@ public class FilePathJsonConverterTests
             MyFile = new FilePath(Path.Combine($"{PathingUtil.DrivePrefix}SomeDir", "SomeFile.txt"))
         };
         var str = JsonConvert.SerializeObject(dto, Formatting.Indented);
-        str.Should().Be(
+        str.ShouldBe(
             GetTestFile(Path.Combine("IO", "Files", "NakedFilePathSerialization.json")));
     }
 
@@ -56,7 +56,7 @@ public class FilePathJsonConverterTests
     {
         var str = GetTestFile(Path.Combine("IO", "Files", "ConverterFilePathSerialization.json"));
         var converted = JsonConvert.DeserializeObject<Dto>(str, ConverterSettings)!;
-        converted.MyFile.RelativePath.Should().Be(Path.Combine($"{PathingUtil.DrivePrefix}SomeDir", "SomeFile.txt"));
+        converted.MyFile.RelativePath.ShouldBe(Path.Combine($"{PathingUtil.DrivePrefix}SomeDir", "SomeFile.txt"));
     }
 
     [Fact]
@@ -64,7 +64,7 @@ public class FilePathJsonConverterTests
     {
         var str = GetTestFile(Path.Combine("IO", "Files", "OldFilePathSerialization.json"));
         var converted = JsonConvert.DeserializeObject<Dto>(str, ConverterSettings)!;
-        converted.MyFile.RelativePath.Should().Be(Path.Combine($"{PathingUtil.DrivePrefix}SomeDir", "SomeFile.txt"));
+        converted.MyFile.RelativePath.ShouldBe(Path.Combine($"{PathingUtil.DrivePrefix}SomeDir", "SomeFile.txt"));
     }
 
     [Fact]
@@ -72,7 +72,7 @@ public class FilePathJsonConverterTests
     {
         var str = GetTestFile(Path.Combine("IO", "Files", "NakedFilePathSerialization.json"));
         var converted = JsonConvert.DeserializeObject<Dto>(str, ConverterSettings)!;
-        converted.MyFile.RelativePath.Should().Be(Path.Combine($"{PathingUtil.DrivePrefix}SomeDir", "SomeFile.txt"));
+        converted.MyFile.RelativePath.ShouldBe(Path.Combine($"{PathingUtil.DrivePrefix}SomeDir", "SomeFile.txt"));
     }
 
     [Fact]
@@ -84,7 +84,7 @@ public class FilePathJsonConverterTests
         };
         var str = GetTestFile(Path.Combine("IO", "Files", "ConverterFilePathSerialization.json"));
         var converted = JsonConvert.SerializeObject(dto, ConverterSettings);
-        str.Should().Be(converted);
+        str.ShouldBe(converted);
     }
 
     private string GetTestFile(string path)

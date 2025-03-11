@@ -151,7 +151,7 @@ public static class StringExt
         return result;
     }
 
-    public static bool TryTrimEnd(this string src, string item, out string result)
+    public static bool TryTrimStringFromEnd(this string src, string item, out string result)
     {
         if (!src.EndsWith(item))
         {
@@ -167,15 +167,10 @@ public static class StringExt
         return true;
     }
 
-    public static string TrimEnd(this string src, string item)
+    public static string TrimStringFromEnd(this string src, string item)
     {
-        TryTrimEnd(src, item, out string result);
+        TryTrimStringFromEnd(src, item, out string result);
         return result;
-    }
-
-    public static byte[] ToBytes(this string str)
-    {
-        return Encoding.ASCII.GetBytes(str);
     }
 
     public static string RemoveDisallowedFilepathChars(string str)

@@ -102,13 +102,9 @@ jobs:
         dotnet restore Noggog.CSharpExt.sln
     - name: Build
       run: dotnet build Noggog.CSharpExt.sln -c Release --no-restore /p:GeneratePackageOnBuild=false
-    - name: Pack Preview
-      if: ${{ success() && (github.event.release.prerelease || github.event_name != 'release') }}
+    - name: Pack
+      if: ${{ success() }}
       run: |
-        dotnet pack Noggog.CSharpExt.sln -c Release --no-restore -o out --include-symbols -p:SymbolPackageFormat=snupkg
-    - name: Pack Release
-      if: ${{ success() && !github.event.release.prerelease && github.event_name == 'release' }}
-      run: | 
         dotnet pack Noggog.CSharpExt.sln -c Release --no-restore -o out --include-symbols -p:SymbolPackageFormat=snupkg
     - name: Publish to Github
       uses: svenstaro/upload-release-action@v2

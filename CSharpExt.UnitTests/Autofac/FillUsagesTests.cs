@@ -1,5 +1,6 @@
-﻿using FluentAssertions;
-using Noggog.Autofac.Validation;
+﻿using Noggog.Autofac.Validation;
+using Noggog.Testing.Extensions;
+using Shouldly;
 
 namespace CSharpExt.UnitTests.Autofac;
 
@@ -23,7 +24,7 @@ public class FillUsagesTests
         new GetUsages().Get(
                 typeof(NoCtorClass),
                 typeof(EmptyCtorClass))
-            .Should().BeEmpty();
+            .ShouldBeEmpty();
     }
 
     class SomeParams
@@ -48,7 +49,7 @@ public class FillUsagesTests
     {
         new GetUsages().Get(
                 typeof(SomeParams))
-            .Should().Equal(
+            .ShouldEqual(
                 typeof(NoCtorClass),
                 typeof(SubClass));
     }

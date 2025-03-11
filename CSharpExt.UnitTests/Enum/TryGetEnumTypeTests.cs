@@ -1,5 +1,5 @@
-﻿using FluentAssertions;
-using Noggog;
+﻿using Noggog;
+using Shouldly;
 
 namespace CSharpExt.UnitTests.Enum;
 
@@ -9,14 +9,14 @@ public class TryGetEnumTypeTests
     public void TypicalLookup()
     {
         Enums.TryGetEnumType("CSharpExt.UnitTests.Enum.TestEnum", out var type)
-            .Should().BeTrue();
-        type.Should().Be(typeof(TestEnum));
+            .ShouldBeTrue();
+        type.ShouldBe(typeof(TestEnum));
     }
     
     [Fact]
     public void TypicalFailedLookup()
     {
         Enums.TryGetEnumType("CSharpExt.UnitTests.Enum.TestEnum2", out var type)
-            .Should().BeFalse();
+            .ShouldBeFalse();
     }
 }

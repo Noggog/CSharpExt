@@ -25,8 +25,9 @@
     <PackageReference Include="MahApps.Metro" />
     <PackageReference Include="MahApps.Metro.IconPacks" />
     <PackageReference Include="Newtonsoft.Json" />
+    <PackageReference Include="ReactiveMarbles.ObservableEvents.SourceGenerator"
+                      PrivateAssets="all" />
     <PackageReference Include="ReactiveUI" />
-    <PackageReference Include="ReactiveUI.Events.WPF" />
     <PackageReference Include="ReactiveUI.Fody" />
     <PackageReference Include="ReactiveUI.WPF" />
     <PackageReference Include="System.Reactive" />

@@ -1,8 +1,8 @@
 ﻿using Autofac;
 using Autofac.Core;
-using FluentAssertions;
 using Noggog.Autofac.Validation;
 using Noggog.Testing.AutoFixture;
+using Noggog.Testing.Extensions;
 using NSubstitute;
 
 namespace CSharpExt.UnitTests.Autofac;
@@ -31,7 +31,7 @@ public class RegistrationsTests
         new Registrations(cont).Items
             .Where(x => x.Key == typeof(Class))
             .SelectMany(x => x.Value)
-            .Should().Equal(
+            .ShouldEqual(
                 new Registration(typeof(Class), true));
     }
 
@@ -44,7 +44,7 @@ public class RegistrationsTests
         new Registrations(cont).Items
             .Where(x => x.Key == typeof(Class))
             .SelectMany(x => x.Value)
-            .Should().Equal(
+            .ShouldEqual(
                 new Registration(typeof(Class), false));
     }
 
@@ -54,10 +54,10 @@ public class RegistrationsTests
         var builder = new ContainerBuilder();
         builder.Register(_ => new Class(new SubClass())).AsSelf();
         var cont = builder.Build();
-        var regis = new Registrations(cont).Items
+        new Registrations(cont).Items
             .Where(x => x.Key == typeof(Class))
             .SelectMany(x => x.Value)
-            .Should().Equal(
+            .ShouldEqual(
                 new Registration(typeof(Class), false));
     }
 

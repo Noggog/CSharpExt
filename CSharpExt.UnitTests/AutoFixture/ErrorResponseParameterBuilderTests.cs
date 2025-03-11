@@ -1,9 +1,10 @@
 ﻿using AutoFixture.Kernel;
-using FluentAssertions;
 using Noggog;
 using Noggog.Testing.AutoFixture;
 using Noggog.Testing.AutoFixture.Testing;
+using Noggog.Testing.Extensions;
 using NSubstitute;
+using Shouldly;
 
 namespace CSharpExt.UnitTests.AutoFixture;
 
@@ -23,10 +24,10 @@ public class ErrorResponseParameterBuilderTests
         ErrorResponseParameterBuilder sut)
     {
         context.MockToReturn(err);
-        var param = typeof(NonInterestingClass).Methods().First().GetParameters().First();
+        var param = typeof(NonInterestingClass).GetMethods().First().GetParameters().First();
         ErrorResponse resp = (ErrorResponse)sut.Create(param, context);
         context.ShouldHaveCreated<ErrorResponse>();
-        resp.Should().Be(err);
+        resp.ShouldBe(err);
     }
         
     class Fails
@@ -56,8 +57,8 @@ public class ErrorResponseParameterBuilderTests
             var param = method.GetParameters().First();
             context.ClearReceivedCalls();
             ErrorResponse resp = (ErrorResponse)sut.Create(param, context);
-            resp.Succeeded.Should().BeFalse();
-            resp.Reason.Should().Be(errString);
+            resp.Succeeded.ShouldBeFalse();
+            resp.Reason.ShouldBe(errString);
         }
     }
         
@@ -68,12 +69,16 @@ public class ErrorResponseParameterBuilderTests
         ErrorResponseParameterBuilder sut)
     {
         context.MockToReturn(errString);
-        foreach (var method in typeof(Fails).Methods())
+        foreach (var method in typeof(Fails).GetMethods())
         {
+            if (method.Name is not nameof(Fails.Prefix) and not nameof(Fails.Suffix) and not nameof(Fails.Sandwich))
+            {
+                continue;
+            }
             var param = method.GetParameters().First();
             context.ClearReceivedCalls();
             ErrorResponse resp = (ErrorResponse)sut.Create(param, context);
-            resp.Exception.Should().BeNull();
+            resp.Exception.ShouldBeNull();
         }
     }
 }

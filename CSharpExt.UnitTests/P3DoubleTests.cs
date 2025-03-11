@@ -1,6 +1,6 @@
-﻿using FluentAssertions;
-using Noggog;
+﻿using Noggog;
 using Noggog.Testing.AutoFixture;
+using Shouldly;
 
 namespace CSharpExt.UnitTests;
 
@@ -12,8 +12,8 @@ public class P3DoubleTests
     {
         var givenStr = $"{x},{y},{z}";
         var expectedPoint = new P3Double(x, y, z);
-        P3Double.TryParse(givenStr, out var result).Should().BeTrue();
-        result.Should().Be(expectedPoint);
+        P3Double.TryParse(givenStr, out var result).ShouldBeTrue();
+        result.ShouldBe(expectedPoint);
     }
     
     [Theory]
@@ -21,7 +21,7 @@ public class P3DoubleTests
     public void P3DoubleReparse(double x, double y, double z)
     {
         var expectedPoint = new P3Double(x, y, z);
-        P3Double.TryParse(expectedPoint.ToString(), out var result).Should().BeTrue();
-        result.Should().Be(expectedPoint);
+        P3Double.TryParse(expectedPoint.ToString(), out var result).ShouldBeTrue();
+        result.ShouldBe(expectedPoint);
     }
 }

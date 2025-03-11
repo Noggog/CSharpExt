@@ -1,10 +1,10 @@
 ﻿using System.Collections;
 using System.IO.Abstractions;
 using System.Runtime.InteropServices;
-using FluentAssertions;
 using Noggog;
 using Noggog.Testing.AutoFixture;
 using NSubstitute;
+using Shouldly;
 
 namespace CSharpExt.UnitTests.Structs.FileSystems;
 
@@ -104,14 +104,14 @@ public class FilePathTests
     public void PathExposesAbsolutePath(string path)
     {
         new FilePath(path)
-            .Path.Should().Be(Path.GetFullPath(path));
+            .Path.ShouldBe(Path.GetFullPath(path));
     }
 
     [Fact]
     public void EmptyPathExposesEmptyPath()
     {
         new FilePath()
-            .Path.Should().Be(string.Empty);
+            .Path.ShouldBe(string.Empty);
     }
 
     [Theory]
@@ -120,7 +120,7 @@ public class FilePathTests
     public void RelativePathExposesGivenPath(string path)
     {
         new FilePath(path)
-            .RelativePath.Should().Be(path);
+            .RelativePath.ShouldBe(path);
     }
 
     [Theory]
@@ -129,7 +129,7 @@ public class FilePathTests
     public void NameSameAsSystem(string path)
     {
         new FilePath(path)
-            .Name.Should().Be(new FileName(Path.GetFileName(path)));
+            .Name.ShouldBe(new FileName(Path.GetFileName(path)));
     }
 
     [Theory]
@@ -138,7 +138,7 @@ public class FilePathTests
     public void ExtensionSameAsSystem(string path)
     {
         new FilePath(path)
-            .Extension.Should().Be(Path.GetExtension(path));
+            .Extension.ShouldBe(Path.GetExtension(path));
     }
 
     [Theory]
@@ -147,7 +147,7 @@ public class FilePathTests
     public void NameWithoutExtensionSameAsSystem(string path)
     {
         new FilePath(path)
-            .NameWithoutExtension.Should().Be(Path.GetFileNameWithoutExtension(path));
+            .NameWithoutExtension.ShouldBe(Path.GetFileNameWithoutExtension(path));
     }
 
     [Theory]
@@ -155,7 +155,7 @@ public class FilePathTests
     public void DirectorySameAsSystem(string path)
     {
         new FilePath(path)
-            .Directory.Should().Be(
+            .Directory.ShouldBe(
                 new DirectoryPath(Path.GetDirectoryName(Path.GetFullPath(path))!));
     }
 
@@ -164,13 +164,13 @@ public class FilePathTests
     public void EmptyDirectoryNull(string path)
     {
         new FilePath(path)
-            .Directory.Should().BeNull();
+            .Directory.ShouldBeNull();
     }
 
     [Fact]
     public void DefaultFilePathSameAsEmpty()
     {
-        new FilePath().Should().Be(new FilePath(string.Empty));
+        new FilePath().ShouldBe(new FilePath(string.Empty));
     }
 
     [Theory]
@@ -181,7 +181,7 @@ public class FilePathTests
         var path = Path.Combine(absPrefix, "SomeFile");
         var fs = Substitute.For<IFileSystem>();
         fs.File.Exists(path).Returns(shouldExist);
-        new FilePath(path).CheckExists(fs).Should().Be(shouldExist);
+        new FilePath(path).CheckExists(fs).ShouldBe(shouldExist);
     }
 
     [Fact]
@@ -190,7 +190,7 @@ public class FilePathTests
         if (isWindows)
         {
             new FilePath("C:/SomeFile")
-                .Path.Should().Be("C:\\SomeFile");
+                .Path.ShouldBe("C:\\SomeFile");
         }
     }
 
@@ -200,7 +200,7 @@ public class FilePathTests
         if (isWindows)
         {
             new FilePath("SomeDir/SomeFile")
-                .RelativePath.Should().Be("SomeDir\\SomeFile");
+                .RelativePath.ShouldBe("SomeDir\\SomeFile");
         }
     }
 
@@ -209,7 +209,7 @@ public class FilePathTests
     [InlineData("")]
     public void EqualsSelf(string path)
     {
-        new FilePath(path).Should().Be(new FilePath(path));
+        new FilePath(path).ShouldBe(new FilePath(path));
     }
 
     [Theory]
@@ -218,13 +218,13 @@ public class FilePathTests
     public void EqualsDifferentCase(string path)
     {
         new FilePath(path)
-            .Should().Be(new FilePath(path.ToUpper()));
+            .ShouldBe(new FilePath(path.ToUpper()));
     }
 
     [Fact]
     public void EmptyEqualsDefault()
     {
-        new FilePath().Should().Be(new FilePath(string.Empty));
+        new FilePath().ShouldBe(new FilePath(string.Empty));
     }
 
     [Theory]
@@ -232,7 +232,7 @@ public class FilePathTests
     [InlineData("")]
     public void DoesNotEqualRawPath(string path)
     {
-        new FilePath(path).Should().NotBe(path);
+        new FilePath(path).Equals((object)path).ShouldBeFalse();
     }
 
     [Theory]
@@ -241,7 +241,7 @@ public class FilePathTests
     public void HashEqualsSelf(string path)
     {
         var fp = new FilePath(path);
-        fp.GetHashCode().Should().Be(fp.GetHashCode());
+        fp.GetHashCode().ShouldBe(fp.GetHashCode());
     }
 
     [Theory]
@@ -250,14 +250,14 @@ public class FilePathTests
     public void HashEqualsDifferentCase(string path)
     {
         new FilePath(path).GetHashCode()
-            .Should().Be(new FilePath(path.ToUpper()).GetHashCode());
+            .ShouldBe(new FilePath(path.ToUpper()).GetHashCode());
     }
 
     [Fact]
     public void EmptyHashEqualsDefaultHash()
     {
         new FilePath().GetHashCode()
-            .Should().Be(new FilePath(string.Empty).GetHashCode());
+            .ShouldBe(new FilePath(string.Empty).GetHashCode());
     }
 
     [Theory]
@@ -266,7 +266,7 @@ public class FilePathTests
     {
         new FilePath(from)
             .GetRelativePathTo(new DirectoryPath(to))
-            .Should().Be(expected);
+            .ShouldBe(expected);
     }
 
     [Theory]
@@ -275,7 +275,7 @@ public class FilePathTests
     {
         new FilePath(from)
             .GetRelativePathTo(new FilePath(to))
-            .Should().Be(expected);
+            .ShouldBe(expected);
     }
 
     [Theory]
@@ -284,26 +284,26 @@ public class FilePathTests
     {
         new FilePath(from)
             .IsUnderneath(new DirectoryPath(to))
-            .Should().Be(expected);
+            .ShouldBe(expected);
     }
 
     [Theory]
     [ClassData(typeof(TestData))]
     public void ToStringReturnsFullPath(string path)
     {
-        new FilePath(path).ToString().Should().Be(Path.GetFullPath(path));
+        new FilePath(path).ToString().ShouldBe(Path.GetFullPath(path));
     }
 
     [Fact]
     public void EmptyToStringReturnsEmpty()
     {
-        new FilePath(string.Empty).ToString().Should().Be(string.Empty);
+        new FilePath(string.Empty).ToString().ShouldBe(string.Empty);
     }
 
     [Fact]
     public void DefaultToStringReturnsEmpty()
     {
-        new FilePath().ToString().Should().Be(string.Empty);
+        new FilePath().ToString().ShouldBe(string.Empty);
     }
 
     [Theory]
@@ -322,7 +322,7 @@ public class FilePathTests
     {
         var fp = new FilePath(path);
         string str = fp;
-        str.Should().Be(fp.RelativePath);
+        str.ShouldBe(fp.RelativePath);
     }
 
     [Theory, DefaultAutoData]

@@ -2,10 +2,10 @@
 using System.IO.Abstractions;
 using System.IO.Abstractions.TestingHelpers;
 using System.Runtime.InteropServices;
-using FluentAssertions;
 using Noggog;
 using Noggog.Testing.AutoFixture;
 using NSubstitute;
+using Shouldly;
 
 namespace CSharpExt.UnitTests.Structs.FileSystems;
 
@@ -44,14 +44,14 @@ public class DirectoryPathTests
     public void PathExposesAbsolutePath(string path)
     {
         new DirectoryPath(path)
-            .Path.Should().Be(Path.GetFullPath(path));
+            .Path.ShouldBe(Path.GetFullPath(path));
     }
 
     [Fact]
     public void EmptyPathExposesEmptyPath()
     {
         new DirectoryPath()
-            .Path.Should().Be(string.Empty);
+            .Path.ShouldBe(string.Empty);
     }
 
     [Theory]
@@ -60,7 +60,7 @@ public class DirectoryPathTests
     public void RelativePathExposesGivenPath(string path)
     {
         new DirectoryPath(path)
-            .RelativePath.Should().Be(path);
+            .RelativePath.ShouldBe(path);
     }
 
     [Theory]
@@ -69,7 +69,7 @@ public class DirectoryPathTests
     public void NameSameAsSystem(string path)
     {
         new DirectoryPath(path)
-            .Name.Should().Be(new FileName(Path.GetFileName(path)));
+            .Name.ShouldBe(new FileName(Path.GetFileName(path)));
     }
 
     [Theory]
@@ -77,7 +77,7 @@ public class DirectoryPathTests
     public void DirectorySameAsSystem(string path)
     {
         new DirectoryPath(path)
-            .Directory.Should().Be(
+            .Directory.ShouldBe(
                 new DirectoryPath(Path.GetDirectoryName(Path.GetFullPath(path))!));
     }
 
@@ -87,7 +87,7 @@ public class DirectoryPathTests
     {
         var dir = new DirectoryPath(path);
         dir.GetFile("Text.txt")
-            .Should().Be(
+            .ShouldBe(
                 new FilePath(Path.Combine(path, "Text.txt")));
     }
 
@@ -96,7 +96,7 @@ public class DirectoryPathTests
     public void EmptyDirectoryNull(string path)
     {
         new DirectoryPath(path)
-            .Directory.Should().BeNull();
+            .Directory.ShouldBeNull();
     }
 
     [Theory]
@@ -107,7 +107,7 @@ public class DirectoryPathTests
         var path = absPrefix + "SomeFolder";
         var fs = Substitute.For<IFileSystem>();
         fs.Directory.Exists(path).Returns(shouldExist);
-        new DirectoryPath(path).CheckExists(fs).Should().Be(shouldExist);
+        new DirectoryPath(path).CheckExists(fs).ShouldBe(shouldExist);
     }
 
     [Fact]
@@ -116,7 +116,7 @@ public class DirectoryPathTests
         if (isWindows)
         {
             new DirectoryPath(absPrefix + "SomeDir")
-                .Path.Should().Be("C:\\SomeDir");
+                .Path.ShouldBe("C:\\SomeDir");
         }
     }
 
@@ -126,7 +126,7 @@ public class DirectoryPathTests
         if (isWindows)
         {
             new DirectoryPath("SomeDir/SubDir")
-                .RelativePath.Should().Be("SomeDir\\SubDir");
+                .RelativePath.ShouldBe("SomeDir\\SubDir");
         }
     }
 
@@ -136,7 +136,7 @@ public class DirectoryPathTests
         if (isWindows)
         {
             new DirectoryPath("C:\\SomeDir\\")
-                .Path.Should().Be("C:\\SomeDir");
+                .Path.ShouldBe("C:\\SomeDir");
         }
     }
 
@@ -146,7 +146,7 @@ public class DirectoryPathTests
         if (isWindows)
         {
             new DirectoryPath("SomeDir\\SubDir\\")
-                .RelativePath.Should().Be("SomeDir\\SubDir");
+                .RelativePath.ShouldBe("SomeDir\\SubDir");
         }
     }
 
@@ -154,14 +154,14 @@ public class DirectoryPathTests
     public void PathTrimsTrailingForwardSlashes()
     {
         new DirectoryPath(absPrefix + "SomeDir/")
-            .Path.Should().Be(Path.Combine(absPrefix, "SomeDir"));
+            .Path.ShouldBe(Path.Combine(absPrefix, "SomeDir"));
     }
 
     [Fact]
     public void RelativePathTrimsTrailingForwardSlashes()
     {
         new DirectoryPath("SomeDir/SubDir/")
-            .RelativePath.Should().Be(Path.Combine("SomeDir", "SubDir"));
+            .RelativePath.ShouldBe(Path.Combine("SomeDir", "SubDir"));
     }
 
     [Theory]
@@ -169,7 +169,7 @@ public class DirectoryPathTests
     [InlineData("")]
     public void EqualsSelf(string path)
     {
-        new DirectoryPath(path).Should().Be(new DirectoryPath(path));
+        new DirectoryPath(path).ShouldBe(new DirectoryPath(path));
     }
 
     [Theory]
@@ -178,13 +178,13 @@ public class DirectoryPathTests
     public void EqualsDifferentCase(string path)
     {
         new DirectoryPath(path)
-            .Should().Be(new DirectoryPath(path.ToUpper()));
+            .ShouldBe(new DirectoryPath(path.ToUpper()));
     }
 
     [Fact]
     public void EmptyEqualsDefault()
     {
-        new DirectoryPath().Should().Be(new DirectoryPath(string.Empty));
+        new DirectoryPath().ShouldBe(new DirectoryPath(string.Empty));
     }
 
     [Theory]
@@ -192,7 +192,7 @@ public class DirectoryPathTests
     [InlineData("")]
     public void DoesNotEqualRawPath(string path)
     {
-        new DirectoryPath(path).Should().NotBe(path);
+        new DirectoryPath(path).Equals((object)path).ShouldBeFalse();
     }
 
     [Theory]
@@ -201,7 +201,7 @@ public class DirectoryPathTests
     public void HashEqualsSelf(string path)
     {
         var fp = new DirectoryPath(path);
-        fp.GetHashCode().Should().Be(fp.GetHashCode());
+        fp.GetHashCode().ShouldBe(fp.GetHashCode());
     }
 
     [Theory]
@@ -210,33 +210,33 @@ public class DirectoryPathTests
     public void HashEqualsDifferentCase(string path)
     {
         new DirectoryPath(path).GetHashCode()
-            .Should().Be(new DirectoryPath(path.ToUpper()).GetHashCode());
+            .ShouldBe(new DirectoryPath(path.ToUpper()).GetHashCode());
     }
 
     [Fact]
     public void EmptyHashEqualsDefaultHash()
     {
         new DirectoryPath().GetHashCode()
-            .Should().Be(new DirectoryPath(string.Empty).GetHashCode());
+            .ShouldBe(new DirectoryPath(string.Empty).GetHashCode());
     }
 
     [Theory]
     [ClassData(typeof(TestData))]
     public void ToStringReturnsFullPath(string path)
     {
-        new DirectoryPath(path).ToString().Should().Be(Path.GetFullPath(path));
+        new DirectoryPath(path).ToString().ShouldBe(Path.GetFullPath(path));
     }
 
     [Fact]
     public void EmptyToStringReturnsEmpty()
     {
-        new DirectoryPath(string.Empty).ToString().Should().Be(string.Empty);
+        new DirectoryPath(string.Empty).ToString().ShouldBe(string.Empty);
     }
 
     [Fact]
     public void DefaultToStringReturnsEmpty()
     {
-        new DirectoryPath().ToString().Should().Be(string.Empty);
+        new DirectoryPath().ToString().ShouldBe(string.Empty);
     }
 
     [Theory]
@@ -245,7 +245,7 @@ public class DirectoryPathTests
     public void ImplictOperatorEqualToCtor(string path)
     {
         DirectoryPath dir = path;
-        dir.Should().Be(new DirectoryPath(path));
+        dir.ShouldBe(new DirectoryPath(path));
     }
 
     [Theory]
@@ -255,7 +255,7 @@ public class DirectoryPathTests
     {
         var dir = new DirectoryPath(path);
         string str = dir;
-        str.Should().Be(dir.RelativePath);
+        str.ShouldBe(dir.RelativePath);
     }
 
     [Theory]
@@ -282,7 +282,7 @@ public class DirectoryPathTests
         {
             new DirectoryPath(from)
                 .IsSubfolderOf(new DirectoryPath(to))
-                .Should().Be(expected);
+                .ShouldBe(expected);
         }
     }
 
@@ -318,16 +318,16 @@ public class DirectoryPathTests
         new DirectoryPath(absPrefix + "SomeDir")
             .DeleteEntireFolder(fileSystem: fs, disableReadOnly: locked);
 
-        fs.File.Exists(absPrefix + "SomeDir/SubDir/SomeFile.txt").Should().BeFalse();
-        fs.File.Exists(absPrefix + "SomeDir/SubDir/SomeFile2.txt").Should().BeFalse();
-        fs.File.Exists(absPrefix + "SomeDir/SubDir/SubSubDir/SomeFile2.txt").Should().BeFalse();
-        fs.File.Exists(absPrefix + "SomeDir/SomeFile.txt").Should().BeFalse();
-        fs.File.Exists(absPrefix + "SomeDir/SomeFile2.txt").Should().BeFalse();
-        fs.File.Exists(absPrefix + "SomeFile.txt").Should().BeTrue();
-        fs.File.Exists(absPrefix + "SomeOtherDir/SomeFile2.txt").Should().BeTrue();
+        fs.File.Exists(absPrefix + "SomeDir/SubDir/SomeFile.txt").ShouldBeFalse();
+        fs.File.Exists(absPrefix + "SomeDir/SubDir/SomeFile2.txt").ShouldBeFalse();
+        fs.File.Exists(absPrefix + "SomeDir/SubDir/SubSubDir/SomeFile2.txt").ShouldBeFalse();
+        fs.File.Exists(absPrefix + "SomeDir/SomeFile.txt").ShouldBeFalse();
+        fs.File.Exists(absPrefix + "SomeDir/SomeFile2.txt").ShouldBeFalse();
+        fs.File.Exists(absPrefix + "SomeFile.txt").ShouldBeTrue();
+        fs.File.Exists(absPrefix + "SomeOtherDir/SomeFile2.txt").ShouldBeTrue();
 
-        fs.Directory.Exists(absPrefix + "SomeOtherDir").Should().BeTrue();
-        fs.Directory.Exists(absPrefix + "SomeDir").Should().BeFalse();
+        fs.Directory.Exists(absPrefix + "SomeOtherDir").ShouldBeTrue();
+        fs.Directory.Exists(absPrefix + "SomeDir").ShouldBeFalse();
     }
 
     [Fact]
@@ -338,16 +338,16 @@ public class DirectoryPathTests
         new DirectoryPath(absPrefix + "SomeDir")
             .DeleteEntireFolder(fileSystem: fs, deleteFolderItself: false);
 
-        fs.File.Exists(absPrefix + "SomeDir/SubDir/SomeFile.txt").Should().BeFalse();
-        fs.File.Exists(absPrefix + "SomeDir/SubDir/SomeFile2.txt").Should().BeFalse();
-        fs.File.Exists(absPrefix + "SomeDir/SubDir/SubSubDir/SomeFile2.txt").Should().BeFalse();
-        fs.File.Exists(absPrefix + "SomeDir/SomeFile.txt").Should().BeFalse();
-        fs.File.Exists(absPrefix + "SomeDir/SomeFile2.txt").Should().BeFalse();
-        fs.File.Exists(absPrefix + "SomeFile.txt").Should().BeTrue();
-        fs.File.Exists(absPrefix + "SomeOtherDir/SomeFile2.txt").Should().BeTrue();
+        fs.File.Exists(absPrefix + "SomeDir/SubDir/SomeFile.txt").ShouldBeFalse();
+        fs.File.Exists(absPrefix + "SomeDir/SubDir/SomeFile2.txt").ShouldBeFalse();
+        fs.File.Exists(absPrefix + "SomeDir/SubDir/SubSubDir/SomeFile2.txt").ShouldBeFalse();
+        fs.File.Exists(absPrefix + "SomeDir/SomeFile.txt").ShouldBeFalse();
+        fs.File.Exists(absPrefix + "SomeDir/SomeFile2.txt").ShouldBeFalse();
+        fs.File.Exists(absPrefix + "SomeFile.txt").ShouldBeTrue();
+        fs.File.Exists(absPrefix + "SomeOtherDir/SomeFile2.txt").ShouldBeTrue();
 
-        fs.Directory.Exists(absPrefix + "SomeOtherDir").Should().BeTrue();
-        fs.Directory.Exists(absPrefix + "SomeDir").Should().BeTrue();
+        fs.Directory.Exists(absPrefix + "SomeOtherDir").ShouldBeTrue();
+        fs.Directory.Exists(absPrefix + "SomeDir").ShouldBeTrue();
     }
 
     [Theory]
@@ -368,16 +368,16 @@ public class DirectoryPathTests
         new DirectoryPath(absPrefix + "SomeDir")
             .TryDeleteEntireFolder(fileSystem: fs, disableReadOnly: locked);
 
-        fs.File.Exists(absPrefix + "SomeDir/SubDir/SomeFile.txt").Should().BeFalse();
-        fs.File.Exists(absPrefix + "SomeDir/SubDir/SomeFile2.txt").Should().BeFalse();
-        fs.File.Exists(absPrefix + "SomeDir/SubDir/SubSubDir/SomeFile2.txt").Should().BeFalse();
-        fs.File.Exists(absPrefix + "SomeDir/SomeFile.txt").Should().BeFalse();
-        fs.File.Exists(absPrefix + "SomeDir/SomeFile2.txt").Should().BeFalse();
-        fs.File.Exists(absPrefix + "SomeFile.txt").Should().BeTrue();
-        fs.File.Exists(absPrefix + "SomeOtherDir/SomeFile2.txt").Should().BeTrue();
+        fs.File.Exists(absPrefix + "SomeDir/SubDir/SomeFile.txt").ShouldBeFalse();
+        fs.File.Exists(absPrefix + "SomeDir/SubDir/SomeFile2.txt").ShouldBeFalse();
+        fs.File.Exists(absPrefix + "SomeDir/SubDir/SubSubDir/SomeFile2.txt").ShouldBeFalse();
+        fs.File.Exists(absPrefix + "SomeDir/SomeFile.txt").ShouldBeFalse();
+        fs.File.Exists(absPrefix + "SomeDir/SomeFile2.txt").ShouldBeFalse();
+        fs.File.Exists(absPrefix + "SomeFile.txt").ShouldBeTrue();
+        fs.File.Exists(absPrefix + "SomeOtherDir/SomeFile2.txt").ShouldBeTrue();
 
-        fs.Directory.Exists(absPrefix + "SomeOtherDir").Should().BeTrue();
-        fs.Directory.Exists(absPrefix + "SomeDir").Should().BeFalse();
+        fs.Directory.Exists(absPrefix + "SomeOtherDir").ShouldBeTrue();
+        fs.Directory.Exists(absPrefix + "SomeDir").ShouldBeFalse();
     }
 
     [Fact]
@@ -388,16 +388,16 @@ public class DirectoryPathTests
         new DirectoryPath(absPrefix + "SomeDir")
             .TryDeleteEntireFolder(fileSystem: fs, deleteFolderItself: false);
 
-        fs.File.Exists(absPrefix + "SomeDir/SubDir/SomeFile.txt").Should().BeFalse();
-        fs.File.Exists(absPrefix + "SomeDir/SubDir/SomeFile2.txt").Should().BeFalse();
-        fs.File.Exists(absPrefix + "SomeDir/SubDir/SubSubDir/SomeFile2.txt").Should().BeFalse();
-        fs.File.Exists(absPrefix + "SomeDir/SomeFile.txt").Should().BeFalse();
-        fs.File.Exists(absPrefix + "SomeDir/SomeFile2.txt").Should().BeFalse();
-        fs.File.Exists(absPrefix + "SomeFile.txt").Should().BeTrue();
-        fs.File.Exists(absPrefix + "SomeOtherDir/SomeFile2.txt").Should().BeTrue();
+        fs.File.Exists(absPrefix + "SomeDir/SubDir/SomeFile.txt").ShouldBeFalse();
+        fs.File.Exists(absPrefix + "SomeDir/SubDir/SomeFile2.txt").ShouldBeFalse();
+        fs.File.Exists(absPrefix + "SomeDir/SubDir/SubSubDir/SomeFile2.txt").ShouldBeFalse();
+        fs.File.Exists(absPrefix + "SomeDir/SomeFile.txt").ShouldBeFalse();
+        fs.File.Exists(absPrefix + "SomeDir/SomeFile2.txt").ShouldBeFalse();
+        fs.File.Exists(absPrefix + "SomeFile.txt").ShouldBeTrue();
+        fs.File.Exists(absPrefix + "SomeOtherDir/SomeFile2.txt").ShouldBeTrue();
 
-        fs.Directory.Exists(absPrefix + "SomeOtherDir").Should().BeTrue();
-        fs.Directory.Exists(absPrefix + "SomeDir").Should().BeTrue();
+        fs.Directory.Exists(absPrefix + "SomeOtherDir").ShouldBeTrue();
+        fs.Directory.Exists(absPrefix + "SomeDir").ShouldBeTrue();
     }
 
     [Fact]
@@ -432,16 +432,16 @@ public class DirectoryPathTests
                 .DeleteEntireFolder(fileSystem: fs, disableReadOnly: false);
         });
 
-        fs.File.Exists(absPrefix + "SomeDir/SubDir/SomeFile.txt").Should().BeTrue();
-        fs.File.Exists(absPrefix + "SomeDir/SubDir/SomeFile2.txt").Should().BeFalse();
-        fs.File.Exists(absPrefix + "SomeDir/SubDir/SubSubDir/SomeFile2.txt").Should().BeTrue();
-        fs.File.Exists(absPrefix + "SomeDir/SomeFile.txt").Should().BeTrue();
-        fs.File.Exists(absPrefix + "SomeDir/SomeFile2.txt").Should().BeTrue();
-        fs.File.Exists(absPrefix + "SomeFile.txt").Should().BeTrue();
-        fs.File.Exists(absPrefix + "SomeOtherDir/SomeFile2.txt").Should().BeTrue();
+        fs.File.Exists(absPrefix + "SomeDir/SubDir/SomeFile.txt").ShouldBeTrue();
+        fs.File.Exists(absPrefix + "SomeDir/SubDir/SomeFile2.txt").ShouldBeFalse();
+        fs.File.Exists(absPrefix + "SomeDir/SubDir/SubSubDir/SomeFile2.txt").ShouldBeTrue();
+        fs.File.Exists(absPrefix + "SomeDir/SomeFile.txt").ShouldBeTrue();
+        fs.File.Exists(absPrefix + "SomeDir/SomeFile2.txt").ShouldBeTrue();
+        fs.File.Exists(absPrefix + "SomeFile.txt").ShouldBeTrue();
+        fs.File.Exists(absPrefix + "SomeOtherDir/SomeFile2.txt").ShouldBeTrue();
 
-        fs.Directory.Exists(absPrefix + "SomeOtherDir").Should().BeTrue();
-        fs.Directory.Exists(absPrefix + "SomeDir").Should().BeTrue();
+        fs.Directory.Exists(absPrefix + "SomeOtherDir").ShouldBeTrue();
+        fs.Directory.Exists(absPrefix + "SomeDir").ShouldBeTrue();
     }
 
     [Fact]
@@ -470,16 +470,16 @@ public class DirectoryPathTests
         new DirectoryPath(absPrefix + "SomeDir")
             .TryDeleteEntireFolder(fileSystem: fs, disableReadOnly: false);
 
-        fs.File.Exists(absPrefix + "SomeDir/SubDir/SomeFile.txt").Should().BeTrue();
-        fs.File.Exists(absPrefix + "SomeDir/SubDir/SomeFile2.txt").Should().BeFalse();
-        fs.File.Exists(absPrefix + "SomeDir/SubDir/SubSubDir/SomeFile2.txt").Should().BeTrue();
-        fs.File.Exists(absPrefix + "SomeDir/SomeFile.txt").Should().BeTrue();
-        fs.File.Exists(absPrefix + "SomeDir/SomeFile2.txt").Should().BeTrue();
-        fs.File.Exists(absPrefix + "SomeFile.txt").Should().BeTrue();
-        fs.File.Exists(absPrefix + "SomeOtherDir/SomeFile2.txt").Should().BeTrue();
+        fs.File.Exists(absPrefix + "SomeDir/SubDir/SomeFile.txt").ShouldBeTrue();
+        fs.File.Exists(absPrefix + "SomeDir/SubDir/SomeFile2.txt").ShouldBeFalse();
+        fs.File.Exists(absPrefix + "SomeDir/SubDir/SubSubDir/SomeFile2.txt").ShouldBeTrue();
+        fs.File.Exists(absPrefix + "SomeDir/SomeFile.txt").ShouldBeTrue();
+        fs.File.Exists(absPrefix + "SomeDir/SomeFile2.txt").ShouldBeTrue();
+        fs.File.Exists(absPrefix + "SomeFile.txt").ShouldBeTrue();
+        fs.File.Exists(absPrefix + "SomeOtherDir/SomeFile2.txt").ShouldBeTrue();
 
-        fs.Directory.Exists(absPrefix + "SomeOtherDir").Should().BeTrue();
-        fs.Directory.Exists(absPrefix + "SomeDir").Should().BeTrue();
+        fs.Directory.Exists(absPrefix + "SomeOtherDir").ShouldBeTrue();
+        fs.Directory.Exists(absPrefix + "SomeDir").ShouldBeTrue();
     }
 
     [Fact]
@@ -489,7 +489,7 @@ public class DirectoryPathTests
         var someDir = absPrefix + "SomeDir";
         new DirectoryPath(someDir)
             .Create(fs);
-        fs.Directory.Exists(someDir).Should().BeTrue();
+        fs.Directory.Exists(someDir).ShouldBeTrue();
     }
 
     [Fact]
@@ -500,7 +500,7 @@ public class DirectoryPathTests
         fs.Directory.CreateDirectory(someDir);
         new DirectoryPath(someDir)
             .Delete(fs);
-        fs.Directory.Exists(someDir).Should().BeFalse();
+        fs.Directory.Exists(someDir).ShouldBeFalse();
     }
 
     [Fact]
@@ -511,7 +511,7 @@ public class DirectoryPathTests
         fs.Directory.CreateDirectory(absPrefix + "SomeDir");
         new DirectoryPath(someDir)
             .CheckEmpty(fs)
-            .Should().BeTrue();
+            .ShouldBeTrue();
     }
 
     [Fact]
@@ -523,7 +523,7 @@ public class DirectoryPathTests
         fs.File.Create(Path.Combine(someDir, "SomeFile"));
         new DirectoryPath(someDir)
             .CheckEmpty(fs)
-            .Should().BeFalse();
+            .ShouldBeFalse();
     }
 
     [Fact]
@@ -550,7 +550,7 @@ public class DirectoryPathTests
         fs.Directory.CreateDirectory(Path.Combine(someDir, "SubDir"));
         new DirectoryPath(someDir)
             .CheckEmpty(fs)
-            .Should().BeFalse();
+            .ShouldBeFalse();
     }
 
     [Theory]
@@ -564,7 +564,7 @@ public class DirectoryPathTests
         {
             new DirectoryPath(from)
                 .GetRelativePathTo(new DirectoryPath(to))
-                .Should().Be(expected);
+                .ShouldBe(expected);
         }
     }
 
@@ -579,7 +579,7 @@ public class DirectoryPathTests
         {
             new DirectoryPath(from)
                 .GetRelativePathTo(new FilePath(to))
-                .Should().Be(expected);
+                .ShouldBe(expected);
         }
     }
 

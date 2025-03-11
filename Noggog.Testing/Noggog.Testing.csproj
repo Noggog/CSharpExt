@@ -18,7 +18,7 @@
         <PackageReference Include="AutoFixture" />
         <PackageReference Include="AutoFixture.AutoNSubstitute" />
         <PackageReference Include="NSubstitute" />
-        <PackageReference Include="FluentAssertions" />
+        <PackageReference Include="Shouldly" />
         <PackageReference Include="Microsoft.Reactive.Testing" />
         <PackageReference Include="AutoFixture.Xunit2" />
         <PackageReference Include="System.IO.Abstractions.TestingHelpers" />
