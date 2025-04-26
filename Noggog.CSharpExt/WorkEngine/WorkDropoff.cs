@@ -69,78 +69,134 @@ public class WorkDropoff : IWorkDropoff, IWorkQueue
 
     public async Task<IReadOnlyList<T>> EnqueueAndWait<T>(IEnumerable<T> items, Action<T> action, CancellationToken cancellationToken = default)
     {
-        return await Task.WhenAll(items
-            .Select(x => EnqueueAndWait(() =>
+        List<Task<T>> tasks = new();
+        foreach (var x in items)
+        {
+            var tcs = new TaskCompletionSource<T>();
+            await _channel.Writer.WriteAsync(new ToDo<T>(() =>
             {
                 action(x);
                 return x;
-            }, cancellationToken)));
+            }, tcs), cancellationToken).ConfigureAwait(false);
+            tasks.Add(tcs.Task);
+        }
+        await ProcessExistingQueue().ConfigureAwait(false);
+        return await Task.WhenAll(tasks).ConfigureAwait(false);
     }
     
     public async Task<IReadOnlyList<T>> EnqueueAndWait<T>(IEnumerable<T> items, Action<T, CancellationToken> action, CancellationToken cancellationToken = default)
     {
-        return await Task.WhenAll(items
-            .Select(x => EnqueueAndWait(() =>
+        List<Task<T>> tasks = new();
+        foreach (var x in items)
+        {
+            var tcs = new TaskCompletionSource<T>();
+            await _channel.Writer.WriteAsync(new ToDo<T>(() =>
             {
                 action(x, cancellationToken);
                 return x;
-            }, cancellationToken)));
+            }, tcs), cancellationToken).ConfigureAwait(false);
+            tasks.Add(tcs.Task);
+        }
+        await ProcessExistingQueue().ConfigureAwait(false);
+        return await Task.WhenAll(tasks).ConfigureAwait(false);
     }
     
     public async Task<IReadOnlyList<TRet>> EnqueueAndWait<TIn, TRet>(IEnumerable<TIn> items, Func<TIn, TRet> action, CancellationToken cancellationToken = default)
     {
-        return await Task.WhenAll(items
-            .Select(x => EnqueueAndWait(() =>
+        List<Task<TRet>> tasks = new();
+        foreach (var x in items)
+        {
+            var tcs = new TaskCompletionSource<TRet>();
+            await _channel.Writer.WriteAsync(new ToDo<TRet>(() =>
             {
                 return action(x);
-            }, cancellationToken)));
+            }, tcs), cancellationToken).ConfigureAwait(false);
+            tasks.Add(tcs.Task);
+        }
+        await ProcessExistingQueue().ConfigureAwait(false);
+        return await Task.WhenAll(tasks).ConfigureAwait(false);
     }
     
     public async Task<IReadOnlyList<TRet>> EnqueueAndWait<TIn, TRet>(IEnumerable<TIn> items, Func<TIn, CancellationToken, TRet> action, CancellationToken cancellationToken = default)
     {
-        return await Task.WhenAll(items
-            .Select(x => EnqueueAndWait(() =>
+        List<Task<TRet>> tasks = new();
+        foreach (var x in items)
+        {
+            var tcs = new TaskCompletionSource<TRet>();
+            await _channel.Writer.WriteAsync(new ToDo<TRet>(() =>
             {
                 return action(x, cancellationToken);
-            }, cancellationToken)));
+            }, tcs), cancellationToken).ConfigureAwait(false);
+            tasks.Add(tcs.Task);
+        }
+        await ProcessExistingQueue().ConfigureAwait(false);
+        return await Task.WhenAll(tasks).ConfigureAwait(false);
     }
 
     public async Task<IReadOnlyList<T>> EnqueueAndWait<T>(IEnumerable<T> items, Func<T, Task> action, CancellationToken cancellationToken = default)
     {
-        return await Task.WhenAll(items
-            .Select(x => EnqueueAndWait(async () =>
+        List<Task<T>> tasks = new();
+        foreach (var x in items)
+        {
+            var tcs = new TaskCompletionSource<T>();
+            await _channel.Writer.WriteAsync(new ToDo<T>(async () =>
             {
                 await action(x);
                 return x;
-            }, cancellationToken)));
+            }, tcs), cancellationToken).ConfigureAwait(false);
+            tasks.Add(tcs.Task);
+        }
+        await ProcessExistingQueue().ConfigureAwait(false);
+        return await Task.WhenAll(tasks).ConfigureAwait(false);
     }
 
     public async Task<IReadOnlyList<T>> EnqueueAndWait<T>(IEnumerable<T> items, Func<T, CancellationToken, Task> action, CancellationToken cancellationToken = default)
     {
-        return await Task.WhenAll(items
-            .Select(x => EnqueueAndWait(async () =>
+        List<Task<T>> tasks = new();
+        foreach (var x in items)
+        {
+            var tcs = new TaskCompletionSource<T>();
+            await _channel.Writer.WriteAsync(new ToDo<T>(async () =>
             {
                 await action(x, cancellationToken);
                 return x;
-            }, cancellationToken)));
+            }, tcs), cancellationToken).ConfigureAwait(false);
+            tasks.Add(tcs.Task);
+        }
+        await ProcessExistingQueue().ConfigureAwait(false);
+        return await Task.WhenAll(tasks).ConfigureAwait(false);
     }
 
     public async Task<IReadOnlyList<TRet>> EnqueueAndWait<TIn, TRet>(IEnumerable<TIn> items, Func<TIn, Task<TRet>> action, CancellationToken cancellationToken = default)
     {
-        return await Task.WhenAll(items
-            .Select(x => EnqueueAndWait(async () =>
+        List<Task<TRet>> tasks = new();
+        foreach (var x in items)
+        {
+            var tcs = new TaskCompletionSource<TRet>();
+            await _channel.Writer.WriteAsync(new ToDo<TRet>(async () =>
             {
                 return await action(x);
-            }, cancellationToken)));
+            }, tcs), cancellationToken).ConfigureAwait(false);
+            tasks.Add(tcs.Task);
+        }
+        await ProcessExistingQueue().ConfigureAwait(false);
+        return await Task.WhenAll(tasks).ConfigureAwait(false);
     }
 
     public async Task<IReadOnlyList<TRet>> EnqueueAndWait<TIn, TRet>(IEnumerable<TIn> items, Func<TIn, CancellationToken, Task<TRet>> action, CancellationToken cancellationToken = default)
     {
-        return await Task.WhenAll(items
-            .Select(x => EnqueueAndWait(async () =>
+        List<Task<TRet>> tasks = new();
+        foreach (var x in items)
+        {
+            var tcs = new TaskCompletionSource<TRet>();
+            await _channel.Writer.WriteAsync(new ToDo<TRet>(async () =>
             {
                 return await action(x, cancellationToken);
-            }, cancellationToken)));
+            }, tcs), cancellationToken).ConfigureAwait(false);
+            tasks.Add(tcs.Task);
+        }
+        await ProcessExistingQueue().ConfigureAwait(false);
+        return await Task.WhenAll(tasks).ConfigureAwait(false);
     }
 }
 #endif
