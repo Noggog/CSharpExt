@@ -19,7 +19,8 @@ public static class WindowExt
         this Window window,
         string settingsPath,
         Func<string, T> load,
-        Action<string, T> save)
+        Action<string, T> save,
+        Action<T> initialize)
         where T : IDisposable, new()
     {
         T mainVM;
@@ -30,6 +31,7 @@ public static class WindowExt
         else
         {
             mainVM = new T();
+            initialize(mainVM);
         }
         window.Closed += (a, b) =>
         {
@@ -45,13 +47,15 @@ public static class WindowExt
     public static T WireMainVM<T>(
         this Window window,
         string settingsPath,
-        JsonSerializerSettings? settings = null)
+        JsonSerializerSettings? settings = null,
+        Action<T>? initialize = null)
         where T : IDisposable, new()
     {
         return window.WireMainVM(
             settingsPath: settingsPath,
             load: (s) => (T)JsonConvert.DeserializeObject<T>(File.ReadAllText(s), settings)!,
-            save: (s, vm) => File.WriteAllText(s, JsonConvert.SerializeObject(vm, Formatting.Indented, settings)));
+            save: (s, vm) => File.WriteAllText(s, JsonConvert.SerializeObject(vm, Formatting.Indented, settings)),
+            initialize: initialize ?? (x => {}));
     }
 
     public static T WireMainVM<T>(
@@ -59,12 +63,17 @@ public static class WindowExt
         string settingsPath,
         T mainVM,
         Action<string, T> load,
-        Action<string, T> save)
+        Action<string, T> save,
+        Action<T> initialize)
         where T : IDisposable
     {
         if (File.Exists(settingsPath))
         {
             load(settingsPath, mainVM);
+        }
+        else
+        {
+            initialize(mainVM);
         }
         window.Closed += (a, b) =>
         {
@@ -81,13 +90,18 @@ public static class WindowExt
         this Window window,
         string settingsPath,
         Action<string, T> load,
-        Action<string, T> save)
+        Action<string, T> save,
+        Action<T> initialize)
         where T : IDisposable, new()
     {
         var mainVM = new T();
         if (File.Exists(settingsPath))
         {
             load(settingsPath, mainVM);
+        }
+        else
+        {
+            initialize(mainVM);
         }
         window.Closed += (a, b) =>
         {
