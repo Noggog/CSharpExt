@@ -8,6 +8,20 @@ namespace CSharpExt.UnitTests;
 public class ShouldlyExtTests
 {
     [Theory, DefaultAutoData]
+    public void RoughlyEqual(
+        byte b)
+    {
+        ShouldlyExt.RoughlyEqual(b, (int)b).ShouldBeTrue();
+    }
+
+    [Theory, DefaultAutoData]
+    public void RoughlyEqualFalse(
+        byte b)
+    {
+        ShouldlyExt.RoughlyEqual(b, (int)(b + 1)).ShouldBeFalse();
+    }
+
+    [Theory, DefaultAutoData]
     public void ShouldEqual(
         byte b)
     {
