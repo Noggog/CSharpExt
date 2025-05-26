@@ -49,7 +49,7 @@ public class FillUsagesTests
     {
         new GetUsages().Get(
                 typeof(SomeParams))
-            .ShouldEqual(
+            .ShouldEqualEnumerable(
                 typeof(NoCtorClass),
                 typeof(SubClass));
     }
