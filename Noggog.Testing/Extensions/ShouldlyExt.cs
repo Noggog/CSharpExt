@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+using System.Collections;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using Shouldly;
 
@@ -6,11 +7,46 @@ namespace Noggog.Testing.Extensions;
 
 public static class ShouldlyExt
 {
-    private static bool RoughlyEqual<TLhs>(TLhs actual, object? expected)
+    public static object? ConvertWithImplicitOperator(object input, Type targetType)
+    {
+        var inputType = input.GetType();
+
+        // Look for implicit operator in input type
+        var method = inputType
+            .GetMethods(BindingFlags.Public | BindingFlags.Static)
+            .FirstOrDefault(m =>
+                m.Name == "op_Implicit" &&
+                m.ReturnType == targetType &&
+                m.GetParameters()[0].ParameterType.IsAssignableFrom(inputType));
+
+        // Or look for it in target type
+        method ??= targetType
+            .GetMethods(BindingFlags.Public | BindingFlags.Static)
+            .FirstOrDefault(m =>
+                m.Name == "op_Implicit" &&
+                m.ReturnType == targetType &&
+                m.GetParameters()[0].ParameterType.IsAssignableFrom(inputType));
+
+        if (method == null)
+            throw new InvalidCastException($"No implicit conversion from {inputType} to {targetType}");
+
+        return method.Invoke(null, new[] { input });
+    }
+    
+    internal static bool RoughlyEqual<TLhs>(TLhs actual, object? expected)
     {
         if (actual == null && expected == null) return true;
         if (actual == null || expected == null) return false;
         if (object.Equals(actual, expected)) return true;
+
+        try
+        {
+            TLhs? convertedExpected = (TLhs?)ConvertWithImplicitOperator(expected, actual.GetType());
+            if (object.Equals(actual, convertedExpected)) return true;
+        }
+        catch (Exception e)
+        {
+        }
         
         try
         {
@@ -33,7 +69,7 @@ public static class ShouldlyExt
             }
         }
 
-        return true;
+        return false;
     }
     
     [MethodImpl(MethodImplOptions.NoInlining)]
@@ -65,15 +101,58 @@ public static class ShouldlyExt
         }
     }
     
+    public static void ShouldEqualEnumerables(this IEnumerable actual, IEnumerable expected)
+    {
+        var actualList = new List<object>();
+        foreach (var item in actual)
+        {
+            actualList.Add(item);
+        }
+        var expectedList = new List<object>();
+        foreach (var item in expected)
+        {
+            expectedList.Add(item);
+        }
+        if (actualList.Count != expectedList.Count)
+        {
+            throw new ShouldAssertException(
+                new ExpectedActualShouldlyMessage(expectedList, actualList, null).ToString());
+        }
+
+        if (actualList.Count == 0) return;
+
+        for (int i = 0; i < actualList.Count; i++)
+        {
+            if (!RoughlyEqual(actualList[i], expectedList[i]))
+            {
+                throw new ShouldAssertException(
+                    new ExpectedActualShouldlyMessage(expected, actual, null).ToString()); 
+            }
+        }
+    }
+
     [MethodImpl(MethodImplOptions.NoInlining)]
     public static void ShouldEqual<TLhs, TRhs>(this TLhs actual, TRhs expected)
     {
-        if (actual is IEnumerable<object> actualEnumerable && expected is IEnumerable<object> expectedEnumerable)
+        if (RoughlyEqual(actual, expected)) return;
+
+        if (actual is IEnumerable<TRhs> rhs)
         {
-            ShouldEqual(actualEnumerable, expectedEnumerable);
+            ShouldEqual(rhs, [expected]);
             return;
         }
-        if (RoughlyEqual(actual, expected)) return;
+
+        if (actual is TRhs[] rhsArr)
+        {
+            ShouldEqual(rhsArr, [expected]);
+            return;
+        }
+        
+        if (actual is IEnumerable actualEnumerable && expected is IEnumerable expectedEnumerable)
+        {
+            ShouldEqualEnumerables(actualEnumerable, expectedEnumerable);
+            return;
+        }
 
         throw new ShouldAssertException(
             new ExpectedActualShouldlyMessage(expected, actual, null).ToString());
