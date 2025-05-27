@@ -63,7 +63,7 @@ public class ProcessRunnerTests
         process.Output.Returns(Observable.Return(str));
         sut.Factory.Create(default!).ReturnsForAnyArgs(process);
         var result = await sut.RunAndCapture(startInfo, cancel);
-        result.Out.ShouldEqual(str);
+        result.Out.ShouldEqualEnumerable(str);
     }
         
     [Theory, DefaultAutoData(ConfigureMembers: false)]
@@ -77,7 +77,7 @@ public class ProcessRunnerTests
         process.Error.Returns(Observable.Return(str));
         sut.Factory.Create(default!).ReturnsForAnyArgs(process);
         var result = await sut.RunAndCapture(startInfo, cancel);
-        result.Errors.ShouldEqual(str);
+        result.Errors.ShouldEqualEnumerable(str);
     }
         
     [Theory, DefaultAutoData(ConfigureMembers: false)]
@@ -122,7 +122,7 @@ public class ProcessRunnerTests
         sut.Factory.Create(default!).ReturnsForAnyArgs(process);
         var received = new List<string>();
         await sut.RunWithCallback(startInfo, received.Add, errCb, cancel);
-        received.ShouldEqual(str);
+        received.ShouldEqualEnumerable(str);
     }
         
     [Theory, DefaultAutoData(ConfigureMembers: false)]
@@ -138,7 +138,7 @@ public class ProcessRunnerTests
         sut.Factory.Create(default!).ReturnsForAnyArgs(process);
         var received = new List<string>();
         await sut.RunWithCallback(startInfo, outCb, received.Add, cancel);
-        received.ShouldEqual(str);
+        received.ShouldEqualEnumerable(str);
     }
         
     [Theory, DefaultAutoData(ConfigureMembers: false)]
@@ -185,7 +185,7 @@ public class ProcessRunnerTests
         sut.Factory.Create(default!).ReturnsForAnyArgs(process);
         var received = new List<string>();
         await sut.RunWithCallback(startInfo, received.Add, cancel);
-        received.ShouldEqual(str);
+        received.ShouldEqualEnumerable(str);
     }
         
     [Theory, DefaultAutoData(ConfigureMembers: false)]
@@ -200,7 +200,7 @@ public class ProcessRunnerTests
         sut.Factory.Create(default!).ReturnsForAnyArgs(process);
         var received = new List<string>();
         await sut.RunWithCallback(startInfo, received.Add, cancel);
-        received.ShouldEqual(str);
+        received.ShouldEqualEnumerable(str);
     }
         
     [Theory, DefaultAutoData(ConfigureMembers: false)]

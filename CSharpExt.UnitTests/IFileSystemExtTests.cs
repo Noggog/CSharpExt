@@ -113,7 +113,7 @@ public class IFileSystemExtTests
     {
         var fileSystem = TypicalFileSystem();
         fileSystem.Directory.EnumerateFilePaths(DirPath)
-            .ShouldEqual(
+            .ShouldEqualEnumerable(
                 SomeFile,
                 SomeFileTxt);
     }
@@ -123,7 +123,7 @@ public class IFileSystemExtTests
     {
         var fileSystem = TypicalFileSystem();
         fileSystem.Directory.EnumerateFilePaths(DirPath, "*.txt")
-            .ShouldEqual(
+            .ShouldEqualEnumerable(
                 SomeFileTxt);
     }
         
@@ -132,7 +132,7 @@ public class IFileSystemExtTests
     {
         var fileSystem = TypicalFileSystem();
         fileSystem.Directory.EnumerateFilePaths(DirPath, recursive: true)
-            .ShouldEqual(
+            .ShouldEqualEnumerable(
                 SomeFile,
                 SomeFileTxt,
                 SomeSubFile,
@@ -144,7 +144,7 @@ public class IFileSystemExtTests
     {
         var fileSystem = TypicalFileSystem();
         fileSystem.Directory.EnumerateFilePaths(DirPath, "*.txt", recursive: true)
-            .ShouldEqual(
+            .ShouldEqualEnumerable(
                 SomeFileTxt,
                 SomeSubFileTxt);
     }
@@ -164,7 +164,7 @@ public class IFileSystemExtTests
             { subSubDir, new MockFileData("Doop") },
         });
         fileSystem.Directory.EnumerateDirectoryPaths(DirPath, includeSelf: true, recursive: true)
-            .ShouldEqual(
+            .ShouldEqualEnumerable(
                 DirPath,
                 SomeSubDir);
     }
@@ -174,7 +174,7 @@ public class IFileSystemExtTests
     {
         var fileSystem = TypicalFileSystem();
         fileSystem.Directory.EnumerateDirectoryPaths(DirPath, includeSelf: false, recursive: true)
-            .ShouldEqual(
+            .ShouldEqualEnumerable(
                 SomeSubDir);
     }
 
@@ -188,7 +188,7 @@ public class IFileSystemExtTests
             { Path.Combine(SomeSubDir, "SubSubDir"), new MockFileData("Doop") },
         });
         fileSystem.Directory.EnumerateDirectoryPaths(DirPath, includeSelf: true, recursive: false)
-            .ShouldEqual(
+            .ShouldEqualEnumerable(
                 DirPath,
                 SomeSubDir);
     }

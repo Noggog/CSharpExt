@@ -61,7 +61,7 @@ public class ObservableExtTests
         scheduler.AdvanceBy(20);
         await complete.Task;
         results.Count.ShouldBe(1);
-        results.ShouldEqual(secondWait);
+        results.ShouldEqualEnumerable(secondWait);
     });
 
     [Theory, TestData(FileSystem: TargetFileSystem.Fake)]

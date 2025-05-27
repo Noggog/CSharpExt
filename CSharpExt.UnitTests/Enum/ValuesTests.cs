@@ -9,7 +9,7 @@ public class ValuesTests
     [Fact]
     public void Typical()
     {
-        Enums<TestEnum>.Values.ShouldEqual(
+        Enums<TestEnum>.Values.ShouldEqualEnumerable(
             TestEnum.First,
             TestEnum.Second,
             TestEnum.Third);
@@ -24,7 +24,7 @@ public class ValuesTests
     [Fact]
     public void TypicalFlags()
     {
-        Enums<FlagsTestEnum>.Values.ShouldEqual(
+        Enums<FlagsTestEnum>.Values.ShouldEqualEnumerable(
             FlagsTestEnum.One,
             FlagsTestEnum.Two,
             FlagsTestEnum.Four);

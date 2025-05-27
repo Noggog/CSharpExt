@@ -73,35 +73,26 @@ public static class ShouldlyExt
     }
     
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public static void ShouldEqual<T>(this IEnumerable<T> actual, params object?[] expected)
+    public static void ShouldEqualEnumerable<T, TRhs>(this IEnumerable<T> actual, params TRhs?[] expected)
+        where TRhs : T 
     {
-        ShouldEqual<T>(actual, (IEnumerable<object?>)expected);
+        ShouldEqualEnumerableInternal(actual, expected);
     }
     
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public static void ShouldEqual<T>(this IEnumerable<T> actual, IEnumerable<object?> expected)
+    public static void ShouldEqualEnumerable<T>(this IEnumerable<T> actual, params object?[] expected)
     {
-        var actualList = actual.ToArray();
-        var expectedList = expected.ToArray();
-        if (actualList.Length != expectedList.Length)
-        {
-            throw new ShouldAssertException(
-                new ExpectedActualShouldlyMessage(expectedList, actualList, null).ToString());
-        }
-
-        if (actualList.Length == 0) return;
-
-        for (int i = 0; i < actualList.Length; i++)
-        {
-            if (!RoughlyEqual(actualList[i], expectedList[i]))
-            {
-                throw new ShouldAssertException(
-                    new ExpectedActualShouldlyMessage(expected, actual, null).ToString()); 
-            }
-        }
+        ShouldEqualEnumerableInternal(actual, expected);
     }
     
-    public static void ShouldEqualEnumerables(this IEnumerable actual, IEnumerable expected)
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public static void ShouldEqualEnumerable<TLhs, TRhs>(this IEnumerable<TLhs> actual, IEnumerable<TRhs> expected)
+    {
+        ShouldEqualEnumerableInternal(actual, expected);
+    }
+    
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    private static void ShouldEqualEnumerableInternal(IEnumerable actual, IEnumerable expected)
     {
         var actualList = new List<object>();
         foreach (var item in actual)
@@ -130,29 +121,11 @@ public static class ShouldlyExt
             }
         }
     }
-
+    
     [MethodImpl(MethodImplOptions.NoInlining)]
     public static void ShouldEqual<TLhs, TRhs>(this TLhs actual, TRhs expected)
     {
         if (RoughlyEqual(actual, expected)) return;
-
-        if (actual is IEnumerable<TRhs> rhs)
-        {
-            ShouldEqual(rhs, [expected]);
-            return;
-        }
-
-        if (actual is TRhs[] rhsArr)
-        {
-            ShouldEqual(rhsArr, [expected]);
-            return;
-        }
-        
-        if (actual is IEnumerable actualEnumerable && expected is IEnumerable expectedEnumerable)
-        {
-            ShouldEqualEnumerables(actualEnumerable, expectedEnumerable);
-            return;
-        }
 
         throw new ShouldAssertException(
             new ExpectedActualShouldlyMessage(expected, actual, null).ToString());
