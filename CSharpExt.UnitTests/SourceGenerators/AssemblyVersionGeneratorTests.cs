@@ -20,7 +20,7 @@ public class AssemblyVersionGeneratorTests
     #if DEBUG
             if (AutoVerify)
             {
-                verifySettings.AutoVerify();
+                verifySettings.AutoVerify(includeBuildServer: true, throwException: false);
             }
     #else
             verifySettings.DisableDiff();
