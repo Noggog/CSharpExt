@@ -73,27 +73,39 @@ public static class ShouldlyExt
     }
     
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public static void ShouldEqualEnumerable<T, TRhs>(this IEnumerable<T> actual, params TRhs?[] expected)
+    public static void ShouldEqualEnumerable<T, TRhs>(this IEnumerable<T>? actual, params TRhs?[] expected)
         where TRhs : T 
     {
         ShouldEqualEnumerableInternal(actual, expected);
     }
     
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public static void ShouldEqualEnumerable<T>(this IEnumerable<T> actual, params object?[] expected)
+    public static void ShouldEqualEnumerable<T>(this IEnumerable<T>? actual, params object?[] expected)
     {
         ShouldEqualEnumerableInternal(actual, expected);
     }
     
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public static void ShouldEqualEnumerable<TLhs, TRhs>(this IEnumerable<TLhs> actual, IEnumerable<TRhs> expected)
+    public static void ShouldEqualEnumerable<TLhs, TRhs>(this IEnumerable<TLhs>? actual, IEnumerable<TRhs>? expected)
     {
         ShouldEqualEnumerableInternal(actual, expected);
     }
     
     [MethodImpl(MethodImplOptions.NoInlining)]
-    private static void ShouldEqualEnumerableInternal(IEnumerable actual, IEnumerable expected)
+    public static void ShouldEqualEnumerable<TLhs, TRhs>(this IEnumerable<TLhs>? actual, ReadOnlyMemorySlice<TRhs>? expected)
     {
+        ShouldEqualEnumerableInternal(actual, expected);
+    }
+    
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    private static void ShouldEqualEnumerableInternal(IEnumerable? actual, IEnumerable? expected)
+    {
+        if (actual == null && expected == null) return;
+        if (actual == null || expected == null)
+        {
+            throw new ShouldAssertException(
+                new ExpectedActualShouldlyMessage(expected, actual, null).ToString());
+        }
         var actualList = new List<object>();
         foreach (var item in actual)
         {
