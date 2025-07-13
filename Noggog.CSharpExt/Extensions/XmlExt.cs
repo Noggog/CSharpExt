@@ -1,4 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.Reflection;
 using System.Text;
 using System.Xml.Linq;
@@ -69,7 +70,7 @@ public static class XmlExt
         return true;
     }
 
-    public static bool TryGetAttribute<P>(this XElement node, string str, [MaybeNullWhen(false)] out P val, bool throwException = false)
+    public static bool TryGetAttribute<P>(this XElement node, string str, [MaybeNullWhen(false)] out P val, bool throwException = false, CultureInfo? culture = null)
     {
         var ret = TryGetAttribute<P>(node, str, out val, (strVal) =>
         {
@@ -90,7 +91,7 @@ public static class XmlExt
                 }
                 else
                 {
-                    return (P)Convert.ChangeType(strVal, t);
+                    return (P)Convert.ChangeType(strVal, t, culture);
                 }
             }
             catch (Exception)

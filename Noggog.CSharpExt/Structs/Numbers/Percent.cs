@@ -16,7 +16,7 @@ public readonly struct Percent : IComparable, IEquatable<Percent>, IComparable<P
         }
         else
         {
-            throw new ArgumentException("Element out of range: " + d);
+            throw new ArgumentOutOfRangeException("Element out of range: " + d);
         }
     }
 
@@ -27,7 +27,7 @@ public readonly struct Percent : IComparable, IEquatable<Percent>, IComparable<P
 
     public static bool InRange(double d)
     {
-        return d >= 0 || d <= 1;
+        return d >= 0 && d <= 1;
     }
 
     public static Percent operator +(Percent c1, Percent c2)
@@ -45,9 +45,9 @@ public readonly struct Percent : IComparable, IEquatable<Percent>, IComparable<P
         return new Percent(c1.Value - c2.Value);
     }
 
-    public static Percent operator /(Percent c1, Percent c2)
+    public static double operator /(Percent c1, Percent c2)
     {
-        return new Percent(c1.Value / c2.Value);
+        return c1.Value / c2.Value;
     }
 
     public static implicit operator double(Percent c1)

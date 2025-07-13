@@ -86,4 +86,20 @@ public class ShouldlyExtTests
     {
         paths.Select(x => x.Path).ShouldEqualEnumerable(paths.ToArray());
     }
+
+    [Fact]
+    public void ShouldEqualEnumerableMemorySlice()
+    {
+        ReadOnlyMemorySlice<byte> b1 = new byte[] { 1, 2, 3 };
+        ReadOnlyMemorySlice<byte> b2 = new byte[] { 1, 2, 3 };
+        b1.ShouldEqualEnumerable(b2);
+    }
+
+    [Fact]
+    public void ShouldEqualEnumerableMemorySliceNullable()
+    {
+        ReadOnlyMemorySlice<byte> b1 = new byte[] { 1, 2, 3 };
+        ReadOnlyMemorySlice<byte>? b2 = new byte[] { 1, 2, 3 };
+        b1.ShouldEqualEnumerable(b2);
+    }
 }
