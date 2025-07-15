@@ -33,7 +33,7 @@ public static class XmlExt
         return sReader.ReadToEnd();
     }
 
-    public static bool TryGetAttribute(this XElement node, string str, [MaybeNullWhen(false)] out XAttribute val)
+    public static bool TryGetAttribute(this XElement? node, string str, [MaybeNullWhen(false)] out XAttribute val)
     {
         if (node != null)
         {
@@ -59,7 +59,7 @@ public static class XmlExt
         return false;
     }
 
-    public static bool TryGetAttribute<P>(this XElement node, string str, [MaybeNullWhen(false)] out P val, Func<string, P> converter)
+    public static bool TryGetAttribute<P>(this XElement node, string str, [MaybeNullWhen(false)] out P val, Func<string?, P> converter)
     {
         if (!TryGetAttributeString(node, str, out string strVal))
         {
