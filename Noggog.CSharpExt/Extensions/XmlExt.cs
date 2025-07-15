@@ -33,7 +33,7 @@ public static class XmlExt
         return sReader.ReadToEnd();
     }
 
-    public static bool TryGetAttribute(this XElement node, string str, [MaybeNullWhen(false)] out XAttribute val)
+    public static bool TryGetAttribute(this XElement? node, string str, [MaybeNullWhen(false)] out XAttribute val)
     {
         if (node != null)
         {
@@ -59,7 +59,7 @@ public static class XmlExt
         return false;
     }
 
-    public static bool TryGetAttribute<P>(this XElement node, string str, [MaybeNullWhen(false)] out P val, Func<string, P> converter)
+    public static bool TryGetAttribute<P>(this XElement node, string str, [MaybeNullWhen(false)] out P val, Func<string?, P> converter)
     {
         if (!TryGetAttributeString(node, str, out string strVal))
         {
@@ -110,26 +110,26 @@ public static class XmlExt
         return val != null;
     }
 
-    public static P? GetAttribute<P>(this XElement node, string str, P? defaultVal = default, bool throwException = false)
+    public static P? GetAttribute<P>(this XElement node, string str, P? defaultVal = default, bool throwException = false, CultureInfo? culture = null)
     {
-        if (!TryGetAttribute<P>(node, str, out var val, throwException))
+        if (!TryGetAttribute<P>(node, str, out var val, throwException, culture: culture))
         {
             val = defaultVal;
         }
         return val;
     }
 
-    public static void TransferAttribute<P>(this XElement node, string str, Action<P> acti, bool throwException = false)
+    public static void TransferAttribute<P>(this XElement node, string str, Action<P> acti, bool throwException = false, CultureInfo? culture = null)
     {
-        if (TryGetAttribute<P>(node, str, out var val, throwException))
+        if (TryGetAttribute<P>(node, str, out var val, throwException, culture: culture))
         {
             acti(val);
         }
     }
 
-    public static string? GetAttribute(this XElement node, string str, string? defaultVal = null, bool throwException = false)
+    public static string? GetAttribute(this XElement node, string str, string? defaultVal = null, bool throwException = false, CultureInfo? culture = null)
     {
-        if (!TryGetAttribute(node, str, out string? val, throwException))
+        if (!TryGetAttribute(node, str, out string? val, throwException, culture: culture))
         {
             return defaultVal;
         }
@@ -154,8 +154,8 @@ public static class XmlExt
     {
         if (node.HasElements != rhs.HasElements) return false;
         if (!node.Name.ContentEqual(rhs.Name)) return false;
-        var lhsAttrEnumer = node.Attributes().GetEnumerator();
-        var rhsAttrEnumer = rhs.Attributes().GetEnumerator();
+        using var lhsAttrEnumer = node.Attributes().GetEnumerator();
+        using var rhsAttrEnumer = rhs.Attributes().GetEnumerator();
         while (true)
         {
             var lhsHas = lhsAttrEnumer.MoveNext();
