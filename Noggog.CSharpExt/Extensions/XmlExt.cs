@@ -110,26 +110,26 @@ public static class XmlExt
         return val != null;
     }
 
-    public static P? GetAttribute<P>(this XElement node, string str, P? defaultVal = default, bool throwException = false)
+    public static P? GetAttribute<P>(this XElement node, string str, P? defaultVal = default, bool throwException = false, CultureInfo? culture = null)
     {
-        if (!TryGetAttribute<P>(node, str, out var val, throwException))
+        if (!TryGetAttribute<P>(node, str, out var val, throwException, culture: culture))
         {
             val = defaultVal;
         }
         return val;
     }
 
-    public static void TransferAttribute<P>(this XElement node, string str, Action<P> acti, bool throwException = false)
+    public static void TransferAttribute<P>(this XElement node, string str, Action<P> acti, bool throwException = false, CultureInfo? culture = null)
     {
-        if (TryGetAttribute<P>(node, str, out var val, throwException))
+        if (TryGetAttribute<P>(node, str, out var val, throwException, culture: culture))
         {
             acti(val);
         }
     }
 
-    public static string? GetAttribute(this XElement node, string str, string? defaultVal = null, bool throwException = false)
+    public static string? GetAttribute(this XElement node, string str, string? defaultVal = null, bool throwException = false, CultureInfo? culture = null)
     {
-        if (!TryGetAttribute(node, str, out string? val, throwException))
+        if (!TryGetAttribute(node, str, out string? val, throwException, culture: culture))
         {
             return defaultVal;
         }
