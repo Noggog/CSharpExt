@@ -154,8 +154,8 @@ public static class XmlExt
     {
         if (node.HasElements != rhs.HasElements) return false;
         if (!node.Name.ContentEqual(rhs.Name)) return false;
-        var lhsAttrEnumer = node.Attributes().GetEnumerator();
-        var rhsAttrEnumer = rhs.Attributes().GetEnumerator();
+        using var lhsAttrEnumer = node.Attributes().GetEnumerator();
+        using var rhsAttrEnumer = rhs.Attributes().GetEnumerator();
         while (true)
         {
             var lhsHas = lhsAttrEnumer.MoveNext();
