@@ -67,6 +67,16 @@ public struct P2Float : IEquatable<P2Float>
             _y / length);
     }
 
+    public float Cross(P2Float b)
+    {
+        return this.X * b.Y - this.Y * b.X;
+    }
+
+    public float Dot(P2Float b)
+    {
+        return this.X * b.X + this.Y * b.Y;
+    }
+
     public static float Dot(P2Float v1, P2Float v2) => v1._x * v2._x + v1._y * v2._y;
     public float Distance(P2Float p2) => (this - p2).Magnitude;
 

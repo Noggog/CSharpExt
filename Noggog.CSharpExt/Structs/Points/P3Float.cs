@@ -249,4 +249,17 @@ public struct P3Float : IEquatable<P3Float>
             return ret.GetHashCode();
         }
     }
+    
+    public P3Float Cross(P3Float b)
+    {
+        return new P3Float(
+            this.Y * b.Z - this.Z * b.Y,
+            this.Z * b.X - this.X * b.Z,
+            this.X * b.Y - this.Y * b.X);
+    }
+
+    public float Dot(P3Float b)
+    {
+        return this.X * b.X + this.Y * b.Y + this.Z * b.Z;
+    }
 }
