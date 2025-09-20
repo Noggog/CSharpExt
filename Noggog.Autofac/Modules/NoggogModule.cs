@@ -24,12 +24,5 @@ public class NoggogModule : Module
             .NotInjection()
             .AsImplementedInterfaces()
             .SingleInstance();
-        builder.RegisterAssemblyTypes(typeof(IWorkDropoff).Assembly)
-            .InNamespacesOf(
-                typeof(IWorkDropoff))
-            .Except<NumWorkThreadsConstant>()
-            .NotInjection()
-            .AsImplementedInterfaces()
-            .SingleInstance();
     }
 }
