@@ -1,0 +1,16 @@
+mode: ContinuousDeployment
+increment: Patch
+tag-prefix: ''
+branches:
+  dev:
+    regex: ^dev$
+    increment: Patch
+    label: dev
+  master:
+    increment: Patch
+    regex: ^master$
+  main:
+    increment: Patch
+    regex: ^main$
+ignore:
+  sha: []
