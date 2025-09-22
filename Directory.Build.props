@@ -11,5 +11,8 @@
     <ItemGroup>
         <PackageReference Include="Microsoft.SourceLink.GitHub" PrivateAssets="All"/>
     </ItemGroup>
+    <ItemGroup Condition="'$(IsPackable)' == 'false'">
+        <ProjectCapability Remove="Pack" />
+    </ItemGroup>
 
 </Project>
