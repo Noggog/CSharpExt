@@ -284,3 +284,7 @@ Noggog.CSharpExt.Json/Noggog.CSharpExt.Json.xml
 
 *wpftmp.csproj
 nupkg/
+
+# Claude Code files
+CLAUDE.md
+.claude
