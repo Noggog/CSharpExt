@@ -1,12 +1,16 @@
+using System.Diagnostics.Contracts;
+
 namespace Noggog;
 
 public static class CancellationExt
 {
+    [Pure]
     public static CancellationToken Combine(this CancellationToken token, CancellationToken other)
     {
         return CancellationTokenSource.CreateLinkedTokenSource(token, other).Token;
     }
 
+    [Pure]
     public static CancellationToken Combine(this CancellationToken token, params CancellationToken[] other)
     {
         return CancellationTokenSource.CreateLinkedTokenSource(token.AsEnumerable().And(other).ToArray()).Token;

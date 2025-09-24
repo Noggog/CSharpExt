@@ -1,3 +1,4 @@
+using System.Diagnostics.Contracts;
 using System.Runtime.InteropServices;
 
 namespace Noggog;
@@ -7,6 +8,7 @@ public static class ByteExt
     [DllImport("msvcrt.dll", CallingConvention = CallingConvention.Cdecl)]
     static extern int memcmp(byte[] b1, byte[] b2, long count);
 
+    [Pure]
     public static bool IsInRange(this byte d, byte min, byte max)
     {
         if (d < min) return false;
@@ -21,6 +23,7 @@ public static class ByteExt
         return d;
     }
 
+    [Pure]
     public static byte PutInRange(this byte d, byte min, byte max)
     {
         if (d < min) return min;
@@ -45,6 +48,7 @@ public static class ByteExt
         return result;
     }
 
+    [Pure]
     public unsafe static string ToHexString(this byte[] bytes)
     {
         var lookupP = Lookup32UnsafeP;
@@ -61,6 +65,7 @@ public static class ByteExt
         return new string(result);
     }
         
+    [Pure]
     public static unsafe bool EqualsFast(this byte[]? b1, byte[]? b2)
     {
         if (b1 == null && b2 == null) return true;
@@ -68,6 +73,7 @@ public static class ByteExt
         return b1.Length == b2.Length && memcmp(b1, b2, b1.Length) == 0;
     }
 
+    [Pure]
     public static unsafe bool CharBytesEqualsFast(byte[]? strA, byte[]? strB)
     {
         if (strA == null && strB == null) return true;

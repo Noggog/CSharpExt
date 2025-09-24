@@ -7,12 +7,14 @@ namespace Noggog;
 
 public static class EnumExt
 {
+    [Pure]
     [Obsolete("Use NumEntries instead")]
     public static int Length(this Enum obj) 
     { 
         return Enum.GetValues(obj.GetType()).Length; 
     } 
  
+    [Pure]
     [Obsolete("Use Enums<T>.NumEntries instead")]
     public static int Length<T>() 
         where T : struct, Enum
@@ -20,6 +22,7 @@ public static class EnumExt
         return Enums<T>.NumEntries;
     }
  
+    [Pure]
     [Obsolete("Use Enums<T>.TryConvert instead")]
     public static bool TryParse<T>(int number, out T val) 
         where T : struct, Enum
@@ -27,6 +30,7 @@ public static class EnumExt
         return Enums<T>.TryConvert(number, out val);
     }
  
+    [Pure]
     [Obsolete("Use Enums<T>.TryConvert instead")]
     public static T Parse<T>(int number, T defaultTo) 
         where T : struct, Enum 
@@ -34,6 +38,7 @@ public static class EnumExt
         return Enums<T>.TryConvert(number, defaultTo);
     } 
  
+    [Pure]
     [Obsolete("Use Enums<T>.Values instead")]
     public static IEnumerable<T> GetValues<T>() 
         where T : struct, Enum 

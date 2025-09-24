@@ -1,10 +1,12 @@
-﻿using System.Drawing;
+﻿using System.Diagnostics.Contracts;
+using System.Drawing;
 using System.Globalization;
 
 namespace Noggog;
 
 public static class ColorExt
 {
+    [Pure]
     public static bool ColorOnlyEquals(this Color color, Color rhs)
     {
         return color.A == rhs.A
@@ -13,6 +15,7 @@ public static class ColorExt
                && color.B == rhs.B;
     }
 
+    [Pure]
     public static bool ColorOnlyEquals(this Color? color, Color? rhs)
     {
         if (color.HasValue && rhs.HasValue)
@@ -114,6 +117,7 @@ public static class ColorExt
         return ErrorResponse.Success;
     }
 
+    [Pure]
     public static Color ConvertFromCommaString(ReadOnlySpan<char> span)
     {
         var err = TryConvertFromCommaString(span, out var color);
@@ -133,6 +137,7 @@ public static class ColorExt
         Never,
     }
     
+    [Pure]
     public static string CommaString(this Color color, IncludeAlpha alpha = IncludeAlpha.WhenApplicable)
     {
         switch (alpha)
@@ -148,6 +153,7 @@ public static class ColorExt
         }
     }
     
+    [Pure]
     public static string ToHexString(this Color color, IncludeAlpha alpha = IncludeAlpha.WhenApplicable)
     {
         switch (alpha)
@@ -165,6 +171,7 @@ public static class ColorExt
 
 #if NETSTANDARD2_0 
 #else
+    [Pure]
     public static Color FromHexString(ReadOnlySpan<char> colorString)
     {
         if (colorString.Length < 6 || colorString.Length > 9)

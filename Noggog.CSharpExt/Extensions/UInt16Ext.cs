@@ -1,7 +1,10 @@
+using System.Diagnostics.Contracts;
+
 namespace Noggog;
 
 public static class UInt16Ext
 {
+    [Pure]
     public static bool IsInRange(this ushort d, ushort min, ushort max)
     {
         if (d < min) return false;
@@ -16,6 +19,7 @@ public static class UInt16Ext
         return d;
     }
 
+    [Pure]
     public static ushort PutInRange(this ushort d, ushort min, ushort max)
     {
         if (d < min) return min;

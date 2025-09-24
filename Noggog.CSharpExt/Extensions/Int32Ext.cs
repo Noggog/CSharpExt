@@ -1,12 +1,16 @@
+using System.Diagnostics.Contracts;
+
 namespace Noggog;
 
 public static class Int32Ext
 {
+    [Pure]
     public static int Clamp(this int a, int min, int max)
     {
         return Math.Min(Math.Max(a, min), max);
     }
 
+    [Pure]
     public static bool IsInRange(this int d, int min, int max)
     {
         if (d < min) return false;
@@ -21,6 +25,7 @@ public static class Int32Ext
         return d;
     }
 
+    [Pure]
     public static int PutInRange(this int d, int min, int max)
     {
         if (d < min) return min;

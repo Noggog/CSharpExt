@@ -1,4 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics.Contracts;
 using System.Reflection;
 using System.Text;
 
@@ -6,6 +7,7 @@ namespace Noggog;
 
 public static class TypeExt
 {
+    [Pure]
     public static bool InheritsFrom(this Type t, Type baseType, bool excludeSelf = false, bool couldInherit = false)
     {
         if (baseType == t) return !excludeSelf;
@@ -23,6 +25,7 @@ public static class TypeExt
         return false;
     }
 
+    [Pure]
     public static bool IsAssignableToGenericType(Type givenType, Type genericType, bool couldInherit = false)
     {
         var genTypeDef = genericType.GetGenericTypeDefinition();
@@ -63,6 +66,7 @@ public static class TypeExt
         return IsAssignableToGenericType(baseType, genericType);
     }
 
+    [Pure]
     public static string GetName(this Type t)
     {
         if (!t.IsGenericType)
@@ -103,6 +107,7 @@ public static class TypeExt
         return sb.ToString();
     }
 
+    [Pure]
     public static bool IsPrimitive(this Type toCheck)
     {
         if (toCheck == typeof(String)) return true;
@@ -110,6 +115,7 @@ public static class TypeExt
                || toCheck.IsEnum;
     }
 
+    [Pure]
     public static string GetSimpleName(this Type t)
     {
         string str = t.Name;
@@ -119,6 +125,7 @@ public static class TypeExt
         return str;
     }
 
+    [Pure]
     public static bool IsSubclassOfGeneric(this Type toCheck, Type generic)
     {
         while (toCheck != null && toCheck != typeof(object))

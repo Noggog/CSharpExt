@@ -1,9 +1,11 @@
 using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics.Contracts;
 
 namespace Noggog;
 
 public static class ListExt
 {
+    [Pure]
     public static int BinarySearch<T>(this IReadOnlyList<T> list, T value)
     {
         if (list.Count == 0) return ~0;
@@ -40,6 +42,7 @@ public static class ListExt
     }
 
     // IList does not implement IReadOnlyList
+    [Pure]
     public static int BinarySearch<T>(this IList<T> list, T value)
     {
         if (list.Count == 0) return ~0;
@@ -76,11 +79,13 @@ public static class ListExt
     }
 
     // To avoid compiler confusion
+    [Pure]
     public static int BinarySearch<T>(this List<T> list, T value)
     {
         return BinarySearch<T>((IReadOnlyList<T>)list, value);
     }
 
+    [Pure]
     public static bool InRange<T>(this IReadOnlyList<T> list, int index)
     {
         return index >= 0 && index < list.Count;

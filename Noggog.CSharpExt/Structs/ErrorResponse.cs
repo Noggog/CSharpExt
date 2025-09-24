@@ -1,3 +1,5 @@
+using System.Diagnostics.Contracts;
+
 namespace Noggog;
 
 public struct ErrorResponse : IEquatable<ErrorResponse>
@@ -39,6 +41,7 @@ public struct ErrorResponse : IEquatable<ErrorResponse>
         return $"({(Succeeded ? "Success" : "Fail")}, {Reason})";
     }
 
+    [Pure]
     public GetResponse<TRet> BubbleFailure<TRet>()
     {
         if (Exception == null)
@@ -48,6 +51,7 @@ public struct ErrorResponse : IEquatable<ErrorResponse>
         return GetResponse<TRet>.Fail(Exception);
     }
 
+    [Pure]
     public GetResponse<TRet> BubbleResult<TRet>(TRet item)
     {
         if (Exception != null)
@@ -63,6 +67,7 @@ public struct ErrorResponse : IEquatable<ErrorResponse>
         return Equals(resp);
     }
 
+    [Pure]
     public bool Equals(ErrorResponse other)
     {
         if (_failed != other._failed) return false;
@@ -76,6 +81,7 @@ public struct ErrorResponse : IEquatable<ErrorResponse>
         }
     }
 
+    [Pure]
     public override int GetHashCode()
     {
         HashCode hash = new HashCode();
@@ -86,31 +92,37 @@ public struct ErrorResponse : IEquatable<ErrorResponse>
     }
 
     #region Factories
+    [Pure]
     public static ErrorResponse Succeed()
     {
         return new ErrorResponse(true);
     }
 
+    [Pure]
     public static ErrorResponse Succeed(string reason)
     {
         return new ErrorResponse(true, reason);
     }
 
+    [Pure]
     public static ErrorResponse Fail(string reason)
     {
         return new ErrorResponse(false, reason: reason);
     }
 
+    [Pure]
     public static ErrorResponse Fail(Exception ex)
     {
         return new ErrorResponse(false, ex: ex);
     }
 
+    [Pure]
     public static ErrorResponse Fail()
     {
         return new ErrorResponse(false);
     }
 
+    [Pure]
     public static ErrorResponse Create(bool successful, string reason = "", Exception? ex = null)
     {
         return new ErrorResponse(successful, reason, ex);

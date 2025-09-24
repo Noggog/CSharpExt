@@ -1,7 +1,10 @@
+using System.Diagnostics.Contracts;
+
 namespace Noggog;
 
 public static class Int64Ext
 {
+    [Pure]
     public static bool IsInRange(this long d, long min, long max)
     {
         if (d < min) return false;
@@ -16,6 +19,7 @@ public static class Int64Ext
         return d;
     }
 
+    [Pure]
     public static long PutInRange(this long d, long min, long max)
     {
         if (d < min) return min;

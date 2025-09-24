@@ -1,9 +1,11 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics.Contracts;
 
 namespace Noggog;
 
 public static class ExceptionExt
 {
+    [Pure]
     [return: NotNullIfNotNull("lhs")]
     [return: NotNullIfNotNull("rhs")]
     public static Exception? Combine(this Exception? lhs, Exception? rhs)
@@ -33,6 +35,7 @@ public static class ExceptionExt
             rhs);
     }
 
+    [Pure]
     [return: NotNullIfNotNull("lhs")]
     [return: NotNullIfNotNull("rhs")]
     public static IEnumerable<T>? Combine<T>(this IEnumerable<T>? lhs, IEnumerable<T>? rhs)

@@ -1,7 +1,10 @@
+using System.Diagnostics.Contracts;
+
 namespace Noggog;
 
 public static class MathExt
 {
+    [Pure]
     public static int Min(IEnumerable<int> e)
     {
         int? rhs = null;
@@ -16,11 +19,13 @@ public static class MathExt
         return rhs.Value;
     }
 
+    [Pure]
     public static int Min(params int[] e)
     {
         return Min((IEnumerable<int>)e);
     }
 
+    [Pure]
     public static int Max(IEnumerable<int> e)
     {
         int? rhs = null;
@@ -35,6 +40,7 @@ public static class MathExt
         return rhs.Value;
     }
 
+    [Pure]
     public static int Max(params int[] e)
     {
         return Max((IEnumerable<int>)e);

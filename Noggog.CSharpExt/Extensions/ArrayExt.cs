@@ -1,7 +1,10 @@
+using System.Diagnostics.Contracts;
+
 namespace Noggog;
 
 public static class ArrayExt
 {
+    [Pure]
     public static bool Contains<T>(this T[] arr, T val)
     {
         foreach (T t in arr)
@@ -15,11 +18,13 @@ public static class ArrayExt
         return false;
     }
 
+    [Pure]
     public static P2Int Center<T>(this T[,] array)
     {
         return new P2Int(array.GetLength(0) / 2, array.GetLength(1) / 2);
     }
 
+    [Pure]
     public static bool InRange<T>(this T[,] array, int x, int y)
     {
         return x >= 0 
@@ -67,6 +72,7 @@ public static class ArrayExt
         }
     }
 
+    [Pure]
     public static T[] Create<T>(int size, Func<int, T> factory)
     {
         T[] ret = new T[size];
@@ -77,6 +83,7 @@ public static class ArrayExt
         return ret;
     }
     
+    [Pure]
     public static T[] Create<T>(int size, T val)
     {
         var ret = new T[size];
@@ -84,6 +91,7 @@ public static class ArrayExt
         return ret;
     }
     
+    [Pure]
     public static T[,] Copy<T>(this T[,] array)
     {
         T[,] ret = new T[array.GetLength(0), array.GetLength(1)];
@@ -91,6 +99,7 @@ public static class ArrayExt
         return ret;
     }
 
+    [Pure]
     public static T[,] Expand<T>(this T[,] array, int buffer)
     {
         T[,] ret = new T[array.GetLength(0) + 2 * buffer, array.GetLength(1) + 2 * buffer];
@@ -104,6 +113,7 @@ public static class ArrayExt
         return ret;
     }
 
+    [Pure]
     public static T[] ToArray<T>(this T[] arr, int validCount)
     {
         T[] ret = new T[validCount];
@@ -114,6 +124,7 @@ public static class ArrayExt
         return ret;
     }
 
+    [Pure]
     public static IEnumerable<(T Item, bool Last)> IterateMarkLast<T>(this T[] arr)
     {
         for (int i = 0; i < arr.Length; i++)
@@ -122,6 +133,7 @@ public static class ArrayExt
         }
     }
 
+    [Pure]
     public static bool InRange<T>(this T[] arr, int index)
     {
         return index >= 0 && index < arr.Length;

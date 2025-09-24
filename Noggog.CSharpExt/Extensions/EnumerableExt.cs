@@ -1,19 +1,23 @@
 using System.Collections;
+using System.Diagnostics.Contracts;
 
 namespace Noggog;
 
 public static class EnumerableExt
 {
+    [Pure]
     public static Type GetEnumeratedType<T>(this IEnumerable<T> _)
     {
         return typeof(T);
     }
 
+    [Pure]
     public static IEnumerable<T> AsEnumerable<T>(this T item)
     {
         yield return item;
     }
 
+    [Pure]
     public static bool Any(this IEnumerable enumer)
     {
         foreach (var _ in enumer)
@@ -23,6 +27,7 @@ public static class EnumerableExt
         return false;
     }
 
+    [Pure]
     public static bool CountGreaterThan(this IEnumerable enumer, uint count)
     {
         foreach (var e in enumer)
@@ -35,6 +40,7 @@ public static class EnumerableExt
         return false;
     }
 
+    [Pure]
     public static IEnumerable<T> And<T>(this IEnumerable<T> enumer, IEnumerable<T> enumer2)
     {
         foreach (var e in enumer)
@@ -47,6 +53,7 @@ public static class EnumerableExt
         }
     }
 
+    [Pure]
     public static IEnumerable<T> And<T>(this IEnumerable<T> enumer2, T item)
     {
         foreach (var e in enumer2)
@@ -56,6 +63,7 @@ public static class EnumerableExt
         yield return item;
     }
 
+    [Pure]
     public static IEnumerable<T> AndWhen<T>(this IEnumerable<T> enumer, IEnumerable<T> enumer2, Func<bool> when)
     {
         foreach (var e in enumer)
@@ -69,6 +77,7 @@ public static class EnumerableExt
         }
     }
 
+    [Pure]
     public static IEnumerable<T> AndWhen<T>(this IEnumerable<T> enumer2, T item, Func<bool> when)
     {
         foreach (var e in enumer2)
@@ -79,6 +88,7 @@ public static class EnumerableExt
         yield return item;
     }
 
+    [Pure]
     public static IEnumerable<R> SelectWhere<T, R>(this IEnumerable<T> enumer, Func<T, TryGet<R>> conv)
     {
         foreach (var item in enumer)
@@ -92,6 +102,7 @@ public static class EnumerableExt
     }
 
     public delegate bool SelectWhereSelector<T, R>(T item, out R returnItem);
+    [Pure]
     public static IEnumerable<R> SelectWhere<T, R>(this IEnumerable<T> enumer, SelectWhereSelector<T, R> conv)
     {
         foreach (var item in enumer)
@@ -103,11 +114,13 @@ public static class EnumerableExt
         }
     }
 
+    [Pure]
     public static IEnumerable<T> Randomize<T>(this IEnumerable<T> e, RandomSource rand)
     {
         return e.OrderBy<T, int>((item) => rand.Next());
     }
 
+    [Pure]
     public static IEnumerable<R> SelectAgainst<T, R>(this IEnumerable<T> lhs, IEnumerable<T> rhs, Func<T, T, R> selector, out bool countEqual)
     {
         List<R> ret = new List<R>();
@@ -126,6 +139,7 @@ public static class EnumerableExt
         return ret;
     }
 
+    [Pure]
     public static IEnumerable<R> SelectAgainst<T, R>(this IEnumerable<T> lhs, IEnumerable<T> rhs, Func<T, T, R> selector)
     {
         var lhsEnumer = lhs.GetEnumerator();
@@ -145,6 +159,7 @@ public static class EnumerableExt
         }
     }
 
+    [Pure]
     public static IEnumerable<T> First<T>(this IEnumerable<T> en, int amount)
     {
         foreach (var item in en)
@@ -154,6 +169,7 @@ public static class EnumerableExt
         }
     }
 
+    [Pure]
     public static IEnumerable<LastMarkedItem<T>> IterateMarkLast<T>(this IEnumerable<T> en)
     {
         T last = default(T)!;
@@ -176,6 +192,7 @@ public static class EnumerableExt
         }
     }
 
+    [Pure]
     public static IEnumerable<IEnumerable<T>> Cut<T>(this IEnumerable<T> en, int amount)
     {
         // The list to return.

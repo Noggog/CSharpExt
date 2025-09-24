@@ -1,7 +1,10 @@
+using System.Diagnostics.Contracts;
+
 namespace Noggog;
 
 public static class UInt64Ext
 {
+    [Pure]
     public static bool IsInRange(this ulong d, ulong min, ulong max)
     {
         if (d < min) return false;
@@ -16,6 +19,7 @@ public static class UInt64Ext
         return d;
     }
 
+    [Pure]
     public static ulong PutInRange(this ulong d, ulong min, ulong max)
     {
         if (d < min) return min;

@@ -1,4 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics.Contracts;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -6,6 +7,7 @@ namespace Noggog;
 
 public static class StringExt
 {
+    [Pure]
     public static bool IsNumeric(this string s, bool floatingPt = true)
     {
         s = s.Trim();
@@ -19,12 +21,14 @@ public static class StringExt
         }
     }
 
+    [Pure]
     [Obsolete("Use alternative with comparison parameter")]
     public static IEnumerable<string> Split(this string line, string delim, char escapeChar)
     {
         return Split(line, delim, escapeChar, StringComparison.CurrentCulture);
     }
 
+    [Pure]
     public static IEnumerable<string> Split(this string line, string delim, char escapeChar, StringComparison comparison)
     {
         int index = -1;
@@ -67,6 +71,7 @@ public static class StringExt
         return true;
     }
 
+    [Pure]
     [Obsolete("Use alternative with comparison parameter")]
     public static string SubstringFromStart(this string src, string item)
     {
@@ -74,6 +79,7 @@ public static class StringExt
         return result;
     }
 
+    [Pure]
     public static string SubstringFromStart(this string src, string item, StringComparison comparison)
     {
         TrySubstringFromStart(src, item, comparison, out string result);
@@ -103,6 +109,7 @@ public static class StringExt
         return true;
     }
 
+    [Pure]
     [Obsolete("Use alternative with comparison parameter")]
     public static string SubstringFromEnd(this string src, string item)
     {
@@ -110,6 +117,7 @@ public static class StringExt
         return result;
     }
 
+    [Pure]
     public static string SubstringFromEnd(this string src, string item, StringComparison comparison)
     {
         TrySubstringFromEnd(src, item, comparison, out string result);
@@ -138,6 +146,7 @@ public static class StringExt
         return true;
     }
 
+    [Pure]
     [Obsolete("Use alternative with comparison parameter")]
     public static string TrimStart(this string src, string item)
     {
@@ -145,6 +154,7 @@ public static class StringExt
         return result;
     }
 
+    [Pure]
     public static string TrimStart(this string src, string item, StringComparison comparison)
     {
         TryTrimStart(src, item, comparison, out string result);
@@ -167,18 +177,21 @@ public static class StringExt
         return true;
     }
 
+    [Pure]
     public static string TrimStringFromEnd(this string src, string item)
     {
         TryTrimStringFromEnd(src, item, out string result);
         return result;
     }
 
+    [Pure]
     public static string RemoveDisallowedFilepathChars(string str)
     {
         Regex illegalInFileName = new Regex(@"[\\/:*?""<>|]");
         return illegalInFileName.Replace(str, "");
     }
 
+    [Pure]
     public static bool IsViableFilename(string str)
     {
         return str.IndexOfAny(Path.GetInvalidFileNameChars()) == -1;
@@ -186,6 +199,7 @@ public static class StringExt
 
 #if NETSTANDARD2_0
 #else
+    [Pure]
     public static bool ContainsInsensitive(this string str, string rhs)
     {
         return str.Contains(rhs, StringComparison.OrdinalIgnoreCase);
@@ -198,6 +212,7 @@ public static class StringExt
     /// <param name="src">String to process</param>
     /// <param name="decorator">String decorator if source not null or empty</param>
     /// <returns>Decorated string, or null/empty if source was null/empty</returns>
+    [Pure]
     [return: NotNullIfNotNull("src")]
     public static string? Decorate(this string? src, Func<string, string> decorator)
     {
@@ -206,11 +221,13 @@ public static class StringExt
         return decorator(src);
     }
 
+    [Pure]
     public static bool IsNullOrWhitespace([NotNullWhen(false)] this string? src)
     {
         return string.IsNullOrWhiteSpace(src);
     }
 
+    [Pure]
     public static bool IsNullOrEmpty([NotNullWhen(false)] this string? src)
     {
         return string.IsNullOrEmpty(src);

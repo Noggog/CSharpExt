@@ -1,3 +1,5 @@
+using System.Diagnostics.Contracts;
+
 namespace Noggog;
 
 public static class ICollectionExt
@@ -86,6 +88,7 @@ public static class ICollectionExt
         return new CollectionGetterWrapper<T>(coll);
     }
 
+    [Pure]
     public static bool SequenceEqual<T>(this IReadOnlyCollection<T> lhs, IReadOnlyCollection<T> rhs, Func<T, T, bool> equality)
     {
         if (ReferenceEquals(lhs, rhs)) return true;
@@ -95,6 +98,7 @@ public static class ICollectionExt
             .All(x => x);
     }
 
+    [Pure]
     public static bool SequenceEqualNullable<T>(this IReadOnlyCollection<T>? lhs, IReadOnlyCollection<T>? rhs, Func<T, T, bool> equality)
     {
         if (lhs == null && rhs == null) return true;

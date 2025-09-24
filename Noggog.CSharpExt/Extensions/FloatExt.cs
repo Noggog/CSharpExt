@@ -1,12 +1,16 @@
+using System.Diagnostics.Contracts;
+
 namespace Noggog;
 
 public static class FloatExt
 {
+    [Pure]
     public static int ToInt(this float a)
     {
         return Convert.ToInt32(a);
     }
 
+    [Pure]
     public static bool EqualsWithin(this float a, float b, float within = 0.000000001f)
     {
         if (Math.Abs(a - b) < within) return true;
@@ -15,6 +19,7 @@ public static class FloatExt
         return false;
     }
 
+    [Pure]
     public static bool EqualsWithin(this float? a, float? b, float within = 0.000000001f)
     {
         if (a.HasValue && b.HasValue)
@@ -30,17 +35,20 @@ public static class FloatExt
         }
     }
 
+    [Pure]
     public static int Round(this float a)
     {
         return (int)Math.Round(a);
     }
 
+    [Pure]
     public static bool IsReal(this float f)
     {
         return !float.IsInfinity(f)
                && !float.IsNaN(f);
     }
 
+    [Pure]
     public static float Average(this float a, float b)
     {
         float less, more;
@@ -59,6 +67,7 @@ public static class FloatExt
         return diff + less;
     }
 
+    [Pure]
     public static bool IsInRange(this float d, float min, float max)
     {
         if (d < min) return false;
@@ -73,6 +82,7 @@ public static class FloatExt
         return d;
     }
 
+    [Pure]
     public static float PutInRange(this float d, float min, float max)
     {
         if (d < min) return min;

@@ -1,3 +1,4 @@
+using System.Diagnostics.Contracts;
 using System.Reflection;
 
 namespace Noggog;
@@ -95,6 +96,7 @@ public static class ObjectExt
         throw new ArgumentException($"Failed to cast from type {o.GetType()} to {typeof(R)}");
     }
 
+    [Pure]
     public static bool NullSame<T>(T? a, T? b)
         where T : class
     {
@@ -102,6 +104,7 @@ public static class ObjectExt
         return a != null && b != null;
     }
 
+    [Pure]
     public static bool NullSame<T>(Nullable<T> a, Nullable<T> b)
         where T : struct
     {

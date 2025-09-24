@@ -1,3 +1,4 @@
+using System.Diagnostics.Contracts;
 using System.Globalization;
 using System.Runtime.Serialization;
 
@@ -67,26 +68,31 @@ public struct P2Int : IP2IntGet, IEquatable<P2Int>
     #endregion Ctors
 
     #region Shifts
+    [Pure]
     public P2Int Shift(int x, int y)
     {
         return new P2Int(_x + x, _y + y);
     }
 
+    [Pure]
     public P2Int Shift(double x, double y)
     {
         return Shift((int)x, (int)y);
     }
 
+    [Pure]
     public P2Int Shift(P2Double vect)
     {
         return Shift(vect.X, vect.Y);
     }
 
+    [Pure]
     public P2Int Shift(P2Int p)
     {
         return Shift(p._x, p._y);
     }
 
+    [Pure]
     public P2Int ShiftToPositive()
     {
         return Shift(
@@ -95,6 +101,7 @@ public struct P2Int : IP2IntGet, IEquatable<P2Int>
     }
     #endregion Shifts
 
+    [Pure]
     public P2Int UnitDir()
     {
         int max = Math.Max(Math.Abs(_x), Math.Abs(_y));
@@ -110,31 +117,37 @@ public struct P2Int : IP2IntGet, IEquatable<P2Int>
         }
     }
 
+    [Pure]
     public int MidPoint()
     {
         return (_y - _x) / 2;
     }
 
+    [Pure]
     public double Distance(P2Int rhs)
     {
         return Distance(rhs._x, rhs._y);
     }
 
+    [Pure]
     public double Distance(int x, int y)
     {
         return Math.Sqrt(Math.Pow(x - _x, 2) + Math.Pow(y - _y, 2));
     }
 
+    [Pure]
     public P2Int Invert()
     {
         return new P2Int(-_x, -_y);
     }
         
+    [Pure]
     public override string ToString()
     {
         return $"{_x}, {_y}";
     }
 
+    [Pure]
     public string ToString(IFormatProvider? provider)
     {
         return $"{_x.ToString(provider)}, {_y.ToString(provider)}";
@@ -146,6 +159,7 @@ public struct P2Int : IP2IntGet, IEquatable<P2Int>
         return Equals(p);
     }
 
+    [Pure]
     public bool Equals(P2Int rhs)
     {
         return _x == rhs._x
@@ -172,7 +186,7 @@ public struct P2Int : IP2IntGet, IEquatable<P2Int>
         ret = new P2Int(x, y);
         return true;
     }
-#else 
+#else
     public static bool TryParse(ReadOnlySpan<char> str, out P2Int ret, IFormatProvider? provider = null)
     {
         // ToDo
@@ -196,8 +210,10 @@ public struct P2Int : IP2IntGet, IEquatable<P2Int>
     }
 #endif
 
+    [Pure]
     public override int GetHashCode() => HashCode.Combine(_x, _y);
 
+    [Pure]
     public bool NextTo(P2Int p)
     {
         if (p._x == _x)
@@ -211,31 +227,37 @@ public struct P2Int : IP2IntGet, IEquatable<P2Int>
         return false;
     }
 
+    [Pure]
     public static bool operator ==(P2Int obj1, P2Int obj2)
     {
         return obj1.Equals(obj2);
     }
 
+    [Pure]
     public static bool operator !=(P2Int obj1, P2Int obj2)
     {
         return !obj1.Equals(obj2);
     }
 
+    [Pure]
     public static P2Int operator +(P2Int p1, P2Int p2)
     {
         return p1.Shift(p2);
     }
 
+    [Pure]
     public static P2Int operator -(P2Int p1, P2Int p2)
     {
         return new P2Int(p1._x - p2._x, p1._y - p2._y);
     }
 
+    [Pure]
     public static P2Int operator -(P2Int p1)
     {
         return new P2Int(-p1._x, -p1._y);
     }
 
+    [Pure]
     public static P2Int operator *(P2Int p1, int num)
     {
         return new P2Int(p1._x * num, p1._y * num);

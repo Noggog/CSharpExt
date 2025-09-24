@@ -1,5 +1,6 @@
 using DynamicData;
 using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics.Contracts;
 
 namespace Noggog;
 
@@ -216,6 +217,7 @@ public static class CacheExt
         return false;
     }
 
+    [Pure]
     public static bool ContentEquals<TObject, TKey>(this IReadOnlyCache<TObject, TKey> lhs, IReadOnlyCache<TObject, TKey> rhs, Func<TObject, TObject, bool>? equalityComparer = null)
     {
         if (ReferenceEquals(lhs, rhs)) return true;
@@ -237,6 +239,7 @@ public static class CacheExt
         return true;
     }
 
+    [Pure]
     public static bool ContentEqualsNullable<TObject, TKey>(this IReadOnlyCache<TObject, TKey>? lhs, IReadOnlyCache<TObject, TKey>? rhs, Func<TObject, TObject, bool>? equalityComparer = null)
     {
         if (lhs == null && rhs == null) return true;
