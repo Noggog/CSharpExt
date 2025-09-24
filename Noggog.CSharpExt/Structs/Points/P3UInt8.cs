@@ -80,24 +80,63 @@ namespace Noggog;
 #else 
         public static bool TryParse(ReadOnlySpan<char> str, out P3UInt8 ret, IFormatProvider? provider = null)
         {
-            // ToDo
-            // Improve parsing to reduce allocation
-            string[] split = str.ToString().Split(',');
-            if (split.Length != 3)
+            byte? x2 = null;
+            byte? y2 = null;
+            byte? z2 = null;
+
+            var index = 0;
+            foreach (var subStrSpan in str.Split(','))
             {
-                ret = default(P3UInt8);
+                switch (index)
+                {
+                    case 0:
+                    {
+                        if (!byte.TryParse(subStrSpan, NumberStyles.Any, provider, out var x))
+                        {
+                            ret = default;
+                            return false;
+                        }
+
+                        x2 = x;
+                        break;
+                    }
+                    case 1:
+                    {
+                        if (!byte.TryParse(subStrSpan, NumberStyles.Any, provider, out var y))
+                        {
+                            ret = default;
+                            return false;
+                        }
+
+                        y2 = y;
+                        break;
+                    }
+                    case 2:
+                    {
+                        if (!byte.TryParse(subStrSpan, NumberStyles.Any, provider, out var z))
+                        {
+                            ret = default;
+                            return false;
+                        }
+
+                        z2 = z;
+                        break;
+                    }
+                    default:
+                        ret = default;
+                        return false;
+                }
+
+                index++;
+            }
+
+            if (x2 == null || y2 == null || z2 == null)
+            {
+                ret = default;
                 return false;
             }
 
-            if (!byte.TryParse(split[0], NumberStyles.Any, provider, out var x)
-                || !byte.TryParse(split[1], NumberStyles.Any, provider, out var y)
-                || !byte.TryParse(split[2], NumberStyles.Any, provider, out var z))
-            {
-                ret = default(P3UInt8);
-                return false;
-            }
-
-            ret = new P3UInt8(x, y, z);
+            ret = new P3UInt8(x2.Value, y2.Value, z2.Value);
             return true;
         }
 #endif

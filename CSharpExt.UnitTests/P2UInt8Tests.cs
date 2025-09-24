@@ -24,4 +24,54 @@ public class P2UInt8Tests
         P2UInt8.TryParse(expectedPoint.ToString(), out var result).ShouldBeTrue();
         result.ShouldBe(expectedPoint);
     }
+
+    [Fact]
+    public void P2UInt8Parse_EmptyString_Fails()
+    {
+        P2UInt8.TryParse("", out var result).ShouldBeFalse();
+    }
+
+    [Fact]
+    public void P2UInt8Parse_TooFewComponents_Fails()
+    {
+        P2UInt8.TryParse("1", out var result).ShouldBeFalse();
+    }
+
+    [Fact]
+    public void P2UInt8Parse_TooManyComponents_Fails()
+    {
+        P2UInt8.TryParse("1,2,3", out var result).ShouldBeFalse();
+    }
+
+    [Fact]
+    public void P2UInt8Parse_WithWhitespace_Succeeds()
+    {
+        P2UInt8.TryParse("1, 2", out var result).ShouldBeTrue();
+        result.ShouldBe(new P2UInt8(1, 2));
+    }
+
+    [Fact]
+    public void P2UInt8Parse_WithLeadingTrailingWhitespace_Succeeds()
+    {
+        P2UInt8.TryParse(" 1 , 2 ", out var result).ShouldBeTrue();
+        result.ShouldBe(new P2UInt8(1, 2));
+    }
+
+    [Fact]
+    public void P2UInt8Parse_InvalidFormat_Fails()
+    {
+        P2UInt8.TryParse("a,b", out var result).ShouldBeFalse();
+    }
+
+    [Fact]
+    public void P2UInt8Parse_MixedInvalid_Fails()
+    {
+        P2UInt8.TryParse("1,b", out var result).ShouldBeFalse();
+    }
+
+    [Fact]
+    public void P2UInt8Parse_NegativeNumber_Fails()
+    {
+        P2UInt8.TryParse("-1,2", out var result).ShouldBeFalse();
+    }
 }

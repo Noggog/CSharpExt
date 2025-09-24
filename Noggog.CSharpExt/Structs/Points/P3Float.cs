@@ -114,31 +114,63 @@ public struct P3Float : IEquatable<P3Float>
 #else 
     public static bool TryParse(ReadOnlySpan<char> str, out P3Float p2, IFormatProvider? provider = null)
     {
-        // ToDo
-        // Improve parsing to reduce allocation
-        string[] split = str.ToString().Split(',');
-        if (split.Length != 3)
+        float? x2 = null;
+        float? y2 = null;
+        float? z2 = null;
+
+        var index = 0;
+        foreach (var subStrSpan in str.Split(','))
         {
-            p2 = default(P3Float);
+            switch (index)
+            {
+                case 0:
+                {
+                    if (!float.TryParse(subStrSpan, NumberStyles.Any, provider, out var x))
+                    {
+                        p2 = default;
+                        return false;
+                    }
+
+                    x2 = x;
+                    break;
+                }
+                case 1:
+                {
+                    if (!float.TryParse(subStrSpan, NumberStyles.Any, provider, out var y))
+                    {
+                        p2 = default;
+                        return false;
+                    }
+
+                    y2 = y;
+                    break;
+                }
+                case 2:
+                {
+                    if (!float.TryParse(subStrSpan, NumberStyles.Any, provider, out var z))
+                    {
+                        p2 = default;
+                        return false;
+                    }
+
+                    z2 = z;
+                    break;
+                }
+                default:
+                    p2 = default;
+                    return false;
+            }
+
+            index++;
+        }
+
+        if (x2 == null || y2 == null || z2 == null)
+        {
+            p2 = default;
             return false;
         }
 
-        if (!float.TryParse(split[0], NumberStyles.Any, provider, out float x))
-        {
-            p2 = default(P3Float);
-            return false;
-        }
-        if (!float.TryParse(split[1], NumberStyles.Any, provider, out float y))
-        {
-            p2 = default(P3Float);
-            return false;
-        }
-        if (!float.TryParse(split[2], NumberStyles.Any, provider, out float z))
-        {
-            p2 = default(P3Float);
-            return false;
-        }
-        p2 = new P3Float(x, y, z);
+        p2 = new P3Float(x2.Value, y2.Value, z2.Value);
         return true;
     }
 #endif

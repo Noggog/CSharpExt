@@ -73,4 +73,55 @@ public class P2FloatTests
         var b = new P2Float(5, -3);
         a.Cross(b).ShouldBe(0);
     }
+
+    [Fact]
+    public void P2FloatParse_EmptyString_Fails()
+    {
+        P2Float.TryParse("", out var result).ShouldBeFalse();
+    }
+
+    [Fact]
+    public void P2FloatParse_TooFewComponents_Fails()
+    {
+        P2Float.TryParse("1", out var result).ShouldBeFalse();
+    }
+
+    [Fact]
+    public void P2FloatParse_TooManyComponents_Fails()
+    {
+        P2Float.TryParse("1,2,3", out var result).ShouldBeFalse();
+    }
+
+    [Fact]
+    public void P2FloatParse_WithWhitespace_Succeeds()
+    {
+        P2Float.TryParse("1.5, 2.5", out var result).ShouldBeTrue();
+        result.ShouldBe(new P2Float(1.5f, 2.5f));
+    }
+
+    [Fact]
+    public void P2FloatParse_WithLeadingTrailingWhitespace_Succeeds()
+    {
+        P2Float.TryParse(" 1.5 , 2.5 ", out var result).ShouldBeTrue();
+        result.ShouldBe(new P2Float(1.5f, 2.5f));
+    }
+
+    [Fact]
+    public void P2FloatParse_NegativeNumbers_Succeeds()
+    {
+        P2Float.TryParse("-1.5,-2.5", out var result).ShouldBeTrue();
+        result.ShouldBe(new P2Float(-1.5f, -2.5f));
+    }
+
+    [Fact]
+    public void P2FloatParse_InvalidFormat_Fails()
+    {
+        P2Float.TryParse("a,b", out var result).ShouldBeFalse();
+    }
+
+    [Fact]
+    public void P2FloatParse_MixedInvalid_Fails()
+    {
+        P2Float.TryParse("1.5,b", out var result).ShouldBeFalse();
+    }
 }

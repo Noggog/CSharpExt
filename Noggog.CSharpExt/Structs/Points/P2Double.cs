@@ -99,26 +99,51 @@ public struct P2Double : IEquatable<P2Double>
 #else 
     public static bool TryParse(ReadOnlySpan<char> str, out P2Double p2, IFormatProvider? provider = null)
     {
-        // ToDo
-        // Improve parsing to reduce allocation
-        string[] split = str.ToString().Split(',');
-        if (split.Length != 2)
+        double? x2 = null;
+        double? y2 = null;
+
+        var index = 0;
+        foreach (var subStrSpan in str.Split(','))
         {
-            p2 = default(P2Double);
+            switch (index)
+            {
+                case 0:
+                {
+                    if (!double.TryParse(subStrSpan, NumberStyles.Any, provider, out var x))
+                    {
+                        p2 = default;
+                        return false;
+                    }
+
+                    x2 = x;
+                    break;
+                }
+                case 1:
+                {
+                    if (!double.TryParse(subStrSpan, NumberStyles.Any, provider, out var y))
+                    {
+                        p2 = default;
+                        return false;
+                    }
+
+                    y2 = y;
+                    break;
+                }
+                default:
+                    p2 = default;
+                    return false;
+            }
+
+            index++;
+        }
+
+        if (x2 == null || y2 == null)
+        {
+            p2 = default;
             return false;
         }
 
-        if (!double.TryParse(split[0], NumberStyles.Any, provider, out double x))
-        {
-            p2 = default(P2Double);
-            return false;
-        }
-        if (!double.TryParse(split[1], NumberStyles.Any, provider, out double y))
-        {
-            p2 = default(P2Double);
-            return false;
-        }
-        p2 = new P2Double(x, y);
+        p2 = new P2Double(x2.Value, y2.Value);
         return true;
     }
 #endif

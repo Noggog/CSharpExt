@@ -80,24 +80,63 @@ public struct P3UInt16 : IP3UInt16Get, IEquatable<P3UInt16>
 #else 
     public static bool TryParse(ReadOnlySpan<char> str, out P3UInt16 ret, IFormatProvider? provider = null)
     {
-        // ToDo
-        // Improve parsing to reduce allocation
-        string[] split = str.ToString().Split(',');
-        if (split.Length != 3)
+        ushort? x2 = null;
+        ushort? y2 = null;
+        ushort? z2 = null;
+
+        var index = 0;
+        foreach (var subStrSpan in str.Split(','))
         {
-            ret = default(P3UInt16);
+            switch (index)
+            {
+                case 0:
+                {
+                    if (!ushort.TryParse(subStrSpan, NumberStyles.Any, provider, out var x))
+                    {
+                        ret = default;
+                        return false;
+                    }
+
+                    x2 = x;
+                    break;
+                }
+                case 1:
+                {
+                    if (!ushort.TryParse(subStrSpan, NumberStyles.Any, provider, out var y))
+                    {
+                        ret = default;
+                        return false;
+                    }
+
+                    y2 = y;
+                    break;
+                }
+                case 2:
+                {
+                    if (!ushort.TryParse(subStrSpan, NumberStyles.Any, provider, out var z))
+                    {
+                        ret = default;
+                        return false;
+                    }
+
+                    z2 = z;
+                    break;
+                }
+                default:
+                    ret = default;
+                    return false;
+            }
+
+            index++;
+        }
+
+        if (x2 == null || y2 == null || z2 == null)
+        {
+            ret = default;
             return false;
         }
 
-        if (!ushort.TryParse(split[0], NumberStyles.Any, provider, out ushort x)
-            || !ushort.TryParse(split[1], NumberStyles.Any, provider, out ushort y)
-            || !ushort.TryParse(split[2], NumberStyles.Any, provider, out ushort z))
-        {
-            ret = default(P3UInt16);
-            return false;
-        }
-
-        ret = new P3UInt16(x, y, z);
+        ret = new P3UInt16(x2.Value, y2.Value, z2.Value);
         return true;
     }
 #endif

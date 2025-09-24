@@ -286,34 +286,63 @@ public struct P3Double : IEquatable<P3Double>
 #else 
     public static bool TryParse(ReadOnlySpan<char> str, out P3Double p3, IFormatProvider? provider = null)
     {
-        // ToDo
-        // Improve parsing to reduce allocation
-        string[] split = str.ToString().Split(',');
-        if (split.Length != 3)
+        double? x2 = null;
+        double? y2 = null;
+        double? z2 = null;
+
+        var index = 0;
+        foreach (var subStrSpan in str.Split(','))
         {
-            p3 = default(P3Double);
+            switch (index)
+            {
+                case 0:
+                {
+                    if (!double.TryParse(subStrSpan, NumberStyles.Any, provider, out var x))
+                    {
+                        p3 = default;
+                        return false;
+                    }
+
+                    x2 = x;
+                    break;
+                }
+                case 1:
+                {
+                    if (!double.TryParse(subStrSpan, NumberStyles.Any, provider, out var y))
+                    {
+                        p3 = default;
+                        return false;
+                    }
+
+                    y2 = y;
+                    break;
+                }
+                case 2:
+                {
+                    if (!double.TryParse(subStrSpan, NumberStyles.Any, provider, out var z))
+                    {
+                        p3 = default;
+                        return false;
+                    }
+
+                    z2 = z;
+                    break;
+                }
+                default:
+                    p3 = default;
+                    return false;
+            }
+
+            index++;
+        }
+
+        if (x2 == null || y2 == null || z2 == null)
+        {
+            p3 = default;
             return false;
         }
 
-        if (!double.TryParse(split[0], NumberStyles.Any, provider, out double x))
-        {
-            p3 = default(P3Double);
-            return false;
-        }
-
-        if (!double.TryParse(split[1], NumberStyles.Any, provider, out double y))
-        {
-            p3 = default(P3Double);
-            return false;
-        }
-
-        if (!double.TryParse(split[2], NumberStyles.Any, provider, out double z))
-        {
-            p3 = default(P3Double);
-            return false;
-        }
-
-        p3 = new P3Double(x, y, z);
+        p3 = new P3Double(x2.Value, y2.Value, z2.Value);
         return true;
     }
 #endif

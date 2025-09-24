@@ -108,26 +108,51 @@ public struct P2Float : IEquatable<P2Float>
 #else 
     public static bool TryParse(ReadOnlySpan<char> str, out P2Float p2, IFormatProvider? provider = null)
     {
-        // ToDo
-        // Improve parsing to reduce allocation
-        string[] split = str.ToString().Split(',');
-        if (split.Length != 2)
+        float? x2 = null;
+        float? y2 = null;
+
+        var index = 0;
+        foreach (var subStrSpan in str.Split(','))
         {
-            p2 = default(P2Float);
+            switch (index)
+            {
+                case 0:
+                {
+                    if (!float.TryParse(subStrSpan, NumberStyles.Any, provider, out var x))
+                    {
+                        p2 = default;
+                        return false;
+                    }
+
+                    x2 = x;
+                    break;
+                }
+                case 1:
+                {
+                    if (!float.TryParse(subStrSpan, NumberStyles.Any, provider, out var y))
+                    {
+                        p2 = default;
+                        return false;
+                    }
+
+                    y2 = y;
+                    break;
+                }
+                default:
+                    p2 = default;
+                    return false;
+            }
+
+            index++;
+        }
+
+        if (x2 == null || y2 == null)
+        {
+            p2 = default;
             return false;
         }
-        
-        if (!float.TryParse(split[0], NumberStyles.Any, provider, out float x))
-        {
-            p2 = default(P2Float);
-            return false;
-        }
-        if (!float.TryParse(split[1], NumberStyles.Any, provider, out float y))
-        {
-            p2 = default(P2Float);
-            return false;
-        }
-        p2 = new P2Float(x, y);
+
+        p2 = new P2Float(x2.Value, y2.Value);
         return true;
     }
 #endif

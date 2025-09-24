@@ -24,4 +24,55 @@ public class P3IntTests
         P3Int.TryParse(expectedPoint.ToString(), out var result).ShouldBeTrue();
         result.ShouldBe(expectedPoint);
     }
+
+    [Fact]
+    public void P3IntParse_EmptyString_Fails()
+    {
+        P3Int.TryParse("", out var result).ShouldBeFalse();
+    }
+
+    [Fact]
+    public void P3IntParse_TooFewComponents_Fails()
+    {
+        P3Int.TryParse("1,2", out var result).ShouldBeFalse();
+    }
+
+    [Fact]
+    public void P3IntParse_TooManyComponents_Fails()
+    {
+        P3Int.TryParse("1,2,3,4", out var result).ShouldBeFalse();
+    }
+
+    [Fact]
+    public void P3IntParse_WithWhitespace_Succeeds()
+    {
+        P3Int.TryParse("1, 2, 3", out var result).ShouldBeTrue();
+        result.ShouldBe(new P3Int(1, 2, 3));
+    }
+
+    [Fact]
+    public void P3IntParse_WithLeadingTrailingWhitespace_Succeeds()
+    {
+        P3Int.TryParse(" 1 , 2 , 3 ", out var result).ShouldBeTrue();
+        result.ShouldBe(new P3Int(1, 2, 3));
+    }
+
+    [Fact]
+    public void P3IntParse_NegativeNumbers_Succeeds()
+    {
+        P3Int.TryParse("-1,-2,-3", out var result).ShouldBeTrue();
+        result.ShouldBe(new P3Int(-1, -2, -3));
+    }
+
+    [Fact]
+    public void P3IntParse_InvalidFormat_Fails()
+    {
+        P3Int.TryParse("a,b,c", out var result).ShouldBeFalse();
+    }
+
+    [Fact]
+    public void P3IntParse_MixedInvalid_Fails()
+    {
+        P3Int.TryParse("1,b,3", out var result).ShouldBeFalse();
+    }
 }

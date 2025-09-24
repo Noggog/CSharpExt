@@ -189,23 +189,51 @@ public struct P2Int : IP2IntGet, IEquatable<P2Int>
 #else
     public static bool TryParse(ReadOnlySpan<char> str, out P2Int ret, IFormatProvider? provider = null)
     {
-        // ToDo
-        // Improve parsing to reduce allocation
-        string[] split = str.ToString().Split(',');
-        if (split.Length != 2)
+        int? x2 = null;
+        int? y2 = null;
+
+        var index = 0;
+        foreach (var subStrSpan in str.Split(','))
         {
-            ret = default(P2Int);
+            switch (index)
+            {
+                case 0:
+                {
+                    if (!int.TryParse(subStrSpan, NumberStyles.Any, provider, out var x))
+                    {
+                        ret = default;
+                        return false;
+                    }
+
+                    x2 = x;
+                    break;
+                }
+                case 1:
+                {
+                    if (!int.TryParse(subStrSpan, NumberStyles.Any, provider, out var y))
+                    {
+                        ret = default;
+                        return false;
+                    }
+
+                    y2 = y;
+                    break;
+                }
+                default:
+                    ret = default;
+                    return false;
+            }
+
+            index++;
+        }
+
+        if (x2 == null || y2 == null)
+        {
+            ret = default;
             return false;
         }
 
-        if (!int.TryParse(split[0], NumberStyles.Any, provider, out int x)
-            || !int.TryParse(split[1], NumberStyles.Any, provider, out int y))
-        {
-            ret = default(P2Int);
-            return false;
-        }
-
-        ret = new P2Int(x, y);
+        ret = new P2Int(x2.Value, y2.Value);
         return true;
     }
 #endif
