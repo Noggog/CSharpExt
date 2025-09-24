@@ -1,4 +1,5 @@
-﻿using System.Runtime.InteropServices;
+﻿using System.Buffers.Binary;
+using System.Runtime.InteropServices;
 
 namespace Noggog.Streams.Binary;
 
@@ -61,28 +62,20 @@ internal class LittleEndianBinaryMemoryWriteStream: IBinaryMemoryWriteStream
 
     public void Write(ushort value)
     {
-        _data[_pos++] = (byte)value;
-        _data[_pos++] = (byte)(value >> 8);
+        BinaryPrimitives.WriteUInt16LittleEndian(_data.AsSpan(_pos), value);
+        _pos += sizeof(ushort);
     }
 
     public void Write(uint value)
     {
-        _data[_pos++] = (byte)value;
-        _data[_pos++] = (byte)(value >> 8);
-        _data[_pos++] = (byte)(value >> 0x10);
-        _data[_pos++] = (byte)(value >> 0x18);
+        BinaryPrimitives.WriteUInt32LittleEndian(_data.AsSpan(_pos), value);
+        _pos += sizeof(uint);
     }
 
     public void Write(ulong value)
     {
-        _data[_pos++] = (byte)value;
-        _data[_pos++] = (byte)(value >> 8);
-        _data[_pos++] = (byte)(value >> 0x10);
-        _data[_pos++] = (byte)(value >> 0x18);
-        _data[_pos++] = (byte)(value >> 0x20);
-        _data[_pos++] = (byte)(value >> 0x28);
-        _data[_pos++] = (byte)(value >> 0x30);
-        _data[_pos++] = (byte)(value >> 0x38);
+        BinaryPrimitives.WriteUInt64LittleEndian(_data.AsSpan(_pos), value);
+        _pos += sizeof(ulong);
     }
 
     public void Write(sbyte value)
@@ -92,38 +85,46 @@ internal class LittleEndianBinaryMemoryWriteStream: IBinaryMemoryWriteStream
 
     public void Write(short value)
     {
-        _data[_pos++] = (byte)value;
-        _data[_pos++] = (byte)(value >> 8);
+        BinaryPrimitives.WriteInt16LittleEndian(_data.AsSpan(_pos), value);
+        _pos += sizeof(short);
     }
 
     public void Write(int value)
     {
-        _data[_pos++] = (byte)value;
-        _data[_pos++] = (byte)(value >> 8);
-        _data[_pos++] = (byte)(value >> 0x10);
-        _data[_pos++] = (byte)(value >> 0x18);
+        BinaryPrimitives.WriteInt32LittleEndian(_data.AsSpan(_pos), value);
+        _pos += sizeof(int);
     }
 
     public void Write(long value)
     {
-        _data[_pos++] = (byte)value;
-        _data[_pos++] = (byte)(value >> 8);
-        _data[_pos++] = (byte)(value >> 0x10);
-        _data[_pos++] = (byte)(value >> 0x18);
-        _data[_pos++] = (byte)(value >> 0x20);
-        _data[_pos++] = (byte)(value >> 0x28);
-        _data[_pos++] = (byte)(value >> 0x30);
-        _data[_pos++] = (byte)(value >> 0x38);
+        BinaryPrimitives.WriteInt64LittleEndian(_data.AsSpan(_pos), value);
+        _pos += sizeof(long);
     }
 
     public void Write(float value)
     {
-        Write(new Int32SingleUnion(value).AsInt32);
+#if NETSTANDARD2_0
+        unsafe
+        {
+            BinaryPrimitives.WriteInt32LittleEndian(_data.AsSpan(_pos), *(int*)&value);
+        }
+#else
+        BinaryPrimitives.WriteSingleLittleEndian(_data.AsSpan(_pos), value);
+#endif
+        _pos += sizeof(float);
     }
 
     public void Write(double value)
     {
-        Write(BitConverter.DoubleToInt64Bits(value));
+#if NETSTANDARD2_0
+        unsafe
+        {
+            BinaryPrimitives.WriteInt64LittleEndian(_data.AsSpan(_pos), *(long*)&value);
+        }
+#else
+        BinaryPrimitives.WriteDoubleLittleEndian(_data.AsSpan(_pos), value);
+#endif
+        _pos += sizeof(double);
     }
 
     public void Write(ReadOnlySpan<char> str)
@@ -138,62 +139,4 @@ internal class LittleEndianBinaryMemoryWriteStream: IBinaryMemoryWriteStream
     {
         _data = Array.Empty<byte>();
     }
-
-    #region Private struct used for Single/Int32 conversions
-
-    /// <summary>
-    /// Taken from http://jonskeet.uk/csharp/miscutil/
-    /// Union used solely for the equivalent of DoubleToInt64Bits and vice versa.
-    /// </summary>
-    [StructLayout(LayoutKind.Explicit)]
-    struct Int32SingleUnion
-    {
-        /// <summary>
-        /// Int32 version of the value.
-        /// </summary>
-        [FieldOffset(0)] int i;
-
-        /// <summary>
-        /// Single version of the value.
-        /// </summary>
-        [FieldOffset(0)] float f;
-
-        /// <summary>
-        /// Creates an instance representing the given integer.
-        /// </summary>
-        /// <param name="i">The integer value of the new instance.</param>
-        internal Int32SingleUnion(int i)
-        {
-            f = 0; // Just to keep the compiler happy
-            this.i = i;
-        }
-
-        /// <summary>
-        /// Creates an instance representing the given floating point number.
-        /// </summary>
-        /// <param name="f">The floating point value of the new instance.</param>
-        internal Int32SingleUnion(float f)
-        {
-            i = 0; // Just to keep the compiler happy
-            this.f = f;
-        }
-
-        /// <summary>
-        /// Returns the value of the instance as an integer.
-        /// </summary>
-        internal int AsInt32
-        {
-            get { return i; }
-        }
-
-        /// <summary>
-        /// Returns the value of the instance as a floating point number.
-        /// </summary>
-        internal float AsSingle
-        {
-            get { return f; }
-        }
-    }
-
-    #endregion
 }

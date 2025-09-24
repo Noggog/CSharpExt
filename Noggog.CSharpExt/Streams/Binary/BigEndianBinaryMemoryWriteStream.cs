@@ -1,3 +1,4 @@
+using System.Buffers.Binary;
 using System.Runtime.InteropServices;
 
 namespace Noggog;
@@ -61,28 +62,20 @@ public class BigEndianBinaryMemoryWriteStream: IBinaryMemoryWriteStream
 
     public void Write(ushort value)
     {
-        _data[_pos++] = (byte)(value >> 8);
-        _data[_pos++] = (byte)value;
+        BinaryPrimitives.WriteUInt16BigEndian(_data.AsSpan(_pos), value);
+        _pos += sizeof(ushort);
     }
 
     public void Write(uint value)
     {
-        _data[_pos++] = (byte)(value >> 0x18);
-        _data[_pos++] = (byte)(value >> 0x10);
-        _data[_pos++] = (byte)(value >> 8);
-        _data[_pos++] = (byte)value;
+        BinaryPrimitives.WriteUInt32BigEndian(_data.AsSpan(_pos), value);
+        _pos += sizeof(uint);
     }
 
     public void Write(ulong value)
     {
-        _data[_pos++] = (byte)value;
-        _data[_pos++] = (byte)(value >> 8);
-        _data[_pos++] = (byte)(value >> 0x10);
-        _data[_pos++] = (byte)(value >> 0x18);
-        _data[_pos++] = (byte)(value >> 0x20);
-        _data[_pos++] = (byte)(value >> 0x28);
-        _data[_pos++] = (byte)(value >> 0x30);
-        _data[_pos++] = (byte)(value >> 0x38);
+        BinaryPrimitives.WriteUInt64BigEndian(_data.AsSpan(_pos), value);
+        _pos += sizeof(ulong);
     }
 
     public void Write(sbyte value)
@@ -92,38 +85,50 @@ public class BigEndianBinaryMemoryWriteStream: IBinaryMemoryWriteStream
 
     public void Write(short value)
     {
-        _data[_pos++] = (byte)(value >> 8);
-        _data[_pos++] = (byte)value;
+        BinaryPrimitives.WriteInt16BigEndian(_data.AsSpan(_pos), value);
+        _pos += sizeof(short);
     }
 
     public void Write(int value)
     {
-        _data[_pos++] = (byte)(value >> 0x18);
-        _data[_pos++] = (byte)(value >> 0x10);
-        _data[_pos++] = (byte)(value >> 8);
-        _data[_pos++] = (byte)value;
+        BinaryPrimitives.WriteInt32BigEndian(_data.AsSpan(_pos), value);
+        _pos += sizeof(int);
     }
 
     public void Write(long value)
     {
-        _data[_pos++] = (byte)(value >> 0x38);
-        _data[_pos++] = (byte)(value >> 0x30);
-        _data[_pos++] = (byte)(value >> 0x28);
-        _data[_pos++] = (byte)(value >> 0x20);
-        _data[_pos++] = (byte)(value >> 0x18);
-        _data[_pos++] = (byte)(value >> 0x10);
-        _data[_pos++] = (byte)(value >> 8);
-        _data[_pos++] = (byte)value;
+        BinaryPrimitives.WriteInt64BigEndian(_data.AsSpan(_pos), value);
+        _pos += sizeof(long);
     }
 
     public void Write(float value)
     {
+#if NETSTANDARD2_0
+        // Suggested code.  Needs testing
+        // unsafe
+        // {
+        //     BinaryPrimitives.WriteInt32LittleEndian(_data.AsSpan(_pos), *(int*)&value);
+        // }
         Write(new Int32SingleUnion(value).AsInt32);
+#else
+        BinaryPrimitives.WriteSingleBigEndian(_data.AsSpan(_pos), value);
+#endif
+        _pos += sizeof(float);
     }
 
     public void Write(double value)
     {
+#if NETSTANDARD2_0
+        // Suggested code.  Needs testing
+        // unsafe
+        // {
+        //     BinaryPrimitives.WriteInt64LittleEndian(_data.AsSpan(_pos), *(long*)&value);
+        // }
         Write(BitConverter.DoubleToInt64Bits(value));
+#else
+        BinaryPrimitives.WriteDoubleBigEndian(_data.AsSpan(_pos), value);
+#endif
+        _pos += sizeof(double);
     }
 
     public void Write(ReadOnlySpan<char> str)
@@ -138,7 +143,7 @@ public class BigEndianBinaryMemoryWriteStream: IBinaryMemoryWriteStream
     {
         _data = Array.Empty<byte>();
     }
-
+    
     #region Private struct used for Single/Int32 conversions
 
     /// <summary>
