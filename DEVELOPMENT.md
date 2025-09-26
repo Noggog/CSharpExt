@@ -17,6 +17,22 @@ This file contains helpful information for developers and AI assistants working 
 - Packages are automatically generated in `/nupkg` directory when building with `GeneratePackageOnBuild=true`
 - Package versions managed centrally via `Directory.Packages.props`
 
+### Releases
+- Create release tags using semantic versioning format: `<major>.<minor>.<patch>`
+- Always include the patch number, even if it's zero (e.g., `3.1.0`, not `3.1`)
+- **Do not prefix with `v`** (e.g., use `3.1.0`, not `v3.1.0`)
+- This format is required for GitVersion compatibility
+
+#### Creating GitHub Release Drafts
+1. Find the last release tag: `git tag --sort=-version:refname`
+2. Get commits since last release: `git log --oneline <last-tag>..HEAD`
+3. Construct release notes by categorizing commits:
+   - **Enhancements**: New features, performance improvements, major changes
+   - **Bug Fixes**: Bug fixes and corrections
+   - **Testing & Documentation**: Test additions, documentation updates
+4. Create draft release: `gh release create <version> --draft --title "<version>" --notes "<release-notes>"`
+5. Include full changelog link: `**Full Changelog**: https://github.com/Noggog/CSharpExt/compare/<last-tag>...<new-tag>`
+
 ### Benchmarking
 - Run benchmarks: `dotnet run --project CSharpExt.Benchmark/CSharpExt.Benchmark.csproj -c Release`
 
