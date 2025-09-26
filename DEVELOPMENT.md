@@ -30,7 +30,7 @@ This file contains helpful information for developers and AI assistants working 
    - **Enhancements**: New features, performance improvements, major changes
    - **Bug Fixes**: Bug fixes and corrections
    - **Testing & Documentation**: Test additions, documentation updates
-4. Create draft release: `gh release create <version> --draft --title "<version>" --notes "<release-notes>"`
+4. Create draft release: `gh release create <version> --draft --title "<version>" --notes "<release-notes>" --target main`
 5. Include full changelog link: `**Full Changelog**: https://github.com/Noggog/CSharpExt/compare/<last-tag>...<new-tag>`
 
 ### Benchmarking
