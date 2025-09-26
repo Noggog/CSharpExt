@@ -17,7 +17,7 @@ public class RegistrationsTests
         Assert.Throws<AutofacValidationException>(() =>
         {
             container.ComponentRegistry.Registrations
-                .Returns(Enumerable.Empty<IComponentRegistration>());
+                .Returns([]);
             getRegistrations.Items.ToArray();
         });
     }

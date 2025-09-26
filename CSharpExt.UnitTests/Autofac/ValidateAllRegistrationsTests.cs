@@ -11,7 +11,7 @@ public class ValidateAllRegistrationsTests
     public void Empty(ValidateTypes sut)
     {
         sut.Registrations.Items.Returns(new Dictionary<Type, IReadOnlyList<Registration>>());
-        sut.Validate(Enumerable.Empty<Type>());
+        sut.Validate([]);
     }
         
     [Theory, TestData(ConfigureMembers: true)]

@@ -141,7 +141,7 @@ public class BigEndianBinaryMemoryWriteStream: IBinaryMemoryWriteStream
 
     public void Dispose()
     {
-        _data = Array.Empty<byte>();
+        _data = [];
     }
     
     #region Private struct used for Single/Int32 conversions

@@ -10,7 +10,7 @@ public interface IFileSystemEnvironmentInstructions
 
 public class DefaultFileSystemEnvironmentInstructions : IFileSystemEnvironmentInstructions
 {
-    public virtual IEnumerable<FilePath> FilePaths(ISpecimenContext context) => Enumerable.Empty<FilePath>();
+    public virtual IEnumerable<FilePath> FilePaths(ISpecimenContext context) => [];
     
-    public virtual IEnumerable<DirectoryPath> DirectoryPaths(ISpecimenContext context) => Enumerable.Empty<DirectoryPath>();
+    public virtual IEnumerable<DirectoryPath> DirectoryPaths(ISpecimenContext context) => [];
 }

@@ -511,7 +511,7 @@ static class EnumFlags<TEnum>
             }
             else
             {
-                return Array.Empty<TEnum>();
+                return [];
             }
         }
         ulong bits = (ulong)Enums<TEnum>.ConvertFrom(value);
@@ -531,7 +531,7 @@ static class EnumFlags<TEnum>
             return results.Reverse<TEnum>();
         if (bits == (ulong)Enums<TEnum>.ConvertFrom(value) && FlagValues.Count > 0 && Enums<TEnum>.ConvertFrom(FlagValues[0]) == 0L)
             return FlagValues.Take(1);
-        return Enumerable.Empty<TEnum>();
+        return [];
     }
 
     public static IEnumerable<TEnum> EnumerateAllContainedFlags(TEnum flags)

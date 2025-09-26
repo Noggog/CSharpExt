@@ -132,7 +132,7 @@ public class FramedStreamTests
         framedStream.Length.Returns(10);
         framedStream.Position = 0;
         var frame = new FramedStream(framedStream, 6, doDispose: false);
-        Action act = () => frame.Write(Array.Empty<byte>(), 0, 7);
+        Action act = () => frame.Write([], 0, 7);
         act.ShouldThrow<ArgumentOutOfRangeException>();
     }
 

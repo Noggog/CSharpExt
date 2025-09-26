@@ -432,5 +432,5 @@ public static class EnumerableExt
 
 public static class EnumerableExt<T>
 {
-    public static readonly IEnumerable<T> Empty = Array.Empty<T>();
+    public static readonly IEnumerable<T> Empty = [];
 }

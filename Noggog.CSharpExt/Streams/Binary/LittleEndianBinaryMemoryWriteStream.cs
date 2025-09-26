@@ -137,6 +137,6 @@ internal class LittleEndianBinaryMemoryWriteStream: IBinaryMemoryWriteStream
 
     public void Dispose()
     {
-        _data = Array.Empty<byte>();
+        _data = [];
     }
 }

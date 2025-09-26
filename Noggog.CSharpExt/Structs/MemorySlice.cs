@@ -82,7 +82,7 @@ public readonly struct MemorySlice<T> : IEnumerable<T>
     [Pure]
     public T[] ToArray()
     {
-        if (_arr == null || _length == 0) return Array.Empty<T>();
+        if (_arr == null || _length == 0) return [];
         var ret = new T[_length];
         Array.Copy(_arr, _startPos, ret, 0, _length);
         return ret;
@@ -131,7 +131,7 @@ public readonly struct ReadOnlyMemorySlice<T> : IEnumerable<T>
     public int Length => _length;
     public int StartPosition => _startPos;
 
-    public static readonly ReadOnlyMemorySlice<T> Empty = new ReadOnlyMemorySlice<T>(Array.Empty<T>());
+    public static readonly ReadOnlyMemorySlice<T> Empty = new ReadOnlyMemorySlice<T>([]);
 
     [DebuggerStepThrough]
     public ReadOnlyMemorySlice(T[] arr)
@@ -207,7 +207,7 @@ public readonly struct ReadOnlyMemorySlice<T> : IEnumerable<T>
     [Pure]
     public T[] ToArray()
     {
-        if (_arr == null || _length == 0) return Array.Empty<T>();
+        if (_arr == null || _length == 0) return [];
         var ret = new T[_length];
         Array.Copy(_arr, _startPos, ret, 0, _length);
         return ret;
