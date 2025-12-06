@@ -31,6 +31,7 @@ public static class NoggogCommand
         Func<TInput, (TJob? Job, IObservable<Unit> CompletionSignal)> jobCreator,
         IObservable<TInput> extraInput,
         out IObservable<TJob?> createdJobs,
+        IScheduler scheduler,
         IObservable<bool>? canExecute = null,
         IScheduler? outputScheduler = null)
         where TJob : class
@@ -50,7 +51,7 @@ public static class NoggogCommand
         return ReactiveCommand.CreateFromTask(
             canExecute: Observable.CombineLatest(
                 canExecute ?? Observable.Return(true),
-                gotInput.ObserveOnGui(),
+                gotInput.ObserveOn(scheduler),
                 (canExecute, gotInput) => canExecute && gotInput),
             outputScheduler: outputScheduler,
             execute: async () =>
@@ -165,14 +166,15 @@ public static class NoggogCommand
         IObservable<TObject> objectSource,
         Func<IObservable<TObject>, IObservable<bool>> canExecute,
         Action<TObject> execute,
-        IDisposableDropoff disposable)
+        IDisposableDropoff disposable,
+        IScheduler scheduler)
     {
         TObject latest = default!;
         objectSource
             .Subscribe(l => latest = l)
             .DisposeWith(disposable);
         return ReactiveCommand.Create(
-            canExecute: canExecute(objectSource.ObserveOnGui()),
+            canExecute: canExecute(objectSource.ObserveOn(scheduler)),
             execute: () =>
             {
                 execute(latest);
@@ -184,7 +186,8 @@ public static class NoggogCommand
         Func<IObservable<TObject>, IObservable<bool>> canExecute,
         IObservable<bool> extraCanExecute,
         Action<TObject> execute,
-        IDisposableDropoff disposable)
+        IDisposableDropoff disposable,
+        IScheduler scheduler)
     {
         TObject latest = default!;
         objectSource
@@ -192,7 +195,7 @@ public static class NoggogCommand
             .DisposeWith(disposable);
         return ReactiveCommand.Create(
             canExecute: Observable.CombineLatest(
-                canExecute(objectSource.ObserveOnGui()),
+                canExecute(objectSource.ObserveOn(scheduler)),
                 extraCanExecute,
                 (obj, extra) => obj && extra),
             execute: () =>

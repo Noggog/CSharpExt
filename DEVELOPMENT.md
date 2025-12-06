@@ -89,3 +89,60 @@ This is a multi-project .NET solution focused on providing generic reusable C# e
 - Source generator testing with dedicated testing framework
 
 The codebase emphasizes performance, cross-platform compatibility (where applicable), and developer productivity through extensive use of modern .NET features and reactive programming patterns.
+
+## Development Workflow
+
+### Code Quality
+- `dotnet format` required before commits (CI will fail without it)
+- Line endings: CRLF for .NET projects per .editorconfig
+
+### File System Operations
+- **NEVER redirect to `nul`** - On Windows, `2>nul` creates unwanted files that Git tracks
+- Use proper null redirection: `2>/dev/null` (works on Windows with bash)
+- For temporary files, use `.claude/` subfolder or designated temp directories that are gitignored
+- Example: `ls directory 2>/dev/null || echo "Not found"` instead of `dir directory 2>nul`
+
+### Best Practices
+
+**CRITICAL: Always build and run tests after implementing changes to confirm correctness:**
+
+```bash
+# After making any code changes, ALWAYS follow these steps in order:
+
+# 1. Build to check for compilation errors
+dotnet build
+
+# 2. Run ALL relevant tests (not just one) to verify functionality
+dotnet test --filter "YourTestClassName"
+
+# 3. If tests fail, fix them before claiming the work is complete
+# 4. After targeted tests fail, then run ALL tests. Any failing tests indicate regression
+# 5. Never consider work "successful" when tests are failing
+```
+
+**Test Verification Requirements:**
+- **ALL tests in the affected area must pass** - partial success is not success
+- **Run the full test suite for the component you're working on**, not just individual tests
+- **Fix failing tests immediately** - do not ignore or postpone test failures
+- **Verify tests both compile AND pass execution** - compilation success alone is not sufficient
+- **Test failures indicate incomplete or incorrect implementation** - address the root cause
+- **Test unrelated to current feature indicate regression** - address the root cause
+
+**Common Mistakes to Avoid:**
+- ❌ Only running one test and assuming others work
+- ❌ Ignoring test failures and claiming success
+- ❌ Only checking that code compiles without verifying runtime behavior
+- ❌ Making assumptions about test state without verifying
+
+**Correct Approach:**
+- ✅ Run complete test suite for the area being modified
+- ✅ Ensure 100% of relevant tests pass before completing work
+- ✅ Fix any failing tests as part of the implementation task
+- ✅ Verify both compilation and runtime test execution success
+
+This is critical to ensure:
+- Code compiles without errors
+- New functionality works as expected
+- Existing functionality hasn't been broken by changes
+- Tests themselves are correctly written and can execute
+- **All functionality is actually working, not just appearing to work**

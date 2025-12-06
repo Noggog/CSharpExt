@@ -1,5 +1,6 @@
 using System.Collections.ObjectModel;
 using ReactiveUI;
+using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using DynamicData;
 using DynamicData.Binding;
@@ -19,23 +20,45 @@ public static class ObservableExt
         ViewModel vm,
         string property,
         TRet initialValue,
+        IScheduler scheduler,
         bool deferSubscription = false)
     {
         return source
-            .ToProperty(vm, property, initialValue, deferSubscription: deferSubscription, scheduler: RxApp.MainThreadScheduler)
+            .ToProperty(vm, property, initialValue, deferSubscription: deferSubscription, scheduler: scheduler)
             .DisposeWith(vm);
+    }
+
+    public static ObservableAsPropertyHelper<TRet> ToRxAppGuiProperty<TRet>(
+        this IObservable<TRet> source,
+        ViewModel vm,
+        string property,
+        TRet initialValue,
+        bool deferSubscription = false)
+    {
+        return source.ToGuiProperty(vm, property, initialValue, RxApp.MainThreadScheduler, deferSubscription);
     }
 
     public static ObservableAsPropertyHelper<TRet> ToGuiProperty<TRet>(
         this IObservable<TRet> source,
         ViewModel vm,
         string property,
+        IScheduler scheduler,
         bool deferSubscription = false)
         where TRet : struct
     {
         return source
-            .ToProperty(vm, property, initialValue: default!, deferSubscription, RxApp.MainThreadScheduler)
+            .ToProperty(vm, property, initialValue: default!, deferSubscription, scheduler)
             .DisposeWith(vm);
+    }
+
+    public static ObservableAsPropertyHelper<TRet> ToRxAppGuiProperty<TRet>(
+        this IObservable<TRet> source,
+        ViewModel vm,
+        string property,
+        bool deferSubscription = false)
+        where TRet : struct
+    {
+        return source.ToGuiProperty(vm, property, RxApp.MainThreadScheduler, deferSubscription);
     }
 
     public static void ToGuiProperty<TRet>(
@@ -44,17 +67,29 @@ public static class ObservableExt
         string property,
         TRet initialValue,
         out ObservableAsPropertyHelper<TRet> result,
+        IScheduler scheduler,
         bool deferSubscription = false)
     {
         OAPHCreationHelperMixin.ToProperty(
-                target: source, 
+                target: source,
                 source: vm,
-                property: property, 
+                property: property,
                 getInitialValue: () => initialValue,
-                result: out result, 
+                result: out result,
                 deferSubscription: deferSubscription,
-                scheduler: RxApp.MainThreadScheduler)
+                scheduler: scheduler)
             .DisposeWith(vm);
+    }
+
+    public static void ToRxAppGuiProperty<TRet>(
+        this IObservable<TRet> source,
+        ViewModel vm,
+        string property,
+        TRet initialValue,
+        out ObservableAsPropertyHelper<TRet> result,
+        bool deferSubscription = false)
+    {
+        source.ToGuiProperty(vm, property, initialValue, out result, RxApp.MainThreadScheduler, deferSubscription);
     }
 
     public static void ToGuiProperty<TRet>(
@@ -63,10 +98,22 @@ public static class ObservableExt
         string property,
         Func<TRet> getInitialValue,
         out ObservableAsPropertyHelper<TRet> result,
+        IScheduler scheduler,
         bool deferSubscription = false)
     {
-        source.ToProperty(source: vm, property: property, result: out result, getInitialValue: getInitialValue, deferSubscription: deferSubscription, scheduler: RxApp.MainThreadScheduler)
+        source.ToProperty(source: vm, property: property, result: out result, getInitialValue: getInitialValue, deferSubscription: deferSubscription, scheduler: scheduler)
             .DisposeWith(vm);
+    }
+
+    public static void ToRxAppGuiProperty<TRet>(
+        this IObservable<TRet> source,
+        ViewModel vm,
+        string property,
+        Func<TRet> getInitialValue,
+        out ObservableAsPropertyHelper<TRet> result,
+        bool deferSubscription = false)
+    {
+        source.ToGuiProperty(vm, property, getInitialValue, out result, RxApp.MainThreadScheduler, deferSubscription);
     }
 
     public static void ToGuiProperty<TRet>(
@@ -74,14 +121,26 @@ public static class ObservableExt
         ViewModel vm,
         string property,
         out ObservableAsPropertyHelper<TRet> result,
+        IScheduler scheduler,
         bool deferSubscription = false)
         where TRet : struct
     {
-        source.ToProperty(vm, property, out result, getInitialValue: () => default, deferSubscription, RxApp.MainThreadScheduler)
+        source.ToProperty(vm, property, out result, getInitialValue: () => default, deferSubscription, scheduler)
             .DisposeWith(vm);
     }
 
-    public static IObservable<T> ObserveOnGui<T>(this IObservable<T> obs)
+    public static void ToRxAppGuiProperty<TRet>(
+        this IObservable<TRet> source,
+        ViewModel vm,
+        string property,
+        out ObservableAsPropertyHelper<TRet> result,
+        bool deferSubscription = false)
+        where TRet : struct
+    {
+        source.ToGuiProperty(vm, property, out result, RxApp.MainThreadScheduler, deferSubscription);
+    }
+
+    public static IObservable<T> ObserveOnRxAppGui<T>(this IObservable<T> obs)
     {
         return obs.ObserveOn(RxApp.MainThreadScheduler);
     }
@@ -99,28 +158,41 @@ public static class ObservableExt
         return source.Bind(obsCol, resetThreshold);
     }
 
-    public static IObservableCollection<TObj> ToObservableCollection<TObj>(this IObservable<IChangeSet<TObj>> changeSet, IDisposableDropoff disposable)
+    public static IObservableCollection<TObj> ToObservableCollection<TObj>(this IObservable<IChangeSet<TObj>> changeSet, IDisposableDropoff disposable, IScheduler scheduler)
         where TObj : notnull
     {
         changeSet
-            .ObserveOnGui()
+            .ObserveOn(scheduler)
             .Bind(out IObservableCollection<TObj> display)
             .Subscribe()
             .DisposeWith(disposable);
         return display;
     }
 
-    public static IObservableCollection<TObj> ToObservableCollection<TObj, TKey>(this IObservable<IChangeSet<TObj, TKey>> changeSet, IDisposableDropoff disposable)
+    public static IObservableCollection<TObj> ToRxAppObservableCollection<TObj>(this IObservable<IChangeSet<TObj>> changeSet, IDisposableDropoff disposable)
+        where TObj : notnull
+    {
+        return changeSet.ToObservableCollection(disposable, RxApp.MainThreadScheduler);
+    }
+
+    public static IObservableCollection<TObj> ToObservableCollection<TObj, TKey>(this IObservable<IChangeSet<TObj, TKey>> changeSet, IDisposableDropoff disposable, IScheduler scheduler)
         where TObj : notnull
         where TKey : notnull
     {
         ObservableCollectionExtended<TObj> display = new ObservableCollectionExtended<TObj>();
         changeSet
-            .ObserveOnGui()
+            .ObserveOn(scheduler)
             .Bind(display)
             .Subscribe()
             .DisposeWith(disposable);
         return display;
+    }
+
+    public static IObservableCollection<TObj> ToRxAppObservableCollection<TObj, TKey>(this IObservable<IChangeSet<TObj, TKey>> changeSet, IDisposableDropoff disposable)
+        where TObj : notnull
+        where TKey : notnull
+    {
+        return changeSet.ToObservableCollection(disposable, RxApp.MainThreadScheduler);
     }
 
     #region Keybinds

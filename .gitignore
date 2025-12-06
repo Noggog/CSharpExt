@@ -286,5 +286,4 @@ Noggog.CSharpExt.Json/Noggog.CSharpExt.Json.xml
 nupkg/
 
 # Claude Code files
-CLAUDE.md
 .claude

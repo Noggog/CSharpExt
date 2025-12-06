@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Reactive.Concurrency;
+using System.Reactive.Linq;
 using DynamicData;
 using DynamicData.Binding;
 
@@ -19,12 +21,11 @@ public class SourceListUiFunnel<T> : ISourceListUiFunnel<T>
         
     public ISourceList<T> SourceList { get; }
 
-    public SourceListUiFunnel(ISourceList<T> sourceList, IDisposableDropoff disposableBucket)
+    public SourceListUiFunnel(ISourceList<T> sourceList, IDisposableDropoff disposableBucket, IScheduler scheduler)
     {
         SourceList = sourceList;
         _coll = sourceList.Connect()
-            .ObserveOnGui()
-            .ToObservableCollection(disposableBucket);
+            .ToObservableCollection(disposableBucket, scheduler);
     }
 
     public event NotifyCollectionChangedEventHandler? CollectionChanged
