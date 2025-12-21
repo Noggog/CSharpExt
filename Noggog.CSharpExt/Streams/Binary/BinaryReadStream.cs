@@ -103,6 +103,11 @@ public class BinaryReadStream : Stream, IBinaryReadStream
 
     internal void LoadPosition()
     {
+        if (_internalMemoryStream.Complete && CompleteBuffering)
+        {
+            return;
+        }
+
         if (_internalMemoryStream.Complete)
         {
             var amountRead = _stream.Read(_data, 0, _data.Length);
@@ -128,6 +133,11 @@ public class BinaryReadStream : Stream, IBinaryReadStream
 
     private void LoadPosition(int amount)
     {
+        if (amount > Remaining)
+        {
+            throw new DataMisalignedException($"Attempted to load {amount} bytes but only {Remaining} bytes remain in the stream.");
+        }
+
         if (InternalStreamRemaining < amount)
         {
             LoadPosition();
@@ -499,7 +509,10 @@ public class BinaryReadStream : Stream, IBinaryReadStream
     {
         while (amount > 0)
         {
-            LoadPosition(amount);
+            var toRequest = Math.Min(amount, (int)Remaining);
+            if (toRequest == 0) break;  // No more data available
+
+            LoadPosition(toRequest);
             var internalRemaining = InternalStreamRemaining;
             var toRead = amount < internalRemaining ? amount : internalRemaining;
             _internalMemoryStream.WriteTo(stream, toRead);
