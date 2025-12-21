@@ -509,7 +509,15 @@ public class BinaryReadStream : Stream, IBinaryReadStream
     {
         while (amount > 0)
         {
-            var toRequest = Math.Min(amount, (int)Remaining);
+            int toRequest;
+            if (Remaining < amount)
+            {
+                toRequest = checked((int)Remaining);
+            }
+            else
+            {
+                toRequest = amount;
+            }
             if (toRequest == 0) break;  // No more data available
 
             LoadPosition(toRequest);
