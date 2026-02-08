@@ -98,14 +98,14 @@ jobs:
         dotnet-version: 10.0.*
     - name: Install dependencies
       run: |
-        dotnet clean Noggog.CSharpExt.sln -c Release && dotnet nuget locals all --clear
-        dotnet restore Noggog.CSharpExt.sln
+        dotnet clean Noggog.CSharpExt.slnx -c Release && dotnet nuget locals all --clear
+        dotnet restore Noggog.CSharpExt.slnx
     - name: Build
-      run: dotnet build Noggog.CSharpExt.sln -c Release --no-restore /p:GeneratePackageOnBuild=false
+      run: dotnet build Noggog.CSharpExt.slnx -c Release --no-restore /p:GeneratePackageOnBuild=false
     - name: Pack
       if: ${{ success() }}
       run: |
-        dotnet pack Noggog.CSharpExt.sln -c Release --no-restore -o out --include-symbols -p:SymbolPackageFormat=snupkg
+        dotnet pack Noggog.CSharpExt.slnx -c Release --no-restore -o out --include-symbols -p:SymbolPackageFormat=snupkg
     - name: Publish to Github
       uses: svenstaro/upload-release-action@v2
       if: ${{ success() && !github.event.release.prerelease && github.event_name == 'release' }}

@@ -1,0 +1,19 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path=".editorconfig" />
+    <File Path="Directory.Build.props" />
+    <File Path="Directory.Build.targets" />
+    <File Path="Directory.Packages.props" />
+  </Folder>
+  <Project Path="CSharpExt.Benchmark/CSharpExt.Benchmark.csproj" />
+  <Project Path="CSharpExt.UnitTests/CSharpExt.UnitTests.csproj" />
+  <Project Path="Noggog.Autofac/Noggog.Autofac.csproj" />
+  <Project Path="Noggog.CSharpExt.Json/Noggog.CSharpExt.Json.csproj" />
+  <Project Path="Noggog.CSharpExt.Windows/Noggog.CSharpExt.Windows.csproj" />
+  <Project Path="Noggog.CSharpExt/Noggog.CSharpExt.csproj" />
+  <Project Path="Noggog.Nuget.Tests/Noggog.Nuget.Tests.csproj" />
+  <Project Path="Noggog.Nuget/Noggog.Nuget.csproj" />
+  <Project Path="Noggog.SourceGenerators/Noggog.SourceGenerators.csproj" />
+  <Project Path="Noggog.Testing/Noggog.Testing.csproj" />
+  <Project Path="Noggog.WPF/Noggog.WPF.csproj" />
+</Solution>
