@@ -328,10 +328,10 @@ public class BinaryReadStream : Stream, IBinaryReadStream
         return _internalMemoryStream.ReadFloat(); 
     } 
  
-    public double ReadDouble() 
-    { 
-        LoadPosition(4); 
-        return _internalMemoryStream.ReadDouble(); 
+    public double ReadDouble()
+    {
+        LoadPosition(8);
+        return _internalMemoryStream.ReadDouble();
     } 
  
     public string ReadStringUTF8(int amount) 
