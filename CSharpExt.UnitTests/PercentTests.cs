@@ -147,7 +147,10 @@ public class PercentTests
         c.ShouldBeTrue();
         c = p2 < p1;
         c.ShouldBeFalse();
+
+#pragma warning disable CS1718 // Intentional self-comparison to test operators
         c = p1 < p1;
+#pragma warning restore CS1718
         c.ShouldBeFalse();
     }
 
@@ -160,7 +163,9 @@ public class PercentTests
         c.ShouldBeTrue();
         c = p2 <= p1;
         c.ShouldBeFalse();
+#pragma warning disable CS1718 // Intentional self-comparison to test operators
         c = p1 <= p1;
+#pragma warning restore CS1718
         c.ShouldBeTrue();
     }
 
@@ -173,7 +178,9 @@ public class PercentTests
         c.ShouldBeFalse();
         c = p2 >= p1;
         c.ShouldBeTrue();
+#pragma warning disable CS1718 // Intentional self-comparison to test operators
         c = p1 >= p1;
+#pragma warning restore CS1718
         c.ShouldBeTrue();
     }
 
@@ -186,7 +193,9 @@ public class PercentTests
         c.ShouldBeFalse();
         c = p2 > p1;
         c.ShouldBeTrue();
+#pragma warning disable CS1718 // Intentional self-comparison to test operators
         c = p1 > p1;
+#pragma warning restore CS1718
         c.ShouldBeFalse();
     }
 }
