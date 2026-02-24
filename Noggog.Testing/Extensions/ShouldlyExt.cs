@@ -44,7 +44,7 @@ public static class ShouldlyExt
             TLhs? convertedExpected = (TLhs?)ConvertWithImplicitOperator(expected, actual.GetType());
             if (object.Equals(actual, convertedExpected)) return true;
         }
-        catch (Exception e)
+        catch (Exception)
         {
         }
         
@@ -53,7 +53,7 @@ public static class ShouldlyExt
             TLhs? convertedExpected = (TLhs?)Convert.ChangeType(expected, actual.GetType());
             if (object.Equals(actual, convertedExpected)) return true;
         }
-        catch (Exception e)
+        catch (Exception)
         {
         }
         
@@ -64,7 +64,7 @@ public static class ShouldlyExt
                 var convertedExpected = convertibleExpected.ToType(actual.GetType(), null);
                 if (object.Equals(actual, convertedExpected)) return true;
             }
-            catch (Exception e)
+            catch (Exception)
             {
             }
         }

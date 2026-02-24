@@ -16,7 +16,7 @@ public static class DependencyObjectExt
             {
                 item = VisualTreeHelper.GetParent(item);
             }
-            catch (InvalidOperationException e)
+            catch (InvalidOperationException)
             {
                 break;
             }

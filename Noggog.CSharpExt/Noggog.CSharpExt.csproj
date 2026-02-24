@@ -33,10 +33,6 @@
     <PackageReference Include="System.Linq.Async" />
   </ItemGroup>
 
-  <ItemGroup Condition=" $(TargetFramework.StartsWith('netstandard2.0')) ">
-    <PackageReference Include="System.Threading.Tasks" />
-  </ItemGroup>
-
   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
     <PackageReference Include="Microsoft.Bcl.HashCode" />
     <PackageReference Include="System.Buffers" />

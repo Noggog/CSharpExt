@@ -84,7 +84,9 @@ public class MockFileSystemWatcher : IFileSystemWatcher
     public event FileSystemEventHandler? Changed;
     public event FileSystemEventHandler? Created;
     public event FileSystemEventHandler? Deleted;
+#pragma warning disable CS0067 // Required by IFileSystemWatcher interface
     public event ErrorEventHandler? Error;
+#pragma warning restore CS0067
     public event RenamedEventHandler? Renamed;
 
     public MockFileSystemWatcher(IFileSystem fileSystem)
