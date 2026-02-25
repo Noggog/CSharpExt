@@ -1,6 +1,7 @@
 using DynamicData;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using Newtonsoft.Json;
+using Noggog.Reactive;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 using System.IO;
@@ -79,7 +80,7 @@ public class PathPickerVM : ViewModel
     public const string PathDoesNotExistText = "Path does not exist";
     public const string DoesNotPassFiltersText = "Path does not pass designated filters";
 
-    public PathPickerVM()
+    public PathPickerVM(ISchedulerProvider schedulerProvider)
     {
         SetTargetPathCommand = ConstructTypicalPickerCommand();
         SetFolderPathCommand = ReactiveCommand.Create(() => OpenPicker(PathTypeOptions.Folder));
@@ -90,7 +91,7 @@ public class PathPickerVM : ViewModel
                 this.WhenAnyValue(x => x.TargetPath)
                     // Dont want to debounce the initial value, because we know it's null
                     .Skip(1)
-                    .Debounce(TimeSpan.FromMilliseconds(200), RxApp.TaskpoolScheduler)
+                    .Debounce(TimeSpan.FromMilliseconds(200), schedulerProvider.TaskPool)
                     .StartWith(default(string)),
                 resultSelector: (existsOption, type, path) => (ExistsOption: existsOption, Type: type, Path: path))
             .StartWith((ExistsOption: ExistCheckOption, Type: PathType, Path: TargetPath))
@@ -117,7 +118,7 @@ public class PathPickerVM : ViewModel
             .Replay(1)
             .RefCount();
 
-        _exists = Observable.Interval(TimeSpan.FromSeconds(3), RxApp.TaskpoolScheduler)
+        _exists = Observable.Interval(TimeSpan.FromSeconds(3), schedulerProvider.TaskPool)
             // Only check exists on timer if desired
             .FlowSwitch(doExistsCheck)
             .Unit()
@@ -129,7 +130,7 @@ public class PathPickerVM : ViewModel
             .CombineLatest(existsCheckTuple,
                 resultSelector: (_, tuple) => tuple)
             // Refresh exists
-            .ObserveOn(RxApp.TaskpoolScheduler)
+            .ObserveOn(schedulerProvider.TaskPool)
             .Select(t =>
             {
                 switch (t.ExistsOption)
@@ -157,7 +158,7 @@ public class PathPickerVM : ViewModel
                 }
             })
             .DistinctUntilChanged()
-            .ObserveOn(RxApp.MainThreadScheduler)
+            .ObserveOn(schedulerProvider.MainThread)
             .StartWith(false)
             .ToProperty(this, nameof(Exists));
 
@@ -252,7 +253,7 @@ public class PathPickerVM : ViewModel
                     if (filter.Failed) return filter;
                     return err;
                 })
-            .ObserveOn(RxApp.MainThreadScheduler)
+            .ObserveOn(schedulerProvider.MainThread)
             .ToProperty(this, nameof(ErrorState));
 
         _inError = this.WhenAnyValue(x => x.ErrorState)
@@ -274,7 +275,7 @@ public class PathPickerVM : ViewModel
                     if (!string.IsNullOrWhiteSpace(filters)) return filters;
                     return err.Reason;
                 })
-            .ObserveOn(RxApp.MainThreadScheduler)
+            .ObserveOn(schedulerProvider.MainThread)
             .ToProperty<PathPickerVM, string>(this, nameof(ErrorTooltip));
     }
 
@@ -360,11 +361,11 @@ public class PathPickerVM : ViewModel
 
         public override object ReadJson(JsonReader reader, Type objectType, object? existingValue, JsonSerializer serializer)
         {
-            if (!(existingValue is PathPickerVM vm))
+            if (existingValue is not PathPickerVM vm)
             {
-                vm = new PathPickerVM();
+                return new PathPickerVM(new SchedulerProvider());
             }
-            if (!(reader.Value is string str)) throw new ArgumentException();
+            if (reader.Value is not string str) throw new ArgumentException();
             vm.TargetPath = str;
             return vm;
         }
