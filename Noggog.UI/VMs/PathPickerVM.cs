@@ -1,5 +1,4 @@
 using DynamicData;
-using Microsoft.WindowsAPICodePack.Dialogs;
 using Newtonsoft.Json;
 using Noggog.Reactive;
 using ReactiveUI;
@@ -8,7 +7,7 @@ using System.IO;
 using System.Reactive.Linq;
 using System.Windows.Input;
 
-namespace Noggog.WPF;
+namespace Noggog.UI;
 
 [JsonConverter(typeof(PathPickerJsonConverter))]
 public class PathPickerVM : ViewModel
@@ -74,7 +73,7 @@ public class PathPickerVM : ViewModel
         x => x.TargetPath,
         (err, p) => err.BubbleResult(p));
 
-    public SourceList<CommonFileDialogFilter> Filters { get; } = new SourceList<CommonFileDialogFilter>();
+    public SourceList<DialogFileFilter> Filters { get; } = new SourceList<DialogFileFilter>();
 
     public const string FolderDoesNotExistText = "Folder does not exist";
     public const string PathDoesNotExistText = "Path does not exist";
@@ -83,7 +82,7 @@ public class PathPickerVM : ViewModel
     public PathPickerVM(ISchedulerProvider schedulerProvider)
     {
         SetTargetPathCommand = ConstructTypicalPickerCommand();
-        SetFolderPathCommand = ReactiveCommand.Create(() => OpenPicker(PathTypeOptions.Folder));
+        SetFolderPathCommand = ReactiveCommand.CreateFromTask(() => OpenPicker(PathTypeOptions.Folder));
 
         var existsCheckTuple = Observable.CombineLatest(
                 this.WhenAnyValue(x => x.ExistCheckOption),
@@ -281,44 +280,31 @@ public class PathPickerVM : ViewModel
 
     public ICommand ConstructTypicalPickerCommand()
     {
-        return ReactiveCommand.Create(
-            execute: () =>
+        return ReactiveCommand.CreateFromTask(
+            execute: async () =>
             {
-                string dirPath;
-                if (File.Exists(TargetPath))
-                {
-                    dirPath = Path.GetDirectoryName(TargetPath) ?? string.Empty;
-                }
-                else
-                {
-                    dirPath = TargetPath;
-                }
-                var dlg = new CommonOpenFileDialog
-                {
-                    Title = PromptTitle,
-                    IsFolderPicker = PathType == PathTypeOptions.Folder,
-                    InitialDirectory = dirPath,
-                    AddToMostRecentlyUsedList = false,
-                    AllowNonFileSystemItems = false,
-                    DefaultDirectory = dirPath,
-                    EnsureFileExists = ExistCheckOption != CheckOptions.Off && BlockMissingInDialog,
-                    EnsurePathExists = ExistCheckOption != CheckOptions.Off && BlockMissingInDialog,
-                    EnsureReadOnly = false,
-                    EnsureValidNames = true,
-                    Multiselect = false,
-                    ShowPlacesList = true,
-                };
-                foreach (var filter in Filters.Items)
-                {
-                    dlg.Filters.Add(filter);
-                }
-                if (dlg.ShowDialog() != CommonFileDialogResult.Ok) return;
-                TargetPath = dlg.FileName;
+                var result = await ShowPicker(
+                    PathType == PathTypeOptions.Folder,
+                    ensureExists: ExistCheckOption != CheckOptions.Off && BlockMissingInDialog);
+                if (result == null) return;
+                TargetPath = result;
             });
     }
 
-    private void OpenPicker(PathTypeOptions type)
+    private async Task OpenPicker(PathTypeOptions type)
     {
+        var result = await ShowPicker(
+            type == PathTypeOptions.Folder,
+            ensureExists: true);
+        if (result == null) return;
+        TargetPath = result;
+    }
+
+    private Task<string?> ShowPicker(bool isFolderPicker, bool ensureExists)
+    {
+        var provider = PathPickerDialogProvider.Instance;
+        if (provider == null) return Task.FromResult<string?>(null);
+
         string dirPath;
         if (File.Exists(TargetPath))
         {
@@ -328,27 +314,16 @@ public class PathPickerVM : ViewModel
         {
             dirPath = TargetPath;
         }
-        var dlg = new CommonOpenFileDialog
+
+        return provider.ShowPickerAsync(new PathPickerDialogRequest
         {
             Title = PromptTitle,
-            IsFolderPicker = type == PathTypeOptions.Folder,
+            IsFolderPicker = isFolderPicker,
             InitialDirectory = dirPath,
-            AddToMostRecentlyUsedList = false,
-            AllowNonFileSystemItems = false,
-            DefaultDirectory = dirPath,
-            EnsureFileExists = true,
-            EnsurePathExists = true,
-            EnsureReadOnly = false,
-            EnsureValidNames = true,
-            Multiselect = false,
-            ShowPlacesList = true,
-        };
-        foreach (var filter in Filters.Items)
-        {
-            dlg.Filters.Add(filter);
-        }
-        if (dlg.ShowDialog() != CommonFileDialogResult.Ok) return;
-        TargetPath = dlg.FileName;
+            EnsureFileExists = ensureExists,
+            EnsurePathExists = ensureExists,
+            Filters = Filters.Items.ToList(),
+        });
     }
 
     public class PathPickerJsonConverter : JsonConverter

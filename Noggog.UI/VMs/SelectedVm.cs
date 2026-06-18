@@ -1,6 +1,6 @@
 ﻿using ReactiveUI.Fody.Helpers;
 
-namespace Noggog.WPF;
+namespace Noggog.UI;
 
 public class SelectedVm<T> : ViewModel, ISelectedItem<T>
 {

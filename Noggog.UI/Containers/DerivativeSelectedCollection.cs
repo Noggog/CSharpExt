@@ -3,7 +3,7 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using ReactiveUI.Fody.Helpers;
 
-namespace Noggog.WPF.Containers;
+namespace Noggog.UI.Containers;
 
 public interface IDerivativeSelectedCollection<T> : IReadOnlyList<SelectedVm<T>>, INotifyCollectionChanged
 {

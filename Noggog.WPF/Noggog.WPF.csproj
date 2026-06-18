@@ -39,9 +39,15 @@
   </ItemGroup>
    
   <ItemGroup>
-    <ProjectReference Include="..\Noggog.CSharpExt\Noggog.CSharpExt.csproj" />
+    <Using Include="Noggog.UI" />
+    <Using Include="Noggog.UI.Containers" />
   </ItemGroup>
-   
+
+  <ItemGroup>
+    <ProjectReference Include="..\Noggog.CSharpExt\Noggog.CSharpExt.csproj" />
+    <ProjectReference Include="..\Noggog.UI\Noggog.UI.csproj" />
+  </ItemGroup>
+
   <ItemGroup>
     <Compile Update="Drag\Drag.cs">
       <CodeLanguage>cs</CodeLanguage>

@@ -1,6 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
 using DynamicData;
-using Noggog.WPF.Containers;
+using Noggog.UI.Containers;
 using Noggog.WPF.Internals;
 
 namespace Noggog.WPF

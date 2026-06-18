@@ -6,7 +6,7 @@ using System.Reactive.Linq;
 using DynamicData;
 using DynamicData.Binding;
 
-namespace Noggog.WPF.Containers;
+namespace Noggog.UI.Containers;
 
 public interface ISourceListUiFunnel<T> : IObservableCollection<T>
     where T : notnull

@@ -3,7 +3,7 @@ using System.Reactive;
 using System.Reactive.Linq;
 using System.Windows.Input;
 
-namespace Noggog.WPF;
+namespace Noggog.UI;
 
 public static class CommandExt
 {

@@ -1,7 +1,7 @@
 using ReactiveUI;
 using System.Reactive;
 
-namespace Noggog.WPF;
+namespace Noggog.UI;
 
 public class CommandVM : ViewModel
 {

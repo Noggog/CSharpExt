@@ -1,0 +1,48 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net8.0;net9.0</TargetFrameworks>
+    <AssemblyName>Noggog.UI</AssemblyName>
+    <RootNamespace>Noggog.UI</RootNamespace>
+    <Authors>Noggog</Authors>
+    <Company>Noggog</Company>
+    <Description>Platform-agnostic reusable ReactiveUI ViewModels and Rx/DynamicData helpers, flavored to taste</Description>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <IsPackable>true</IsPackable>
+    <DebugType>portable</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <LangVersion>preview</LangVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="DynamicData" />
+    <PackageReference Include="Newtonsoft.Json" />
+    <PackageReference Include="ReactiveMarbles.ObservableEvents.SourceGenerator"
+                      PrivateAssets="all" />
+    <PackageReference Include="ReactiveUI" />
+    <PackageReference Include="ReactiveUI.Fody" />
+    <PackageReference Include="System.Reactive" />
+    <PackageReference Include="GitVersion.MsBuild">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="Noggog" />
+    <Using Include="Noggog.UI.Containers" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Noggog.CSharpExt\Noggog.CSharpExt.csproj" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <GitInfoReportImportance Condition="$(Configuration) == 'Release'">high</GitInfoReportImportance>
+  </PropertyGroup>
+
+</Project>

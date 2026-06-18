@@ -3,7 +3,7 @@ using Splat;
 using System.Linq.Expressions;
 using System.Reactive.Linq;
 
-namespace Noggog.WPF;
+namespace Noggog.UI;
 
 /// <summary>
 /// Temporary experiment files to add fallback functionality to RxUI.  This would more closely mimic XAML binding behavior.

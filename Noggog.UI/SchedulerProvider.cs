@@ -2,7 +2,7 @@
 using Noggog.Reactive;
 using ReactiveUI;
 
-namespace Noggog.WPF;
+namespace Noggog.UI;
 
 public class SchedulerProvider : ISchedulerProvider
 {

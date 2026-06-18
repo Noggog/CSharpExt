@@ -2,7 +2,7 @@ using ReactiveUI;
 using System.Collections;
 using System.Windows.Input;
 
-namespace Noggog.WPF;
+namespace Noggog.UI;
 
 public static class ReactiveObjectExt
 {

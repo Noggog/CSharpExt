@@ -3,7 +3,7 @@ using System.Reactive.Disposables;
 using System.Runtime.CompilerServices;
 using System.Collections;
 
-namespace Noggog.WPF;
+namespace Noggog.UI;
 
 public class ViewModel : ReactiveObject, IDisposableDropoff
 {
