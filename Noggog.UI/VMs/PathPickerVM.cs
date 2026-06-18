@@ -79,8 +79,11 @@ public class PathPickerVM : ViewModel
     public const string PathDoesNotExistText = "Path does not exist";
     public const string DoesNotPassFiltersText = "Path does not pass designated filters";
 
-    public PathPickerVM(ISchedulerProvider schedulerProvider)
+    private readonly IPathPickerDialogProvider? _dialogProvider;
+
+    public PathPickerVM(ISchedulerProvider schedulerProvider, IPathPickerDialogProvider? dialogProvider)
     {
+        _dialogProvider = dialogProvider;
         SetTargetPathCommand = ConstructTypicalPickerCommand();
         SetFolderPathCommand = ReactiveCommand.CreateFromTask(() => OpenPicker(PathTypeOptions.Folder));
 
@@ -302,8 +305,7 @@ public class PathPickerVM : ViewModel
 
     private Task<string?> ShowPicker(bool isFolderPicker, bool ensureExists)
     {
-        var provider = PathPickerDialogProvider.Instance;
-        if (provider == null) return Task.FromResult<string?>(null);
+        if (_dialogProvider == null) return Task.FromResult<string?>(null);
 
         string dirPath;
         if (File.Exists(TargetPath))
@@ -315,7 +317,7 @@ public class PathPickerVM : ViewModel
             dirPath = TargetPath;
         }
 
-        return provider.ShowPickerAsync(new PathPickerDialogRequest
+        return _dialogProvider.ShowPickerAsync(new PathPickerDialogRequest
         {
             Title = PromptTitle,
             IsFolderPicker = isFolderPicker,
@@ -338,7 +340,7 @@ public class PathPickerVM : ViewModel
         {
             if (existingValue is not PathPickerVM vm)
             {
-                return new PathPickerVM(new SchedulerProvider());
+                return new PathPickerVM(new SchedulerProvider(), null);
             }
             if (reader.Value is not string str) throw new ArgumentException();
             vm.TargetPath = str;
