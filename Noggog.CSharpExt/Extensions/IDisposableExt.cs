@@ -11,6 +11,14 @@ public static class IDisposableExt
         return disposable;
     }
 
+    public static T DisposeWith<T>(this T disposable, CompositeDisposable compositeDisposable)
+        where T : IDisposable
+    {
+        compositeDisposable.Add(disposable);
+        return disposable;
+    }
+
+    [Obsolete("Use DisposeWith. The CompositeDisposable overload no longer collides with ReactiveUI's DisposableMixins (removed in ReactiveUI v23).")]
     public static T DisposeWithComposite<T>(this T disposable, CompositeDisposable compositeDisposable)
         where T : IDisposable
     {

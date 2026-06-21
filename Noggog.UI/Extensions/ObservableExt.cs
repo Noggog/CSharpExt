@@ -32,7 +32,7 @@ public static class ObservableExt
         TRet initialValue,
         bool deferSubscription = false)
     {
-        return source.ToGuiProperty(vm, property, initialValue, RxApp.MainThreadScheduler, deferSubscription);
+        return source.ToGuiProperty(vm, property, initialValue, RxSchedulers.MainThreadScheduler, deferSubscription);
     }
 
     public static ObservableAsPropertyHelper<TRet> ToGuiProperty<TRet>(
@@ -55,7 +55,7 @@ public static class ObservableExt
         bool deferSubscription = false)
         where TRet : struct
     {
-        return source.ToGuiProperty(vm, property, RxApp.MainThreadScheduler, deferSubscription);
+        return source.ToGuiProperty(vm, property, RxSchedulers.MainThreadScheduler, deferSubscription);
     }
 
     public static void ToGuiProperty<TRet>(
@@ -86,7 +86,7 @@ public static class ObservableExt
         out ObservableAsPropertyHelper<TRet> result,
         bool deferSubscription = false)
     {
-        source.ToGuiProperty(vm, property, initialValue, out result, RxApp.MainThreadScheduler, deferSubscription);
+        source.ToGuiProperty(vm, property, initialValue, out result, RxSchedulers.MainThreadScheduler, deferSubscription);
     }
 
     public static void ToGuiProperty<TRet>(
@@ -110,7 +110,7 @@ public static class ObservableExt
         out ObservableAsPropertyHelper<TRet> result,
         bool deferSubscription = false)
     {
-        source.ToGuiProperty(vm, property, getInitialValue, out result, RxApp.MainThreadScheduler, deferSubscription);
+        source.ToGuiProperty(vm, property, getInitialValue, out result, RxSchedulers.MainThreadScheduler, deferSubscription);
     }
 
     public static void ToGuiProperty<TRet>(
@@ -134,12 +134,12 @@ public static class ObservableExt
         bool deferSubscription = false)
         where TRet : struct
     {
-        source.ToGuiProperty(vm, property, out result, RxApp.MainThreadScheduler, deferSubscription);
+        source.ToGuiProperty(vm, property, out result, RxSchedulers.MainThreadScheduler, deferSubscription);
     }
 
     public static IObservable<T> ObserveOnRxAppGui<T>(this IObservable<T> obs)
     {
-        return obs.ObserveOn(RxApp.MainThreadScheduler);
+        return obs.ObserveOn(RxSchedulers.MainThreadScheduler);
     }
 
     public static IDisposable Subscribe<T>(this IObservable<T> obs, Action onCompleted)
@@ -169,7 +169,7 @@ public static class ObservableExt
     public static IObservableCollection<TObj> ToRxAppObservableCollection<TObj>(this IObservable<IChangeSet<TObj>> changeSet, IDisposableDropoff disposable)
         where TObj : notnull
     {
-        return changeSet.ToObservableCollection(disposable, RxApp.MainThreadScheduler);
+        return changeSet.ToObservableCollection(disposable, RxSchedulers.MainThreadScheduler);
     }
 
     public static IObservableCollection<TObj> ToObservableCollection<TObj, TKey>(this IObservable<IChangeSet<TObj, TKey>> changeSet, IDisposableDropoff disposable, IScheduler scheduler)
@@ -189,7 +189,7 @@ public static class ObservableExt
         where TObj : notnull
         where TKey : notnull
     {
-        return changeSet.ToObservableCollection(disposable, RxApp.MainThreadScheduler);
+        return changeSet.ToObservableCollection(disposable, RxSchedulers.MainThreadScheduler);
     }
 
     public static IDisposable WireSelectionTracking<TItem>(this IObservable<TItem?> obs)

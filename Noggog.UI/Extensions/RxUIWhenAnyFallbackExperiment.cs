@@ -21,7 +21,7 @@ public static class RxUIWhenAnyFallbackExperiment
                         int score = x.GetAffinityForObject(t.senderType, t.propertyName, t.beforeChange);
                         return score > acc.score ? (score, x) : acc;
                     }).binding;
-            }, RxApp.BigCacheLimit);
+            }, 64);
 
 
     /// <summary>

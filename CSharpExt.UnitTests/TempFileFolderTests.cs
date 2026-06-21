@@ -1,5 +1,6 @@
 using Noggog.IO;
 using Shouldly;
+using TempFile = Noggog.IO.TempFile;
 
 namespace CSharpExt.UnitTests;
 

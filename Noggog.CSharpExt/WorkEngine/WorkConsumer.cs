@@ -153,7 +153,7 @@ public class WorkConsumer : IDisposable, IWorkConsumer
             .Select(x => x == 0 ? Environment.ProcessorCount : x)
             .DistinctUntilChanged()
             .SubscribeAsyncConcat(AddNewThreadsIfNeeded)
-            .DisposeWithComposite(_disposable);
+            .DisposeWith(_disposable);
     }
 
     public async Task AwaitUntilEmpty()
