@@ -23,7 +23,6 @@
       <Version>2.4.11</Version>
     </PackageVersion>
     <PackageVersion Include="MahApps.Metro.IconPacks" Version="6.2.1" />
-    <PackageVersion Include="Microsoft.Bcl.HashCode" Version="6.0.0" />
     <PackageVersion Include="Microsoft.CodeAnalysis.Analyzers" Version="5.3.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -48,11 +47,9 @@
     </PackageVersion>
     <PackageVersion Include="ReactiveUI.Testing" Version="23.2.28" />
     <PackageVersion Include="ReactiveUI.WPF" Version="23.2.28" />
-    <PackageVersion Include="System.Buffers" Version="4.6.1" />
     <PackageVersion Include="System.IO.Abstractions" Version="22.1.1" />
     <PackageVersion Include="System.IO.Abstractions.TestingHelpers" Version="22.1.1" />
     <PackageVersion Include="System.Linq.Async" Version="7.0.1" />
-    <PackageVersion Include="System.Memory" Version="4.6.3" />
     <PackageVersion Include="System.Reactive" Version="6.1.0" />
     <PackageVersion Include="Verify.DiffPlex" Version="3.1.2" />
     <PackageVersion Include="Verify.SourceGenerators" Version="2.5.0" />

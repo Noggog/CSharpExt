@@ -83,7 +83,7 @@ public class StatusIndicator : Control
         {
             var reason = ToolTip;
             if (reason == null) return;
-            Clipboard.SetText(reason.ToString());
+            Clipboard.SetText(reason.ToString() ?? string.Empty);
         });
     }
 }
