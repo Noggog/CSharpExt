@@ -15,5 +15,7 @@
   <Project Path="Noggog.Nuget/Noggog.Nuget.csproj" />
   <Project Path="Noggog.SourceGenerators/Noggog.SourceGenerators.csproj" />
   <Project Path="Noggog.Testing/Noggog.Testing.csproj" />
+  <Project Path="Noggog.UI/Noggog.UI.csproj" />
+  <Project Path="Noggog.UI.Avalonia/Noggog.UI.Avalonia.csproj" />
   <Project Path="Noggog.WPF/Noggog.WPF.csproj" />
 </Solution>

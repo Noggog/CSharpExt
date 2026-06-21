@@ -1,0 +1,33 @@
+<UserControl
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    d:DesignWidth="400" d:DesignHeight="35"
+    x:Class="Noggog.UI.PathPicker">
+    <UserControl.Resources>
+        <SolidColorBrush x:Key="PathPickerErrorBrush" Color="#F9A825" />
+    </UserControl.Resources>
+    <Grid x:Name="RootGrid" ColumnDefinitions="*,Auto">
+        <TextBox Grid.Column="0"
+                 x:Name="PathTextBox"
+                 VerticalContentAlignment="Center"
+                 Watermark="Path..."
+                 Text="{Binding TargetPath, Mode=TwoWay}" />
+        <Border Grid.Column="0"
+                IsHitTestVisible="False"
+                BorderBrush="{StaticResource PathPickerErrorBrush}"
+                BorderThickness="1"
+                CornerRadius="3"
+                IsVisible="{Binding InError, FallbackValue=False}"
+                ToolTip.Tip="{Binding ErrorTooltip}" />
+        <Button Grid.Column="1"
+                Margin="3,0,0,0"
+                Width="32"
+                HorizontalContentAlignment="Center"
+                Content="…"
+                ToolTip.Tip="Set target path"
+                Command="{Binding SetTargetPathCommand}" />
+    </Grid>
+</UserControl>

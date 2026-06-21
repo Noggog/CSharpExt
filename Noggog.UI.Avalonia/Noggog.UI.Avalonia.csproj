@@ -1,0 +1,44 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net8.0;net9.0</TargetFrameworks>
+    <AssemblyName>Noggog.UI.Avalonia</AssemblyName>
+    <RootNamespace>Noggog.UI</RootNamespace>
+    <Authors>Noggog</Authors>
+    <Company>Noggog</Company>
+    <Description>Avalonia view-layer controls, converters, and dialog providers that pair with Noggog.UI's platform-agnostic ViewModels</Description>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <IsPackable>true</IsPackable>
+    <DebugType>portable</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <LangVersion>preview</LangVersion>
+    <AvaloniaUseCompiledBindingsByDefault>false</AvaloniaUseCompiledBindingsByDefault>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Avalonia" />
+    <PackageReference Include="GitVersion.MsBuild">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="Noggog" />
+    <Using Include="Noggog.UI" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Noggog.CSharpExt\Noggog.CSharpExt.csproj" />
+    <ProjectReference Include="..\Noggog.UI\Noggog.UI.csproj" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <GitInfoReportImportance Condition="$(Configuration) == 'Release'">high</GitInfoReportImportance>
+  </PropertyGroup>
+
+</Project>
