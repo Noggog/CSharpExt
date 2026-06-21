@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net9.0;net10.0</TargetFrameworks>
+    <TargetFrameworks>net9.0;net10.0;netstandard2.0</TargetFrameworks>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <AssemblyName>Noggog.CSharpExt</AssemblyName>
     <RootNamespace>Noggog</RootNamespace>
@@ -29,9 +29,16 @@
     <PackageReference Include="System.IO.Abstractions" />
   </ItemGroup>
 
-  <!-- net10.0 has System.Linq.AsyncEnumerable in the BCL; only net9.0 needs the package. -->
-  <ItemGroup Condition="'$(TargetFramework)' == 'net9.0'">
+  <!-- net10.0 has System.Linq.AsyncEnumerable in the BCL; net9.0 and netstandard2.0 need the package. -->
+  <ItemGroup Condition="'$(TargetFramework)' == 'net9.0' OR '$(TargetFramework)' == 'netstandard2.0'">
     <PackageReference Include="System.Linq.Async" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+    <PackageReference Include="Microsoft.Bcl.HashCode" />
+    <PackageReference Include="System.Buffers" />
+    <PackageReference Include="System.Memory" />
+    <PackageReference Include="System.Reactive" />
   </ItemGroup>
 
 </Project>
