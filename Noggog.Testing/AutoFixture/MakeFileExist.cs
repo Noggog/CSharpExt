@@ -15,6 +15,6 @@ public class MakeFileExist : IMakeFileExist
     {
         var fs = context.Create<MockFileSystem>();
         fs.Directory.CreateDirectory(path.Directory!);
-        fs.File.Create(path);
+        fs.File.Create(path).Dispose();
     }
 }
