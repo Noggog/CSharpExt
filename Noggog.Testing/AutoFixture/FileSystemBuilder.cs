@@ -95,7 +95,7 @@ public class FileSystemBuilder : ISpecimenBuilder
             {
                 mockFs.Directory.CreateDirectory(parent);
             }
-            mockFs.File.Create(file);
+            mockFs.File.Create(file).Dispose();
         }
         return mockFs;
     }
