@@ -1,0 +1,26 @@
+<Project>
+
+    <Target Name="ClearLocalNuGetPackages"
+            AfterTargets="Build"
+            Condition="'$(GeneratePackageOnBuild)' == 'true'">
+        <PropertyGroup>
+            <_NoggogNuGetPackagesPath Condition="'$(NUGET_PACKAGES)' != ''">$(NUGET_PACKAGES)</_NoggogNuGetPackagesPath>
+            <_NoggogNuGetPackagesPath Condition="'$(_NoggogNuGetPackagesPath)' == '' AND '$(OS)' == 'Windows_NT'">$(USERPROFILE)\.nuget\packages</_NoggogNuGetPackagesPath>
+            <_NoggogNuGetPackagesPath Condition="'$(_NoggogNuGetPackagesPath)' == ''">$(HOME)/.nuget/packages</_NoggogNuGetPackagesPath>
+
+            <_NoggogPackageId Condition="'$(PackageId)' != ''">$(PackageId)</_NoggogPackageId>
+            <_NoggogPackageId Condition="'$(_NoggogPackageId)' == '' AND '$(AssemblyName)' != ''">$(AssemblyName)</_NoggogPackageId>
+            <_NoggogPackageId Condition="'$(_NoggogPackageId)' == ''">$(MSBuildProjectName)</_NoggogPackageId>
+
+            <_NoggogCachedPackageDir>$(_NoggogNuGetPackagesPath)/$(_NoggogPackageId.ToLowerInvariant())</_NoggogCachedPackageDir>
+        </PropertyGroup>
+
+        <RemoveDir Directories="$(_NoggogCachedPackageDir)"
+                   Condition="Exists('$(_NoggogCachedPackageDir)')" />
+
+        <Message Importance="high"
+                 Condition="Exists('$(_NoggogCachedPackageDir)')"
+                 Text="Noggog.Build.Dev: cleared cached package '$(_NoggogPackageId)' from $(_NoggogNuGetPackagesPath)" />
+    </Target>
+
+</Project>

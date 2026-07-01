@@ -1,0 +1,38 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netstandard2.0</TargetFramework>
+        <Nullable>disable</Nullable>
+        <LangVersion>latest</LangVersion>
+        <PackageId>Noggog.Build.Dev</PackageId>
+        <Authors>Noggog</Authors>
+        <Company>Noggog</Company>
+        <Product>Noggog</Product>
+        <Copyright>2026</Copyright>
+        <Description>Shared local-development MSBuild targets for Noggog repos. Clears a freshly packed package from the NuGet global-packages cache so sibling repos consuming the same version pick up the new build.</Description>
+
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <IsPackable>true</IsPackable>
+        <IncludeBuildOutput>false</IncludeBuildOutput>
+        <SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
+        <DevelopmentDependency>true</DevelopmentDependency>
+        <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+        <GenerateDocumentationFile>false</GenerateDocumentationFile>
+        <DebugSymbols>false</DebugSymbols>
+        <IncludeSymbols>false</IncludeSymbols>
+        <NoWarn>$(NoWarn);NU5128</NoWarn>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="GitVersion.MsBuild">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Include="Noggog.Build.Dev.targets" Pack="true" PackagePath="build\Noggog.Build.Dev.targets" />
+        <None Include="Noggog.Build.Dev.targets" Pack="true" PackagePath="buildTransitive\Noggog.Build.Dev.targets" />
+    </ItemGroup>
+
+</Project>
