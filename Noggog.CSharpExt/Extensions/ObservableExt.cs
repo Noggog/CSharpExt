@@ -2,6 +2,7 @@ using System.Reactive;
 using System.Reactive.Disposables;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
+using System.Reactive.Subjects;
 using System.IO.Abstractions;
 using DynamicData;
 using DynamicData.Kernel;
@@ -522,8 +523,7 @@ public static class ObservableExt
                                             || x.EventArgs.OldFullPath.Equals(path.Path, StringComparison.OrdinalIgnoreCase))
                                 .Unit());
                 })
-            .Replay(1)
-            .RefCount();
+            .ShareLatest();
     }
 
     /// <summary>
@@ -567,8 +567,7 @@ public static class ObservableExt
                         .Where(x => x.EventArgs.FullPath.Equals(path.Path, StringComparison.OrdinalIgnoreCase))
                         .Unit();
                 })
-            .Replay(1)
-            .RefCount();
+            .ShareLatest();
     }
 
     /// <summary>
@@ -793,5 +792,136 @@ public static class ObservableExt
             disposable.Add(signal);
             return Disposable.Create(() => disposable.Remove(signal));
         }));
+    }
+
+    // Like `Replay(bufferSize).RefCount()` but the inner ReplaySubject and the upstream
+    // subscription are torn down together when refcount hits zero, and a fresh subject +
+    // subscription are allocated on the next 0->1 transition.
+    //
+    // Why: stock `Replay(N).RefCount()` uses a single ReplaySubject that lives for the
+    // observable's lifetime. Once that subject sees OnError it is permanently terminal
+    // and replays the error to every future subscriber; even a happy-path OnNext gets
+    // cached past its useful lifetime and served to subscribers that arrive after a
+    // refcount cycle (stale prices, stale state, etc.). RxJava and RxJS both fixed this
+    // upstream — dotnet/reactive#1218 is open and unresolved as of 2024.
+    //
+    // Semantics: equivalent to RxJS `shareReplay({ bufferSize, refCount: true })` with
+    // `resetOnRefCountZero: true`.
+    public static IObservable<T> ShareLatest<T>(this IObservable<T> source, int bufferSize = 1)
+    {
+        if (source == null) throw new ArgumentNullException(nameof(source));
+        if (bufferSize < 0) throw new ArgumentOutOfRangeException(nameof(bufferSize));
+
+        var gate = new object();
+        var refCount = 0;
+        ReplaySubject<T>? subject = null;
+        IDisposable? upstreamSub = null;
+
+        return Observable.Create<T>(observer =>
+        {
+            ReplaySubject<T> currentSubject;
+            lock (gate)
+            {
+                if (refCount == 0)
+                {
+                    subject = new ReplaySubject<T>(bufferSize);
+                    upstreamSub = source.Subscribe(subject);
+                }
+                refCount++;
+                currentSubject = subject!;
+            }
+
+            var innerSub = currentSubject.Subscribe(observer);
+
+            return Disposable.Create(() =>
+            {
+                innerSub.Dispose();
+                lock (gate)
+                {
+                    if (--refCount == 0)
+                    {
+                        upstreamSub?.Dispose();
+                        upstreamSub = null;
+                        subject = null;
+                    }
+                }
+            });
+        });
+    }
+
+    // Grace-period variant: equivalent to `Replay(bufferSize).RefCount(disconnectDelay, scheduler)`
+    // but with the same teardown semantics as `ShareLatest` above — when the grace period elapses
+    // with refcount still at zero, the inner subject and upstream subscription are both torn down
+    // so the next subscriber gets a fresh source. A subscriber that rejoins inside the grace window
+    // cancels the pending teardown and resumes sharing the same (warm) subject.
+    public static IObservable<T> ShareLatest<T>(
+        this IObservable<T> source,
+        TimeSpan disconnectDelay,
+        IScheduler? scheduler = null,
+        int bufferSize = 1)
+    {
+        if (source == null) throw new ArgumentNullException(nameof(source));
+        if (bufferSize < 0) throw new ArgumentOutOfRangeException(nameof(bufferSize));
+        if (disconnectDelay < TimeSpan.Zero)
+            throw new ArgumentOutOfRangeException(nameof(disconnectDelay));
+
+        if (disconnectDelay == TimeSpan.Zero)
+            return source.ShareLatest(bufferSize);
+
+        var resolvedScheduler = scheduler ?? Scheduler.Default;
+
+        var gate = new object();
+        var refCount = 0;
+        ReplaySubject<T>? subject = null;
+        IDisposable? upstreamSub = null;
+        IDisposable? pendingDisconnect = null;
+
+        return Observable.Create<T>(observer =>
+        {
+            ReplaySubject<T> currentSubject;
+            lock (gate)
+            {
+                // A subscriber arriving inside the grace window cancels the pending teardown
+                // and reuses the warm subject (cached latest survives the disconnect/reconnect).
+                pendingDisconnect?.Dispose();
+                pendingDisconnect = null;
+
+                if (subject == null)
+                {
+                    subject = new ReplaySubject<T>(bufferSize);
+                    upstreamSub = source.Subscribe(subject);
+                }
+                refCount++;
+                currentSubject = subject;
+            }
+
+            var innerSub = currentSubject.Subscribe(observer);
+
+            return Disposable.Create(() =>
+            {
+                innerSub.Dispose();
+                lock (gate)
+                {
+                    if (--refCount == 0)
+                    {
+                        pendingDisconnect = resolvedScheduler.Schedule(disconnectDelay, () =>
+                        {
+                            lock (gate)
+                            {
+                                // Re-check under lock — a new subscriber might have raced in
+                                // between the timer firing and us acquiring the lock.
+                                if (refCount == 0)
+                                {
+                                    upstreamSub?.Dispose();
+                                    upstreamSub = null;
+                                    subject = null;
+                                    pendingDisconnect = null;
+                                }
+                            }
+                        });
+                    }
+                }
+            });
+        });
     }
 }

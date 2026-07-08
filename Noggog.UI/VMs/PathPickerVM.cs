@@ -97,8 +97,7 @@ public class PathPickerVM : ViewModel
                     .StartWith(default(string)),
                 resultSelector: (existsOption, type, path) => (ExistsOption: existsOption, Type: type, Path: path))
             .StartWith((ExistsOption: ExistCheckOption, Type: PathType, Path: TargetPath))
-            .Replay(1)
-            .RefCount();
+            .ShareLatest();
 
         var doExistsCheck = existsCheckTuple
             .Select(t =>
@@ -117,8 +116,7 @@ public class PathPickerVM : ViewModel
                         throw new NotImplementedException();
                 }
             })
-            .Replay(1)
-            .RefCount();
+            .ShareLatest();
 
         _exists = Observable.Interval(TimeSpan.FromSeconds(3), schedulerProvider.TaskPool)
             // Only check exists on timer if desired
@@ -212,8 +210,7 @@ public class PathPickerVM : ViewModel
                 if (passed) return ErrorResponse.Success;
                 return ErrorResponse.Fail(DoesNotPassFiltersText);
             })
-            .Replay(1)
-            .RefCount();
+            .ShareLatest();
 
         var errorText = Observable.CombineLatest(
                 this.WhenAnyValue(x => x.Exists),
@@ -240,8 +237,7 @@ public class PathPickerVM : ViewModel
                 }
                 return ErrorResponse.Create(successful: i.exists, reason: errStr);
             })
-            .Replay(1)
-            .RefCount();
+            .ShareLatest();
 
         _errorState = Observable.CombineLatest(
                 errorText,

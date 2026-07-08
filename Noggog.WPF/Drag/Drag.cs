@@ -42,8 +42,7 @@ public static partial class Drag
         Action<ListBoxItem, Point> dragBegin)
     {
         var startPt = ConstructStartPoint(control)
-            .Replay(1)
-            .RefCount();
+            .ShareLatest();
 
         return control.Events().MouseMove
             .FlowSwitch(startPt.Select(p => p.Item1 != null && p.Item2 != null))
@@ -72,8 +71,7 @@ public static partial class Drag
         Action<ListBoxItem, Point> dragBegin)
     {
         return ConstructParamExtraction<TType>(ConstructBeginDrag(control, dragBegin))
-            .Replay(1)
-            .RefCount();
+            .ShareLatest();
     }
 
     public static IObservable<DragEventParams<TType>> ListBoxDrops<TType>(
@@ -93,8 +91,7 @@ public static partial class Drag
                     .DisposeWith(disp);
                 return disp;
             })
-            .Replay(1)
-            .RefCount();
+            .ShareLatest();
     }
 
     private static IObservable<DragEventParams<TType>> ConstructParamExtraction<TType>(IObservable<DragEventArgs> args)
