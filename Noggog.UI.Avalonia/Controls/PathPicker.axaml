@@ -3,31 +3,122 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:noggog="clr-namespace:Noggog.UI"
     mc:Ignorable="d"
     d:DesignWidth="400" d:DesignHeight="35"
     x:Class="Noggog.UI.PathPicker">
     <UserControl.Resources>
-        <SolidColorBrush x:Key="PathPickerErrorBrush" Color="#F9A825" />
+        <ControlTheme x:Key="PathPickerButtonTheme" TargetType="Button">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+            <Setter Property="Template">
+                <ControlTemplate>
+                    <Border Background="{TemplateBinding Background}"
+                            CornerRadius="3">
+                        <ContentPresenter Content="{TemplateBinding Content}"
+                                          ContentTemplate="{TemplateBinding ContentTemplate}"
+                                          Padding="{TemplateBinding Padding}"
+                                          HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                          VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
+                    </Border>
+                </ControlTemplate>
+            </Setter>
+        </ControlTheme>
     </UserControl.Resources>
-    <Grid x:Name="RootGrid" ColumnDefinitions="*,Auto">
+
+    <UserControl.Styles>
+        <Style Selector="TextBox#PathTextBox">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+        </Style>
+        <Style Selector="TextBox#PathTextBox /template/ Border#PART_BorderElement">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+        </Style>
+        <Style Selector="TextBox#PathTextBox:pointerover /template/ Border#PART_BorderElement">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+        </Style>
+        <Style Selector="TextBox#PathTextBox:focus /template/ Border#PART_BorderElement">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+        </Style>
+        <Style Selector="TextBox#PathTextBox:focus-within /template/ Border#PART_BorderElement">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+        </Style>
+
+        <Style Selector="Border#BackgroundFill">
+            <Setter Property="Background" Value="{Binding $parent[noggog:PathPicker].FieldBackground}" />
+        </Style>
+        <Style Selector="Grid#RootGrid:pointerover Border#BackgroundFill">
+            <Setter Property="Background" Value="{Binding $parent[noggog:PathPicker].FieldBackgroundPointerOver}" />
+        </Style>
+        <Style Selector="Grid#RootGrid:focus-within Border#BackgroundFill">
+            <Setter Property="Background" Value="{Binding $parent[noggog:PathPicker].FieldBackgroundFocused}" />
+        </Style>
+
+        <Style Selector="Button#MeatballButton Ellipse">
+            <Setter Property="Fill" Value="{Binding $parent[noggog:PathPicker].GlyphBrush}" />
+        </Style>
+        <Style Selector="Button#MeatballButton:pointerover Ellipse">
+            <Setter Property="Fill" Value="{Binding $parent[noggog:PathPicker].GlyphBrushPointerOver}" />
+        </Style>
+    </UserControl.Styles>
+
+    <Grid x:Name="RootGrid" ClipToBounds="False" Background="Transparent" ColumnDefinitions="*,36">
+
+        <Border Grid.Column="0" Grid.ColumnSpan="2"
+                x:Name="BackgroundFill"
+                Margin="0,0,5,0"
+                CornerRadius="3" />
+
         <TextBox Grid.Column="0"
                  x:Name="PathTextBox"
                  VerticalContentAlignment="Center"
-                 Watermark="Path..."
+                 PlaceholderText="{Binding $parent[noggog:PathPicker].Watermark}"
                  Text="{Binding TargetPath, Mode=TwoWay}" />
-        <Border Grid.Column="0"
-                IsHitTestVisible="False"
-                BorderBrush="{StaticResource PathPickerErrorBrush}"
+
+        <Grid Grid.Column="1">
+            <Border x:Name="WarningBlock"
+                    Margin="0,1,0,1"
+                    Width="5"
+                    HorizontalAlignment="Right"
+                    CornerRadius="2"
+                    Background="{Binding $parent[noggog:PathPicker].WarningBrush}"
+                    IsVisible="{Binding InError, FallbackValue=False}"
+                    ToolTip.Tip="{Binding ErrorTooltip}" />
+
+            <Border Width="30"
+                    HorizontalAlignment="Left"
+                    CornerRadius="3">
+                <Button x:Name="MeatballButton"
+                        Theme="{StaticResource PathPickerButtonTheme}"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Stretch"
+                        HorizontalContentAlignment="Center"
+                        VerticalContentAlignment="Center"
+                        ToolTip.Tip="Set target path"
+                        Command="{Binding SetTargetPathCommand}">
+                    <StackPanel Orientation="Horizontal" Spacing="3"
+                                HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <Ellipse Width="3.5" Height="3.5" />
+                        <Ellipse Width="3.5" Height="3.5" />
+                        <Ellipse Width="3.5" Height="3.5" />
+                    </StackPanel>
+                </Button>
+            </Border>
+        </Grid>
+
+        <Border Grid.Column="0" Grid.ColumnSpan="2"
+                x:Name="ErrorBorder"
+                BorderBrush="{Binding $parent[noggog:PathPicker].WarningBrush}"
                 BorderThickness="1"
                 CornerRadius="3"
-                IsVisible="{Binding InError, FallbackValue=False}"
-                ToolTip.Tip="{Binding ErrorTooltip}" />
-        <Button Grid.Column="1"
-                Margin="3,0,0,0"
-                Width="32"
-                HorizontalContentAlignment="Center"
-                Content="…"
-                ToolTip.Tip="Set target path"
-                Command="{Binding SetTargetPathCommand}" />
+                IsHitTestVisible="False"
+                IsVisible="{Binding InError, FallbackValue=False}" />
     </Grid>
 </UserControl>
