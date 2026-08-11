@@ -35,4 +35,14 @@
         <None Include="Noggog.Build.Dev.targets" Pack="true" PackagePath="buildTransitive\Noggog.Build.Dev.targets" />
     </ItemGroup>
 
+    <!-- This package has no build output, so a symbols package would be empty and fail with NU5017.
+         CI packs with the include-symbols switch, which arrives as a global property and beats
+         the IncludeSymbols above; only a target-scoped assignment can override it. -->
+    <Target Name="DisableSymbolPackage" BeforeTargets="GenerateNuspec">
+        <PropertyGroup>
+            <IncludeSymbols>false</IncludeSymbols>
+            <IncludeSource>false</IncludeSource>
+        </PropertyGroup>
+    </Target>
+
 </Project>
