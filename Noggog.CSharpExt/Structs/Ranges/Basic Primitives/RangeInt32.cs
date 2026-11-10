@@ -169,9 +169,11 @@ public struct RangeInt32 : IEquatable<RangeInt32>, IEnumerable<int>
 
     public IEnumerator<int> GetEnumerator()
     {
-        for (int i = _min; i <= _max; i++)
+        if (_min > _max) yield break;
+        for (int i = _min; ; i++)
         {
             yield return i;
+            if (i == _max) yield break;
         }
     }
 

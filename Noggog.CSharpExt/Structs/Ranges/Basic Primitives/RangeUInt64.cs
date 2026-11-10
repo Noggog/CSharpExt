@@ -178,9 +178,11 @@ public struct RangeUInt64 : IEquatable<RangeUInt64>, IEnumerable<ulong>
 
     public IEnumerator<ulong> GetEnumerator()
     {
-        for (ulong i = _min; i <= _max; i++)
+        if (_min > _max) yield break;
+        for (ulong i = _min; ; i++)
         {
             yield return i;
+            if (i == _max) yield break;
         }
     }
 

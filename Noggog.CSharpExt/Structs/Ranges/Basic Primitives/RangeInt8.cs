@@ -178,9 +178,11 @@ public struct RangeInt8 : IEquatable<RangeInt8>, IEnumerable<sbyte>
 
     public IEnumerator<sbyte> GetEnumerator()
     {
-        for (sbyte i = _min; i <= _max; i++)
+        if (_min > _max) yield break;
+        for (sbyte i = _min; ; i++)
         {
             yield return i;
+            if (i == _max) yield break;
         }
     }
 

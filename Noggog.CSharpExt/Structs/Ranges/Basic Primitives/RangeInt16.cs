@@ -178,9 +178,11 @@ public struct RangeInt16 : IEquatable<RangeInt16>, IEnumerable<short>
 
     public IEnumerator<short> GetEnumerator()
     {
-        for (short i = _min; i <= _max; i++)
+        if (_min > _max) yield break;
+        for (short i = _min; ; i++)
         {
             yield return i;
+            if (i == _max) yield break;
         }
     }
 

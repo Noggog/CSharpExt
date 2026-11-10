@@ -221,9 +221,11 @@ public struct RangeInt64 : IEquatable<RangeInt64>, IEnumerable<long>
 
     public IEnumerator<long> GetEnumerator()
     {
-        for (long i = _min; i <= _max; i++)
+        if (_min > _max) yield break;
+        for (long i = _min; ; i++)
         {
             yield return i;
+            if (i == _max) yield break;
         }
     }
 
