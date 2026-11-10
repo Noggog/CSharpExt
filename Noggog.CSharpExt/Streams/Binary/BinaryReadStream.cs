@@ -249,7 +249,7 @@ public class BinaryReadStream : Stream, IBinaryReadStream
  
     public ReadOnlyMemorySlice<byte> GetMemory(int amount, bool readSafe = true) 
     { 
-        var ret = ReadMemory(amount); 
+        var ret = ReadMemory(amount, readSafe: readSafe);
         Position -= ret.Length; 
         return ret; 
     } 
@@ -257,7 +257,7 @@ public class BinaryReadStream : Stream, IBinaryReadStream
     public ReadOnlyMemorySlice<byte> GetMemory(int amount, int offset, bool readSafe = true) 
     { 
         Position += offset; 
-        var ret = ReadMemory(amount); 
+        var ret = ReadMemory(amount, readSafe: readSafe);
         Position -= ret.Length + offset; 
         return ret; 
     } 
