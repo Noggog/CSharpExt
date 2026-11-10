@@ -10,28 +10,13 @@ namespace Noggog.StructuredStrings;
 
 public class StructuredStringBuilder : IEnumerable<string>
 {
-    private static readonly string[] NewLineArr = new[] { Environment.NewLine };
-        
     public int Depth;
-    private readonly List<string> _strings = new();
-    public string DepthStr
-    {
-        get
-        {
-            StringBuilder sb = new StringBuilder();
-            sb.Append(' ', Depth * _depthCount);
-            return sb.ToString();
-        }
-    }
-    public bool Empty
-    {
-        get
-        {
-            if (_strings.Count > 1) return false;
-            if (_strings.Count == 0) return true;
-            return string.IsNullOrWhiteSpace(_strings[0]);
-        }
-    }
+    // The line being written is kept apart from the finished ones, so that appending to it
+    // copies nothing until it ends.
+    private readonly List<string> _lines = new();
+    private readonly StringBuilder _line = new();
+    public string DepthStr => new string(' ', Depth * _depthCount);
+    public bool Empty => _lines.Count == 0 && string.IsNullOrWhiteSpace(_line.ToString());
 
 #if NETSTANDARD2_0
 #else
@@ -41,26 +26,19 @@ public class StructuredStringBuilder : IEnumerable<string>
 #endif
     private readonly int _depthCount;
 
-    public int Count => _strings.Count - 1;
+    public int Count => _lines.Count;
 
     public string this[int index]
     {
         get
         {
             CheckIndex(index);
-            return _strings[index];
+            return _lines[index];
         }
         set
         {
             CheckIndex(index);
-            if (index == _strings.Count - 1)
-            {
-                AppendLine(value);
-            }
-            else
-            {
-                _strings[index] = value;
-            }
+            _lines[index] = value;
         }
     }
 
@@ -72,18 +50,17 @@ public class StructuredStringBuilder : IEnumerable<string>
     public StructuredStringBuilder(int depthCount)
     {
         _depthCount = depthCount;
-        AppendLine();
     }
 
     public void Insert(int index, string str)
     {
         CheckIndex(index);
-        _strings.Insert(index, str);
+        _lines.Insert(index, str);
     }
 
     private void CheckIndex(int index)
     {
-        if (index >= _strings.Count - 1 || index < 0)
+        if (index >= _lines.Count || index < 0)
         {
             throw new IndexOutOfRangeException();
         }
@@ -96,35 +73,35 @@ public class StructuredStringBuilder : IEnumerable<string>
 #else
             _lineAppended.OnNext(str);
 #endif
-        if (str.StartsWith(Environment.NewLine))
+        if (str.StartsWith(Environment.NewLine, StringComparison.Ordinal))
         {
-            _strings.Add("");
+            EndLine();
             return;
         }
-        string[] split = str.Split(NewLineArr, StringSplitOptions.None);
-        split.First(
-            (s, first) =>
-            {
-                if (_strings.Count == 0)
-                {
-                    _strings.Add(s);
-                }
-                else
-                {
-                    if (first)
-                    {
-                        _strings[_strings.Count - 1] = _strings[_strings.Count - 1] + s;
-                    }
-                    else
-                    {
-                        _strings.Add(s);
-                    }
-                }
-            });
+        var start = 0;
+        int newLine;
+        while ((newLine = str.IndexOf(Environment.NewLine, start, StringComparison.Ordinal)) >= 0)
+        {
+            _line.Append(str, start, newLine - start);
+            EndLine();
+            start = newLine + Environment.NewLine.Length;
+        }
+        _line.Append(str, start, str.Length - start);
         if (endWithNewLine)
         {
             Append(Environment.NewLine, endWithNewLine: false);
         }
+    }
+
+    private void EndLine()
+    {
+        _lines.Add(_line.ToString());
+        _line.Clear();
+    }
+
+    internal void AppendIndentation()
+    {
+        _line.Append(' ', Depth * _depthCount);
     }
 
     public void AppendLine()
@@ -158,9 +135,11 @@ public class StructuredStringBuilder : IEnumerable<string>
 
     public void AppendLine(string? str, bool extraLine = false, bool appendNewLine = true)
     {
-        using (new Line(this, appendNewLine))
+        AppendIndentation();
+        Append(str);
+        if (appendNewLine)
         {
-            Append(str);
+            AppendLine();
         }
 
         if (extraLine)
@@ -191,12 +170,12 @@ public class StructuredStringBuilder : IEnumerable<string>
     public void RemoveAt(int index)
     {
         CheckIndex(index);
-        _strings.RemoveAt(index);
+        _lines.RemoveAt(index);
     }
 
     public string GetString()
     {
-        return string.Join(Environment.NewLine, _strings);
+        return string.Join(Environment.NewLine, _lines.Append(_line.ToString()));
     }
 
     public override string ToString()
@@ -206,9 +185,9 @@ public class StructuredStringBuilder : IEnumerable<string>
 
     public IEnumerator<string> GetEnumerator()
     {
-        for (int i = 0; i < _strings.Count - 1; i++)
+        for (int i = 0; i < _lines.Count; i++)
         {
-            yield return _strings[i];
+            yield return _lines[i];
         }
     }
 
