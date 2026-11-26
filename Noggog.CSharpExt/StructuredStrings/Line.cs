@@ -9,7 +9,7 @@ public class Line : IDisposable
     {
         _sb = sb;
         _appendNewLine = appendNewLine;
-        _sb.Append(_sb.DepthStr);
+        _sb.AppendIndentation();
     }
 
     public void Dispose()
