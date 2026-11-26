@@ -21,6 +21,21 @@ public interface IArray2d<T> : IReadOnlyArray2d<T>, IEnumerable<KeyValuePair<P2I
 
 public static class IArray2dExt
 {
+    public static bool SequenceEqualNullable<T>(this IReadOnlyArray2d<T>? lhs, IReadOnlyArray2d<T>? rhs)
+    {
+        if (ReferenceEquals(lhs, rhs)) return true;
+        if (lhs is null || rhs is null || lhs.Width != rhs.Width || lhs.Height != rhs.Height) return false;
+        var comparer = EqualityComparer<T>.Default;
+        for (var y = 0; y < lhs.Height; y++)
+        {
+            for (var x = 0; x < lhs.Width; x++)
+            {
+                if (!comparer.Equals(lhs[x, y], rhs[x, y])) return false;
+            }
+        }
+        return true;
+    }
+
     public static Array2d<T> ShallowClone<T>(this IReadOnlyArray2d<T> arr)
     {
         if (arr is Array2d<T> direct)
