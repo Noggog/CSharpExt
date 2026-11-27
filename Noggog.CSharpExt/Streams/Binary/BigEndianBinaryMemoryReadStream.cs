@@ -20,44 +20,44 @@ public class BigEndianBinaryMemoryReadStream : BinaryMemoryReadStream
 
     public override ushort ReadUInt16()
     {
+        var ret = BinaryPrimitives.ReadUInt16BigEndian(_data.Span.Slice(_pos));
         _pos += 2;
-        var span = _data.Span.Slice(_pos - 2);
-        return BinaryPrimitives.ReadUInt16BigEndian(span); 
+        return ret; 
     }
 
     public override uint ReadUInt32()
     {
+        var ret = BinaryPrimitives.ReadUInt32BigEndian(_data.Span.Slice(_pos));
         _pos += 4;
-        var span = _data.Span.Slice(_pos - 4);
-        return BinaryPrimitives.ReadUInt32BigEndian(span); 
+        return ret; 
     }
 
     public override ulong ReadUInt64()
     {
+        var ret = BinaryPrimitives.ReadUInt64BigEndian(_data.Span.Slice(_pos));
         _pos += 8;
-        var span = _data.Span.Slice(_pos - 8);
-        return BinaryPrimitives.ReadUInt64BigEndian(span); 
+        return ret; 
     }
 
     public override short ReadInt16()
     {
+        var ret = BinaryPrimitives.ReadInt16BigEndian(_data.Span.Slice(_pos));
         _pos += 2;
-        var span = _data.Span.Slice(_pos - 2);
-        return BinaryPrimitives.ReadInt16BigEndian(span); 
+        return ret; 
     }
 
     public override int ReadInt32()
     {
+        var ret = BinaryPrimitives.ReadInt32BigEndian(_data.Span.Slice(_pos));
         _pos += 4;
-        var span = _data.Span.Slice(_pos - 4);
-        return BinaryPrimitives.ReadInt32BigEndian(span); 
+        return ret; 
     }
 
     public override long ReadInt64()
     {
+        var ret = BinaryPrimitives.ReadInt64BigEndian(_data.Span.Slice(_pos));
         _pos += 8;
-        var span = _data.Span.Slice(_pos - 8);
-        return BinaryPrimitives.ReadInt64BigEndian(span); 
+        return ret; 
     }
 
     public override ushort GetUInt16(int offset)

@@ -1,3 +1,4 @@
+using System.Buffers.Binary;
 using Noggog;
 
 namespace CSharpExt.UnitTests;
@@ -507,6 +508,97 @@ public class BinaryReadStreamRobustnessTests
         Assert.Equal(0, r.Read(new byte[1], 0, 0));
         Assert.Equal(0, counting.ReadCalls);
         Assert.Equal(0, r.Position);
+    }
+
+    #endregion
+
+    #region BinaryMemoryReadStream: failed reads must not move Position
+
+    public static IEnumerable<object[]> MemoryStreamFailingReads()
+    {
+        var ops = new (string, Action<BinaryMemoryReadStream>)[]
+        {
+            ("ReadUInt16", r => r.ReadUInt16()),
+            ("ReadInt16", r => r.ReadInt16()),
+            ("ReadUInt32", r => r.ReadUInt32()),
+            ("ReadInt32", r => r.ReadInt32()),
+            ("ReadUInt64", r => r.ReadUInt64()),
+            ("ReadInt64", r => r.ReadInt64()),
+            ("ReadFloat", r => r.ReadFloat()),
+            ("ReadDouble", r => r.ReadDouble()),
+            ("ReadSpan", r => r.ReadSpan(5)),
+            ("ReadSpanOffset", r => r.ReadSpan(1, offset: 4)),
+            ("ReadMemory", r => r.ReadMemory(5)),
+            ("ReadMemoryOffset", r => r.ReadMemory(1, offset: 4)),
+            ("ReadStringUTF8", r => r.ReadStringUTF8(5)),
+            ("ReadBytes", r => r.ReadBytes(5)),
+        };
+        foreach (var little in new[] { true, false })
+        foreach (var (name, op) in ops)
+        {
+            yield return new object[] { name, little, op };
+        }
+    }
+
+    [Theory]
+    [MemberData(nameof(MemoryStreamFailingReads))]
+    public void MemoryReadStream_FailedRead_PositionUnchanged(string name, bool littleEndian, Action<BinaryMemoryReadStream> op)
+    {
+        _ = name;
+        var r = BinaryMemoryReadStream.Factory(Bytes(4), littleEndian);
+        r.Position = 3; // 1 byte remaining
+        Assert.ThrowsAny<Exception>(() => op(r));
+        Assert.Equal(3, r.Position);
+    }
+
+    [Theory]
+    [InlineData(true)]
+    [InlineData(false)]
+    public void MemoryReadStream_SingleByteReadsAtEnd_PositionUnchanged(bool littleEndian)
+    {
+        var r = BinaryMemoryReadStream.Factory(Bytes(2), littleEndian);
+        r.Position = 2;
+        Assert.ThrowsAny<Exception>(() => r.ReadUInt8());
+        Assert.ThrowsAny<Exception>(() => r.ReadInt8());
+        Assert.ThrowsAny<Exception>(() => r.ReadBoolean());
+        Assert.Equal(2, r.Position);
+    }
+
+    [Theory]
+    [InlineData(true)]
+    [InlineData(false)]
+    public void MemoryReadStream_SuccessfulReads_StillAdvance(bool littleEndian)
+    {
+        var data = Bytes(64);
+        var r = BinaryMemoryReadStream.Factory(data, littleEndian);
+        Assert.Equal(data[0], r.ReadUInt8());
+        Assert.Equal((sbyte)data[1], r.ReadInt8());
+        Assert.Equal(data[2] > 0, r.ReadBoolean());
+        var u16 = r.ReadUInt16();
+        Assert.Equal(littleEndian ? BinaryPrimitives.ReadUInt16LittleEndian(data.AsSpan(3)) : BinaryPrimitives.ReadUInt16BigEndian(data.AsSpan(3)), u16);
+        var i64 = r.ReadInt64();
+        Assert.Equal(littleEndian ? BinaryPrimitives.ReadInt64LittleEndian(data.AsSpan(5)) : BinaryPrimitives.ReadInt64BigEndian(data.AsSpan(5)), i64);
+        var f = r.ReadFloat();
+        Assert.Equal(littleEndian ? BinaryPrimitives.ReadSingleLittleEndian(data.AsSpan(13)) : BinaryPrimitives.ReadSingleBigEndian(data.AsSpan(13)), f);
+        var d = r.ReadDouble();
+        Assert.Equal(littleEndian ? BinaryPrimitives.ReadDoubleLittleEndian(data.AsSpan(17)) : BinaryPrimitives.ReadDoubleBigEndian(data.AsSpan(17)), d);
+        Assert.Equal(data.AsSpan(25, 3).ToArray(), r.ReadSpan(3).ToArray());
+        Assert.Equal(data.AsSpan(30, 2).ToArray(), r.ReadSpan(2, offset: 2).ToArray());
+        Assert.Equal(32, r.Position);
+        Assert.Equal(data.AsSpan(34, 2).ToArray(), r.ReadMemory(2, offset: 2).ToArray());
+        Assert.Equal(36, r.Position);
+        Assert.Equal(System.Text.Encoding.UTF8.GetString(data, 36, 4), r.ReadStringUTF8(4));
+        Assert.Equal(40, r.Position);
+    }
+
+    [Fact]
+    public void MemoryReadStream_Write_NotSupported()
+    {
+        var r = BinaryMemoryReadStream.Factory(Bytes(10), isLittleEndian: true);
+        var buf = new byte[4];
+        Assert.False(r.CanWrite);
+        Assert.Throws<NotSupportedException>(() => r.Write(buf, 0, 4));
+        Assert.Equal(new byte[4], buf);
     }
 
     #endregion

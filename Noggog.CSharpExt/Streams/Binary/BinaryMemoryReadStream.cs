@@ -129,14 +129,16 @@ public abstract class BinaryMemoryReadStream : Stream, IBinaryReadStream
 
     public ReadOnlySpan<byte> ReadSpan(int amount, int offset, bool readSafe = true)
     {
+        var ret = GetSpan(amount, offset);
         _pos += amount + offset;
-        return GetSpan(amount, offset: -amount);
+        return ret;
     }
 
     public ReadOnlySpan<byte> ReadSpan(int amount, bool readSafe = true)
     {
+        var ret = GetSpan(amount);
         _pos += amount;
-        return GetSpan(amount, offset: -amount);
+        return ret;
     }
 
     public ReadOnlySpan<byte> GetSpan(int amount, bool readSafe = true)
@@ -151,14 +153,16 @@ public abstract class BinaryMemoryReadStream : Stream, IBinaryReadStream
 
     public ReadOnlyMemorySlice<byte> ReadMemory(int amount, int offset, bool readSafe = true)
     {
+        var ret = GetMemory(amount, offset);
         _pos += amount + offset;
-        return GetMemory(amount, offset: -amount);
+        return ret;
     }
 
     public ReadOnlyMemorySlice<byte> ReadMemory(int amount, bool readSafe = true)
     {
+        var ret = GetMemory(amount);
         _pos += amount;
-        return GetMemory(amount, offset: -amount);
+        return ret;
     }
 
     public ReadOnlyMemorySlice<byte> GetMemory(int amount, bool readSafe = true)
@@ -173,46 +177,57 @@ public abstract class BinaryMemoryReadStream : Stream, IBinaryReadStream
 
     public bool ReadBoolean()
     {
-        return _data.Span[_pos++] > 0;
+        var ret = _data.Span[_pos] > 0;
+        _pos++;
+        return ret;
     }
 
     public byte ReadUInt8()
     {
-        return _data.Span[_pos++];
+        var ret = _data.Span[_pos];
+        _pos++;
+        return ret;
     }
 
     public override int ReadByte()
     {
         // Stream contract: -1 at end of stream rather than throwing
         if (_pos >= _data.Length) return -1;
-        return _data.Span[_pos++];
+        var ret = _data.Span[_pos];
+        _pos++;
+        return ret;
     }
 
     public abstract ulong GetUInt64(int offset);
 
     public sbyte ReadInt8()
     {
-        return (sbyte)_data.Span[_pos++];
+        var ret = (sbyte)_data.Span[_pos];
+        _pos++;
+        return ret;
     }
 
     public abstract double GetDouble(int offset);
 
     public string ReadStringUTF8(int amount)
     {
+        var ret = SpanExt.StringUTF8(_data.Span.Slice(_pos, amount));
         _pos += amount;
-        return SpanExt.StringUTF8(_data.Span.Slice(_pos - amount, amount));
+        return ret;
     }
 
     public float ReadFloat()
     {
+        var ret = GetFloat(offset: 0);
         _pos += 4;
-        return GetFloat(offset: -4);
+        return ret;
     }
 
     public double ReadDouble()
     {
+        var ret = GetDouble(offset: 0);
         _pos += 8;
-        return GetDouble(offset: -8);
+        return ret;
     }
 
     protected override void Dispose(bool disposing)
@@ -339,6 +354,7 @@ public abstract class BinaryMemoryReadStream : Stream, IBinaryReadStream
 
     public override void Write(byte[] buffer, int offset, int count)
     {
-        _data.Span.Slice(_pos, count).CopyTo(buffer.AsSpan().Slice(offset));
+        // Read-only stream (CanWrite is false)
+        throw new NotSupportedException("Stream does not support writing.");
     }
 }
