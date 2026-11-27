@@ -76,7 +76,7 @@ public class BinaryReadStream : Stream, IBinaryReadStream
                 if (diff > 0 
                     && diff < NearnessLength) 
                 { 
-                    _stream.Read(NearnessBuffer, 0, (int)diff); 
+                    ReadFully(NearnessBuffer, 0, (int)diff); 
                 } 
                 else 
                 { 
@@ -103,20 +103,36 @@ public class BinaryReadStream : Stream, IBinaryReadStream
         } 
     } 
  
+    /// <summary>
+    /// Reads from the underlying stream until count bytes are read or it reports end of stream.
+    /// Stream.Read may legally return fewer bytes than requested before the end.
+    /// </summary>
+    private int ReadFully(byte[] buffer, int offset, int count) 
+    { 
+        var total = 0; 
+        while (total < count) 
+        { 
+            var read = _stream.Read(buffer, offset + total, count - total); 
+            if (read == 0) break; 
+            total += read; 
+        } 
+        return total; 
+    } 
+ 
     internal void LoadPosition() 
     { 
         if (_internalMemoryStream.Complete) 
         { 
-            var amountRead = _stream.Read(_data, 0, _data.Length); 
+            var amountRead = ReadFully(_data, 0, _data.Length); 
             _streamPos += amountRead; 
             _internalBufferLength = amountRead; 
         } 
         else 
         { 
-            var diff = _internalMemoryStream.Remaining; 
-            var buffDiff = (int)(_data.Length - diff); 
-            Array.Copy(_data, buffDiff, _data, 0, diff); 
-            var amountRead = _stream.Read(_data, (int)diff, buffDiff); 
+            // Only keep the unread valid bytes; anything past _internalBufferLength is stale
+            var diff = InternalStreamRemaining; 
+            Array.Copy(_data, _internalMemoryStream.Position, _data, 0, diff); 
+            var amountRead = ReadFully(_data, diff, _data.Length - diff); 
             _streamPos += amountRead; 
             _internalBufferLength = diff + amountRead; 
         } 
@@ -182,7 +198,7 @@ public class BinaryReadStream : Stream, IBinaryReadStream
         else 
         { 
             forceReload = true; 
-            amount = _stream.Read(buffer, offset, amount); 
+            amount = ReadFully(buffer, offset, amount); 
             _streamPos += amount; 
             return amount + remaining; 
         } 
@@ -381,8 +397,12 @@ public class BinaryReadStream : Stream, IBinaryReadStream
  
         amount -= numRead; 
  
-        _stream.Read(arr, numRead, amount); 
-        _streamPos += amount; 
+        var read = ReadFully(arr, numRead, amount); 
+        _streamPos += read; 
+        if (read != amount) 
+        { 
+            throw new EndOfStreamException($"Underlying stream ended early: needed {amount} more bytes, got {read}."); 
+        } 
         return SpanExt.StringUTF8(arr.AsSpan().Slice(0, amount + numRead)); 
     } 
  

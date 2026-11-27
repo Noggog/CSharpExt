@@ -158,4 +158,113 @@ public class BinaryReadStreamRobustnessTests
     }
 
     #endregion
+
+    #region Short reads from underlying stream
+
+    /// <summary>
+    /// Returns at most maxPerRead bytes per Read call, which Stream's contract allows
+    /// (network, pipe, decompression streams, user wrappers).
+    /// </summary>
+    private class ChunkedStream : MemoryStream
+    {
+        private readonly int _maxPerRead;
+
+        public ChunkedStream(byte[] data, int maxPerRead) : base(data)
+        {
+            _maxPerRead = maxPerRead;
+        }
+
+        public override int Read(byte[] buffer, int offset, int count) =>
+            base.Read(buffer, offset, Math.Min(count, _maxPerRead));
+
+        public override int Read(Span<byte> buffer) =>
+            base.Read(buffer.Slice(0, Math.Min(buffer.Length, _maxPerRead)));
+    }
+
+    private static BinaryReadStream ChunkedReader(int length, int bufferSize, int maxPerRead) =>
+        new(new ChunkedStream(Bytes(length), maxPerRead), bufferSize: bufferSize);
+
+    public static IEnumerable<object[]> ChunkCases()
+    {
+        foreach (var buf in new[] { 16, 100 })
+        {
+            foreach (var chunk in new[] { 1, 3, 7, 30 })
+            {
+                yield return new object[] { buf, chunk };
+            }
+        }
+    }
+
+    private static void AssertBytes(ReadOnlySpan<byte> actual, long pos, int length)
+    {
+        Assert.Equal(length, actual.Length);
+        for (int i = 0; i < length; i++)
+        {
+            Assert.True(At(pos + i) == actual[i], $"Mismatch at stream pos {pos + i}: expected {At(pos + i)}, got {actual[i]}");
+        }
+    }
+
+    [Theory]
+    [MemberData(nameof(ChunkCases))]
+    public void ShortReads_Primitives(int bufferSize, int chunk)
+    {
+        var r = ChunkedReader(500, bufferSize, chunk);
+        long pos = 0;
+        while (pos + 15 <= 500)
+        {
+            Assert.Equal(At(pos), r.ReadUInt8());
+            Assert.Equal(BitConverter.ToInt32(Bytes(500), (int)pos + 1), r.ReadInt32());
+            Assert.Equal(BitConverter.ToInt64(Bytes(500), (int)pos + 5), r.GetInt64());
+            Assert.Equal(BitConverter.ToUInt16(Bytes(500), (int)pos + 13), r.GetUInt16(8));
+            r.ReadInt64();
+            pos += 13;
+            Assert.Equal(pos, r.Position);
+        }
+    }
+
+    [Theory]
+    [MemberData(nameof(ChunkCases))]
+    public void ShortReads_BulkReads(int bufferSize, int chunk)
+    {
+        var r = ChunkedReader(4000, bufferSize, chunk);
+        long pos = 0;
+        foreach (var amount in new[] { 10, 5, bufferSize - 1, bufferSize, bufferSize + 1, 2 * bufferSize + 3, 7 })
+        {
+            AssertBytes(r.ReadBytes(amount), pos, amount);
+            pos += amount;
+            AssertBytes(r.ReadMemory(amount, readSafe: false), pos, amount);
+            pos += amount;
+            AssertBytes(r.ReadMemory(amount, readSafe: true), pos, amount);
+            pos += amount;
+            var s = r.ReadStringUTF8(amount);
+            Assert.Equal(System.Text.Encoding.UTF8.GetString(Bytes(4000), (int)pos, amount), s);
+            pos += amount;
+            var ms = new MemoryStream();
+            r.WriteTo(ms, amount);
+            AssertBytes(ms.ToArray(), pos, amount);
+            pos += amount;
+            Assert.Equal(pos, r.Position);
+        }
+    }
+
+    [Theory]
+    [MemberData(nameof(ChunkCases))]
+    public void ShortReads_Seeks(int bufferSize, int chunk)
+    {
+        var r = ChunkedReader(1000, bufferSize, chunk);
+        r.CheckUnderlyingStreamPosition = true;
+        foreach (var target in new long[] { 5, 17, 30, 12, 200, 205, 219, 600, 3, 999, 0 })
+        {
+            r.Position = target;
+            Assert.Equal(target, r.Position);
+            Assert.Equal(At(target), r.GetUInt8());
+            if (target + 10 < 1000)
+            {
+                r.Position += 10; // Small forward skips use the "nearness" read path
+                Assert.Equal(At(target + 10), r.GetUInt8());
+            }
+        }
+    }
+
+    #endregion
 }
