@@ -365,9 +365,13 @@ public class BinaryReadStream : Stream, IBinaryReadStream
         { 
             return _internalMemoryStream.ReadStringUTF8(amount); 
         } 
+        if (amount > Remaining) 
+        { 
+            throw new EndOfStreamException($"Attempted to read {amount} bytes but only {Remaining} bytes remain in the stream."); 
+        } 
         if (amount < _data.Length) 
         { 
-            LoadPosition(); 
+            LoadPosition(amount); 
             return _internalMemoryStream.ReadStringUTF8(amount); 
         } 
  

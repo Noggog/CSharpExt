@@ -76,4 +76,86 @@ public class BinaryReadStreamRobustnessTests
     }
 
     #endregion
+
+    #region ReadStringUTF8 past end
+
+    [Fact]
+    public void ReadStringUTF8_SmallPastEnd_AfterPartialFinalBuffer_Throws()
+    {
+        // 15 bytes, buffer 10: final fill is short, leaving stale bytes past the valid region
+        var r = Reader(15, bufferSize: 10);
+        r.ReadUInt64();
+        r.ReadUInt32();
+        Assert.Equal(12, r.Position);
+        Assert.Throws<EndOfStreamException>(() => r.ReadStringUTF8(5));
+        Assert.Equal(12, r.Position);
+        // Reader still consistent afterwards
+        var s = r.ReadStringUTF8(3);
+        Assert.Equal(new string(new[] { (char)At(12), (char)At(13), (char)At(14) }), s);
+        r.Position = 0;
+        Assert.Equal(At(0), r.ReadUInt8());
+    }
+
+    [Fact]
+    public void ReadStringUTF8_SmallPastEnd_Throws()
+    {
+        var r = Reader(20, bufferSize: 16);
+        r.ReadBytes(12);
+        Assert.Throws<EndOfStreamException>(() => r.ReadStringUTF8(10));
+        Assert.Equal(12, r.Position);
+    }
+
+    [Fact]
+    public void ReadStringUTF8_AtEnd_Throws()
+    {
+        var r = Reader(19, bufferSize: 100);
+        r.Position = 19;
+        Assert.Throws<EndOfStreamException>(() => r.ReadStringUTF8(2));
+        Assert.Equal(19, r.Position);
+        r.Position = 0;
+        Assert.Equal(At(9), r.GetUInt8(9));
+    }
+
+    [Theory]
+    [InlineData(30, 40)]
+    [InlineData(144, 145)]
+    public void ReadStringUTF8_LargePastEnd_Throws(int length, int amount)
+    {
+        var r = Reader(length, bufferSize: 10);
+        Assert.Throws<EndOfStreamException>(() => r.ReadStringUTF8(amount));
+        Assert.Equal(0, r.Position);
+        Assert.Equal(At(0), r.ReadUInt8());
+    }
+
+    [Fact]
+    public void ReadStringUTF8_LargePastEnd_MidStream_Throws()
+    {
+        var r = Reader(40, bufferSize: 16);
+        r.ReadBytes(30);
+        Assert.Throws<EndOfStreamException>(() => r.ReadStringUTF8(20));
+        Assert.Equal(30, r.Position);
+        Assert.True(r.Position <= r.Length);
+    }
+
+    [Theory]
+    [InlineData(8, 8)]   // Fits after refill
+    [InlineData(0, 16)]  // Exactly buffer size
+    [InlineData(5, 15)]  // Buffer-1, crosses boundary
+    [InlineData(3, 37)]  // Larger than buffer, ends exactly at stream end
+    [InlineData(30, 10)] // Small, ends exactly at stream end
+    public void ReadStringUTF8_InRange_ReturnsCorrectText(int start, int amount)
+    {
+        var r = Reader(40, bufferSize: 16);
+        r.ReadBytes(start);
+        var pos = r.Position;
+        var s = r.ReadStringUTF8(amount);
+        Assert.Equal(amount, s.Length);
+        for (int i = 0; i < amount; i++)
+        {
+            Assert.Equal((char)At(pos + i), s[i]);
+        }
+        Assert.Equal(pos + amount, r.Position);
+    }
+
+    #endregion
 }
