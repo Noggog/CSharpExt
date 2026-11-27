@@ -387,4 +387,39 @@ public class BinaryReadStreamReadSafeTests
     }
 
     #endregion
+
+    #region Failed reads leave Position unchanged
+
+    [Theory]
+    [InlineData(true, 10)]
+    [InlineData(false, 10)]
+    [InlineData(true, 150)]
+    [InlineData(false, 150)]
+    public void ReadMemory_PastEnd_PositionUnchanged(bool readSafe, int amount)
+    {
+        var reader = Reader(300);
+        reader.ReadMemory(295, readSafe: true);
+        Assert.Throws<EndOfStreamException>(() => reader.ReadMemory(amount, readSafe: readSafe));
+        Assert.Equal(295, reader.Position);
+        AssertContent(reader.ReadMemory(5, readSafe: false), 295, 5);
+    }
+
+    [Theory]
+    [InlineData(true, 10, 0)]
+    [InlineData(false, 10, 0)]
+    [InlineData(true, 3, 3)]
+    [InlineData(false, 3, 3)]
+    [InlineData(true, 150, 0)]
+    [InlineData(false, 150, 0)]
+    [InlineData(false, 10, 200)]
+    public void GetMemory_PastEnd_PositionUnchanged(bool readSafe, int amount, int offset)
+    {
+        var reader = Reader(300);
+        reader.ReadMemory(295, readSafe: true);
+        Assert.Throws<EndOfStreamException>(() => reader.GetMemory(amount, offset, readSafe: readSafe));
+        Assert.Equal(295, reader.Position);
+        AssertContent(reader.ReadMemory(5, readSafe: false), 295, 5);
+    }
+
+    #endregion
 }
