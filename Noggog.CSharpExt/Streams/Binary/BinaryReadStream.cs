@@ -229,8 +229,9 @@ public class BinaryReadStream : Stream, IBinaryReadStream
  
     public ReadOnlyMemorySlice<byte> ReadMemory(int amount, bool readSafe = true) 
     { 
-        if (!readSafe && amount < InternalStreamRemaining) 
+        if (!readSafe && amount <= _data.Length) 
         { 
+            LoadPosition(amount);
             return _internalMemoryStream.ReadMemory(amount, readSafe: false); 
         } 
         var ret = new byte[amount]; 
