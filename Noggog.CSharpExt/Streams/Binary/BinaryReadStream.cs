@@ -67,9 +67,11 @@ public class BinaryReadStream : Stream, IBinaryReadStream
             || forceReload) 
         { 
             forceReload = false; 
+            // Always discard the current buffer so LoadPosition starts fresh at _streamPos,
+            // even when pos == _streamPos (e.g. forceReload left over from a large Read).
+            _internalMemoryStream.Position = _internalMemoryStream.Length; 
             if (pos != _streamPos) 
             { 
-                _internalMemoryStream.Position = _internalMemoryStream.Length; 
                 var diff = pos - _streamPos; 
                 if (diff > 0 
                     && diff < NearnessLength) 
@@ -120,6 +122,8 @@ public class BinaryReadStream : Stream, IBinaryReadStream
         } 
         _internalMemoryStream.Position = 0; 
         _posOffset = _data.Length - _internalBufferLength; 
+        // Buffer is now consistent with _streamPos again
+        forceReload = false; 
         if (_streamPos != _stream.Position) 
         { 
             throw new ArgumentException(); 
