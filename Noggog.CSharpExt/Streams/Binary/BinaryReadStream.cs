@@ -154,7 +154,7 @@ public class BinaryReadStream : Stream, IBinaryReadStream
     { 
         if (amount > Remaining) 
         { 
-            throw new DataMisalignedException($"Attempted to load {amount} bytes but only {Remaining} bytes remain in the stream."); 
+            throw new EndOfStreamException($"Attempted to load {amount} bytes but only {Remaining} bytes remain in the stream."); 
         } 
 
         if (InternalStreamRemaining < amount) 
@@ -210,21 +210,28 @@ public class BinaryReadStream : Stream, IBinaryReadStream
  
     public byte[] ReadBytes(int amount) 
     { 
+        ThrowIfPastEnd(amount); 
         var ret = new byte[amount]; 
         if (amount != Read(ret, offset: 0, amount: amount)) 
         { 
-            throw new IndexOutOfRangeException(); 
+            throw new EndOfStreamException($"Underlying stream ended early: expected {amount} bytes."); 
         } 
         return ret; 
+    } 
+ 
+    private void ThrowIfPastEnd(long amount) 
+    { 
+        if (amount > Remaining) 
+        { 
+            throw new EndOfStreamException($"Attempted to read {amount} bytes but only {Remaining} bytes remain in the stream."); 
+        } 
     } 
  
     public ReadOnlySpan<byte> ReadSpan(int amount, bool readSafe = true) 
     { 
         // ToDo 
         // Modify to not allocate if readsafe is off? 
-        var ret = new byte[amount]; 
-        var read = Read(ret, offset: 0, amount: amount); 
-        return ret.AsSpan().Slice(0, read); 
+        return ReadBytes(amount); 
     } 
  
     public ReadOnlySpan<byte> ReadSpan(int amount, int offset, bool readSafe = true) 
@@ -245,6 +252,7 @@ public class BinaryReadStream : Stream, IBinaryReadStream
  
     public ReadOnlySpan<byte> GetSpan(int amount, int offset, bool readSafe = true) 
     { 
+        ThrowIfPastEnd((long)offset + amount); 
         Position += offset; 
         var ret = ReadSpan(amount); 
         Position -= ret.Length + offset; 
@@ -443,7 +451,7 @@ public class BinaryReadStream : Stream, IBinaryReadStream
     { 
         if (offset + size > Remaining) 
         { 
-            throw new DataMisalignedException($"Attempted to load {offset + size} bytes but only {Remaining} bytes remain in the stream."); 
+            throw new EndOfStreamException($"Attempted to load {offset + size} bytes but only {Remaining} bytes remain in the stream."); 
         } 
         var pos = Position; 
         Position = pos + offset; 
@@ -594,20 +602,10 @@ public class BinaryReadStream : Stream, IBinaryReadStream
  
     public void WriteTo(Stream stream, int amount) 
     { 
+        ThrowIfPastEnd(amount); 
         while (amount > 0) 
         { 
-            int toRequest; 
-            if (Remaining < amount) 
-            { 
-                toRequest = checked((int)Remaining); 
-            } 
-            else 
-            { 
-                toRequest = amount; 
-            } 
-            if (toRequest == 0) break;  // No more data available 
- 
-            LoadPosition(toRequest); 
+            LoadPosition(Math.Min(amount, _data.Length)); 
             var internalRemaining = InternalStreamRemaining; 
             var toRead = amount < internalRemaining ? amount : internalRemaining; 
             _internalMemoryStream.WriteTo(stream, toRead); 

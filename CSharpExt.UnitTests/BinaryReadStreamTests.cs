@@ -172,7 +172,7 @@ public class BinaryReadStreamTests : IBinaryStreamTests
     public void ReadBytes_ThrowsWhenNotEnoughData()
     {
         var reader = GetBinaryReadStream(50);
-        Assert.Throws<IndexOutOfRangeException>(() => reader.ReadBytes(100));
+        Assert.Throws<EndOfStreamException>(() => reader.ReadBytes(100));
     }
 
     [Fact]
@@ -740,10 +740,10 @@ public class BinaryReadStreamTests : IBinaryStreamTests
     }
 
     [Fact]
-    public void LoadPosition_RequestMoreThanRemaining_ThrowsInsufficientDataException()
+    public void LoadPosition_RequestMoreThanRemaining_ThrowsEndOfStreamException()
     {
         // When LoadPosition(amount) is called with an amount greater than what's remaining
-        // in the stream, it should throw InsufficientDataException
+        // in the stream, it should throw EndOfStreamException
         var fileSize = 100;
         var reader = GetBinaryReadStream(fileSize);
 
@@ -752,7 +752,7 @@ public class BinaryReadStreamTests : IBinaryStreamTests
         Assert.Equal(5, reader.Remaining);
 
         // Try to read UInt64 (8 bytes) when only 5 bytes remain - should throw
-        Assert.Throws<DataMisalignedException>(() => reader.ReadUInt64());
+        Assert.Throws<EndOfStreamException>(() => reader.ReadUInt64());
     }
     [Fact]
     public void SeekBackwards_AfterReadingToEnd_ReadsCorrectBytes()

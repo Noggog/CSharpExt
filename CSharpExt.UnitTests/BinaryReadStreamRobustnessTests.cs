@@ -335,8 +335,8 @@ public class BinaryReadStreamRobustnessTests
     {
         var r = Reader(100, bufferSize: 16);
         r.ReadBytes(10);
-        Assert.Throws<DataMisalignedException>(() => r.GetInt32(87));
-        Assert.Throws<DataMisalignedException>(() => r.GetStringUTF8(50, 45));
+        Assert.Throws<EndOfStreamException>(() => r.GetInt32(87));
+        Assert.Throws<EndOfStreamException>(() => r.GetStringUTF8(50, 45));
         Assert.Equal(10, r.Position);
         Assert.Equal(At(10), r.ReadUInt8());
     }
@@ -370,6 +370,61 @@ public class BinaryReadStreamRobustnessTests
         Assert.Equal(BitConverter.ToInt64(data, 3), r.ReadInt64());
         Assert.Equal(BitConverter.ToDouble(data, 11), r.ReadDouble());
         Assert.Equal(BitConverter.ToInt64(data, 30), r.GetInt64(11));
+    }
+
+    #endregion
+
+    #region Past end of stream: consistent EndOfStreamException, Position unchanged
+
+    public static IEnumerable<object[]> PastEndOps()
+    {
+        // name, needed bytes beyond current position (op is invoked with remaining = 5)
+        var ops = new (string, Action<BinaryReadStream>)[]
+        {
+            ("ReadBytes", r => r.ReadBytes(6)),
+            ("ReadSpan", r => r.ReadSpan(6)),
+            ("GetSpan", r => r.GetSpan(6)),
+            ("GetSpanOffset", r => r.GetSpan(3, offset: 3)),
+            ("WriteTo", r => r.WriteTo(new MemoryStream(), 6)),
+            ("WriteToLarge", r => r.WriteTo(new MemoryStream(), 100)),
+            ("ReadInt64", r => r.ReadInt64()),
+            ("ReadDouble", r => r.ReadDouble()),
+            ("GetInt64", r => r.GetInt64()),
+            ("GetInt32Offset", r => r.GetInt32(2)),
+            ("GetInt32OffsetBeyondBuffer", r => r.GetInt32(40)),
+            ("ReadStringUTF8", r => r.ReadStringUTF8(6)),
+            ("ReadStringUTF8Large", r => r.ReadStringUTF8(40)),
+            ("GetStringUTF8", r => r.GetStringUTF8(6)),
+            ("GetStringUTF8Offset", r => r.GetStringUTF8(3, 3)),
+            ("GetStringUTF8Large", r => r.GetStringUTF8(40)),
+        };
+        foreach (var (name, op) in ops)
+        {
+            yield return new object[] { name, op };
+        }
+    }
+
+    [Theory]
+    [MemberData(nameof(PastEndOps))]
+    public void PastEnd_ThrowsEndOfStream_PositionUnchanged(string name, Action<BinaryReadStream> op)
+    {
+        _ = name;
+        var r = Reader(60, bufferSize: 16);
+        r.ReadBytes(55);
+        Assert.Throws<EndOfStreamException>(() => op(r));
+        Assert.Equal(55, r.Position);
+        Assert.Equal(At(55), r.ReadUInt8());
+    }
+
+    [Fact]
+    public void WriteTo_ExactlyRemaining_Succeeds()
+    {
+        var r = Reader(60, bufferSize: 16);
+        r.ReadBytes(5);
+        var ms = new MemoryStream();
+        r.WriteTo(ms, 55);
+        Assert.Equal(Bytes(60).AsSpan(5).ToArray(), ms.ToArray());
+        Assert.True(r.Complete);
     }
 
     #endregion
