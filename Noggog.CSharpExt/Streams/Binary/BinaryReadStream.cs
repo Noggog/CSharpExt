@@ -35,6 +35,10 @@ public class BinaryReadStream : Stream, IBinaryReadStream
         { 
             throw new NotImplementedException("Stream must start at position zero."); 
         } 
+        if (bufferSize < sizeof(long)) 
+        { 
+            throw new ArgumentOutOfRangeException(nameof(bufferSize), bufferSize, $"Buffer size must be at least {sizeof(long)} bytes."); 
+        } 
         _dispose = dispose; 
         _stream = stream; 
         _length = _stream.Length; 
@@ -426,74 +430,113 @@ public class BinaryReadStream : Stream, IBinaryReadStream
         return ret; 
     } 
  
+    /// <summary>
+    /// Whether a peek of size bytes at offset can be served from the internal buffer.
+    /// </summary>
+    private bool FitsInBuffer(int size, int offset) => offset >= 0 && size + offset <= _data.Length; 
+ 
+    /// <summary>
+    /// Slow path for peeks that cannot be served from the internal buffer
+    /// (negative offset, or offset + size larger than the buffer).
+    /// </summary>
+    private T GetViaSeek<T>(int offset, int size, Func<BinaryReadStream, T> read) 
+    { 
+        if (offset + size > Remaining) 
+        { 
+            throw new DataMisalignedException($"Attempted to load {offset + size} bytes but only {Remaining} bytes remain in the stream."); 
+        } 
+        var pos = Position; 
+        Position = pos + offset; 
+        try 
+        { 
+            return read(this); 
+        } 
+        finally 
+        { 
+            Position = pos; 
+        } 
+    } 
+ 
     public bool GetBoolean(int offset) 
     { 
+        if (!FitsInBuffer(1, offset)) return GetViaSeek(offset, 1, static s => s.ReadBoolean()); 
         LoadPosition(1 + offset); 
         return _internalMemoryStream.GetBoolean(offset); 
     } 
  
     public byte GetUInt8(int offset) 
     { 
+        if (!FitsInBuffer(1, offset)) return GetViaSeek(offset, 1, static s => s.ReadUInt8()); 
         LoadPosition(1 + offset); 
         return _internalMemoryStream.GetUInt8(offset); 
     } 
  
     public ushort GetUInt16(int offset) 
     { 
+        if (!FitsInBuffer(2, offset)) return GetViaSeek(offset, 2, static s => s.ReadUInt16()); 
         LoadPosition(2 + offset); 
         return _internalMemoryStream.GetUInt16(offset); 
     } 
  
     public uint GetUInt32(int offset) 
     { 
+        if (!FitsInBuffer(4, offset)) return GetViaSeek(offset, 4, static s => s.ReadUInt32()); 
         LoadPosition(4 + offset); 
         return _internalMemoryStream.GetUInt32(offset); 
     } 
  
     public ulong GetUInt64(int offset) 
     { 
+        if (!FitsInBuffer(8, offset)) return GetViaSeek(offset, 8, static s => s.ReadUInt64()); 
         LoadPosition(8 + offset); 
         return _internalMemoryStream.GetUInt64(offset); 
     } 
  
     public sbyte GetInt8(int offset) 
     { 
+        if (!FitsInBuffer(1, offset)) return GetViaSeek(offset, 1, static s => s.ReadInt8()); 
         LoadPosition(1 + offset); 
         return _internalMemoryStream.GetInt8(offset); 
     } 
  
     public short GetInt16(int offset) 
     { 
+        if (!FitsInBuffer(2, offset)) return GetViaSeek(offset, 2, static s => s.ReadInt16()); 
         LoadPosition(2 + offset); 
         return _internalMemoryStream.GetInt16(offset); 
     } 
  
     public int GetInt32(int offset) 
     { 
+        if (!FitsInBuffer(4, offset)) return GetViaSeek(offset, 4, static s => s.ReadInt32()); 
         LoadPosition(4 + offset); 
         return _internalMemoryStream.GetInt32(offset); 
     } 
  
     public long GetInt64(int offset) 
     { 
+        if (!FitsInBuffer(8, offset)) return GetViaSeek(offset, 8, static s => s.ReadInt64()); 
         LoadPosition(8 + offset); 
         return _internalMemoryStream.GetInt64(offset); 
     } 
  
     public float GetFloat(int offset) 
     { 
+        if (!FitsInBuffer(4, offset)) return GetViaSeek(offset, 4, static s => s.ReadFloat()); 
         LoadPosition(4 + offset); 
         return _internalMemoryStream.GetFloat(offset); 
     } 
  
     public double GetDouble(int offset) 
     { 
+        if (!FitsInBuffer(8, offset)) return GetViaSeek(offset, 8, static s => s.ReadDouble()); 
         LoadPosition(8 + offset); 
         return _internalMemoryStream.GetDouble(offset); 
     } 
  
     public string GetStringUTF8(int amount, int offset) 
     { 
+        if (!FitsInBuffer(amount, offset)) return GetViaSeek(offset, amount, s => s.ReadStringUTF8(amount)); 
         LoadPosition(amount + offset); 
         return _internalMemoryStream.GetStringUTF8(amount, offset); 
     } 
@@ -640,6 +683,7 @@ public class BinaryReadStream : Stream, IBinaryReadStream
  
     public string GetStringUTF8(int amount) 
     { 
+        if (!FitsInBuffer(amount, 0)) return GetViaSeek(0, amount, s => s.ReadStringUTF8(amount)); 
         LoadPosition(amount); 
         return _internalMemoryStream.GetStringUTF8(amount); 
     } 

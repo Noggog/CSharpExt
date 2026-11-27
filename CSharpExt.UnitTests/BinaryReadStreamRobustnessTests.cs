@@ -267,4 +267,110 @@ public class BinaryReadStreamRobustnessTests
     }
 
     #endregion
+
+    #region Peeks larger than the buffer
+
+    [Theory]
+    [InlineData(0)]
+    [InlineData(5)]
+    [InlineData(15)]
+    [InlineData(16)]
+    [InlineData(40)]
+    [InlineData(150)]
+    public void GetPrimitivesWithOffset_BeyondBuffer(int offset)
+    {
+        var data = Bytes(400);
+        var r = Reader(400, bufferSize: 16);
+        r.ReadBytes(7);
+        var p = 7 + offset;
+        Assert.Equal(data[p], r.GetUInt8(offset));
+        Assert.Equal((sbyte)data[p], r.GetInt8(offset));
+        Assert.Equal(data[p] > 0, r.GetBoolean(offset));
+        Assert.Equal(BitConverter.ToUInt16(data, p), r.GetUInt16(offset));
+        Assert.Equal(BitConverter.ToInt16(data, p), r.GetInt16(offset));
+        Assert.Equal(BitConverter.ToUInt32(data, p), r.GetUInt32(offset));
+        Assert.Equal(BitConverter.ToInt32(data, p), r.GetInt32(offset));
+        Assert.Equal(BitConverter.ToUInt64(data, p), r.GetUInt64(offset));
+        Assert.Equal(BitConverter.ToInt64(data, p), r.GetInt64(offset));
+        Assert.Equal(BitConverter.ToSingle(data, p), r.GetFloat(offset));
+        Assert.Equal(BitConverter.ToDouble(data, p), r.GetDouble(offset));
+        Assert.Equal(7, r.Position);
+        Assert.Equal(data[7], r.ReadUInt8());
+    }
+
+    [Fact]
+    public void GetPrimitivesWithNegativeOffset()
+    {
+        var data = Bytes(400);
+        var r = Reader(400, bufferSize: 16);
+        r.ReadBytes(100);
+        Assert.Equal(BitConverter.ToInt32(data, 40), r.GetInt32(-60));
+        Assert.Equal(data[99], r.GetUInt8(-1));
+        Assert.Equal(100, r.Position);
+        Assert.Equal(data[100], r.ReadUInt8());
+    }
+
+    [Theory]
+    [InlineData(10, 0)]
+    [InlineData(16, 0)]
+    [InlineData(40, 0)]
+    [InlineData(10, 20)]
+    [InlineData(30, 30)]
+    public void GetStringUTF8_BeyondBuffer(int amount, int offset)
+    {
+        var data = Bytes(120);
+        var r = Reader(120, bufferSize: 16);
+        r.ReadBytes(3);
+        var expected = System.Text.Encoding.UTF8.GetString(data, 3 + offset, amount);
+        Assert.Equal(expected, r.GetStringUTF8(amount, offset));
+        if (offset == 0)
+        {
+            Assert.Equal(expected, r.GetStringUTF8(amount));
+        }
+        Assert.Equal(3, r.Position);
+    }
+
+    [Fact]
+    public void GetWithOffset_BeyondBuffer_PastEnd_Throws_PositionUnchanged()
+    {
+        var r = Reader(100, bufferSize: 16);
+        r.ReadBytes(10);
+        Assert.Throws<DataMisalignedException>(() => r.GetInt32(87));
+        Assert.Throws<DataMisalignedException>(() => r.GetStringUTF8(50, 45));
+        Assert.Equal(10, r.Position);
+        Assert.Equal(At(10), r.ReadUInt8());
+    }
+
+    [Fact]
+    public void GetInt32_DefaultBuffer_OffsetNearBufferEnd()
+    {
+        var data = Bytes(10000);
+        var r = new BinaryReadStream(new MemoryStream(data));
+        Assert.Equal(BitConverter.ToInt32(data, 4094), r.GetInt32(4094));
+        Assert.Equal(BitConverter.ToInt32(data, 5000), r.GetInt32(5000));
+        Assert.Equal(0, r.Position);
+    }
+
+    [Theory]
+    [InlineData(-1)]
+    [InlineData(0)]
+    [InlineData(1)]
+    [InlineData(7)]
+    public void Ctor_BufferTooSmall_Throws(int bufferSize)
+    {
+        Assert.Throws<ArgumentOutOfRangeException>(() => new BinaryReadStream(new MemoryStream(Bytes(10)), bufferSize: bufferSize));
+    }
+
+    [Fact]
+    public void MinimumBuffer_ReadsEightByteValues()
+    {
+        var data = Bytes(100);
+        var r = Reader(100, bufferSize: 8);
+        r.ReadBytes(3);
+        Assert.Equal(BitConverter.ToInt64(data, 3), r.ReadInt64());
+        Assert.Equal(BitConverter.ToDouble(data, 11), r.ReadDouble());
+        Assert.Equal(BitConverter.ToInt64(data, 30), r.GetInt64(11));
+    }
+
+    #endregion
 }
