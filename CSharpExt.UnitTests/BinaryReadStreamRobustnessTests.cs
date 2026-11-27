@@ -428,4 +428,42 @@ public class BinaryReadStreamRobustnessTests
     }
 
     #endregion
+
+    #region ReadByte at end of stream
+
+    [Fact]
+    public void ReadByte_AtEnd_ReturnsMinusOne()
+    {
+        var r = Reader(20, bufferSize: 16);
+        var read = new List<int>();
+        int b;
+        while ((b = r.ReadByte()) != -1)
+        {
+            read.Add(b);
+        }
+        Assert.Equal(Bytes(20).Select(x => (int)x), read);
+        Assert.Equal(-1, r.ReadByte());
+        Assert.Equal(20, r.Position);
+    }
+
+    [Fact]
+    public void ReadByte_EmptyStream_ReturnsMinusOne()
+    {
+        Assert.Equal(-1, Reader(0, bufferSize: 16).ReadByte());
+    }
+
+    [Theory]
+    [InlineData(true)]
+    [InlineData(false)]
+    public void MemoryReadStream_ReadByte_AtEnd_ReturnsMinusOne(bool littleEndian)
+    {
+        var r = BinaryMemoryReadStream.Factory(Bytes(3), littleEndian);
+        Assert.Equal(At(0), r.ReadByte());
+        Assert.Equal(At(1), r.ReadByte());
+        Assert.Equal(At(2), r.ReadByte());
+        Assert.Equal(-1, r.ReadByte());
+        Assert.Equal(3, r.Position);
+    }
+
+    #endregion
 }

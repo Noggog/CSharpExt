@@ -329,6 +329,8 @@ public class BinaryReadStream : Stream, IBinaryReadStream
  
     public override int ReadByte() 
     { 
+        // Stream contract: -1 at end of stream rather than throwing
+        if (Remaining <= 0) return -1; 
         LoadPosition(1); 
         return _internalMemoryStream.ReadUInt8(); 
     } 

@@ -183,6 +183,8 @@ public abstract class BinaryMemoryReadStream : Stream, IBinaryReadStream
 
     public override int ReadByte()
     {
+        // Stream contract: -1 at end of stream rather than throwing
+        if (_pos >= _data.Length) return -1;
         return _data.Span[_pos++];
     }
 
