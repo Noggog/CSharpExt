@@ -4,13 +4,6 @@ on:
   schedule:
     - cron: '0 9 * * *'
   workflow_dispatch:
-  release:
-    types: [published]
-    inputs:
-      is_release_event:
-        description: Should this be a release or a preview package
-        required: true
-        default: 'false'
 
 jobs:
   activity-short-circuit:
@@ -31,7 +24,7 @@ jobs:
           git fetch origin nightly:nightly
           head_sha=$(git rev-parse --verify HEAD)
           nightly_sha=$(git rev-parse --verify nightly)
-          if [[ "$head_sha" == "$nightly_sha" && ${{ github.event_name }} != "release" ]]; then
+          if [[ "$head_sha" == "$nightly_sha" ]]; then
               same_sha=true;
           else
               same_sha=false;
@@ -92,7 +85,7 @@ jobs:
     if: needs.activity-short-circuit.outputs.same_sha == 'false'
     runs-on: windows-latest
     permissions:
-      contents: write
+      contents: read
       id-token: write
     steps:
     - uses: actions/checkout@v4
@@ -114,14 +107,6 @@ jobs:
       if: ${{ success() }}
       run: |
         dotnet pack Noggog.CSharpExt.slnx -c Release --no-restore -o out --include-symbols -p:SymbolPackageFormat=snupkg
-    - name: Publish to Github
-      uses: svenstaro/upload-release-action@v2
-      if: ${{ success() && !github.event.release.prerelease && github.event_name == 'release' }}
-      with:
-        file: "out/*.nupkg"
-        repo_token: ${{ secrets.GITHUB_TOKEN }}
-        tag: ${{ github.event.release.tag_name }}
-        file_glob: "true"
     - name: NuGet login
       uses: NuGet/login@v1
       id: login
@@ -131,7 +116,7 @@ jobs:
       run: |
         Get-ChildItem "out/*.nupkg" | ForEach-Object {
           Write-Host "Pushing $($_.Name)"
-          dotnet nuget push $_.FullName --api-key ${{ steps.login.outputs.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json
+          dotnet nuget push $_.FullName --api-key ${{ steps.login.outputs.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
         }  
 
   update-nightly:

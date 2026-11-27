@@ -1,0 +1,181 @@
+name: Release
+
+# Manual release: Actions tab -> Release -> Run workflow, pick the branch in
+# "Use workflow from" and enter a version.
+# Nothing is created on GitHub or nuget.org until the build and tests pass,
+# so a failed run can simply be re-run with the same version.
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Version to release (e.g. 5.0.1)
+        required: true
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    outputs:
+      sha: ${{ steps.check.outputs.sha }}
+    env:
+      VERSION: ${{ inputs.version }}
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Validate version and tag
+        id: check
+        run: |
+          if [[ ! "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.-]+)?$ ]]; then
+            echo "::error::'$VERSION' is not a valid version (expected e.g. 5.0.1)"
+            exit 1
+          fi
+          sha=$(git rev-parse HEAD)
+          if gh release view "$VERSION" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            echo "::error::Release $VERSION already exists"
+            exit 1
+          fi
+          # A tag left over from an earlier partial run is fine if it points at the same commit
+          if tag_sha=$(git rev-parse -q --verify "refs/tags/$VERSION^{commit}"); then
+            if [[ "$tag_sha" != "$sha" ]]; then
+              echo "::error::Tag $VERSION already exists on a different commit ($tag_sha)"
+              exit 1
+            fi
+          fi
+          echo "Releasing $VERSION from $GITHUB_REF_NAME at $sha"
+          echo "sha=$sha" >> $GITHUB_OUTPUT
+
+  test:
+    needs: validate
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        project:
+          - CSharpExt.UnitTests
+          - Noggog.Autofac
+          - Noggog.CSharpExt
+          - Noggog.CSharpExt.Json
+          - Noggog.CSharpExt.Windows
+          - Noggog.Testing
+          - Noggog.WPF
+        exclude:
+          - os: ubuntu-latest
+            project: Noggog.WPF
+          - os: macos-latest
+            project: Noggog.WPF
+          - os: ubuntu-latest
+            project: Noggog.CSharpExt.Windows
+          - os: macos-latest
+            project: Noggog.CSharpExt.Windows
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        ref: ${{ needs.validate.outputs.sha }}
+        fetch-depth: 0
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: |
+          10.0.*
+          11.0.*
+    - name: Install dependencies
+      run: |
+        dotnet clean -c Release && dotnet nuget locals all --clear
+        dotnet restore ${{ matrix.project }}/${{ matrix.project }}.csproj
+    - name: Build
+      run: dotnet build ${{ matrix.project }}/${{ matrix.project }}.csproj -c Release --no-restore
+    - name: Test
+      run: dotnet test ${{ matrix.project }}/${{ matrix.project }}.csproj -c Release --no-build
+
+  pack:
+    needs: [validate, test]
+    runs-on: windows-latest
+    env:
+      VERSION: ${{ inputs.version }}
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        ref: ${{ needs.validate.outputs.sha }}
+        fetch-depth: 0
+    - name: Tag locally so GitVersion picks up the version
+      shell: bash
+      run: |
+        git rev-parse -q --verify "refs/tags/$VERSION" >/dev/null || git tag "$VERSION"
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: |
+          10.0.*
+          11.0.*
+    - name: Install dependencies
+      run: |
+        dotnet clean Noggog.CSharpExt.slnx -c Release && dotnet nuget locals all --clear
+        dotnet restore Noggog.CSharpExt.slnx
+    - name: Build
+      run: dotnet build Noggog.CSharpExt.slnx -c Release --no-restore /p:GeneratePackageOnBuild=false
+    - name: Pack
+      run: dotnet pack Noggog.CSharpExt.slnx -c Release --no-restore -o out --include-symbols -p:SymbolPackageFormat=snupkg
+    - name: Verify package version
+      shell: bash
+      run: |
+        ls out
+        if [[ ! -f "out/Noggog.CSharpExt.$VERSION.nupkg" ]]; then
+          echo "::error::Expected out/Noggog.CSharpExt.$VERSION.nupkg; GitVersion produced a different version"
+          exit 1
+        fi
+    - uses: actions/upload-artifact@v4
+      with:
+        name: packages
+        path: |
+          out/*.nupkg
+          out/*.snupkg
+        if-no-files-found: error
+
+  publish:
+    needs: [validate, pack]
+    runs-on: ubuntu-latest
+    environment: nuget-release
+    permissions:
+      contents: write
+      id-token: write
+    env:
+      VERSION: ${{ inputs.version }}
+      SHA: ${{ needs.validate.outputs.sha }}
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+    - uses: actions/download-artifact@v4
+      with:
+        name: packages
+        path: out
+    - name: NuGet login
+      uses: NuGet/login@v1
+      id: login
+      with:
+        user: ${{ secrets.NUGET_USER }}
+    - name: Publish to Nuget.org
+      run: |
+        for pkg in out/*.nupkg; do
+          echo "Pushing $pkg"
+          dotnet nuget push "$pkg" --api-key "${{ steps.login.outputs.NUGET_API_KEY }}" --source https://api.nuget.org/v3/index.json --skip-duplicate
+        done
+    - name: Create draft GitHub release
+      run: |
+        gh release create "$VERSION" out/*.nupkg \
+          --repo "$GITHUB_REPOSITORY" \
+          --target "$SHA" \
+          --title "$VERSION" \
+          --draft \
+          --generate-notes
+        echo "Draft release created. Add notes and publish it at:"
+        echo "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/releases"
