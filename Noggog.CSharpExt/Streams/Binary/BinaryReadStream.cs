@@ -229,8 +229,12 @@ public class BinaryReadStream : Stream, IBinaryReadStream
  
     public ReadOnlyMemorySlice<byte> ReadMemory(int amount, bool readSafe = true) 
     { 
-        if (!readSafe && amount <= _data.Length) 
-        { 
+        if (!readSafe && amount <= _data.Length)
+        {
+            if (amount > Remaining)
+            {
+                throw new EndOfStreamException("Could not read desired amount");
+            }
             LoadPosition(amount);
             return _internalMemoryStream.ReadMemory(amount, readSafe: false); 
         } 
@@ -248,20 +252,34 @@ public class BinaryReadStream : Stream, IBinaryReadStream
         throw new NotImplementedException(); 
     } 
  
-    public ReadOnlyMemorySlice<byte> GetMemory(int amount, bool readSafe = true) 
-    { 
-        var ret = ReadMemory(amount, readSafe: readSafe);
-        Position -= ret.Length; 
-        return ret; 
-    } 
- 
-    public ReadOnlyMemorySlice<byte> GetMemory(int amount, int offset, bool readSafe = true) 
-    { 
-        Position += offset; 
-        var ret = ReadMemory(amount, readSafe: readSafe);
-        Position -= ret.Length + offset; 
-        return ret; 
-    } 
+    public ReadOnlyMemorySlice<byte> GetMemory(int amount, bool readSafe = true)
+    {
+        return GetMemory(amount, offset: 0, readSafe: readSafe);
+    }
+
+    public ReadOnlyMemorySlice<byte> GetMemory(int amount, int offset, bool readSafe = true)
+    {
+        if (!readSafe
+            && offset >= 0
+            && amount + offset <= _data.Length)
+        {
+            // Slice the internal buffer directly rather than read-then-seek-back.
+            // Seeking back can trigger a reload that overwrites the buffer the
+            // returned slice points into.
+            if (amount + offset > Remaining)
+            {
+                throw new EndOfStreamException("Could not read desired amount");
+            }
+            LoadPosition(amount + offset);
+            return _internalMemoryStream.GetMemory(amount, offset, readSafe: false);
+        }
+
+        // Seek-based fallback must copy: the seeks may reload the internal buffer.
+        Position += offset;
+        var ret = ReadMemory(amount, readSafe: true);
+        Position -= ret.Length + offset;
+        return ret;
+    }
  
     public bool ReadBoolean() 
     { 
