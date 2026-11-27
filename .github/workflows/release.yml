@@ -108,10 +108,6 @@ jobs:
       with:
         ref: ${{ needs.validate.outputs.sha }}
         fetch-depth: 0
-    - name: Tag locally so GitVersion picks up the version
-      shell: bash
-      run: |
-        git rev-parse -q --verify "refs/tags/$VERSION" >/dev/null || git tag "$VERSION"
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
@@ -122,16 +118,18 @@ jobs:
       run: |
         dotnet clean Noggog.CSharpExt.slnx -c Release && dotnet nuget locals all --clear
         dotnet restore Noggog.CSharpExt.slnx
+    # GitVersion derives a prerelease version on non-main branches even when HEAD is tagged,
+    # so it's disabled here and the requested version is passed in directly.
     - name: Build
-      run: dotnet build Noggog.CSharpExt.slnx -c Release --no-restore /p:GeneratePackageOnBuild=false
+      run: dotnet build Noggog.CSharpExt.slnx -c Release --no-restore /p:GeneratePackageOnBuild=false -p:DisableGitVersionTask=true -p:Version=$env:VERSION
     - name: Pack
-      run: dotnet pack Noggog.CSharpExt.slnx -c Release --no-restore -o out --include-symbols -p:SymbolPackageFormat=snupkg
+      run: dotnet pack Noggog.CSharpExt.slnx -c Release --no-restore -o out --include-symbols -p:SymbolPackageFormat=snupkg -p:DisableGitVersionTask=true -p:Version=$env:VERSION
     - name: Verify package version
       shell: bash
       run: |
         ls out
         if [[ ! -f "out/Noggog.CSharpExt.$VERSION.nupkg" ]]; then
-          echo "::error::Expected out/Noggog.CSharpExt.$VERSION.nupkg; GitVersion produced a different version"
+          echo "::error::Expected out/Noggog.CSharpExt.$VERSION.nupkg; packages were built with a different version"
           exit 1
         fi
     - uses: actions/upload-artifact@v4
