@@ -170,7 +170,7 @@ public class BinaryReadStream : Stream, IBinaryReadStream
  
     public override int Read(byte[] buffer, int offset, int amount) 
     { 
-        if (amount < InternalStreamRemaining) 
+        if (amount <= InternalStreamRemaining) 
         { 
             return _internalMemoryStream.Read(buffer, offset, amount); 
         } 

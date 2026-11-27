@@ -466,4 +466,48 @@ public class BinaryReadStreamRobustnessTests
     }
 
     #endregion
+
+    #region Read exactly the buffered remainder
+
+    private class CountingStream : MemoryStream
+    {
+        public int ReadCalls;
+        public CountingStream(byte[] data) : base(data) { }
+        public override int Read(byte[] buffer, int offset, int count)
+        {
+            ReadCalls++;
+            return base.Read(buffer, offset, count);
+        }
+    }
+
+    [Fact]
+    public void Read_ExactlyBufferedRemainder_DoesNotRefill()
+    {
+        var counting = new CountingStream(Bytes(100));
+        var r = new BinaryReadStream(counting, bufferSize: 16);
+        var buf = new byte[16];
+        Assert.Equal(16, r.Read(buf, 0, 16));
+        Assert.Equal(Bytes(16), buf);
+        Assert.Equal(1, counting.ReadCalls);
+
+        // Read the rest of the second buffer exactly
+        r.ReadUInt32();
+        Assert.Equal(2, counting.ReadCalls);
+        Assert.Equal(12, r.Read(buf, 0, 12));
+        Assert.Equal(2, counting.ReadCalls);
+        Assert.Equal(Bytes(32).AsSpan(20, 12).ToArray(), buf.AsSpan(0, 12).ToArray());
+        Assert.Equal(32, r.Position);
+    }
+
+    [Fact]
+    public void Read_ZeroBytes_DoesNotRefill()
+    {
+        var counting = new CountingStream(Bytes(100));
+        var r = new BinaryReadStream(counting, bufferSize: 16);
+        Assert.Equal(0, r.Read(new byte[1], 0, 0));
+        Assert.Equal(0, counting.ReadCalls);
+        Assert.Equal(0, r.Position);
+    }
+
+    #endregion
 }
